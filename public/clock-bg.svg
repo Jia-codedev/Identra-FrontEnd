@@ -1,0 +1,50 @@
+<svg width="500" height="240" viewBox="0 0 500 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+<circle cx="88.5" cy="72.5" r="2.5" fill="white" fill-opacity="0.5"/>
+<circle cx="88.5" cy="144.5" r="2.5" fill="white" fill-opacity="0.5"/>
+<circle cx="177.5" cy="139.5" r="2.5" fill="white" fill-opacity="0.5"/>
+<circle cx="143.5" cy="207.5" r="2.5" fill="white" fill-opacity="0.5"/>
+<circle cx="443.5" cy="207.5" r="2.5" fill="white" fill-opacity="0.5"/>
+<circle cx="457.5" cy="54.5" r="2.5" fill="white" fill-opacity="0.5"/>
+<circle cx="361.5" cy="59.5" r="2.5" fill="white" fill-opacity="0.5"/>
+<circle cx="400.5" cy="128.5" r="2.5" fill="white" fill-opacity="0.5"/>
+<circle cx="341.5" cy="133.5" r="2.5" fill="white" fill-opacity="0.5"/>
+<circle cx="457.5" cy="149.5" r="2.5" fill="white" fill-opacity="0.5"/>
+<circle cx="258.5" cy="164.5" r="2.5" fill="white" fill-opacity="0.5"/>
+<circle cx="323.5" cy="207.5" r="2.5" fill="white" fill-opacity="0.5"/>
+<circle cx="148.5" cy="40.5" r="2.5" fill="white" fill-opacity="0.5"/>
+<circle cx="41.5" cy="19.5" r="2.5" fill="white" fill-opacity="0.5"/>
+<circle cx="41.5" cy="169.5" r="2.5" fill="white" fill-opacity="0.5"/>
+<circle cx="249.5" cy="219.5" r="2.5" fill="white" fill-opacity="0.5"/>
+<line x1="20.4" y1="1.74846e-08" x2="20.4" y2="240" stroke="white" stroke-opacity="0.2" stroke-width="0.8"/>
+<line x1="70.4" y1="1.74846e-08" x2="70.4" y2="240" stroke="white" stroke-opacity="0.2" stroke-width="0.8"/>
+<line x1="120.4" y1="1.74846e-08" x2="120.4" y2="240" stroke="white" stroke-opacity="0.2" stroke-width="0.8"/>
+<line x1="170.4" y1="1.74846e-08" x2="170.4" y2="240" stroke="white" stroke-opacity="0.2" stroke-width="0.8"/>
+<line x1="220.4" y1="1.74846e-08" x2="220.4" y2="240" stroke="white" stroke-opacity="0.2" stroke-width="0.8"/>
+<line x1="270.4" y1="1.74846e-08" x2="270.4" y2="240" stroke="white" stroke-opacity="0.2" stroke-width="0.8"/>
+<line x1="320.4" y1="1.74846e-08" x2="320.4" y2="240" stroke="white" stroke-opacity="0.2" stroke-width="0.8"/>
+<line x1="370.4" y1="1.74846e-08" x2="370.4" y2="240" stroke="white" stroke-opacity="0.2" stroke-width="0.8"/>
+<line x1="420.4" y1="1.74846e-08" x2="420.4" y2="240" stroke="white" stroke-opacity="0.2" stroke-width="0.8"/>
+<line x1="470.4" y1="1.74846e-08" x2="470.4" y2="240" stroke="white" stroke-opacity="0.2" stroke-width="0.8"/>
+<line x1="1.74846e-08" y1="219.6" x2="500" y2="219.6" stroke="white" stroke-opacity="0.2" stroke-width="0.8"/>
+<line x1="1.74846e-08" y1="169.6" x2="500" y2="169.6" stroke="white" stroke-opacity="0.2" stroke-width="0.8"/>
+<line x1="1.74846e-08" y1="119.6" x2="500" y2="119.6" stroke="white" stroke-opacity="0.2" stroke-width="0.8"/>
+<line x1="1.74846e-08" y1="69.6" x2="500" y2="69.6" stroke="white" stroke-opacity="0.2" stroke-width="0.8"/>
+<line x1="1.74846e-08" y1="19.6" x2="500" y2="19.6" stroke="white" stroke-opacity="0.2" stroke-width="0.8"/>
+<g filter="url(#filter0_b_1_3)">
+<rect width="460" height="240" transform="translate(20)" fill="url(#paint0_linear_1_3)" fill-opacity="0.7"/>
+</g>
+<defs>
+<filter id="filter0_b_1_3" x="15" y="-5" width="470" height="250" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feGaussianBlur in="BackgroundImageFix" stdDeviation="2.5"/>
+<feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur_1_3"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_backgroundBlur_1_3" result="shape"/>
+</filter>
+<linearGradient id="paint0_linear_1_3" x1="230" y1="0" x2="230" y2="240" gradientUnits="userSpaceOnUse">
+<stop stop-color="#0078D4" stop-opacity="0.01"/>
+<stop offset="0.325" stop-color="#F9F9F9" stop-opacity="0.01"/>
+<stop offset="0.615" stop-color="#0078D4" stop-opacity="0.01"/>
+<stop offset="1" stop-color="#F9F9F9" stop-opacity="0.01"/>
+</linearGradient>
+</defs>
+</svg>
