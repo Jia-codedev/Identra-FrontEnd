@@ -1,15 +1,46 @@
 "use client";
-import React, { useState } from "react";
+
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { FiSettings, FiBell } from "react-icons/fi"; // Importing icons
-import { usePathname } from "next/navigation"; // Use usePathname instead of useRouter
+import { FiSettings, FiBell, FiChevronDown } from "react-icons/fi";
+import { usePathname } from "next/navigation";
+
+const LANGS = [
+  { code: "en", label: "English", dir: "ltr" as const },
+  { code: "ar", label: "العربية", dir: "rtl" as const },
+];
 
 const Navbar = () => {
   const [activeMenu, setActiveMenu] = useState("Dashboard");
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const pathname = usePathname(); // Get current URL path
+  const [isLangOpen, setIsLangOpen] = useState(false);
+  const [lang, setLang] = useState<"en" | "ar">("en");
 
+  const pathname = usePathname();
+
+  // read saved language once
+  useEffect(() => {
+    const saved = (typeof window !== "undefined" && localStorage.getItem("lang")) as
+      | "en"
+      | "ar"
+      | null;
+    if (saved && (saved === "en" || saved === "ar")) {
+      setLang(saved);
+    }
+  }, []);
+
+  // reflect language to <html> tag
+  useEffect(() => {
+    if (typeof document !== "undefined") {
+      const meta = LANGS.find((l) => l.code === lang) ?? LANGS[0];
+      document.documentElement.lang = meta.code;
+      document.documentElement.dir = meta.dir;
+      localStorage.setItem("lang", meta.code);
+    }
+  }, [lang]);
+
+  const currentLang = LANGS.find((l) => l.code === lang)!;
 
   return (
     <nav className="bg-white shadow-md relative">
@@ -18,15 +49,27 @@ const Navbar = () => {
         {/* Left Side: Logo & Main Navigation */}
         <div className="flex items-center space-x-6">
           <div className="flex items-center space-x-2">
+            {/* replace with your logo path */}
             <img src="/logo.png" alt="Chronologix Logo" className="h-6" />
-            <span className="text-lg font-semibold text-gray-800">Chronologix</span>
+            <span className="text-lg font-semibold text-gray-800">
+              Chronologix
+            </span>
           </div>
 
           {/* Primary Navigation Links */}
-          {["Dashboard", "Master Data", "Employee Master","Scheduling","WorkForce","Leave Tracker"].map((menu) => (
+          {[
+            "Dashboard",
+            "Master Data",
+            "Employee Master",
+            "Scheduling",
+            "WorkForce",
+            "Leave Tracker",
+          ].map((menu) => (
             <button
               key={menu}
-              className={`px-3 py-2 rounded-lg font-semibold ${activeMenu === menu ? "bg-purple-600 text-white" : "text-gray-700 hover:text-purple-500"
+              className={`px-3 py-2 rounded-lg font-semibold ${activeMenu === menu
+                ? "bg-purple-600 text-white"
+                : "text-gray-700 hover:text-purple-500"
                 }`}
               onClick={() => setActiveMenu(menu)}
             >
@@ -35,9 +78,47 @@ const Navbar = () => {
           ))}
         </div>
 
-        {/* Right Side: Icons & Profile */}
+        {/* Right Side: Language, Icons & Profile */}
         <div className="flex items-center space-x-4">
-          {/* Settings Icon with Hover Dropdown */}
+          {/* Language Switcher */}
+          <div className="relative">
+            <button
+              className="flex items-center space-x-1 text-sm text-gray-700 hover:text-blue-600"
+              onClick={() => setIsLangOpen(!isLangOpen)}
+            >
+              <img
+                src={lang === "en" ? "/usa.png" : "/uae.png"}
+                alt={currentLang.label}
+                className="w-5 h-5 rounded-full"
+              />
+              <span className="ml-1">{currentLang.label}</span>
+              <FiChevronDown className="text-xs" />
+            </button>
+
+            {isLangOpen && (
+              <div
+                className="absolute right-0 mt-2 w-40 rounded-md border bg-white py-2 shadow-lg z-50"
+                onMouseLeave={() => setIsLangOpen(false)}
+              >
+                {LANGS.map((l) => (
+                  <button
+                    key={l.code}
+                    onClick={() => {
+                      setLang(l.code as "en" | "ar");
+                      setIsLangOpen(false);
+                    }}
+                    className={`w-full px-4 py-2 text-left text-sm hover:bg-gray-100 ${lang === l.code ? "text-purple-600 font-medium" : "text-gray-700"
+                      }`}
+                  >
+                    {l.code === "en" ? "🇺🇸 " : "🇸🇦 "}
+                    {l.label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Settings */}
           <div
             className="relative"
             onMouseEnter={() => setIsSettingsOpen(true)}
@@ -45,68 +126,102 @@ const Navbar = () => {
           >
             <FiSettings className="text-gray-600 text-xl cursor-pointer hover:text-blue-500" />
 
-            {/* Settings Dropdown Modal */}
             {isSettingsOpen && (
               <div className="absolute right-0 mt-2 w-56 bg-white shadow-lg rounded-lg py-2 border z-50">
-                <Link href="/settings/app" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                <Link
+                  href="/settings/app"
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >
                   Application Settings
                 </Link>
-                <Link href="/settings/notifications" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                <Link
+                  href="/settings/notifications"
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >
                   Notification Settings
                 </Link>
-                <Link href="/settings/organizations" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                <Link
+                  href="/settings/organizations"
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >
                   Organizations
                 </Link>
-                <Link href="/logs/employee" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                <Link
+                  href="/logs/employee"
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >
                   View Employee Logs
                 </Link>
-                <Link href="/logs/view" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                <Link
+                  href="/logs/view"
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >
                   View Logs
                 </Link>
-                <Link href="/announcement" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                <Link
+                  href="/announcement"
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >
                   Announcement
                 </Link>
-                <Link href="/license" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                <Link
+                  href="/license"
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >
                   License
                 </Link>
               </div>
             )}
           </div>
 
-          {/* Notification Icon */}
+          {/* Notifications */}
           <FiBell className="text-gray-600 text-xl cursor-pointer hover:text-blue-500" />
 
-          {/* Profile Picture with Hover Effect */}
-          <div
-            className="relative"
-            onMouseEnter={() => setIsProfileOpen(true)}
-            onMouseLeave={() => setIsProfileOpen(false)}
-          >
-            <img src="/user-avatar.png" alt="Profile" className="h-8 w-8 rounded-full border cursor-pointer" />
+          {/* Profile */}
+          <div className="relative">
+            <img
+              src="/user-avatar.png"
+              alt="Profile"
+              className="h-8 w-8 rounded-full border cursor-pointer"
+              onClick={() => setIsProfileOpen((prev) => !prev)} // Toggle on click
+            />
 
-            {/* Profile Dropdown Modal */}
             {isProfileOpen && (
               <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg py-2 border z-50">
                 <div className="px-4 py-2 border-b">
-                  <p className="text-sm font-medium text-gray-900">Janaki Alagappan</p>
+                  <p className="text-sm font-medium text-gray-900">
+                    Janaki Alagappan
+                  </p>
                   <p className="text-xs text-gray-500">Janaki@demoapp.com</p>
                 </div>
-                <Link href="/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                <Link
+                  href="/profile"
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >
                   Profile
                 </Link>
-                <Link href="/security" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                <Link
+                  href="/security"
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >
                   Security
                 </Link>
-                <Link href="/language" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                  Language
-                </Link>
-                <Link href="/appearance" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                <Link
+                  href="/appearance"
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >
                   Appearance
                 </Link>
-                <Link href="/support" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                <Link
+                  href="/support"
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >
                   Support
                 </Link>
-                <Link href="/logout" className="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100">
+                <Link
+                  href="/logout"
+                  className="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+                >
                   Log out
                 </Link>
               </div>
@@ -115,65 +230,142 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Secondary Navigation - Changes based on selected menu */}
+      {/* Secondary Navigation */}
       <div className="bg-gray-100 px-6 py-2 flex space-x-6 text-gray-600 text-sm">
         {activeMenu === "Dashboard" && (
           <>
-            <Link href="/self-statistics" className="hover:text-blue-500">Self Statistics</Link>
-            <Link href="/team-statistics" className="hover:text-blue-500">Team Statistics</Link>
-            <Link href="/activity-monitor" className="hover:text-blue-500">Activity Monitor</Link>
-            <Link href="/team-efficiency" className="hover:text-blue-500">Team Efficiency</Link>
-            <Link href="/geo-tracking" className="hover:text-blue-500">Geo Tracking</Link>
+            <Link href="/self-statistics" className="hover:text-blue-500">
+              Self Statistics
+            </Link>
+            <Link href="/team-statistics" className="hover:text-blue-500">
+              Team Statistics
+            </Link>
+            <Link href="/activity-monitor" className="hover:text-blue-500">
+              Activity Monitor
+            </Link>
+            <Link href="/team-efficiency" className="hover:text-blue-500">
+              Team Efficiency
+            </Link>
+            <Link href="/geo-tracking" className="hover:text-blue-500">
+              Geo Tracking
+            </Link>
           </>
         )}
 
         {activeMenu === "Master Data" && (
           <>
-            <Link href="/masterdata/regions" className={`hover:text-purple-500 ${pathname === "/masterdata/regions" ? "text-purple-500 font-bold" : "" }`}>Regions</Link>
-            <Link href="/masterdata/grades" className={`hover:text-purple-500 ${pathname === "/masterdata/grades" ? "text-purple-500 font-bold" : "" }`}>Grades</Link>
-            <Link href="/masterdata/designations" className={`hover:text-purple-500 ${pathname === "/masterdata/designations" ? "text-purple-500 font-bold" : "" }`}>Designations</Link>
-            <Link href="/masterdata/nationalities" className={`hover:text-purple-500 ${pathname === "/masterdata/nationalities" ? "text-purple-500 font-bold" : "" }`}>Nationalities</Link>
-            <Link href="/masterdata/organizations" className={`hover:text-purple-500 ${pathname === "/masterdata/organizations" ? "text-purple-500 font-bold" : "" }`}>Organizations</Link>
-            <Link href="/masterdata/organizationtypes" className={`hover:text-purple-500 ${pathname === "/masterdata/organizationtypes" ? "text-purple-500 font-bold" : "" }`}>Organization Types</Link>
-            <Link href="/masterdata/organizationStructure" className={`hover:text-purple-500 ${pathname === "/masterdata/organizationStructure" ? "text-purple-500 font-bold" : "" }`}>Organization Structure</Link>
+            <NavItem href="/masterdata/regions" pathname={pathname}>
+              Regions
+            </NavItem>
+            <NavItem href="/masterdata/grades" pathname={pathname}>
+              Grades
+            </NavItem>
+            <NavItem href="/masterdata/designations" pathname={pathname}>
+              Designations
+            </NavItem>
+            <NavItem href="/masterdata/nationalities" pathname={pathname}>
+              Nationalities
+            </NavItem>
+            <NavItem href="/masterdata/organizations" pathname={pathname}>
+              Organizations
+            </NavItem>
+            <NavItem href="/masterdata/organizationtypes" pathname={pathname}>
+              Organization Types
+            </NavItem>
+            <NavItem
+              href="/masterdata/organizationStructure"
+              pathname={pathname}
+            >
+              Organization Structure
+            </NavItem>
           </>
         )}
-                {activeMenu === "Employee Master" && (
+
+        {activeMenu === "Employee Master" && (
           <>
-            <Link href="/employeemaster/workflow" className={`hover:text-purple-500 ${pathname === "/employeemaster/workflow" ? "text-purple-500 font-bold" : "" }`}>Work Flow</Link>
-            <Link href="/employeemaster/employees" className={`hover:text-purple-500 ${pathname === "/employeemaster/employees" ? "text-purple-500 font-bold" : "" }`}>Employees</Link>
-            <Link href="/employeemaster/employeetypes" className={`hover:text-purple-500 ${pathname === "/employeemaster/employeetypes" ? "text-purple-500 font-bold" : "" }`}>Employee Types</Link>
-            <Link href="/employeemaster/employeegroups" className={`hover:text-purple-500 ${pathname === "/employeemaster/employeegroups" ? "text-purple-500 font-bold" : "" }`}>Employee Groups</Link>
+            <NavItem href="/employeemaster/employees" pathname={pathname}>
+              Employees
+            </NavItem>
+            <NavItem href="/employeemaster/employeetypes" pathname={pathname}>
+              Employee Types
+            </NavItem>
+            <NavItem href="/employeemaster/employeegroups" pathname={pathname}>
+              Employee Groups
+            </NavItem>
           </>
         )}
+
         {activeMenu === "Scheduling" && (
           <>
-            <Link href="/scheduling/reasons" className={`hover:text-purple-500 ${pathname === "/scheduling/reasons" ? "text-purple-500 font-bold" : "" }`}>Reasons</Link>
-            <Link href="/scheduling/holidays" className={`hover:text-purple-500 ${pathname === "/scheduling/holidays" ? "text-purple-500 font-bold" : "" }`}>Holidays</Link>
-            <Link href="/scheduling/ramadandates" className={`hover:text-purple-500 ${pathname === "/scheduling/ramadandates" ? "text-purple-500 font-bold" : "" }`}>Ramadan Dates</Link>
-            <Link href="/scheduling/scheduletypes" className={`hover:text-purple-500 ${pathname === "/scheduling/scheduletypes" ? "text-purple-500 font-bold" : "" }`}>Schedule Types</Link>
-            <Link href="/scheduling/monthlyroaster" className={`hover:text-purple-500 ${pathname === "/scheduling/monthlyroaster" ? "text-purple-500 font-bold" : "" }`}>Monthly Roaster</Link>
-            <Link href="/scheduling/weeklyschedule" className={`hover:text-purple-500 ${pathname === "/scheduling/weeklyschedule" ? "text-purple-500 font-bold" : "" }`}>Weekly Schedule</Link>         
+            <NavItem href="/scheduling/reasons" pathname={pathname}>
+              Reasons
+            </NavItem>
+            <NavItem href="/scheduling/holidays" pathname={pathname}>
+              Holidays
+            </NavItem>
+            <NavItem href="/scheduling/ramadandates" pathname={pathname}>
+              Ramadan Dates
+            </NavItem>
+            <NavItem href="/scheduling/scheduletypes" pathname={pathname}>
+              Schedule Types
+            </NavItem>
+            <NavItem href="/scheduling/monthlyroaster" pathname={pathname}>
+              Monthly Roaster
+            </NavItem>
+            <NavItem href="/scheduling/weeklyschedule" pathname={pathname}>
+              Weekly Schedule
+            </NavItem>
           </>
         )}
+
         {activeMenu === "WorkForce" && (
           <>
-            <Link href="/workforce/approvals" className={`hover:text-purple-500 ${pathname === "/workforce/approvals" ? "text-purple-500 font-bold" : "" }`}>Approvals</Link>
-            <Link href="/workforce/reports" className={`hover:text-purple-500 ${pathname === "/workforce/reports" ? "text-purple-500 font-bold" : "" }`}>Reports</Link>         
-
+            <NavItem href="/workforce/approvals" pathname={pathname}>
+              Approvals
+            </NavItem>
+            <NavItem href="/workforce/reports" pathname={pathname}>
+              Reports
+            </NavItem>
           </>
         )}
+
         {activeMenu === "Leave Tracker" && (
           <>
-            <Link href="/leavetracker/leaves" className={`hover:text-purple-500 ${pathname === "/leavetracker/leaves" ? "text-purple-500 font-bold" : "" }`}>Leaves</Link>
-            <Link href="/leavetracker/permissions" className={`hover:text-purple-500 ${pathname === "/leavetracker/permissions" ? "text-purple-500 font-bold" : "" }`}>Permissions</Link>
-            <Link href="/leavetracker/punches" className={`hover:text-purple-500 ${pathname === "/leavetracker/punches" ? "text-purple-500 font-bold" : "" }`}>Punches</Link>
+            <NavItem href="/leavetracker/leaves" pathname={pathname}>
+              Leaves
+            </NavItem>
+            <NavItem href="/leavetracker/permissions" pathname={pathname}>
+              Permissions
+            </NavItem>
+            <NavItem href="/leavetracker/punches" pathname={pathname}>
+              Punches
+            </NavItem>
+            <NavItem href="/leavetracker/workflow" pathname={pathname}>
+              Work Flow
+            </NavItem>
           </>
         )}
-
       </div>
     </nav>
   );
 };
+
+const NavItem = ({
+  href,
+  pathname,
+  children,
+}: {
+  href: string;
+  pathname: string | null;
+  children: React.ReactNode;
+}) => (
+  <Link
+    href={href}
+    className={`hover:text-purple-500 ${pathname === href ? "text-purple-500 font-bold" : ""
+      }`}
+  >
+    {children}
+  </Link>
+);
 
 export default Navbar;

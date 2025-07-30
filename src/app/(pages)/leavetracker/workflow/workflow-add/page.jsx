@@ -1,7 +1,10 @@
 "use client";
 import React from "react";
+import { useRouter } from "next/navigation";
 
 const WorkflowAddPage = () => {
+    const router = useRouter();
+  
   return (
     <div className="p-6 bg-white rounded-lg shadow">
       <h2 className="text-lg font-semibold mb-4">Generate the workflows</h2>
@@ -76,7 +79,13 @@ const WorkflowAddPage = () => {
 
       {/* Action Buttons */}
       <div className="flex justify-end mt-6 gap-2">
-        <button className="px-4 py-2 bg-gray-200 rounded-md">Cancel</button>
+            <button
+              type="button"
+              onClick={() => router.push("./")}
+              className="px-6 py-2 bg-gray-200 hover:bg-gray-100 text-sm"
+            >
+              Cancel
+            </button>
         <button className="px-4 py-2 bg-purple-600 text-white rounded-md">
           Save
         </button>
