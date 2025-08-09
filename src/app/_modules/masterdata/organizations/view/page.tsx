@@ -1,0 +1,181 @@
+"use client";
+import React, { useState } from "react";
+import { useTranslations } from "@/hooks/use-translations";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { useOrganizations } from "../index";
+import { IOrganization } from "../types";
+import { useOrganizationMutations } from "../hooks/useMutations";
+import {
+  OrganizationsTable,
+  OrganizationModal,
+  OrganizationHeader
+} from "../index";
+import { CustomPagination } from "@/components/common/dashboard/Pagination";
+
+export default function OrganizationsPage() {
+  const { t } = useTranslations();
+  const { createOrganization, updateOrganization, deleteOrganization, deleteOrganizations } = useOrganizationMutations();
+  const {
+    organizations,
+    selected,
+    search,
+    page,
+    pageCount,
+    pageSize,
+    pageSizeOptions,
+    allChecked,
+    setSearch,
+    setPage,
+    setPageSize,
+    selectOrganization,
+    selectAll,
+    isLoading,
+  } = useOrganizations();
+
+  const [modalState, setModalState] = useState<{
+    isOpen: boolean;
+    mode: "add" | "edit";
+    organization: IOrganization | null;
+  }>({
+    isOpen: false,
+    mode: "add",
+    organization: null,
+  });
+
+  const [deleteDialog, setDeleteDialog] = useState<{
+    open: boolean;
+    type: "single" | "bulk" | null;
+    id?: number;
+  }>({ open: false, type: null });
+
+  const handleAddOrganization = () => {
+    setModalState({
+      isOpen: true,
+      mode: "add",
+      organization: null,
+    });
+  };
+
+  const handleEditOrganization = (organization: IOrganization) => {
+    setModalState({
+      isOpen: true,
+      mode: "edit",
+      organization,
+    });
+  };
+
+  const handleCloseModal = () => {
+    setModalState({
+      isOpen: false,
+      mode: "add",
+      organization: null,
+    });
+  };
+
+  const handleSaveOrganization = async (data: Partial<IOrganization>) => {
+    if (modalState.mode === "add") {
+      createOrganization({ organizationData: data as IOrganization, onClose: handleCloseModal, search, pageSize });
+    } else if (modalState.mode === "edit" && modalState.organization) {
+      updateOrganization({ id: modalState.organization.organization_id, organizationData: data as IOrganization, onClose: handleCloseModal, search, pageSize });
+    }
+  };
+
+  const handleDeleteOrganization = (id: number) => {
+    setDeleteDialog({ open: true, type: "single", id });
+  };
+
+  const handleDeleteSelected = () => {
+    setDeleteDialog({ open: true, type: "bulk" });
+  };
+
+  const handleConfirmDelete = () => {
+    if (deleteDialog.type === "single" && deleteDialog.id !== undefined) {
+      deleteOrganization(deleteDialog.id);
+    } else if (deleteDialog.type === "bulk" && selected.length > 0) {
+      deleteOrganizations(selected);
+    }
+    setDeleteDialog({ open: false, type: null });
+  };
+
+  const handleCancelDelete = () => {
+    setDeleteDialog({ open: false, type: null });
+  };
+
+  return (
+    <div className="w-full h-full flex flex-col items-center justify-start">
+      <div className="w-full relative">
+        <div className="rounded-2xl border py-4 border-border bg-background/90">
+          <OrganizationHeader
+            search={search}
+            onSearchChange={setSearch}
+            onAddOrganization={handleAddOrganization}
+            selectedCount={selected.length}
+            onDeleteSelected={handleDeleteSelected}
+          />
+
+          <OrganizationsTable
+            organizations={organizations}
+            selected={selected}
+            page={page}
+            pageSize={pageSize}
+            allChecked={allChecked}
+            onSelectOrganization={selectOrganization}
+            onSelectAll={selectAll}
+            isLoading={isLoading}
+            onEditOrganization={handleEditOrganization}
+            onDeleteOrganization={handleDeleteOrganization}
+          />
+
+          <CustomPagination
+            currentPage={page}
+            totalPages={pageCount}
+            onPageChange={setPage}
+            pageSize={pageSize}
+            pageSizeOptions={pageSizeOptions}
+            onPageSizeChange={setPageSize}
+          />
+        </div>
+      </div>
+
+      <OrganizationModal
+        isOpen={modalState.isOpen}
+        onClose={handleCloseModal}
+        isLoading={isLoading}
+        onSave={handleSaveOrganization}
+        organization={modalState.organization}
+        mode={modalState.mode}
+      />
+      <Dialog open={deleteDialog.open} onOpenChange={open => !open && handleCancelDelete()}>
+        <DialogContent
+          className="p-0"
+        >
+          <DialogHeader
+            className="p-2"
+          >
+            <DialogTitle
+              className="mb-1 p-2"
+            >{t("common.confirm") + " " + t("common.delete")}</DialogTitle>
+            <div className="bg-black/5 p-4 rounded-lg dark:bg-white/5">
+              <DialogDescription>
+                {deleteDialog.type === "single"
+                  ? t("messages.confirm.delete")
+                  : t("messages.confirm.delete", { count: selected.length })}
+              </DialogDescription>
+              <div className="flex justify-end space-x-2 mt-4">
+                <Button variant="outline" onClick={handleCancelDelete}>{t("common.cancel")}</Button>
+                <Button variant="destructive" onClick={handleConfirmDelete}>{t("common.delete")}</Button>
+              </div>
+            </div>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}

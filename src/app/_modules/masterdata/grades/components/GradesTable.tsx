@@ -1,0 +1,66 @@
+"use client";
+
+import React from "react";
+import { useTranslations } from "@/hooks/use-translations";
+import { GenericTable, TableColumn } from "@/components/common/GenericTable";
+import { IGrade } from "../types";
+
+interface GradesTableProps {
+  grades: IGrade[];
+  selected: number[];
+  page: number;
+  pageSize: number;
+  allChecked: boolean;
+  onSelectGrade: (id: number) => void;
+  onSelectAll: () => void;
+  onEditGrade: (grade: IGrade) => void;
+  onDeleteGrade: (id: number) => void;
+  isLoading?: boolean;
+}
+
+export const GradesTable: React.FC<GradesTableProps> = ({
+  grades,
+  selected,
+  page,
+  pageSize,
+  allChecked,
+  onSelectGrade,
+  onSelectAll,
+  onEditGrade,
+  onDeleteGrade,
+  isLoading,
+}) => {
+  const { t } = useTranslations();
+
+  const columns: TableColumn<IGrade>[] = [
+    {
+      key: "name",
+      header: t("masterData.grades.gradeName"),
+      accessor: (item, isRTL) => isRTL ? item.grade_arb : item.grade_eng,
+    },
+    {
+      key: "code",
+      header: t("masterData.grades.gradeCode"),
+      accessor: (item) => item.grade_code,
+    },
+  ];
+
+  return (
+    <GenericTable
+      data={grades}
+      columns={columns}
+      selected={selected}
+      page={page}
+      pageSize={pageSize}
+      allChecked={allChecked}
+      getItemId={(item) => item.grade_id}
+      getItemDisplayName={(item, isRTL) => isRTL ? item.grade_arb || item.grade_eng || "" : item.grade_eng || item.grade_arb || ""}
+      onSelectItem={onSelectGrade}
+      onSelectAll={onSelectAll}
+      onEditItem={onEditGrade}
+      onDeleteItem={onDeleteGrade}
+      noDataMessage={t("masterData.grades.noGradesFound")}
+      isLoading={isLoading}
+    />
+  );
+};

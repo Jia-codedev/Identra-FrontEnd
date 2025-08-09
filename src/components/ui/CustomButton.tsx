@@ -1,5 +1,5 @@
 'use client';
-import React, { forwardRef } from 'react';
+import React from 'react';
 import { cn } from '@/lib/utils';
 
 const baseClasses = `w-auto h-10 flex items-center justify-center gap-2 border px-3 capitalize`;

@@ -1,0 +1,19 @@
+{
+  "welcome": "أهلاً وسهلاً",
+  "overview": "نظرة عامة",
+  "statistics": "الإحصائيات",
+  "recentActivity": "النشاط الأخير",
+  "quickActions": "الإجراءات السريعة",
+  "totalEmployees": "إجمالي الموظفين",
+  "activeEmployees": "الموظفون النشطون",
+  "inactiveEmployees": "الموظفون غير النشطين",
+  "totalDepartments": "إجمالي الأقسام",
+  "totalProjects": "إجمالي المشاريع",
+  "attendanceRate": "معدل الحضور",
+  "productivityScore": "درجة الإنتاجية",
+  "leaveRequests": "طلبات الإجازة",
+  "pendingApprovals": "الموافقات المعلقة",
+  "upcomingHolidays": "العطلات القادمة",
+  "birthdays": "أعياد الميلاد",
+  "anniversaries": "الذكرى السنوية"
+}

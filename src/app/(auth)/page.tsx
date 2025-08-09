@@ -1,9 +1,8 @@
-import CardComponent from "../(auth)/ui/CardComponent";
-
-export default function Home() {
+import AuthComponent from "../_modules/auth/login/view/page";
+export default async function Home() {
   return (
     <div className="w-full h-screen flex items-center justify-center bg-signin-frame bg-cover bg-no-repeat bg-center">
-      <CardComponent />
+      <AuthComponent />
     </div>
   );
 }
