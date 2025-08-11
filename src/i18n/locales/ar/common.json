@@ -71,6 +71,7 @@
   "of": "من",
   "saving": "جاري الحفظ...",
   "saveError": "فشل في الحفظ",
+  "errorLoading": "خطأ في تحميل البيانات",
   "confirmDelete": "تأكيد الحذف",
   "confirmDeleteDescription": "هل أنت متأكد من حذف هذا العنصر؟ لا يمكن التراجع عن هذا الإجراء.",
   "searchReportingPerson": "البحث عن الشخص المسؤول",
@@ -82,6 +83,13 @@
   "year": "السنة",
   "month": "الشهر",
   "days": "الأيام",
+  "organization": "المؤسسة",
+  "location": "الموقع",
+  "minutes": "دقائق",
+  "activeFilters": "المرشحات النشطة",
+  "clearFilters": "مسح المرشحات",
+  "clearAll": "مسح الكل",
+  "org": "المؤسسة",
   "months": {
     "january": "يناير",
     "february": "فبراير",
@@ -134,7 +142,11 @@
       "created": "تم إنشاء البيانات بنجاح",
       "create": "تم الإنشاء بنجاح",
       "update": "تم التحديث بنجاح",
-      "delete": "تم الحذف بنجاح"
+      "delete": "تم الحذف بنجاح",
+      "scheduleCreated": "تم إنشاء الجدول بنجاح",
+      "scheduleUpdated": "تم تحديث الجدول بنجاح",
+      "scheduleDeleted": "تم حذف الجدول بنجاح",
+      "schedulesDeleted": "تم حذف {count} جداول بنجاح"
     },
     "error": {
       "general": "حدث خطأ. يرجى المحاولة مرة أخرى.",
@@ -146,7 +158,11 @@
       "server": "خطأ في الخادم. يرجى المحاولة لاحقاً.",
       "create": "فشل في الإنشاء",
       "update": "فشل في التحديث", 
-      "delete": "فشل في الحذف"
+      "delete": "فشل في الحذف",
+      "scheduleCreateFailed": "فشل في إنشاء الجدول",
+      "scheduleUpdateFailed": "فشل في تحديث الجدول",
+      "scheduleDeleteFailed": "فشل في حذف الجدول",
+      "schedulesDeleteFailed": "فشل في حذف الجداول"
     },
     "confirm": {
       "delete": "هل أنت متأكد من حذف هذا العنصر؟",
@@ -173,5 +189,15 @@
   "switchToEnglish": "التبديل إلى الإنجليزية",
   "notAvailable": "غير متوفر",
   "level": "م",
-  "pickDate": "اختر تاريخاً"
+  "pickDate": "اختر تاريخاً",
+  "startDate": "تاريخ البداية",
+  "endDate": "تاريخ النهاية",
+  "selectDate": "اختر التاريخ",
+  "deleteSuccess": "تم الحذف بنجاح",
+  "deleteError": "فشل في الحذف",
+  "updateSuccess": "تم التحديث بنجاح",
+  "updateError": "فشل في التحديث",
+  "createSuccess": "تم الإنشاء بنجاح",
+  "createError": "فشل في الإنشاء",
+  "selectItemsToDelete": "يرجى اختيار العناصر المراد حذفها"
 }

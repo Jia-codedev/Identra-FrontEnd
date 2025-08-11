@@ -39,6 +39,15 @@ class OrganizationsApi {
   getOrganizationStructure() {
     return apiClient.get("/organization/structure");
   }
+
+  // Dropdown specific endpoint
+  getOrganizationsForDropdown(params?: {
+    offset?: number;
+    limit?: number;
+    name?: string;
+  }) {
+    return apiClient.get("/organization/", { params });
+  }
 }
 const organizationsApi = new OrganizationsApi();
 export default organizationsApi;

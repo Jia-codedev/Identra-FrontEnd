@@ -1,9 +1,5 @@
-import React from 'react'
+import ScheduleTemplatesPage from "@/app/_modules/scheduling/scheduletypes/view/page";
 
-function page() {
-  return (
-    <div>page</div>
-  )
+export default function ScheduleTemplatesPageWrapper() {
+  return <ScheduleTemplatesPage />
 }
-
-export default page

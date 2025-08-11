@@ -20,6 +20,15 @@ class EmployeeGroupApi {
     });
   }
 
+  getEmployeeGroupsForDropdown(search?: string) {
+    const params = new URLSearchParams();
+    if (search && search.trim() !== '') {
+      params.append('search', search.trim());
+    }
+    
+    return apiClient.get(`/employeeGroup/get?${params.toString()}`);
+  }
+
   getEmployeeGroupById(id: number) {
     return apiClient.get(`/employeeGroup/get/${id}`);
   }

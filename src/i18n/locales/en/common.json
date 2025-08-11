@@ -71,6 +71,7 @@
   "of": "of",
   "saving": "Saving...",
   "saveError": "Failed to save",
+  "errorLoading": "Error loading data",
   "confirmDelete": "Confirm Delete",
   "confirmDeleteDescription": "Are you sure you want to delete this item? This action cannot be undone.",
   "noResults": "No results found",
@@ -81,6 +82,13 @@
   "year": "Year",
   "days": "Days",
   "month": "Month",
+  "organization": "Organization",
+  "location": "Location",
+  "minutes": "minutes",
+  "activeFilters": "Active Filters",
+  "clearFilters": "Clear Filters",
+  "clearAll": "Clear All",
+  "org": "Org",
   "months": {
     "january": "January",
     "february": "February",
@@ -133,7 +141,11 @@
       "created": "Data created successfully",
       "create": "Created successfully",
       "update": "Updated successfully",
-      "delete": "Deleted successfully"
+      "delete": "Deleted successfully",
+      "scheduleCreated": "Schedule created successfully",
+      "scheduleUpdated": "Schedule updated successfully",
+      "scheduleDeleted": "Schedule deleted successfully",
+      "schedulesDeleted": "{count} schedules deleted successfully"
     },
     "error": {
       "general": "An error occurred. Please try again.",
@@ -145,7 +157,11 @@
       "server": "Server error. Please try again later.",
       "create": "Failed to create",
       "update": "Failed to update", 
-      "delete": "Failed to delete"
+      "delete": "Failed to delete",
+      "scheduleCreateFailed": "Failed to create schedule",
+      "scheduleUpdateFailed": "Failed to update schedule",
+      "scheduleDeleteFailed": "Failed to delete schedule",
+      "schedulesDeleteFailed": "Failed to delete schedules"
     },
     "confirm": {
       "delete": "Are you sure you want to delete this item?",
@@ -172,5 +188,15 @@
   "switchToEnglish": "Switch to English",
   "notAvailable": "N/A",
   "level": "L",
-  "pickDate": "Pick a date"
+  "pickDate": "Pick a date",
+  "startDate": "Start Date",
+  "endDate": "End Date",
+  "selectDate": "Select Date",
+  "deleteSuccess": "Deleted successfully",
+  "deleteError": "Failed to delete",
+  "updateSuccess": "Updated successfully",
+  "updateError": "Failed to update",
+  "createSuccess": "Created successfully",
+  "createError": "Failed to create",
+  "selectItemsToDelete": "Please select items to delete"
 }
