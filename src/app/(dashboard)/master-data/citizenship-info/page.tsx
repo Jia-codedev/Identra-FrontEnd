@@ -1,4 +1,4 @@
-import NationalitiesPage from '@/app/_modules/masterdata/nationalities/view/page'
+import NationalitiesPage from '@/modules/masterdata/nationalities/view/page'
 import React from 'react'
 
 function page() {

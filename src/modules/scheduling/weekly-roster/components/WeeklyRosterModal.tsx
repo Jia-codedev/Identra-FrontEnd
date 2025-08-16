@@ -36,7 +36,7 @@ import {
 } from "@/components/ui/popover";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { OptimizedParentScheduleSelect } from "@/app/_modules/scheduling/scheduletypes/components/OptimizedParentScheduleSelect";
+import { OptimizedParentScheduleSelect } from "@/modules/scheduling/scheduletypes/components/OptimizedParentScheduleSelect";
 import {
   IGroupSchedule,
   ICreateGroupSchedule,

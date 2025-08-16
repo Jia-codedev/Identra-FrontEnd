@@ -1,4 +1,4 @@
-import GradesPage from '@/app/_modules/masterdata/grades/view/page'
+import GradesPage from '@/modules/masterdata/grades/view/page'
 import React from 'react'
 
 function page() {

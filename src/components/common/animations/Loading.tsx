@@ -1,11 +1,20 @@
 import React from "react";
-import { motion } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
 
 // Usage notes:
 // 1) Recommended: Import the SVG as a React component using SVGR (create-react-app, Vite + svgr, Next.js with @svgr/webpack).
 //    Example: `import { ReactComponent as LoaderSVG } from "./Group 829.svg";`
 //    Make sure paths you want to animate use `stroke` (not `fill`) and set `stroke="currentColor"` or `fill="currentColor"` where appropriate.
 // 2) Fallback: If you cannot import SVG as ReactComponent, pass the SVG URL to the `src` prop — the component will animate the outer container and a subtle shimmer.
+
+interface SVGLoaderProps {
+  SVGComponent?: React.ComponentType<React.SVGProps<SVGSVGElement>> | null;
+  src?: string | null;
+  size?: number;
+  loop?: boolean;
+  speed?: number;
+  className?: string;
+}
 
 export default function SVGLoader({
   // either pass a React component (recommended) or an image URL
@@ -15,9 +24,9 @@ export default function SVGLoader({
   loop = true,
   speed = 1, // multiplier for animation durations
   className = "",
-}) {
+}: SVGLoaderProps) {
   // animation variants
-  const container = {
+  const container: Variants = {
     animate: {
       rotate: [0, 6, -6, 0],
       scale: [1, 1.06, 0.98, 1],
@@ -25,30 +34,18 @@ export default function SVGLoader({
         duration: 1.6 / speed,
         ease: "easeInOut",
         repeat: loop ? Infinity : 0,
-        repeatType: "mirror" as const,
+        repeatType: "mirror",
       },
     },
   };
 
-  const float = {
+  const float: Variants = {
     animate: {
       y: [0, -6, 0],
       transition: {
         duration: 1.8 / speed,
         repeat: loop ? Infinity : 0,
         ease: "easeInOut",
-      },
-    },
-  };
-
-  const shimmer = {
-    initial: { x: "-100%" },
-    animate: {
-      x: ["-100%", "100%"],
-      transition: {
-        duration: 1.2 / speed,
-        repeat: loop ? Infinity : 0,
-        ease: "linear",
       },
     },
   };
@@ -73,8 +70,13 @@ export default function SVGLoader({
 
           {/* subtle shimmer overlay using absolute positioned gradient */}
           <motion.div
-            initial={shimmer.initial}
-            animate={shimmer.animate}
+            initial={{ x: "-100%" }}
+            animate={{ x: ["-100%", "100%"] }}
+            transition={{
+              duration: 1.2 / speed,
+              repeat: loop ? Infinity : 0,
+              ease: "linear",
+            }}
             style={{
               position: "absolute",
               width: size,
@@ -106,8 +108,13 @@ export default function SVGLoader({
           />
 
           <motion.div
-            initial={shimmer.initial}
-            animate={shimmer.animate}
+            initial={{ x: "-100%" }}
+            animate={{ x: ["-100%", "100%"] }}
+            transition={{
+              duration: 1.2 / speed,
+              repeat: loop ? Infinity : 0,
+              ease: "linear",
+            }}
             style={{
               position: "absolute",
               inset: 0,

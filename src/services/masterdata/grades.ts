@@ -1,4 +1,4 @@
-import { IGrade } from "@/app/_modules/masterdata/grades/types";
+import { IGrade } from "@/modules/masterdata/grades/types";
 import apiClient from "@/configs/api/Axios";
 
 class GradesApi {

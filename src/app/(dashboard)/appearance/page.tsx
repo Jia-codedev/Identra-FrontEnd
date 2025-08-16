@@ -1,4 +1,4 @@
-import AppearancePage from '@/app/_modules/appearance/view/page'
+import AppearancePage from '@/modules/appearance/view/page'
 import React from 'react'
 
 function page() {

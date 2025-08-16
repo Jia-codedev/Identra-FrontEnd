@@ -1,4 +1,4 @@
-import Dashboard from "@/app/_modules/dashboard/statistics/view/page";
+import Dashboard from "@/modules/dashboard/statistics/view/page";
 import React from "react";
 
 function page() {

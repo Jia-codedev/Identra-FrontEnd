@@ -1,5 +1,5 @@
 "use client";
-import WeeklyRosterPage from "@/app/_modules/scheduling/weekly-roster/page";
+import WeeklyRosterPage from "@/modules/scheduling/weekly-roster/page";
 import React from "react";
 
 function page() {

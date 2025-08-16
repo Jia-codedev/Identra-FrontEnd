@@ -27,7 +27,26 @@ export const LogoutConfirmation: React.FC<LogoutConfirmationProps> = ({
   const { logout } = useAuth();
 
   const handleLogout = async () => {
+    // Call the logout logic (if any server-side/session logic)
     await logout();
+
+    // Clear session storage
+    if (typeof window !== "undefined") {
+      sessionStorage.clear();
+
+      // Delete all cookies
+      document.cookie.split(";").forEach((c) => {
+        document.cookie = c
+          .replace(/^ +/, "")
+          .replace(/=.*/, "=;expires=" + new Date(0).toUTCString() + ";path=/");
+      });
+    }
+
+    // Route to root
+    if (typeof window !== "undefined") {
+      window.location.href = "/";
+    }
+
     onClose();
   };
 
@@ -44,7 +63,7 @@ export const LogoutConfirmation: React.FC<LogoutConfirmationProps> = ({
           <AlertDialogCancel onClick={onClose}>
             {t("common.cancel")}
           </AlertDialogCancel>
-          <AlertDialogAction 
+          <AlertDialogAction
             onClick={handleLogout}
             className="bg-red-600 hover:bg-red-700"
           >

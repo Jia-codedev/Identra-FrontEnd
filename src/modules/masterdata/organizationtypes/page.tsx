@@ -1,10 +1,10 @@
 "use client";
 import React, { useState } from 'react';
-import { useOrganizationTypes } from '@/app/_modules/masterdata/organizationtypes/hooks/useOrganizationTypes';
-import { OrganizationTypesHeader } from '@/app/_modules/masterdata/organizationtypes/components/OrganizationTypesHeader';
-import { OrganizationTypesTable } from '@/app/_modules/masterdata/organizationtypes/components/OrganizationTypesTable';
-import { OrganizationTypeModal } from '@/app/_modules/masterdata/organizationtypes/components/OrganizationTypeModal';
-import { IOrganizationType } from '@/app/_modules/masterdata/organizationtypes/types';
+import { useOrganizationTypes } from '@/modules/masterdata/organizationtypes/hooks/useOrganizationTypes';
+import { OrganizationTypesHeader } from '@/modules/masterdata/organizationtypes/components/OrganizationTypesHeader';
+import { OrganizationTypesTable } from '@/modules/masterdata/organizationtypes/components/OrganizationTypesTable';
+import { OrganizationTypeModal } from '@/modules/masterdata/organizationtypes/components/OrganizationTypeModal';
+import { IOrganizationType } from '@/modules/masterdata/organizationtypes/types';
 import { useTranslations } from '@/hooks/use-translations';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { CustomPagination } from '@/components/common/dashboard/Pagination';

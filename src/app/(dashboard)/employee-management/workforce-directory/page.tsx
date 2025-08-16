@@ -1,4 +1,4 @@
-import EmployeePage from "@/app/_modules/employeemaster/employee/view/page";
+import EmployeePage from "@/modules/employeemaster/employee/view/page";
 import React from "react";
 
 function page() {

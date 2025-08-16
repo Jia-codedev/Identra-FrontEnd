@@ -1,4 +1,4 @@
-import { IEmployeeGroup } from "@/app/_modules/employeemaster/employeeGroup/types";
+import { IEmployeeGroup } from "@/modules/employeemaster/employeeGroup/types";
 import apiClient from "@/configs/api/Axios";
 
 class EmployeeGroupApi {
@@ -21,12 +21,11 @@ class EmployeeGroupApi {
   }
 
   getEmployeeGroupsForDropdown(search?: string) {
-    const params = new URLSearchParams();
-    if (search && search.trim() !== '') {
-      params.append('search', search.trim());
-    }
-    
-    return apiClient.get(`/employeeGroup/get?${params.toString()}`);
+    return apiClient.get(`/employeeGroup`, {
+      params: {
+        name: search && search.trim() !== "" ? search.trim() : undefined,
+      },
+    });
   }
 
   getEmployeeGroupById(id: number) {

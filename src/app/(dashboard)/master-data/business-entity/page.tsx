@@ -1,4 +1,4 @@
-import { OrganizationsPage } from '@/app/_modules/masterdata/organizations'
+import { OrganizationsPage } from '@/modules/masterdata/organizations'
 import React from 'react'
 
 function page() {

@@ -1,4 +1,4 @@
-import { CreateHolidayRequest, UpdateHolidayRequest } from "@/app/_modules/scheduling/holidays/types";
+import { CreateHolidayRequest, UpdateHolidayRequest } from "@/modules/scheduling/holidays/types";
 import apiClient from "@/configs/api/Axios";
 
 class HolidaysApi {

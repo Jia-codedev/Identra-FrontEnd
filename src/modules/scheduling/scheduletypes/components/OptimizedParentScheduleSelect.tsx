@@ -91,6 +91,7 @@ export const OptimizedParentScheduleSelect: React.FC<OptimizedParentScheduleSele
   });
 
   let schedules: Schedule[] = schedulesData?.data?.data || [];
+  const [selectedFallback, setSelectedFallback] = useState<Schedule | undefined>(undefined);
   
   // Filter schedules based on search and exclude current schedule
   if (debouncedSearch) {
@@ -109,6 +110,27 @@ export const OptimizedParentScheduleSelect: React.FC<OptimizedParentScheduleSele
 
   // Find selected schedule
   const selectedSchedule = schedules.find(sch => sch.schedule_id === value);
+
+  // If a value exists but it's not in the current list (due to filters/limits), fetch it by ID
+  useEffect(() => {
+    const loadSelectedIfMissing = async () => {
+      if (value && !selectedSchedule) {
+        try {
+          const res = await schedulesApi.getScheduleById(value);
+          const sch: Schedule | undefined = res?.data?.data;
+          if (sch) setSelectedFallback(sch);
+        } catch (_) {
+          // ignore
+        }
+      } else if (!value) {
+        setSelectedFallback(undefined);
+      }
+    };
+    loadSelectedIfMissing();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value, selectedSchedule]);
+
+  const effectiveSelected = selectedSchedule ?? selectedFallback;
 
   const handleSelect = (schId: string) => {
     const id = schId === 'none' ? undefined : parseInt(schId, 10);
@@ -149,13 +171,13 @@ export const OptimizedParentScheduleSelect: React.FC<OptimizedParentScheduleSele
           >
             <div className="flex items-center gap-2 truncate">
               <Clock className="h-4 w-4 shrink-0" />
-              {selectedSchedule ? (
+              {effectiveSelected ? (
                 <div className="flex items-center gap-2 truncate">
-                  <span className="truncate">{selectedSchedule.schedule_code}</span>
-                  {selectedSchedule.sch_color && (
+          <span className="truncate">{effectiveSelected?.schedule_code}</span>
+          {effectiveSelected?.sch_color && (
                     <div 
                       className="w-3 h-3 rounded-full shrink-0"
-                      style={{ backgroundColor: selectedSchedule.sch_color }}
+            style={{ backgroundColor: effectiveSelected.sch_color }}
                     />
                   )}
                 </div>

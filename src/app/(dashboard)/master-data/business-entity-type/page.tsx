@@ -1,4 +1,4 @@
-import OrganizationTypesPage from '@/app/_modules/masterdata/organizationtypes/page'
+import OrganizationTypesPage from '@/modules/masterdata/organizationtypes/page'
 import React from 'react'
 
 function page() {
