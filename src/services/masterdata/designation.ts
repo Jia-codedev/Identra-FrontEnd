@@ -1,4 +1,4 @@
-import { IDesignation } from "@/app/_modules/masterdata/designations/types";
+import { IDesignation } from "@/modules/masterdata/designations/types";
 import apiClient from "@/configs/api/Axios";
 
 class DesignationsApi {

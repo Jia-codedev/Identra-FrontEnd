@@ -48,7 +48,7 @@ regions/
 
 ### **Basic Implementation**
 ```tsx
-import { RegionsPage } from '@/app/_modules/masterdata/regions';
+import { RegionsPage } from '@/modules/masterdata/regions';
 
 export default function MyPage() {
   return <RegionsPage />;
@@ -61,7 +61,7 @@ import {
   RegionsHeader, 
   RegionsTable, 
   useRegions 
-} from '@/app/_modules/masterdata/regions';
+} from '@/modules/masterdata/regions';
 
 function CustomRegionsPage() {
   const regionsHook = useRegions();
@@ -77,7 +77,7 @@ function CustomRegionsPage() {
 
 ### **Using the Hook**
 ```tsx
-import { useRegions } from '@/app/_modules/masterdata/regions';
+import { useRegions } from '@/modules/masterdata/regions';
 
 function MyComponent() {
   const {
@@ -199,7 +199,7 @@ interface Region {
 ### **Component Testing**
 ```tsx
 import { render, screen } from '@testing-library/react';
-import { RegionsPage } from '@/app/_modules/masterdata/regions';
+import { RegionsPage } from '@/modules/masterdata/regions';
 
 test('renders regions page', () => {
   render(<RegionsPage />);
@@ -210,7 +210,7 @@ test('renders regions page', () => {
 ### **Hook Testing**
 ```tsx
 import { renderHook, act } from '@testing-library/react';
-import { useRegions } from '@/app/_modules/masterdata/regions';
+import { useRegions } from '@/modules/masterdata/regions';
 
 test('useRegions hook', () => {
   const { result } = renderHook(() => useRegions());

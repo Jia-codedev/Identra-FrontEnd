@@ -1,4 +1,4 @@
-import { IEmployeeGroup } from "@/app/_modules/employeemaster/employeeGroup/types";
+import { IEmployeeGroup } from "@/modules/employeemaster/employeeGroup/types";
 import apiClient from "@/configs/api/Axios";
 
 class EmployeeGroupApi {

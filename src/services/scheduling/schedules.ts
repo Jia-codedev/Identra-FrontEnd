@@ -1,4 +1,4 @@
-import { CreateScheduleRequest, UpdateScheduleRequest } from "@/app/_modules/scheduling/scheduletypes/types";
+import { CreateScheduleRequest, UpdateScheduleRequest } from "@/modules/scheduling/scheduletypes/types";
 import apiClient from "@/configs/api/Axios";
 
 class SchedulesApi {

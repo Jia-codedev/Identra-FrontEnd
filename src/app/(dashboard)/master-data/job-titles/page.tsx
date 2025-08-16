@@ -1,4 +1,4 @@
-import DesignationsPage from '@/app/_modules/masterdata/designations/view/page'
+import DesignationsPage from '@/modules/masterdata/designations/view/page'
 import React from 'react'
 
 function page() {

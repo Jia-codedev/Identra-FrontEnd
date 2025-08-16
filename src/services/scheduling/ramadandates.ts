@@ -1,4 +1,4 @@
-import { CreateRamadanDateRequest, UpdateRamadanDateRequest } from "@/app/_modules/scheduling/ramadandates/types";
+import { CreateRamadanDateRequest, UpdateRamadanDateRequest } from "@/modules/scheduling/ramadandates/types";
 import apiClient from "@/configs/api/Axios";
 
 class RamadanDatesApi {

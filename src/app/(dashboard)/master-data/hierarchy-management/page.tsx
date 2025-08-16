@@ -1,5 +1,5 @@
 import React from 'react'
-import OrganizationStructurePage from '@/app/_modules/masterdata/organizations/structure/page'
+import OrganizationStructurePage from '@/modules/masterdata/organizations/structure/page'
 
 function page() {
   return (

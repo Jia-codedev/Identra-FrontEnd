@@ -1,4 +1,4 @@
-import { INationality } from "@/app/_modules/masterdata/nationalities/types";
+import { INationality } from "@/modules/masterdata/nationalities/types";
 import apiClient from "@/configs/api/Axios";
 
 class NationalitiesApi {

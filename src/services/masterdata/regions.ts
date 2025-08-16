@@ -1,4 +1,4 @@
-import { IRegion } from "@/app/_modules/masterdata/regions";
+import { IRegion } from "@/modules/masterdata/regions";
 import apiClient from "@/configs/api/Axios";
 
 class RegionsApi {
