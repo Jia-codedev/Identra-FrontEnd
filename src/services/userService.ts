@@ -5,27 +5,12 @@ import tokenService from "@/configs/api/jwtToken";
 class UserService {
   async restoreUserFromToken(): Promise<boolean> {
     try {
-      const token = 
-        document.cookie
-          .split('; ')
-          .find(row => row.startsWith('_authToken='))
-          ?.split('=')[1] ||
-        sessionStorage.getItem('authToken');
-
-      if (!token) {
-        console.log("No token found, cannot restore user");
-        return false;
-      }
-
-      const { id: userId, role } = await tokenService.verifyToken(token);
-      console.log("Token verified, user ID:", userId, "role:", role);
-
-      const response = await apiClient.get(`/secuser/get-by-emp-id/${userId}`);
-      
+      // Instead of checking for a token in JS, always try to fetch user data from backend
+      // The backend will use its own cookies for authentication
+      const response = await apiClient.get(`/secuser/me`); // You may need to implement this endpoint
       if (response.status === 200 && response.data.success) {
         const userData = response.data.data;
         const employeeData = userData.employee_master;
-        
         const user: IUser = {
           employeename: {
             firsteng: employeeData?.firstname_eng || "",
@@ -33,23 +18,19 @@ class UserService {
             firstarb: employeeData?.firstname_arb || "",
             lastarb: employeeData?.lastname_arb || "",
           },
-          employeenumber: employeeData?.employee_id || userId,
+          employeenumber: employeeData?.employee_id,
           scheduledgeocoordinates: employeeData?.scheduled_geo_coordinates || null,
           radius: employeeData?.radius || 0,
           email: employeeData?.email || "",
           isGeofence: employeeData?.geofence_flag || false,
-          role: role,
+          role: userData.role || "Employee",
         };
-
         useUserStore.getState().setUser(user);
-        console.log("User data restored successfully:", user);
         return true;
       } else {
-        console.log("Failed to fetch user data from backend");
         return false;
       }
     } catch (error) {
-      console.error("Error restoring user from token:", error);
       return false;
     }
   }
