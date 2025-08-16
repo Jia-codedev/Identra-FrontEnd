@@ -103,7 +103,7 @@ export interface IUpdateGroupSchedule {
 }
 
 class GroupSchedulesApi {
-  private baseUrl = '/group-schedules';
+  private baseUrl = '/groupSchedule';
 
   // Get all group schedules
   async getAll() {

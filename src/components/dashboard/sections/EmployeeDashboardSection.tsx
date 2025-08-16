@@ -160,7 +160,7 @@ const EmployeeDashboardSection: React.FC = () => {
                     <div className="lg:col-span-2">
                         <div className="grid grid-cols-2 gap-3 h-full">
                             <StatCard
-                                title="Today's Progress"
+                                title="Today&apos;s Progress"
                                 value={Math.round((workedHours / targetHours) * 100)}
                                 suffix="%"
                                 subtitle="Target completion"
@@ -194,7 +194,7 @@ const EmployeeDashboardSection: React.FC = () => {
                                 className="h-full"
                             />
                             <InfoCard
-                                title="Today's Mood"
+                                title="Today&apos;s Mood"
                                 content={
                                     <div className="space-y-1">
                                         <div className="text-2xl">😊</div>
@@ -214,7 +214,7 @@ const EmployeeDashboardSection: React.FC = () => {
             <motion.div key="attendance-overview" variants={itemVariants}>
                 <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
                     <Clock className="w-5 h-5 text-primary" />
-                    Today's Overview
+                    Today&apos;s Overview
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div className="col-span-1">
