@@ -60,7 +60,6 @@ export const useNavigation = () => {
       label: t("common.employeeMaster"),
       icon: FiUsers,
       secondary: [
-        { label: t("navigation.workFlow"), href: "/employee-management/process-automation" },
         { label: t("navigation.employees"), href: "/employee-management/workforce-directory" },
         {
           label: t("navigation.employeeTypes"),
@@ -77,7 +76,7 @@ export const useNavigation = () => {
       label: t("common.scheduling"),
       icon: FiCalendar,
       secondary: [
-        { label: t("navigation.reasons"), href: "/roster-management/reasons" },
+        // { label: t("navigation.reasons"), href: "/roster-management/reasons" },
         { label: t("navigation.holidays"), href: "/roster-management/holiday-calendar" },
         {
           label: t("navigation.ramadanDates"),
@@ -102,6 +101,7 @@ export const useNavigation = () => {
       label: t("common.workforce"),
       icon: FiBriefcase,
       secondary: [
+        { label: t("navigation.workFlow"), href: "/workforce/process-automation" },
         { label: t("navigation.approvals"), href: "/workforce/request-authorizations" },
         { label: t("navigation.reports"), href: "/workforce/analytics-reports" },
       ],
