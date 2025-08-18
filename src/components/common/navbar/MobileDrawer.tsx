@@ -35,7 +35,7 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({
 }) => {
   const pathname = usePathname();
   const { isRTL } = useLanguage();
-  const { NAV_LINKS, PROFILE_LINKS, SETTINGS_LINKS } = useNavigation();
+  const { NAV_LINKS, PROFILE_LINKS } = useNavigation();
   const [showLogoutDialog, setShowLogoutDialog] = useState(false);
 
   const handleLinkClick = (href: string) => {
@@ -173,7 +173,7 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({
               ))}
             </div>
 
-            {/* Settings Links */}
+            {/* Settings Links
             <div className="flex flex-col pt-2 border-t border-border space-y-1">
               {SETTINGS_LINKS.map((item) => (
                 <Link
@@ -185,7 +185,7 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({
                   {item.label}
                 </Link>
               ))}
-            </div>
+            </div> */}
 
             {/* Language Switcher */}
             <div className="flex flex-col pt-2 border-t border-border">

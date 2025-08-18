@@ -29,7 +29,7 @@ interface UserProfileSectionProps {
 export const UserProfileSection: React.FC<UserProfileSectionProps> = ({
   user,
 }) => {
-  const { PROFILE_LINKS, SETTINGS_LINKS } = useNavigation();
+  const { PROFILE_LINKS } = useNavigation();
   const [showLogoutDialog, setShowLogoutDialog] = useState(false);
 
   const handleMenuClick = (href: string) => {
@@ -51,7 +51,7 @@ export const UserProfileSection: React.FC<UserProfileSectionProps> = ({
       </div>
 
       {/* Settings Dropdown */}
-      <DropdownMenu>
+      {/* <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button className="p-1 rounded-md hover:bg-muted transition-colors">
             <FiSettings className="text-xl cursor-pointer text-muted-foreground hover:text-primary transition-colors" />

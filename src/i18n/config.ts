@@ -32,7 +32,8 @@ export default getRequestConfig(async ({ locale }) => {
       import(`./locales/${locale}/settings.json`),
       import(`./locales/${locale}/validation.json`),
       import(`./locales/${locale}/chatbot.json`),
-      import(`./locales/${locale}/toast.json`)
+      import(`./locales/${locale}/toast.json`),
+      import(`./locales/${locale}/workflow.json`)
     ]);
 
     return {

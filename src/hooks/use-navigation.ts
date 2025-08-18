@@ -130,22 +130,22 @@ export const useNavigation = () => {
     { label: t("common.logout"), href: "/sign-out", className: "text-red-600" },
   ];
 
-  const SETTINGS_LINKS = [
-    { label: t("settings.applicationSettings"), href: "/settings/app-settings" },
-    {
-      label: t("settings.notificationSettings"),
-      href: "/settings/alert-preferences",
-    },
-    { label: t("navigation.organizations"), href: "/settings/business-entity" },
-    { label: t("settings.viewEmployeeLogs"), href: "/logs/employee-audit-trail" },
-    { label: t("settings.viewLogs"), href: "/logs/system-logs" },
-    { label: t("settings.announcement"), href: "/bulletins" },
-    { label: t("settings.license"), href: "/license-management" },
-  ];
+  // const SETTINGS_LINKS = [
+  //   { label: t("settings.applicationSettings"), href: "/settings/app-settings" },
+  //   {
+  //     label: t("settings.notificationSettings"),
+  //     href: "/settings/alert-preferences",
+  //   },
+  //   { label: t("navigation.organizations"), href: "/settings/business-entity" },
+  //   { label: t("settings.viewEmployeeLogs"), href: "/logs/employee-audit-trail" },
+  //   { label: t("settings.viewLogs"), href: "/logs/system-logs" },
+  //   { label: t("settings.announcement"), href: "/bulletins" },
+  //   { label: t("settings.license"), href: "/license-management" },
+  // ];
 
   return {
     NAV_LINKS,
     PROFILE_LINKS,
-    SETTINGS_LINKS,
+    // SETTINGS_LINKS,
   };
 };

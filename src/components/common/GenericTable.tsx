@@ -40,6 +40,8 @@ interface GenericTableProps<T> {
   onDeleteItem: (id: number) => void;
   noDataMessage: string;
   isLoading?: boolean;
+  onPageChange: (page: number) => void;
+  onPageSizeChange: (size: number) => void;
 }
 
 export function GenericTable<T>({
@@ -57,6 +59,8 @@ export function GenericTable<T>({
   onDeleteItem,
   noDataMessage,
   isLoading = false,
+  onPageChange,
+  onPageSizeChange,
 }: GenericTableProps<T>) {
   const { t } = useTranslations();
   const { isRTL } = useLanguage();
@@ -65,14 +69,13 @@ export function GenericTable<T>({
     return (
       <div className="overflow-x-auto rounded-b-3xl px-4">
         <div className="backdrop-blur-xl mt-4 bg-card/70 border border-border rounded-2xl overflow-hidden">
-          {
-            isLoading ? (
-              <Loader />
-            ) : (
-              <div className="p-4 text-center text-muted-foreground">
-                {noDataMessage}
-              </div>
-            )}
+          {isLoading ? (
+            <Loader />
+          ) : (
+            <div className="p-4 text-center text-muted-foreground">
+              {noDataMessage}
+            </div>
+          )}
         </div>
       </div>
     );
@@ -84,8 +87,7 @@ export function GenericTable<T>({
         <Table>
           <TableHeader>
             <TableRow
-              className={`bg-gradient-to-${isRTL ? "l" : "r"
-                } from-primary/10 to-background/80 backdrop-blur-md`}
+              className={`bg-gradient-to-${isRTL ? "l" : "r"} from-primary/10 to-background/80 backdrop-blur-md`}
             >
               <TableHead className="w-12 text-center">
                 <Checkbox
@@ -97,7 +99,9 @@ export function GenericTable<T>({
               {columns.map((column) => (
                 <TableHead
                   key={column.key}
-                  className={`text-base font-bold text-primary drop-shadow-sm tracking-wide ${column.width || ""} ${column.className || ""}`}
+                  className={`text-base font-bold text-primary drop-shadow-sm tracking-wide ${
+                    column.width || ""
+                  } ${column.className || ""}`}
                 >
                   {column.header}
                 </TableHead>
@@ -110,7 +114,7 @@ export function GenericTable<T>({
           <TableBody>
             <AnimatePresence>
               {data
-                .filter(item => item && getItemId(item) !== undefined)
+                .filter((item) => item && getItemId(item) !== undefined)
                 .map((item, idx) => {
                   const itemId = getItemId(item);
                   return (
