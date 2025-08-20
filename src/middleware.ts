@@ -49,20 +49,37 @@ export async function middleware(request: NextRequest) {
     }
 
     try {
-      const res = await apiClient.post("/auth/refresh", { refreshToken });
+      // Backend expects the refresh token as an httpOnly cookie.
+      // Forward it via the Cookie header so the backend can read req.cookies.refreshToken.
+      const res = await apiClient.post(
+        "/auth/refresh",
+        null,
+        {
+          headers: {
+            Cookie: `refreshToken=${refreshToken}`,
+          },
+        }
+      );
+
       if (res.status === 200 && res.data.token) {
         const newToken = res.data.token;
-        const newRefreshToken = res.data.refreshToken;
 
         const response = NextResponse.next();
+        // Set the new access token cookie (httpOnly)
         response.cookies.set("token", newToken, {
           httpOnly: true,
           secure: true,
+          sameSite: "none",
+          path: "/",
         });
-        response.cookies.set("refreshToken", newRefreshToken, {
+        // Preserve the existing refreshToken cookie value
+        response.cookies.set("refreshToken", refreshToken, {
           httpOnly: true,
           secure: true,
+          sameSite: "none",
+          path: "/",
         });
+
         return response;
       }
     } catch (e) {

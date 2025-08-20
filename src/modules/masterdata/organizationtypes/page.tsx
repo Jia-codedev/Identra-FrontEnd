@@ -103,6 +103,8 @@ const OrganizationTypesPage = () => {
           onSelectAll={selectAll}
           onEditOrganizationType={handleEdit}
           onDeleteOrganizationType={handleDelete}
+          onPageChange={setPage}
+          onPageSizeChange={setPageSize}
           isLoading={isLoading}
         />
       </div>

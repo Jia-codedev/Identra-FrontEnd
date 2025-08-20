@@ -11,6 +11,8 @@ interface DesignationsTableProps {
   page: number;
   pageSize: number;
   allChecked: boolean;
+  onPageChange: (page: number) => void;
+  onPageSizeChange: (size: number) => void;
   onSelectDesignation: (id: number) => void;
   onSelectAll: () => void;
   onEditDesignation: (designation: IDesignation) => void;
@@ -29,6 +31,8 @@ export const DesignationsTable: React.FC<DesignationsTableProps> = ({
   onEditDesignation,
   onDeleteDesignation,
   isLoading,
+  onPageChange,
+  onPageSizeChange,
 }) => {
   const { t } = useTranslations();
 
@@ -59,6 +63,8 @@ export const DesignationsTable: React.FC<DesignationsTableProps> = ({
       onSelectAll={onSelectAll}
       onEditItem={onEditDesignation}
       onDeleteItem={onDeleteDesignation}
+  onPageChange={onPageChange}
+  onPageSizeChange={onPageSizeChange}
       noDataMessage={t("masterData.designations.noDesignationsFound")}
       isLoading={isLoading}
     />

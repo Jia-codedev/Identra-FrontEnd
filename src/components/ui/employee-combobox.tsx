@@ -30,18 +30,46 @@ export const EmployeeCombobox: React.FC<EmployeeComboboxProps> = ({
   const load = React.useCallback(async (q: string) => {
     setIsLoading(true);
     try {
-      const resp = q && q.length > 0
-        ? await employeeApi.getEmployees({ offset: 1, limit, search: q })
-        : await employeeApi.getEmployees({ offset: 1, limit });
+      let resp: any;
+      if (q && q.length > 0) {
+        resp = await employeeApi.getEmployees({ offset: 1, limit, search: q });
+      } else {
+        // Try non-paginated endpoint for full list first to populate dropdown
+        try {
+          resp = await employeeApi.getEmployeesWithoutPagination();
+        } catch (e) {
+          // fallback to paginated endpoint
+          resp = await employeeApi.getEmployees({ offset: 1, limit });
+        }
+      }
 
-      const data = resp?.data?.data ?? resp?.data ?? [];
+      const status = resp?.status;
+      const raw = resp?.data;
+      const data = raw?.data ?? raw;
+
+      if (status !== 200 && status !== 201) {
+        // log for debugging (network/auth issues)
+        // eslint-disable-next-line no-console
+        console.warn('EmployeeCombobox: unexpected response status', status, raw);
+        setOptions([]);
+        return;
+      }
+
       if (Array.isArray(data)) {
         const opts = data.map((emp: any) => ({
           label: `${emp.firstname_eng || ''} ${emp.lastname_eng || ''} (${emp.emp_no || emp.employee_id || ''})`,
-          value: emp.employee_id,
+          value: String(emp.employee_id),
         }));
         setOptions(opts);
       } else {
+        // If data is an object but contains a single record, convert it
+        if (data && typeof data === 'object') {
+          const single = data;
+          if (single.employee_id) {
+            setOptions([{ label: `${single.firstname_eng || ''} ${single.lastname_eng || ''} (${single.emp_no || single.employee_id || ''})`, value: String(single.employee_id) }]);
+            return;
+          }
+        }
         setOptions([]);
       }
     } catch (e) {
@@ -67,12 +95,20 @@ export const EmployeeCombobox: React.FC<EmployeeComboboxProps> = ({
       if (value && typeof value === 'number') {
         try {
           const resp = await employeeApi.getEmployeeById(Number(value));
-          const emp = resp?.data?.data ?? resp?.data;
-          if (mounted && emp) {
-            setOptions([{ label: `${emp.firstname_eng || ''} ${emp.lastname_eng || ''} (${emp.emp_no || emp.employee_id || ''})`, value: emp.employee_id }]);
+          const status = resp?.status;
+          const raw = resp?.data;
+          const emp = raw?.data ?? raw;
+          if (mounted) {
+            if (status === 200 && emp) {
+              setOptions([{ label: `${emp.firstname_eng || ''} ${emp.lastname_eng || ''} (${emp.emp_no || emp.employee_id || ''})`, value: String(emp.employee_id) }]);
+            } else {
+              // eslint-disable-next-line no-console
+              console.warn('EmployeeCombobox preload: unexpected response', status, raw);
+            }
           }
         } catch (e) {
-          // ignore
+          // eslint-disable-next-line no-console
+          console.error('EmployeeCombobox preload error', e);
         }
       }
     })();
@@ -85,7 +121,7 @@ export const EmployeeCombobox: React.FC<EmployeeComboboxProps> = ({
   return (
     <Combobox
       options={options}
-      value={value ?? null}
+      value={value != null ? String(value) : null}
       onValueChange={(v) => onChange(v ? Number(v) : null)}
       placeholder={placeholder}
       onSearch={(q) => debouncedSearch(q)}

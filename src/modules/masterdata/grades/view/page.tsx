@@ -131,6 +131,8 @@ export default function GradesPage() {
             isLoading={isLoading}
             onEditGrade={handleEditGrade}
             onDeleteGrade={handleDeleteGrade}
+            onPageChange={setPage}
+            onPageSizeChange={setPageSize}
           />
 
           <CustomPagination

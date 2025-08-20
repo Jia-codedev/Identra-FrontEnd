@@ -13,6 +13,7 @@ import { format } from 'date-fns';
 import employeeGroupApi from '@/services/employeemaster/employeeGroup';
 import organizationsApi from '@/services/masterdata/organizations';
 import { MonthlyRosterFilters } from '../types';
+import { useMonthlyRosterMutations } from '../hooks/useMutations';
 
 interface MonthlyRosterHeaderProps {
   filters: MonthlyRosterFilters;
@@ -86,6 +87,52 @@ export const MonthlyRosterHeader: React.FC<MonthlyRosterHeaderProps> = ({ filter
   ];
 
   const years = Array.from({ length: 11 }, (_, i) => new Date().getFullYear() - 5 + i);
+  const { importMutation, exportMutation } = useMonthlyRosterMutations();
+  const fileInputRef = React.useRef<HTMLInputElement | null>(null);
+
+  const handleImportClick = () => {
+    if (!fileInputRef.current) {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = '.csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel';
+      input.onchange = async (e: any) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        const fd = new FormData();
+        fd.append('file', file);
+        try {
+          await importMutation.mutateAsync(fd);
+        } catch (err) {
+          console.error('Import failed', err);
+        }
+      };
+      fileInputRef.current = input as HTMLInputElement;
+    }
+    fileInputRef.current.click();
+  };
+
+  const handleExportClick = async () => {
+    if (!filters.organization_id || !filters.month || !filters.year) {
+      // prefer client to ensure export filters are set
+      alert('Select organization, month and year before export');
+      return;
+    }
+    try {
+      const blobRes = await exportMutation.mutateAsync({ organization_id: filters.organization_id!, month: filters.month!, year: filters.year!, employee_group_id: filters.employee_group_id });
+      const blob = blobRes?.data;
+      if (!blob) throw new Error('No blob returned');
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `monthly_roster_${filters.organization_id}_${filters.year}_${filters.month}.xlsx`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('Export failed', err);
+    }
+  };
 
   return (
     <div className="sticky top-0 z-10 bg-background/80 rounded-t-3xl px-4 py-6 border-b">
@@ -106,6 +153,8 @@ export const MonthlyRosterHeader: React.FC<MonthlyRosterHeaderProps> = ({ filter
                 Add Sample Data
               </Button>
             )}
+            <Button variant="outline" onClick={handleImportClick}>Import</Button>
+            <Button variant="outline" onClick={handleExportClick}>Export</Button>
           </div>
         </div>
 

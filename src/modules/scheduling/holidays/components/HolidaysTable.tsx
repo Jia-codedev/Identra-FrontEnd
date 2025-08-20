@@ -15,6 +15,8 @@ interface HolidaysTableProps {
   page: number;
   pageSize: number;
   allChecked: boolean;
+  onPageChange: (page: number) => void;
+  onPageSizeChange: (size: number) => void;
   onSelectHoliday: (id: number) => void;
   onSelectAll: () => void;
   isLoading: boolean;
@@ -33,6 +35,8 @@ export const HolidaysTable: React.FC<HolidaysTableProps> = ({
   isLoading,
   onEditHoliday,
   onDeleteHoliday,
+  onPageChange,
+  onPageSizeChange,
 }) => {
   const { t } = useTranslations();
   const { isRTL } = useLanguage();
@@ -149,6 +153,8 @@ export const HolidaysTable: React.FC<HolidaysTableProps> = ({
       onSelectAll={onSelectAll}
       onEditItem={onEditHoliday}
       onDeleteItem={onDeleteHoliday}
+  onPageChange={onPageChange}
+  onPageSizeChange={onPageSizeChange}
       noDataMessage={t('scheduling.holidays.noHolidays')}
       isLoading={isLoading}
     />

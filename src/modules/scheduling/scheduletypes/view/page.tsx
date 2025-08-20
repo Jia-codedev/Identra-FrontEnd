@@ -157,6 +157,8 @@ export default function ScheduleTemplatesPage() {
             isLoading={isLoading}
             onEditSchedule={handleEditSchedule}
             onDeleteSchedule={handleDeleteSchedule}
+            onPageChange={setPage}
+            onPageSizeChange={setPageSize}
           />
 
           <CustomPagination

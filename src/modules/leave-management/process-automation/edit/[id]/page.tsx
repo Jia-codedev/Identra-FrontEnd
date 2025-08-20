@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import { useTranslations } from '@/hooks/use-translations';
+import { toast } from 'sonner';
 
 export default function EditWorkflowPage() {
   const { t, currentLocale } = useTranslations();
@@ -118,6 +119,11 @@ export default function EditWorkflowPage() {
   const handleSubmit = async () => {
     if (isSubmitting) return;
     setIsSubmitting(true);
+    const tr = (key: string, fallback: string) => {
+      const v = t(key);
+      return v && v !== key ? v : fallback;
+    };
+
     try {
       // Update workflow
       const payload = {
@@ -138,6 +144,23 @@ export default function EditWorkflowPage() {
       }
 
       // Then iterate current steps
+      // Strict per-step validation: every step must have a name and a role
+      for (let i = 0; i < steps.length; i++) {
+        const st = steps[i];
+        const hasName = currentLocale === 'en' ? !!(st.step_eng && st.step_eng.trim()) : !!(st.step_arb && st.step_arb.trim());
+        const hasRole = st.role_id !== null && st.role_id !== undefined && String(st.role_id).trim() !== '';
+        if (!hasName) {
+          toast.error(tr('workflow.error.noStepName', `Step ${i + 1} requires a name.`));
+          setIsSubmitting(false);
+          return;
+        }
+        if (!hasRole) {
+          toast.error(tr('workflow.error.noStepRole', `Step ${i + 1} requires a role.`));
+          setIsSubmitting(false);
+          return;
+        }
+      }
+
       const validSteps = steps.filter((st) => (st.step_eng && st.step_eng.trim()) || (st.step_arb && st.step_arb.trim()));
 
       for (const st of validSteps) {
@@ -159,10 +182,11 @@ export default function EditWorkflowPage() {
         }
       }
 
-      router.push('/leave-management/process-automation');
+  toast.success(tr('workflow.updated', 'Workflow updated successfully'));
+  router.push('/leave-management/process-automation');
     } catch (err) {
       console.error(err);
-      alert(t('common.error') || 'Error saving workflow.');
+  toast.error(tr('common.error', 'Error saving workflow.'));
     } finally {
       setIsSubmitting(false);
     }

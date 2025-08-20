@@ -9,11 +9,16 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import { useTranslations } from '@/hooks/use-translations';
+import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 
 export default function AddWorkflowPage() {
   const { t, currentLocale } = useTranslations();
   const router = useRouter();
+  const tr = (key: string, fallback: string) => {
+    const v = t(key);
+    return v && v !== key ? v : fallback;
+  };
   const [code, setCode] = useState('');
   const [nameEng, setNameEng] = useState('');
   const [nameArb, setNameArb] = useState('');
@@ -94,23 +99,38 @@ export default function AddWorkflowPage() {
     if (isSubmitting) return;
 
     if (!code.trim()) {
-      alert(t('workflow.error.noCode') || 'Code is mandatory.');
+      toast.error(tr('workflow.error.noCode', 'Code is mandatory.'));
       return;
     }
 
     if (currentLocale === 'en' && !nameEng.trim()) {
-      alert(t('workflow.error.noNameEng') || 'English name is mandatory.');
+      toast.error(tr('workflow.error.noNameEng', 'English name is mandatory.'));
       return;
     }
 
     if (currentLocale === 'ar' && !nameArb.trim()) {
-      alert(t('workflow.error.noNameArb') || 'Arabic name is mandatory.');
+      toast.error(tr('workflow.error.noNameArb', 'Arabic name is mandatory.'));
       return;
     }
 
     if (steps.length === 0) {
-      alert(t('workflow.error.noSteps') || 'At least one step is mandatory.');
+      toast.error(tr('workflow.error.noSteps', 'At least one step is mandatory.'));
       return;
+    }
+
+    // Strict per-step validation: every step must have a name and a role
+    for (let i = 0; i < steps.length; i++) {
+      const st = steps[i];
+      const hasName = currentLocale === 'en' ? !!(st.step_eng && st.step_eng.trim()) : !!(st.step_arb && st.step_arb.trim());
+      const hasRole = st.role_id !== null && st.role_id !== undefined && String(st.role_id).trim() !== '';
+      if (!hasName) {
+        toast.error(tr('workflow.error.noStepName', `Step ${i + 1} requires a name.`));
+        return;
+      }
+      if (!hasRole) {
+        toast.error(tr('workflow.error.noStepRole', `Step ${i + 1} requires a role.`));
+        return;
+      }
     }
 
     setIsSubmitting(true);
@@ -130,6 +150,7 @@ export default function AddWorkflowPage() {
       const workflowId = res?.data?.data?.workflow_id || res?.data?.workflow_id;
 
       if (!workflowId) {
+        toast.error(tr('common.error', 'Error saving workflow.'));
         throw new Error('No workflow id returned from server');
       }
 
@@ -152,11 +173,12 @@ export default function AddWorkflowPage() {
         }
       }
 
-      router.push('/leave-management/process-automation');
+  toast.success(tr('workflow.created', 'Workflow created successfully'));
+  router.push('/leave-management/process-automation');
     } catch (err) {
       console.error(err);
-      // surface a clearer message to the user
-      alert(t('common.error') || 'Error saving workflow.');
+    // surface a clearer message to the user
+  toast.error(tr('common.error', 'Error saving workflow.'));
     } finally {
       setIsSubmitting(false);
     }

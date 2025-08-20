@@ -50,6 +50,7 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({
     <AnimatePresence mode="wait">
       {mobileOpen && (
         <motion.div
+          key={"mobile-drawer"}
           className="fixed inset-0 bg-background/10 backdrop-blur z-50"
           onClick={() => setMobileOpen(false)}
         >
@@ -77,18 +78,24 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({
                 <AvatarFallback>{user.initials}</AvatarFallback>
               </Avatar>
               <div>
-                <p className="text-sm font-medium text-foreground">{user.name}</p>
+                <p className="text-sm font-medium text-foreground">
+                  {user.name}
+                </p>
                 <p className="text-xs text-muted-foreground">{user.email}</p>
               </div>
             </div>
 
             {/* Navigation Links */}
             <div className="flex flex-col space-y-1">
-              {NAV_LINKS.map((menu) => {
+              {NAV_LINKS.map((menu, menuIndex) => {
                 const Icon = menu.icon;
                 const isExpanded = expandedMenu === menu.label;
+                const key =
+                  (menu.id && String(menu.id)) ||
+                  (menu.label && String(menu.label)) ||
+                  `nav-${menuIndex}`;
                 return (
-                  <div key={menu.label}>
+                  <div key={key}>
                     <button
                       className={cn(
                         "flex items-center justify-between w-full px-2 py-2 rounded-md font-semibold text-sm transition-colors text-left",
@@ -128,21 +135,31 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({
                           transition={{ duration: 0.2 }}
                           className="ml-6 flex flex-col space-y-1 mt-1 overflow-hidden"
                         >
-                          {menu.secondary.map((item: any) => (
-                            <Link
-                              key={item.href}
-                              href={item.href}
-                              className={cn(
-                                "block px-2 py-1 rounded text-xs font-medium transition-all text-nowrap hover:text-primary text-muted-foreground",
-                                pathname === item.href
-                                  ? "bg-primary text-primary-foreground font-bold"
-                                  : "hover:bg-muted"
-                              )}
-                              onClick={() => setMobileOpen(false)}
-                            >
-                              {item.label}
-                            </Link>
-                          ))}
+                          {menu.secondary.map(
+                            (item: any, itemIndex: number) => {
+                              const itemKey =
+                                (item.id && String(item.id)) ||
+                                (item.href && String(item.href)) ||
+                                (item.label && String(item.label)) ||
+                                (item.value && String(item.value)) ||
+                                `nav-${menuIndex}-item-${itemIndex}`;
+                              return (
+                                <Link
+                                  key={itemKey}
+                                  href={item.href}
+                                  className={cn(
+                                    "block px-2 py-1 rounded text-xs font-medium transition-all text-nowrap hover:text-primary text-muted-foreground",
+                                    pathname === item.href
+                                      ? "bg-primary text-primary-foreground font-bold"
+                                      : "hover:bg-muted"
+                                  )}
+                                  onClick={() => setMobileOpen(false)}
+                                >
+                                  {item.label}
+                                </Link>
+                              );
+                            }
+                          )}
                         </motion.div>
                       )}
                     </AnimatePresence>
@@ -153,24 +170,33 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({
 
             {/* Profile Links */}
             <div className="flex flex-col pt-2 border-t border-border space-y-1">
-              {PROFILE_LINKS.map((link) => (
-                <div
-                  key={link.href}
-                  className={cn(
-                    "px-2 py-1 text-xs rounded hover:bg-muted cursor-pointer",
-                    link.className || ""
-                  )}
-                  onClick={() => handleLinkClick(link.href)}
-                >
-                  {link.href === "/logout" ? (
-                    <span>{link.label}</span>
-                  ) : (
-                    <Link href={link.href} onClick={() => setMobileOpen(false)}>
-                      {link.label}
-                    </Link>
-                  )}
-                </div>
-              ))}
+              {PROFILE_LINKS.map((link, idx) => {
+                const profileKey =
+                  (link.href && String(link.href)) ||
+                  (link.label && String(link.label)) ||
+                  `profile-${idx}`;
+                return (
+                  <div
+                    key={profileKey}
+                    className={cn(
+                      "px-2 py-1 text-xs rounded hover:bg-muted cursor-pointer",
+                      link.className || ""
+                    )}
+                    onClick={() => handleLinkClick(link.href)}
+                  >
+                    {link.href === "/logout" ? (
+                      <span>{link.label}</span>
+                    ) : (
+                      <Link
+                        href={link.href}
+                        onClick={() => setMobileOpen(false)}
+                      >
+                        {link.label}
+                      </Link>
+                    )}
+                  </div>
+                );
+              })}
             </div>
 
             {/* Settings Links
@@ -196,7 +222,7 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({
       )}
 
       {/* Logout Confirmation Dialog */}
-      <LogoutConfirmation 
+      <LogoutConfirmation
         isOpen={showLogoutDialog}
         onClose={() => setShowLogoutDialog(false)}
       />

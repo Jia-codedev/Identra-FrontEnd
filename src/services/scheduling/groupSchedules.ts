@@ -1,4 +1,4 @@
-import apiClient from '@/configs/api/Axios';
+import apiClient from "@/configs/api/Axios";
 
 export interface IGroupSchedule {
   group_schedule_id?: number;
@@ -28,6 +28,9 @@ export interface IGroupSchedule {
     in_time?: string;
     out_time?: string;
     sch_color?: string;
+    open_shift_flag?: boolean;
+    night_shift_flag?: boolean;
+    ramadan_flag?: boolean;
   };
   tuesday_schedule?: {
     schedule_id: number;
@@ -35,6 +38,9 @@ export interface IGroupSchedule {
     in_time?: string;
     out_time?: string;
     sch_color?: string;
+    open_shift_flag?: boolean;
+    night_shift_flag?: boolean;
+    ramadan_flag?: boolean;
   };
   wednesday_schedule?: {
     schedule_id: number;
@@ -42,6 +48,9 @@ export interface IGroupSchedule {
     in_time?: string;
     out_time?: string;
     sch_color?: string;
+    open_shift_flag?: boolean;
+    night_shift_flag?: boolean;
+    ramadan_flag?: boolean;
   };
   thursday_schedule?: {
     schedule_id: number;
@@ -49,6 +58,9 @@ export interface IGroupSchedule {
     in_time?: string;
     out_time?: string;
     sch_color?: string;
+    open_shift_flag?: boolean;
+    night_shift_flag?: boolean;
+    ramadan_flag?: boolean;
   };
   friday_schedule?: {
     schedule_id: number;
@@ -56,6 +68,9 @@ export interface IGroupSchedule {
     in_time?: string;
     out_time?: string;
     sch_color?: string;
+    open_shift_flag?: boolean;
+    night_shift_flag?: boolean;
+    ramadan_flag?: boolean;
   };
   saturday_schedule?: {
     schedule_id: number;
@@ -63,6 +78,9 @@ export interface IGroupSchedule {
     in_time?: string;
     out_time?: string;
     sch_color?: string;
+    open_shift_flag?: boolean;
+    night_shift_flag?: boolean;
+    ramadan_flag?: boolean;
   };
   sunday_schedule?: {
     schedule_id: number;
@@ -70,7 +88,17 @@ export interface IGroupSchedule {
     in_time?: string;
     out_time?: string;
     sch_color?: string;
+    open_shift_flag?: boolean;
+    night_shift_flag?: boolean;
+    ramadan_flag?: boolean;
   };
+}
+
+export interface IGroupSchedulesResponse {
+  success: boolean;
+  data: IGroupSchedule[];
+  total?: number;
+  hasNext?: boolean;
 }
 
 export interface ICreateGroupSchedule {
@@ -103,12 +131,20 @@ export interface IUpdateGroupSchedule {
 }
 
 class GroupSchedulesApi {
-  private baseUrl = '/groupSchedule';
+  private baseUrl = "/groupSchedule";
 
   // Get all group schedules
-  async getAll() {
-    const response = await apiClient.get(`${this.baseUrl}/all`);
-    return response.data;
+  async getAll(params?: {
+    offset?: number;
+    limit?: number;
+    employee_group_id?: number;
+    start_date?: string; // ISO
+    end_date?: string; // ISO
+    search?: string;
+  }) {
+    const response = await apiClient.get(`${this.baseUrl}/all`, { params });
+    // return the full API payload so callers can access pagination metadata
+    return response.data as IGroupSchedulesResponse;
   }
 
   // Get group schedule by ID
@@ -137,8 +173,8 @@ class GroupSchedulesApi {
 
   // Delete multiple group schedules
   async deleteMany(ids: number[]) {
-    const response = await apiClient.delete(`${this.baseUrl}/delete-many`, {
-      data: { group_schedule_ids: ids }
+    const response = await apiClient.delete(`${this.baseUrl}/delete`, {
+      data: { group_schedule_ids: ids },
     });
     return response.data;
   }

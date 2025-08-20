@@ -11,6 +11,8 @@ interface NationalitiesTableProps {
   page: number;
   pageSize: number;
   allChecked: boolean;
+  onPageChange: (page: number) => void;
+  onPageSizeChange: (size: number) => void;
   onSelectNationality: (id: number) => void;
   onSelectAll: () => void;
   onEditNationality: (nationality: INationality) => void;
@@ -29,6 +31,8 @@ export const NationalitiesTable: React.FC<NationalitiesTableProps> = ({
   onEditNationality,
   onDeleteNationality,
   isLoading = false,
+  onPageChange,
+  onPageSizeChange,
 }) => {
   const { t } = useTranslations();
 
@@ -59,6 +63,8 @@ export const NationalitiesTable: React.FC<NationalitiesTableProps> = ({
       onSelectAll={onSelectAll}
       onEditItem={onEditNationality}
       onDeleteItem={onDeleteNationality}
+  onPageChange={onPageChange}
+  onPageSizeChange={onPageSizeChange}
       noDataMessage={t("masterData.nationalities.noNationalitiesFound")}
       isLoading={isLoading}
     />

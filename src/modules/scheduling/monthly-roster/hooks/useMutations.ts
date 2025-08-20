@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import employeeMonthlyRosterApi, { UpdateMonthlyRosterRequest, CreateMonthlyRosterRequest } from '@/services/scheduling/employeeMonthlyRoster';
+import employeeMonthlyRosterApi, { UpdateMonthlyRosterRequest, CreateMonthlyRosterRequest, FilterMonthlyRosterRequest } from '@/services/scheduling/employeeMonthlyRoster';
 
 export const useMonthlyRosterMutations = () => {
   const createMutation = useMutation({
@@ -26,5 +26,17 @@ export const useMonthlyRosterMutations = () => {
     },
   });
 
-  return { createMutation, finalizeMutation, deleteMutation, editMutation };
+  const importMutation = useMutation({
+    mutationFn: async (formData: FormData) => {
+      return employeeMonthlyRosterApi.importFile(formData);
+    },
+  });
+
+  const exportMutation = useMutation({
+    mutationFn: async (filters: FilterMonthlyRosterRequest) => {
+      return employeeMonthlyRosterApi.export(filters);
+    },
+  });
+
+  return { createMutation, finalizeMutation, deleteMutation, editMutation, importMutation, exportMutation };
 };

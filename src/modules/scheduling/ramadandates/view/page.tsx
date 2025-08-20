@@ -127,6 +127,8 @@ const RamadanDatesPage: React.FC = () => {
         isLoading={isLoading}
         onEditRamadanDate={handleEdit}
         onDeleteRamadanDate={handleDelete}
+  onPageChange={() => {}}
+  onPageSizeChange={() => {}}
       />
 
       <RamadanDateModal

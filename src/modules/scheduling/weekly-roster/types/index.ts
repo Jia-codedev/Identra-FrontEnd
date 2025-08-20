@@ -42,6 +42,9 @@ export interface ScheduleInfo {
   in_time: string;
   out_time: string;
   sch_color: string;
+  open_shift_flag?: boolean;
+  night_shift_flag?: boolean;
+  ramadan_flag?: boolean;
 }
 
 export interface GroupScheduleCreate {

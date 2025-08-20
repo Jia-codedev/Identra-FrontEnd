@@ -83,6 +83,18 @@ class EmployeeMonthlyRosterApi {
   filter(data: FilterMonthlyRosterRequest) {
     return apiClient.post("/employeeMonthlyRoster/filter", data);
   }
+
+  // Bulk import monthly roster via file upload (CSV/Excel)
+  importFile(formData: FormData) {
+    return apiClient.post("/employeeMonthlyRoster/import", formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+  }
+
+  // Export monthly roster for provided filters as a file (blob)
+  export(data: FilterMonthlyRosterRequest) {
+    return apiClient.post("/employeeMonthlyRoster/export", data, { responseType: 'blob' });
+  }
 }
 
 const employeeMonthlyRosterApi = new EmployeeMonthlyRosterApi();

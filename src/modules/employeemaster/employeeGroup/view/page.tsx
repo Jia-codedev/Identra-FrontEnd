@@ -145,6 +145,8 @@ export default function EmployeeGroupsPage() {
             isLoading={isLoading}
             onEditEmployeeGroup={handleEditEmployeeGroup}
             onDeleteEmployeeGroup={handleDeleteEmployeeGroup}
+            onPageChange={setPage}
+            onPageSizeChange={setPageSize}
           />
 
           <CustomPagination

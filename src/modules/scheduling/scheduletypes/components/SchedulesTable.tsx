@@ -15,6 +15,8 @@ interface SchedulesTableProps {
   page: number;
   pageSize: number;
   allChecked: boolean;
+  onPageChange: (page: number) => void;
+  onPageSizeChange: (size: number) => void;
   onSelectSchedule: (id: number) => void;
   onSelectAll: () => void;
   isLoading: boolean;
@@ -33,6 +35,8 @@ export const SchedulesTable: React.FC<SchedulesTableProps> = ({
   isLoading,
   onEditSchedule,
   onDeleteSchedule,
+  onPageChange,
+  onPageSizeChange,
 }) => {
   const { t } = useTranslations();
   const { isRTL } = useLanguage();
@@ -227,6 +231,8 @@ export const SchedulesTable: React.FC<SchedulesTableProps> = ({
       onSelectAll={onSelectAll}
       onEditItem={onEditSchedule}
       onDeleteItem={onDeleteSchedule}
+  onPageChange={onPageChange}
+  onPageSizeChange={onPageSizeChange}
       noDataMessage={t('scheduling.schedules.noSchedules')}
       isLoading={isLoading}
     />

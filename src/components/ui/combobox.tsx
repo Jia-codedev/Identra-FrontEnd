@@ -213,8 +213,8 @@ export const Combobox: React.FC<ComboboxProps> = ({
       {isOpen && dropdownStyle && ReactDOM.createPortal(
         <div
           ref={dropdownRef}
-          style={{ left: dropdownStyle.left, top: dropdownStyle.top, width: dropdownStyle.width }}
-          className="absolute z-[9999] bg-popover text-popover-foreground border border-border rounded-md shadow-sm max-h-48 overflow-hidden"
+          style={{ left: dropdownStyle.left, top: dropdownStyle.top, width: dropdownStyle.width, pointerEvents: 'auto', zIndex: 2147483647 }}
+          className="absolute bg-popover text-popover-foreground border border-border rounded-md shadow-sm max-h-48 overflow-hidden"
         >
           {isLoading ? (
             <div className="p-2 text-muted-foreground text-sm flex items-center gap-2">
@@ -226,7 +226,10 @@ export const Combobox: React.FC<ComboboxProps> = ({
               {filteredOptions.map((option, index) => (
                 <div
                   key={option.value}
-                  onClick={() => handleOptionSelect(option)}
+                  onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); handleOptionSelect(option); }}
+                  onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleOptionSelect(option); }}
+                  role="button"
+                  tabIndex={0}
                   className={cn(
                     "px-2 py-2 cursor-pointer border-b last:border-b-0 transition-colors duration-150 text-sm",
                     index === highlightedIndex

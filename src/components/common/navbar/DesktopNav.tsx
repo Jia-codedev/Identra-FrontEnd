@@ -20,9 +20,10 @@ export const DesktopNav: React.FC<DesktopNavProps> = ({
       {NAV_LINKS.map((menu) => {
         const Icon = menu.icon;
         const isActive = activeMenu === menu.label;
+        const key = menu.id || menu.label || Math.random().toString(36).slice(2, 9);
         return (
           <div
-            key={menu.label}
+            key={key}
             className="relative flex flex-col items-center px-1"
           >
             <motion.button
@@ -47,7 +48,7 @@ export const DesktopNav: React.FC<DesktopNavProps> = ({
                   animate={{ width: "auto", opacity: 1 }}
                   exit={{ width: 0, opacity: 0 }}
                   transition={{ duration: 0.28, ease: "easeInOut" }}
-                  key={menu.label}
+                  key={menu.label || key}
                 >
                   {menu.label}
                 </motion.span>

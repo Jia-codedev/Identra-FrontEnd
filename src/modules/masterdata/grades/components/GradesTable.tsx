@@ -11,6 +11,8 @@ interface GradesTableProps {
   page: number;
   pageSize: number;
   allChecked: boolean;
+  onPageChange: (page: number) => void;
+  onPageSizeChange: (size: number) => void;
   onSelectGrade: (id: number) => void;
   onSelectAll: () => void;
   onEditGrade: (grade: IGrade) => void;
@@ -29,6 +31,8 @@ export const GradesTable: React.FC<GradesTableProps> = ({
   onEditGrade,
   onDeleteGrade,
   isLoading,
+  onPageChange,
+  onPageSizeChange,
 }) => {
   const { t } = useTranslations();
 
@@ -59,6 +63,8 @@ export const GradesTable: React.FC<GradesTableProps> = ({
       onSelectAll={onSelectAll}
       onEditItem={onEditGrade}
       onDeleteItem={onDeleteGrade}
+  onPageChange={onPageChange}
+  onPageSizeChange={onPageSizeChange}
       noDataMessage={t("masterData.grades.noGradesFound")}
       isLoading={isLoading}
     />

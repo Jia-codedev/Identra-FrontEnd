@@ -15,6 +15,8 @@ interface RamadanDatesTableProps {
   page: number;
   pageSize: number;
   allChecked: boolean;
+  onPageChange: (page: number) => void;
+  onPageSizeChange: (size: number) => void;
   onSelectRamadanDate: (id: number) => void;
   onSelectAll: () => void;
   isLoading: boolean;
@@ -33,6 +35,8 @@ export const RamadanDatesTable: React.FC<RamadanDatesTableProps> = ({
   isLoading,
   onEditRamadanDate,
   onDeleteRamadanDate,
+  onPageChange,
+  onPageSizeChange,
 }) => {
   const { t } = useTranslations();
   const { currentLocale } = useLanguage();
@@ -135,6 +139,8 @@ export const RamadanDatesTable: React.FC<RamadanDatesTableProps> = ({
       onSelectAll={onSelectAll}
       onEditItem={onEditRamadanDate}
       onDeleteItem={onDeleteRamadanDate}
+  onPageChange={onPageChange}
+  onPageSizeChange={onPageSizeChange}
       noDataMessage={t('scheduling.ramadanDates.noData')}
       isLoading={isLoading}
     />

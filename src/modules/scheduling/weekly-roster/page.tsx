@@ -36,13 +36,16 @@ export default function WeeklyRosterPage() {
     allChecked,
   } = useWeeklyRosterState();
 
-  // Fetch data using the custom hook
+  // Fetch data using the custom hook with filters and pagination
   const {
-    data: weeklySchedules,
+    data: weeklySchedulesResp,
     isLoading,
     error,
     refetch
-  } = useWeeklyRoster();
+  } = useWeeklyRoster({ page, pageSize, filters, search });
+
+  const weeklySchedules = weeklySchedulesResp?.data ?? [];
+  const total = weeklySchedulesResp?.total ?? 0;
 
   // Mutations for CRUD operations
   const {
@@ -143,10 +146,10 @@ export default function WeeklyRosterPage() {
       />
 
       <WeeklyRosterTable
-        data={weeklySchedules || []}
+  data={weeklySchedules}
         isLoading={isLoading || stateLoading}
         selectedItems={selected}
-        onSelectionChange={(selectedIds: number[]) => {
+  onSelectionChange={(selectedIds: number[]) => {
           // Update the selected state based on the new selection
           selectedIds.forEach(id => {
             if (!selected.includes(id)) {

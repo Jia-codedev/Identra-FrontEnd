@@ -11,6 +11,8 @@ interface OrganizationsTableProps {
   page: number;
   pageSize: number;
   allChecked: boolean;
+  onPageChange: (page: number) => void;
+  onPageSizeChange: (size: number) => void;
   onSelectOrganization: (id: number) => void;
   onSelectAll: () => void;
   onEditOrganization: (organization: IOrganization) => void;
@@ -29,6 +31,8 @@ export const OrganizationsTable: React.FC<OrganizationsTableProps> = ({
   onEditOrganization,
   onDeleteOrganization,
   isLoading = false,
+  onPageChange,
+  onPageSizeChange,
 }) => {
   const { t } = useTranslations();
 
@@ -59,6 +63,8 @@ export const OrganizationsTable: React.FC<OrganizationsTableProps> = ({
       onSelectAll={onSelectAll}
       onEditItem={onEditOrganization}
       onDeleteItem={onDeleteOrganization}
+  onPageChange={onPageChange}
+  onPageSizeChange={onPageSizeChange}
       noDataMessage={t("masterData.organizations.noOrganizationsFound")}
       isLoading={isLoading}
     />

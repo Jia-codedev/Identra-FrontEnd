@@ -17,16 +17,21 @@ export default function MonthlyRosterPage() {
     employee_group_id: undefined,
   });
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [currentLimit, setCurrentLimit] = useState<number>(50);
 
   const apiFilters = useMemo(() => {
     if (!filters.organization_id || !filters.month || !filters.year) return undefined;
     return {
       organization_id: filters.organization_id!,
       month: filters.month!,
-      year: filters.year!,
+  year: filters.year!,
+  // pagination defaults
+  limit: currentLimit,
+  offset: currentPage,
       employee_group_id: filters.employee_group_id,
     };
-  }, [filters]);
+  }, [filters, currentPage, currentLimit]);
 
   const { data, isLoading, refetch } = useMonthlyRoster(apiFilters as any);
   const { createMutation, finalizeMutation, deleteMutation } = useMonthlyRosterMutations();
@@ -137,6 +142,12 @@ export default function MonthlyRosterPage() {
         onAddRoster={handleAddRoster}
         onAddSampleData={handleAddSampleData}
       />
+
+      <div className="flex items-center gap-2">
+        <button className="btn" onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}>Prev</button>
+        <div>Page: {currentPage}</div>
+        <button className="btn" onClick={() => setCurrentPage(currentPage + 1)}>Next</button>
+      </div>
 
       <MonthlyRosterTable
         data={(data as any) || []}

@@ -131,6 +131,8 @@ export default function NationalitiesPage() {
             isLoading={isLoading}
             onEditNationality={handleEditNationality}
             onDeleteNationality={handleDeleteNationality}
+            onPageChange={setPage}
+            onPageSizeChange={setPageSize}
           />
 
           <CustomPagination

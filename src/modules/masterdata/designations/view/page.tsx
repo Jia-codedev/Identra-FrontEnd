@@ -148,6 +148,8 @@ export default function DesignationsPage() {
             isLoading={isLoading}
             onEditDesignation={handleEditDesignation}
             onDeleteDesignation={handleDeleteDesignation}
+            onPageChange={setPage}
+            onPageSizeChange={setPageSize}
           />
 
           <CustomPagination

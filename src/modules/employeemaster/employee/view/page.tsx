@@ -136,6 +136,8 @@ export default function EmployeePage() {
             isLoading={isLoading}
             onEditEmployee={handleEditEmployee}
             onSelectEmployee={selectEmployee}
+            onPageChange={setPage}
+            onPageSizeChange={setPageSize}
           />
 
           <CustomPagination

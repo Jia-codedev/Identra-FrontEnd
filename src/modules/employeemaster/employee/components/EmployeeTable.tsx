@@ -12,6 +12,8 @@ interface EmployeesTableProps {
   page: number;
   pageSize: number;
   allChecked: boolean;
+  onPageChange: (page: number) => void;
+  onPageSizeChange: (size: number) => void;
   onSelectEmployee: (id: number) => void;
   onSelectAll: () => void;
   onEditEmployee: (employee: IEmployee) => void;
@@ -30,6 +32,8 @@ export const EmployeesTable: React.FC<EmployeesTableProps> = ({
   onEditEmployee,
   onDeleteEmployee,
   isLoading,
+  onPageChange,
+  onPageSizeChange,
 }) => {
   const { t } = useTranslations();
 
@@ -77,6 +81,8 @@ export const EmployeesTable: React.FC<EmployeesTableProps> = ({
       onSelectAll={onSelectAll}
       onEditItem={onEditEmployee}
       onDeleteItem={onDeleteEmployee}
+  onPageChange={onPageChange}
+  onPageSizeChange={onPageSizeChange}
       noDataMessage={t("employeeMaster.employee.noEmployeesFound")}
       isLoading={isLoading}
     />

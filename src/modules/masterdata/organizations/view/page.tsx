@@ -131,6 +131,8 @@ export default function OrganizationsPage() {
             isLoading={isLoading}
             onEditOrganization={handleEditOrganization}
             onDeleteOrganization={handleDeleteOrganization}
+            onPageChange={setPage}
+            onPageSizeChange={setPageSize}
           />
 
           <CustomPagination

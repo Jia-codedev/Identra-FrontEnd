@@ -182,5 +182,12 @@
       "dateRangeInvalid": "To date must be after from date",
       "endDateAfterStartDate": "End date must be after start date"
     }
+    ,
+    "shift": {
+      "open": "Open",
+      "night": "Night",
+      "ramadan": "Ramadan",
+      "regular": "Regular"
+    }
   }
 }

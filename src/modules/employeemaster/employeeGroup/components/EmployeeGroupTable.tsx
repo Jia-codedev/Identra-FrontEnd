@@ -11,6 +11,8 @@ interface EmployeeGroupTableProps {
   page: number;
   pageSize: number;
   allChecked: boolean;
+  onPageChange: (page: number) => void;
+  onPageSizeChange: (size: number) => void;
   onSelectEmployeeGroup: (id: number) => void;
   onSelectAll: () => void;
   onEditEmployeeGroup: (employeeGroup: IEmployeeGroup) => void;
@@ -29,6 +31,8 @@ export const EmployeeGroupTable: React.FC<EmployeeGroupTableProps> = ({
   onEditEmployeeGroup,
   onDeleteEmployeeGroup,
   isLoading,
+  onPageChange,
+  onPageSizeChange,
 }) => {
   const { t } = useTranslations();
 
@@ -64,6 +68,8 @@ export const EmployeeGroupTable: React.FC<EmployeeGroupTableProps> = ({
       onSelectAll={onSelectAll}
       onEditItem={onEditEmployeeGroup}
       onDeleteItem={onDeleteEmployeeGroup}
+  onPageChange={onPageChange}
+  onPageSizeChange={onPageSizeChange}
       noDataMessage={t("employeeMaster.employeeGroups.noEmployeeGroupsFound")}
       isLoading={isLoading}
     />

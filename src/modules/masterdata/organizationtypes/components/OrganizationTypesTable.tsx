@@ -11,6 +11,8 @@ interface OrganizationTypesTableProps {
   page: number;
   pageSize: number;
   allChecked: boolean;
+  onPageChange: (page: number) => void;
+  onPageSizeChange: (size: number) => void;
   onSelectOrganizationType: (id: number) => void;
   onSelectAll: () => void;
   onEditOrganizationType: (organizationType: IOrganizationType) => void;
@@ -29,6 +31,8 @@ export const OrganizationTypesTable: React.FC<OrganizationTypesTableProps> = ({
   onEditOrganizationType,
   onDeleteOrganizationType,
   isLoading = false,
+  onPageChange,
+  onPageSizeChange,
 }) => {
   const { t } = useTranslations();
 
@@ -59,6 +63,8 @@ export const OrganizationTypesTable: React.FC<OrganizationTypesTableProps> = ({
       onSelectAll={onSelectAll}
       onEditItem={onEditOrganizationType}
       onDeleteItem={onDeleteOrganizationType}
+  onPageChange={onPageChange}
+  onPageSizeChange={onPageSizeChange}
       noDataMessage={t("masterData.organizationTypes.noOrganizationTypesFound")}
       isLoading={isLoading}
     />

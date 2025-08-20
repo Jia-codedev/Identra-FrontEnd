@@ -131,6 +131,8 @@ export default function EmployeeTypesPage() {
             isLoading={isLoading}
             onEditEmployeeType={handleEditEmployeeType}
             onDeleteEmployeeType={handleDeleteEmployeeType}
+            onPageChange={setPage}
+            onPageSizeChange={setPageSize}
           />
 
           <CustomPagination

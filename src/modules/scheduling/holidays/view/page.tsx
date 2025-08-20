@@ -138,6 +138,8 @@ export default function HolidaysPage() {
             isLoading={isLoading}
             onEditHoliday={handleEditHoliday}
             onDeleteHoliday={handleDeleteHoliday}
+            onPageChange={setPage}
+            onPageSizeChange={setPageSize}
           />
 
           <CustomPagination

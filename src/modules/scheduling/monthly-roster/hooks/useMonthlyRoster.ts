@@ -7,18 +7,18 @@ export const useMonthlyRoster = (
   return useQuery<MonthlyRoster[]>({
     queryKey: ['monthly-roster', filters],
     queryFn: async () => {
-      // Always return the same resolved type to satisfy the query function contract
-      if (!filters) {
+      if (!filters) return [] as MonthlyRoster[];
+      try {
+        // Use provided pagination from filters if present, otherwise default
+        const body = { ...filters, limit: (filters as any).limit ?? 50, offset: (filters as any).offset ?? 1 } as any;
+        const response = await employeeMonthlyRosterApi.filter(body);
+        const data = response?.data?.data || [];
+        return data as MonthlyRoster[];
+      } catch (err) {
+        console.error('Monthly roster fetch error:', err);
+        // Return empty array on error so UI stays stable
         return [] as MonthlyRoster[];
       }
-      console.log('Fetching monthly roster with filters:', filters);
-      const response = await employeeMonthlyRosterApi.filter(filters);
-      console.log('Monthly roster API response:', response);
-      
-      // Backend returns { success: true, data: [...] } according to the OpenAPI spec
-      const data = response?.data?.data || [];
-      console.log('Extracted data:', data);
-      return data as MonthlyRoster[];
     },
     enabled: !!filters && !!filters.organization_id && !!filters.month && !!filters.year,
     staleTime: 5 * 60 * 1000,

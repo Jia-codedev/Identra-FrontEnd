@@ -2,7 +2,6 @@
   "title": "إدارة الجدولة",
   "calendar": "التقويم",
   "schedule": "الجدول",
-  "shift": "الوردية",
   "roster": "جدول الخدمة",
   "holiday": "إجازة",
   "leave": "إجازة",
@@ -122,11 +121,16 @@
     "filterByCode": "تصفية بالرمز",
     "filterByOrganization": "تصفية بالمؤسسة",
     "noSchedules": "لم يتم العثور على جداول",
-    "shift": "الوردية",
     "code": "الرمز",
     "open": "مفتوحة",
     "night": "ليلية",
     "regular": "عادية",
+    "shift": {
+      "open": "مفتوح",
+      "night": "ليلي",
+      "ramadan": "رمضان",
+      "regular": "عادي"
+    },
     "calcHours": "حساب الساعات",
     "overtime": "وقت إضافي"
   },

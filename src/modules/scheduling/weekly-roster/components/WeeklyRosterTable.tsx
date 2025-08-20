@@ -25,6 +25,9 @@ const ScheduleCell: React.FC<{
     in_time?: string;
     out_time?: string;
     sch_color?: string;
+    open_shift_flag?: boolean;
+    night_shift_flag?: boolean;
+    ramadan_flag?: boolean;
   };
   isRTL: boolean;
 }> = ({ schedule, isRTL }) => {
@@ -38,23 +41,31 @@ const ScheduleCell: React.FC<{
     );
   }
 
+  const bg = schedule.sch_color || '#f3f4f6';
+  const hex = (bg || '#ffffff').replace('#', '');
+  const r = parseInt(hex.substring(0, 2) || 'ff', 16);
+  const g = parseInt(hex.substring(2, 4) || 'ff', 16);
+  const b = parseInt(hex.substring(4, 6) || 'ff', 16);
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  const textColor = luminance > 0.6 ? '#000' : '#fff';
+
+  // Determine a single concise shift label with precedence: Ramadan > Night > Open > Regular
+  const shiftLabel = schedule.ramadan_flag
+    ? t('scheduling.weeklyRoster.shift.ramadan') || 'Ramadan'
+    : schedule.night_shift_flag
+    ? t('scheduling.weeklyRoster.shift.night') || 'Night'
+    : schedule.open_shift_flag
+    ? t('scheduling.weeklyRoster.shift.open') || 'Open'
+    : t('scheduling.weeklyRoster.shift.regular') || 'Regular';
+
   return (
-    <div className="flex flex-col gap-1">
-      <Badge 
-        variant="outline" 
-        className="text-xs"
-        style={{ 
-          backgroundColor: schedule.sch_color || '#f3f4f6',
-          borderColor: schedule.sch_color || '#d1d5db'
-        }}
+    <div className="flex items-center">
+      <div
+        className="p-2 rounded-md w-full text-center"
+        style={{ backgroundColor: bg, color: textColor }}
       >
-        {schedule.schedule_code}
-      </Badge>
-      {schedule.in_time && schedule.out_time && (
-        <span className="text-xs text-muted-foreground">
-          {schedule.in_time} - {schedule.out_time}
-        </span>
-      )}
+        <div className="text-sm font-semibold truncate">{shiftLabel}</div>
+      </div>
     </div>
   );
 };
@@ -199,6 +210,8 @@ export const WeeklyRosterTable: React.FC<WeeklyRosterTableProps> = ({
       onSelectAll={handleSelectAll}
       onEditItem={onEdit}
       onDeleteItem={onDelete}
+  onPageChange={() => {}}
+  onPageSizeChange={() => {}}
       noDataMessage={t('scheduling.weeklyRoster.noData')}
       isLoading={isLoading}
     />

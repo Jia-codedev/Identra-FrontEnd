@@ -1,8 +1,8 @@
 "use client";
 import lodash from "lodash";
 import { useState, useMemo, useCallback } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { HolidaysState, IHoliday, HolidayFilters } from "../types";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { HolidaysState, IHoliday, HolidayFilters, CreateHolidayRequest } from "../types";
 import holidaysApi from "@/services/scheduling/holidays";
 
 const PAGE_SIZE = 10;
@@ -42,6 +42,47 @@ export const useHolidays = () => {
           offset: state.page,
         })
         .then((response) => response.data),
+  });
+
+  const queryClient = useQueryClient();
+
+  type AddHolidayResponse = {
+    success?: boolean;
+    message?: string;
+    data: IHoliday;
+  };
+
+  const addHolidayFn: (payload: CreateHolidayRequest) => Promise<AddHolidayResponse> = (
+    payload
+  ) => holidaysApi.addHoliday(payload).then((response) => response.data as AddHolidayResponse);
+
+  const addHolidayMutation = useMutation<AddHolidayResponse, unknown, CreateHolidayRequest>({
+    mutationFn: addHolidayFn,
+    onSuccess: (response: AddHolidayResponse) => {
+        try {
+          const key = ["holidays", state.filters, state.search, state.page, state.pageSize];
+
+          queryClient.setQueryData(key, (old: any) => {
+            if (!old || !old.success) return old;
+
+            const existing: IHoliday[] = Array.isArray(old.data) ? old.data : [];
+
+            // Prepend new holiday to the current page's data and trim to pageSize
+            const newList = [response.data, ...existing].slice(0, state.pageSize);
+
+            return {
+              ...old,
+              data: newList,
+              total: (old.total || 0) + 1,
+            };
+          });
+        } catch (e) {
+          // If updating cache fails, don't throw — leave original cache intact
+          // The caller can still call refetch() if needed
+          // eslint-disable-next-line no-console
+          console.error("Failed to update holidays cache after add:", e);
+        }
+    },
   });
 
   // Get holidays and pagination data from server response
@@ -167,5 +208,14 @@ export const useHolidays = () => {
     selectAll,
     clearSelection,
     refetch,
+    // Mutation helpers to add holidays and update cache without invalidation
+    addHoliday: addHolidayMutation.mutate,
+    addHolidayAsync: addHolidayMutation.mutateAsync,
+    addHolidayStatus: {
+      status: addHolidayMutation.status,
+      isLoading: addHolidayMutation.status === "pending",
+      isError: addHolidayMutation.status === "error",
+      error: addHolidayMutation.error,
+    },
   };
 };
