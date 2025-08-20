@@ -9,6 +9,14 @@ class WorkflowStepsApi {
     return apiClient.get(`/workflowTypeStep/workflow/${workflowId}`);
   }
 
+  getStepById(id: number) {
+    return apiClient.get(`/workflowTypeStep/get/${id}`);
+  }
+
+  editStep(id: number, data: any) {
+    return apiClient.put(`/workflowTypeStep/edit/${id}`, data);
+  }
+
   deleteStep(id: number) {
     return apiClient.delete(`/workflowTypeStep/delete/${id}`);
   }

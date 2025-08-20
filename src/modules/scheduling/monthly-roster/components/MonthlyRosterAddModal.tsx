@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import EmployeeCombobox from '@/components/ui/employee-combobox';
 import { Label } from '@/components/ui/label';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -70,14 +71,11 @@ export const MonthlyRosterAddModal: React.FC<MonthlyRosterAddModalProps> = ({
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="employee_id">Employee ID</Label>
-            <Input
-              id="employee_id"
-              type="number"
-              value={formData.employee_id || ''}
-              onChange={(e) => setFormData(prev => ({ ...prev, employee_id: parseInt(e.target.value) || undefined }))}
-              placeholder="Enter employee ID"
-              required
+            <Label htmlFor="employee_id">Employee</Label>
+            <EmployeeCombobox
+              value={formData.employee_id ?? null}
+              onChange={(v) => setFormData(prev => ({ ...prev, employee_id: v ?? undefined }))}
+              placeholder="Select employee"
             />
           </div>
 
@@ -146,13 +144,11 @@ export const MonthlyRosterAddModal: React.FC<MonthlyRosterAddModalProps> = ({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="manager_id">Manager ID (Optional)</Label>
-            <Input
-              id="manager_id"
-              type="number"
-              value={formData.manager_id || ''}
-              onChange={(e) => setFormData(prev => ({ ...prev, manager_id: parseInt(e.target.value) || undefined }))}
-              placeholder="Enter manager ID"
+            <Label htmlFor="manager_id">Manager (Optional)</Label>
+            <EmployeeCombobox
+              value={formData.manager_id ?? null}
+              onChange={(v) => setFormData(prev => ({ ...prev, manager_id: v ?? undefined }))}
+              placeholder="Select manager"
             />
           </div>
 

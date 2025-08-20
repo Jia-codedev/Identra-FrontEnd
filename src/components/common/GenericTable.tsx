@@ -82,7 +82,7 @@ export function GenericTable<T>({
   }
 
   return (
-    <div className="overflow-x-auto rounded-b-3xl px-4">
+    <div className="overflow-x-auto w-full grid grid-cols-1 rounded-b-3xl px-4">
       <div className="backdrop-blur-xl mt-4 bg-card/70 border border-border rounded-2xl overflow-hidden">
         <Table>
           <TableHeader>

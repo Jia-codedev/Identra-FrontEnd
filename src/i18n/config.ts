@@ -21,7 +21,8 @@ export default getRequestConfig(async ({ locale }) => {
       settings,
       validation,
       chatbot,
-      toast
+  toast,
+  workflow
     ] = await Promise.all([
       import(`./locales/${locale}/common.json`),
       import(`./locales/${locale}/auth.json`),
@@ -31,9 +32,10 @@ export default getRequestConfig(async ({ locale }) => {
       import(`./locales/${locale}/scheduling.json`),
       import(`./locales/${locale}/settings.json`),
       import(`./locales/${locale}/validation.json`),
-      import(`./locales/${locale}/chatbot.json`),
-      import(`./locales/${locale}/toast.json`),
-      import(`./locales/${locale}/workflow.json`)
+  import(`./locales/${locale}/chatbot.json`),
+  import(`./locales/${locale}/toast.json`),
+  import(`./locales/${locale}/workflow.json`),
+  import(`./locales/${locale}/translator.json`)
     ]);
 
     return {
@@ -47,12 +49,14 @@ export default getRequestConfig(async ({ locale }) => {
         settings: settings.default,
         validation: validation.default,
         chatbot: chatbot.default,
-        toast: toast.default,
+    toast: toast.default,
         ...common.default,
         navigation: common.default.navigation,
         messages: common.default.messages,
         pagination: common.default.pagination,
-        appearance: settings.default.appearance
+  appearance: settings.default.appearance,
+  workflow: workflow?.default ?? {},
+  translator: (await import(`./locales/${locale}/translator.json`)).default || {}
       },
       locale
     };

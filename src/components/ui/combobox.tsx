@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
+import ReactDOM from 'react-dom';
 import { Input } from "@/components/ui/input";
 import { X, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -40,6 +41,7 @@ export const Combobox: React.FC<ComboboxProps> = ({
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const [dropdownStyle, setDropdownStyle] = useState<{ left: number; top: number; width: number } | null>(null);
 
   // Find selected option
   const selectedOption = options.find((option) => option.value === value);
@@ -154,6 +156,26 @@ export const Combobox: React.FC<ComboboxProps> = ({
     };
   }, []);
 
+  // Compute dropdown position so it can be rendered in a portal and not be clipped
+  const updateDropdownPosition = () => {
+    const el = inputRef.current;
+    if (!el) return setDropdownStyle(null);
+    const rect = el.getBoundingClientRect();
+    setDropdownStyle({ left: rect.left + window.scrollX, top: rect.bottom + window.scrollY, width: rect.width });
+  };
+
+  useEffect(() => {
+    if (isOpen) {
+      updateDropdownPosition();
+      window.addEventListener('resize', updateDropdownPosition);
+      window.addEventListener('scroll', updateDropdownPosition, true);
+    }
+    return () => {
+      window.removeEventListener('resize', updateDropdownPosition);
+      window.removeEventListener('scroll', updateDropdownPosition, true);
+    };
+  }, [isOpen]);
+
   return (
     <div className={cn("relative", className)}>
       <div className="relative">
@@ -165,7 +187,7 @@ export const Combobox: React.FC<ComboboxProps> = ({
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
           disabled={disabled}
-          className="pr-8"
+          className="pr-8 bg-input text-foreground text-sm"
           autoComplete="off"
         />
         <div className="absolute inset-y-0 right-0 flex items-center">
@@ -173,61 +195,54 @@ export const Combobox: React.FC<ComboboxProps> = ({
             <button
               type="button"
               onClick={handleClear}
-              className="p-1 text-gray-400 hover:text-gray-600 mr-1"
+              className="p-1 text-muted-foreground hover:text-foreground/80 mr-1"
             >
               <X className="h-4 w-4" />
             </button>
           )}
           <ChevronDown
             className={cn(
-              "h-4 w-4 text-gray-400 mr-2 transition-transform",
+              "h-4 w-4 text-muted-foreground mr-2 transition-transform",
               isOpen && "rotate-180"
             )}
           />
         </div>
       </div>
 
-      {/* Dropdown */}
-      {isOpen && (
+      {/* Dropdown (rendered in a portal to avoid clipping) */}
+      {isOpen && dropdownStyle && ReactDOM.createPortal(
         <div
           ref={dropdownRef}
-          className="absolute z-50 w-full mt-1 bg-white border rounded-md shadow-lg max-h-60 overflow-hidden"
+          style={{ left: dropdownStyle.left, top: dropdownStyle.top, width: dropdownStyle.width }}
+          className="absolute z-[9999] bg-popover text-popover-foreground border border-border rounded-md shadow-sm max-h-48 overflow-hidden"
         >
           {isLoading ? (
-            <div className="p-3 text-gray-500 text-sm flex items-center gap-2">
-              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-900"></div>
-              Loading...
+            <div className="p-2 text-muted-foreground text-sm flex items-center gap-2">
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current"></div>
+              {"Loading..."}
             </div>
           ) : filteredOptions.length > 0 ? (
-            <div className="max-h-60 overflow-y-auto">
+            <div className="max-h-48 overflow-y-auto">
               {filteredOptions.map((option, index) => (
                 <div
                   key={option.value}
                   onClick={() => handleOptionSelect(option)}
                   className={cn(
-                    "p-3 cursor-pointer border-b last:border-b-0 transition-colors duration-150",
+                    "px-2 py-2 cursor-pointer border-b last:border-b-0 transition-colors duration-150 text-sm",
                     index === highlightedIndex
-                      ? "bg-blue-100 border-blue-200"
-                      : "hover:bg-blue-50"
+                      ? "bg-accent text-accent-foreground"
+                      : "hover:bg-accent/10"
                   )}
                 >
-                  <div
-                    className={cn(
-                      "font-medium",
-                      index === highlightedIndex
-                        ? "text-blue-900"
-                        : "text-gray-900"
-                    )}
-                  >
-                    {option.label}
-                  </div>
+                  <div className={cn("text-sm font-medium", index === highlightedIndex ? "" : "")}>{option.label}</div>
                 </div>
               ))}
             </div>
           ) : (
-            <div className="p-3 text-gray-500 text-sm">{emptyMessage}</div>
+            <div className="p-2 text-muted-foreground text-sm">{emptyMessage}</div>
           )}
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );

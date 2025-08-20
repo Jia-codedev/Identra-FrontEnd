@@ -12,6 +12,8 @@ import enSettings from '@/i18n/locales/en/settings.json';
 import enValidation from '@/i18n/locales/en/validation.json';
 import enChatbot from '@/i18n/locales/en/chatbot.json';
 import enToast from '@/i18n/locales/en/toast.json';
+import enWorkflow from '@/i18n/locales/en/workflow.json';
+import enTranslator from '@/i18n/locales/en/translator.json';
 
 import arCommon from '@/i18n/locales/ar/common.json';
 import arAuth from '@/i18n/locales/ar/auth.json';
@@ -23,11 +25,16 @@ import arSettings from '@/i18n/locales/ar/settings.json';
 import arValidation from '@/i18n/locales/ar/validation.json';
 import arChatbot from '@/i18n/locales/ar/chatbot.json';
 import arToast from '@/i18n/locales/ar/toast.json';
+import arWorkflow from '@/i18n/locales/ar/workflow.json';
+import arTranslator from '@/i18n/locales/ar/translator.json';
 const enTranslations = {
   common: enCommon,
+  leaveManagement: enCommon.leaveManagement || {},
   auth: enAuth,
   dashboard: enDashboard,
   masterData: enMasterData,
+  workflow: enWorkflow || {},
+  translator: enTranslator || {},
   employee: enEmployee,
   scheduling: enScheduling,
   settings: enSettings,
@@ -53,9 +60,12 @@ const enTranslations = {
 
 const arTranslations = {
   common: arCommon,
+  leaveManagement: arCommon.leaveManagement || {},
   auth: arAuth,
   dashboard: arDashboard,
   masterData: arMasterData,
+  workflow: arWorkflow || {},
+  translator: arTranslator || {},
   employee: arEmployee,
   scheduling: arScheduling,
   settings: arSettings,

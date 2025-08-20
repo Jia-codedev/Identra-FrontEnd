@@ -19,11 +19,26 @@ export const useNavigation = () => {
       label: t("common.dashboard"),
       icon: FiHome,
       secondary: [
-        { label: t("navigation.selfStatistics"), href: "/workforce-analytics/my-insights" },
-        { label: t("navigation.teamStatistics"), href: "/workforce-analytics/team-insights" },
-        { label: t("navigation.activityMonitor"), href: "/workforce-analytics/activity-log" },
-        { label: t("navigation.teamEfficiency"), href: "/workforce-analytics/productivity-metrics" },
-        { label: t("navigation.geoTracking"), href: "/workforce-analytics/location-intelligence" },
+        {
+          label: t("navigation.selfStatistics"),
+          href: "/workforce-analytics/my-insights",
+        },
+        {
+          label: t("navigation.teamStatistics"),
+          href: "/workforce-analytics/team-insights",
+        },
+        {
+          label: t("navigation.activityMonitor"),
+          href: "/workforce-analytics/activity-log",
+        },
+        {
+          label: t("navigation.teamEfficiency"),
+          href: "/workforce-analytics/productivity-metrics",
+        },
+        {
+          label: t("navigation.geoTracking"),
+          href: "/workforce-analytics/location-intelligence",
+        },
       ],
     },
     {
@@ -31,7 +46,10 @@ export const useNavigation = () => {
       label: t("common.masterData"),
       icon: FiDatabase,
       secondary: [
-        { label: t("navigation.regions"), href: "/master-data/site-managements" },
+        {
+          label: t("navigation.regions"),
+          href: "/master-data/site-managements",
+        },
         { label: t("navigation.grades"), href: "/master-data/job-levels" },
         {
           label: t("navigation.designations"),
@@ -53,6 +71,10 @@ export const useNavigation = () => {
           label: t("navigation.organizationStructure"),
           href: "/master-data/hierarchy-management",
         },
+        {
+          label: t("navigation.departmentAdmins"),
+          href: "/master-data/dept-admins",
+        },
       ],
     },
     {
@@ -60,7 +82,10 @@ export const useNavigation = () => {
       label: t("common.employeeMaster"),
       icon: FiUsers,
       secondary: [
-        { label: t("navigation.employees"), href: "/employee-management/workforce-directory" },
+        {
+          label: t("navigation.employees"),
+          href: "/employee-management/workforce-directory",
+        },
         {
           label: t("navigation.employeeTypes"),
           href: "/employee-management/contract-types",
@@ -77,7 +102,10 @@ export const useNavigation = () => {
       icon: FiCalendar,
       secondary: [
         // { label: t("navigation.reasons"), href: "/roster-management/reasons" },
-        { label: t("navigation.holidays"), href: "/roster-management/holiday-calendar" },
+        {
+          label: t("navigation.holidays"),
+          href: "/roster-management/holiday-calendar",
+        },
         {
           label: t("navigation.ramadanDates"),
           href: "/roster-management/ramadan-hours-setup",
@@ -101,9 +129,14 @@ export const useNavigation = () => {
       label: t("common.workforce"),
       icon: FiBriefcase,
       secondary: [
-        { label: t("navigation.workFlow"), href: "/workforce/process-automation" },
-        { label: t("navigation.approvals"), href: "/workforce/request-authorizations" },
-        { label: t("navigation.reports"), href: "/workforce/analytics-reports" },
+        {
+          label: t("navigation.approvals"),
+          href: "/workforce/request-authorizations",
+        },
+        {
+          label: t("navigation.reports"),
+          href: "/workforce/analytics-reports",
+        },
       ],
     },
     {
@@ -111,12 +144,19 @@ export const useNavigation = () => {
       label: t("navigation.leaveTracker"),
       icon: FiClock,
       secondary: [
+        {
+          label: t("navigation.workFlow"),
+          href: "/leave-management/process-automation",
+        },
         { label: t("navigation.leaves"), href: "/leave-management/leaves" },
         {
           label: t("navigation.permissions"),
           href: "/leave-management/permission-management",
         },
-        { label: t("navigation.punches"), href: "/leave-management/attendance-logs" },
+        {
+          label: t("navigation.punches"),
+          href: "/leave-management/attendance-logs",
+        },
       ],
     },
   ];
@@ -127,7 +167,7 @@ export const useNavigation = () => {
     { label: t("common.language"), href: "/language" },
     { label: t("common.appearance"), href: "/theme-layout" },
     { label: t("common.support"), href: "/help-support" },
-    { label: t("common.logout"), href: "/sign-out", className: "text-red-600" },
+    { label: t("common.logout"), href: "/", className: "text-red-600" },
   ];
 
   // const SETTINGS_LINKS = [

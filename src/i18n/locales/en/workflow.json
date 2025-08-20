@@ -1,0 +1,19 @@
+{
+  "code": "Code",
+  "name": "Name",
+  "nameEng": "Name (EN)",
+  "nameArb": "Name (AR)",
+  "category": "Category",
+  "categoryEng": "Category (EN)",
+  "categoryArb": "Category (AR)",
+  "add": "Add Workflow",
+  "steps": "Steps",
+  "addStep": "Add Step",
+  "stepEng": "Step (EN)",
+  "stepArb": "Step (AR)",
+  "role": "Role",
+  "isFinal": "Final Step",
+  "onSuccess": "On Success",
+  "onFailure": "On Failure",
+  "noData": "No workflow types found"
+}

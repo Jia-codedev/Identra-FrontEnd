@@ -26,7 +26,7 @@ export const SecondaryNav: React.FC<SecondaryNavProps> = ({ activeMenuObj }) => 
   }
 
   return (
-    <div className="w-full items-start justify-between mt-4 shadow-[inset_0_0_8px_rgba(2,56,0,0.09)] rounded-lg p-1 lg:flex hidden">
+    <div className="w-full items-start justify-between mt-4 shadow-[inset_0_0_8px_rgba(2,56,0,0.09)] rounded-lg p-1 xl:flex hidden">
       <motion.div
         className="flex space-x-4 overflow-x-scroll overflow-y-hidden scrollbar-hide"
         variants={{

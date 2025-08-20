@@ -15,6 +15,7 @@
   "add": "إضافة",
   "edit": "تعديل",
   "delete": "حذف",
+  "remove": "إزالة",
   "save": "حفظ",
   "cancel": "إلغاء",
   "close": "إغلاق",
@@ -105,6 +106,7 @@
     "december": "ديسمبر"
   },
   "navigation": {
+    "departmentAdmins": "مدراء الأقسام",
     "selfStatistics": "إحصائياتي",
     "teamStatistics": "إحصائيات الفريق",
     "activityMonitor": "مراقب النشاط",
@@ -131,8 +133,20 @@
     "reports": "التقارير",
     "leaveTracker": "متتبع الإجازات",
     "leaves": "الإجازات",
+    "leaveManagement": {
+      "processAutomation": {
+        "title": "أتمتة العمليات",
+        "description": "إدارة أنواع سير العمل والخطوات لطلبات الإجازة والموافقات."
+      }
+    },
     "permissions": "الأذونات",
     "punches": "الطبعات"
+  },
+  "leaveManagement": {
+    "processAutomation": {
+      "title": "أتمتة العمليات",
+      "description": "إدارة أنواع سير العمل والخطوات لطلبات الإجازة والموافقات."
+    }
   },
   "messages": {
     "success": {

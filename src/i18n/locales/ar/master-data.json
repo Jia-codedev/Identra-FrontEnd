@@ -9,13 +9,17 @@
     "regionNameArabic": "اسم المنطقة (عربي)",
     "regionCode": "رمز المنطقة",
     "city": "المدينة",
-    "regionLabel": "تسمية المنطقة",
+  "regionLabel": "تسمية المنطقة",
+  "region": "المنطقة",
+  "id": "المعرف",
     "country": "البلد",
     "countryCode": "رمز البلد",
     "radius": "نصف القطر (كم)",
     "geolocation": "الموقع الجغرافي",
     "searchPlaceholder": "البحث في المناطق...",
-    "noRegionsFound": "لم يتم العثور على مناطق.",
+  "selectCountry": "اختر البلد",
+  "noRegionsFound": "لم يتم العثور على مناطق.",
+  "noCountriesFound": "لم يتم العثور على دول.",
     "enterRegionName": "أدخل اسم المنطقة",
     "enterRegionNameArabic": "أدخل اسم المنطقة بالعربية",
     "enterRegionCode": "أدخل رمز المنطقة",
@@ -138,5 +142,35 @@
     "deleteError": "فشل في حذف نوع المنظمة",
     "addSuccess": "تم إنشاء نوع المنظمة بنجاح",
     "editSuccess": "تم تحديث نوع المنظمة بنجاح"
+  }
+  ,
+  "workflow": {
+    "code": "الرمز",
+    "name": "الاسم",
+    "nameEng": "الاسم (إنجليزي)",
+    "nameArb": "الاسم (عربي)",
+    "category": "الفئة",
+    "categoryEng": "الفئة (إنجليزي)",
+    "categoryArb": "الفئة (عربي)",
+    "add": "إضافة سير عمل",
+    "steps": "الخطوات",
+    "stepEng": "الخطوة (إنجليزي)",
+    "stepArb": "الخطوة (عربي)",
+    "noData": "لم يتم العثور على أنواع سير العمل"
+  }
+
+  ,"deptAdmins": {
+    "title": "مسؤولو الأقسام",
+    "description": "إدارة تفويضات ومسؤولي الأقسام.",
+    "add": "إضافة مسؤول قسم",
+    "edit": "تعديل مسؤول قسم",
+    "searchPlaceholder": "البحث في مسؤولي الأقسام...",
+    "employeeId": "معرف الموظف",
+    "from": "من",
+    "to": "إلى",
+    "level": "المستوى",
+    "active": "نشط",
+    "remarks": "ملاحظات",
+    "noData": "لم يتم العثور على مسؤولي الأقسام"
   }
 }

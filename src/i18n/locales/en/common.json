@@ -15,6 +15,7 @@
   "add": "Add",
   "edit": "Edit",
   "delete": "Delete",
+  "remove": "Remove",
   "save": "Save",
   "cancel": "Cancel",
   "close": "Close",
@@ -104,6 +105,7 @@
     "december": "December"
   },
   "navigation": {
+    "departmentAdmins": "Department Admins",
     "selfStatistics": "My Insights",
     "teamStatistics": "Team Insights",
     "activityMonitor": "Workforce Activity Log",
@@ -130,8 +132,20 @@
     "reports": "Analytics & Reports",
     "leaveTracker": "Leave Management",
     "leaves": "Leave Management",
+    "leaveManagement": {
+      "processAutomation": {
+        "title": "Process Automation",
+        "description": "Manage workflow types and steps for leave requests and approvals."
+      }
+    },
     "permissions": "Permission Management",
     "punches": "Attendance Logs"
+  },
+  "leaveManagement": {
+    "processAutomation": {
+      "title": "Process Automation",
+      "description": "Manage workflow types and steps for leave requests and approvals."
+    }
   },
   "messages": {
     "success": {
