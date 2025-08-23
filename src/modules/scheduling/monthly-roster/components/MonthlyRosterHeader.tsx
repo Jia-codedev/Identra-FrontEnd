@@ -20,9 +20,10 @@ interface MonthlyRosterHeaderProps {
   onFiltersChange: (filters: Partial<MonthlyRosterFilters>) => void;
   onAddRoster?: () => void;
   onAddSampleData?: () => void;
+  selectedIds?: number[];
 }
 
-export const MonthlyRosterHeader: React.FC<MonthlyRosterHeaderProps> = ({ filters, onFiltersChange, onAddRoster, onAddSampleData }) => {
+export const MonthlyRosterHeader: React.FC<MonthlyRosterHeaderProps> = ({ filters, onFiltersChange, onAddRoster, onAddSampleData, selectedIds }) => {
   const { t } = useTranslations();
   const { isRTL } = useLanguage();
 
@@ -91,6 +92,8 @@ export const MonthlyRosterHeader: React.FC<MonthlyRosterHeaderProps> = ({ filter
   const fileInputRef = React.useRef<HTMLInputElement | null>(null);
 
   const handleImportClick = () => {
+    // Create a file input on demand and trigger it. When a file is selected
+    // we append it to FormData under the 'file' key (server expects 'file').
     if (!fileInputRef.current) {
       const input = document.createElement('input');
       input.type = 'file';
@@ -112,25 +115,49 @@ export const MonthlyRosterHeader: React.FC<MonthlyRosterHeaderProps> = ({ filter
   };
 
   const handleExportClick = async () => {
-    if (!filters.organization_id || !filters.month || !filters.year) {
-      // prefer client to ensure export filters are set
-      alert('Select organization, month and year before export');
-      return;
-    }
     try {
-      const blobRes = await exportMutation.mutateAsync({ organization_id: filters.organization_id!, month: filters.month!, year: filters.year!, employee_group_id: filters.employee_group_id });
-      const blob = blobRes?.data;
+      let payload: any = {};
+      if (selectedIds && selectedIds.length > 0) {
+        payload = { ids: selectedIds };
+      } else {
+        // send current filters to backend to export all matching rows
+        payload = {
+          organization_id: filters.organization_id,
+          employee_group_id: filters.employee_group_id,
+          employee_id: filters.employee_id,
+          manager_id: filters.manager_id,
+          schedule_id: filters.schedule_id,
+          finalize_flag: filters.finalize_flag,
+          month: filters.month,
+          year: filters.year,
+        };
+      }
+
+  const blobRes = await exportMutation.mutateAsync(payload);
+  const blob = blobRes?.data;
       if (!blob) throw new Error('No blob returned');
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `monthly_roster_${filters.organization_id}_${filters.year}_${filters.month}.xlsx`;
+      // choose filename based on payload
+      const fnParts = ['monthly_roster'];
+      if (payload.organization_id) fnParts.push(String(payload.organization_id));
+      if (payload.year) fnParts.push(String(payload.year));
+      if (payload.month) fnParts.push(String(payload.month));
+  a.download = `${fnParts.join('_')}.csv`;
       document.body.appendChild(a);
       a.click();
       a.remove();
       window.URL.revokeObjectURL(url);
+      // show a simple notification
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const { toast } = require('sonner');
+      try { toast.success('Export started'); } catch {}
     } catch (err) {
       console.error('Export failed', err);
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const { toast } = require('sonner');
+      try { toast.error('Export failed'); } catch {}
     }
   };
 

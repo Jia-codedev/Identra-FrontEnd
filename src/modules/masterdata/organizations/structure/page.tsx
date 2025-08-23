@@ -1,16 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
 import {
     Building2,
     RefreshCw,
@@ -21,14 +14,13 @@ import {
 import { useTranslations } from '@/hooks/use-translations';
 import { useLanguage } from '@/providers/language-provider';
 import { useOrganizationStructure } from '../hooks/useOrganizationStructure';
-import { OrganizationChart, ChartStyle, chartStyleOptions } from '../components/OrganizationChart';
-import { ChartStylePreview } from '../components/ChartStylePreview';
+import { OrganizationChart } from '../components/OrganizationChart';
 import { IOrganizationStructure } from '../types';
 
 const OrganizationStructurePage: React.FC = () => {
     const { t } = useTranslations();
     const { currentLocale, isRTL, setLanguage } = useLanguage();
-    const [chartStyle, setChartStyle] = useState<ChartStyle>('hierarchical');
+    const fixedChartStyle = 'horizontal';
     const {
         data: organizationData,
         isLoading,
@@ -109,21 +101,7 @@ const OrganizationStructurePage: React.FC = () => {
                 </div>
 
                 <div className={`flex items-center gap-2 px-4 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                    <Select value={chartStyle} onValueChange={(value) => setChartStyle(value as ChartStyle)}>
-                        <SelectTrigger className={`w-40 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                            <SelectValue placeholder="Select style" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {chartStyleOptions.map((option) => (
-                                <SelectItem key={option.value} value={option.value}>
-                                    <div className={`flex flex-col ${isRTL ? 'text-right' : 'text-left'}`}>
-                                        <span className="font-medium">{option.label}</span>
-                                        <span className="text-xs text-muted-foreground">{option.description}</span>
-                                    </div>
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
+                    {/* Horizontal layout is fixed — no selector shown */}
 
                     <Button
                         variant="outline"
@@ -161,14 +139,7 @@ const OrganizationStructurePage: React.FC = () => {
             </div>
             
             {/* Style Preview */}
-            {organizationData?.data && organizationData.data.length > 0 && (
-                <div className="px-4">
-                    <ChartStylePreview 
-                        currentStyle={chartStyle}
-                        onStyleChange={setChartStyle}
-                    />
-                </div>
-            )}
+            {/* No style preview — chart is always horizontal */}
 
             <div className="border rounded-2xl p-1">
                 {/* Main Content */}
@@ -186,7 +157,7 @@ const OrganizationStructurePage: React.FC = () => {
                         </AlertDescription>
                     </Alert>
                 ) : organizationData?.data && organizationData.data.length > 0 ? (
-                    <OrganizationChart data={organizationData.data} style={chartStyle} />
+                    <OrganizationChart data={organizationData.data} style={fixedChartStyle} />
                 ) : (
                     <div className={`flex flex-col items-center justify-center text-muted-foreground space-y-2 ${isRTL ? 'text-right' : 'text-left'}`}>
                         <Building2 className="h-12 w-12 opacity-50" />

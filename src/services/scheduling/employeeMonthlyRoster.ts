@@ -60,7 +60,7 @@ class EmployeeMonthlyRosterApi {
     return apiClient.post("/employeeMonthlyRoster/add", data);
   }
 
-  getAll(params?: { employee_id?: number; manager_id?: number; finalize_flag?: boolean }) {
+  getAll(params?: { organization_id?: number; month?: number; year?: number; day?: number; employee_id?: number; employee_group_id?: number; manager_id?: number; schedule_id?: number; finalize_flag?: boolean; limit?: number; offset?: number; orderBy?: string }) {
     return apiClient.get("/employeeMonthlyRoster/all", { params });
   }
 
@@ -86,8 +86,11 @@ class EmployeeMonthlyRosterApi {
 
   // Bulk import monthly roster via file upload (CSV/Excel)
   importFile(formData: FormData) {
+    // Do not set Content-Type header here — letting the browser/axios
+    // populate the correct multipart boundary is required for servers
+    // to parse the file field correctly.
     return apiClient.post("/employeeMonthlyRoster/import", formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
+      headers: { 'Content-Type': undefined as any },
     });
   }
 

@@ -26,7 +26,8 @@ class SchedulesApi {
   }
 
   getScheduleById(id: number) {
-    return apiClient.get(`/schedule/${id}`);
+    // Backend route is defined as GET /schedule/get:id (e.g. /schedule/get1002)
+    return apiClient.get(`/schedule/get${id}`);
   }
 
   getSchedulesByOrganization(organizationId: number) {

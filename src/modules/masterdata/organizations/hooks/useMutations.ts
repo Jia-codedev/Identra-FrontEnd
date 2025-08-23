@@ -102,10 +102,22 @@ export function useOrganizationMutations() {
     });
     const deleteOrganizationMutation = useMutation({
         mutationFn: async (id: number) => {
-            const data = await organizationsApi.deleteOrganization(id);
-            return data;
+            const response = await organizationsApi.deleteOrganization(id);
+            // If backend returns Conflict (409), surface the message and return null
+            if (response?.status === 409) {
+                toast.error(response.data?.message || t('toast.error.deleting'));
+                return null;
+            }
+            // For other non-success statuses, show generic error and return null
+            if (response?.status !== 200) {
+                toast.error(response.data?.message || t('toast.error.deleting'));
+                return null;
+            }
+            return response;
         },
-        onSuccess: () => {
+        onSuccess: (data) => {
+            // If mutationFn returned null (conflict or handled error), do nothing
+            if (!data) return;
             toast.success(t('toast.success.deleted'));
             queryClient.invalidateQueries({ queryKey: ["organizations"] });
         },
@@ -116,10 +128,19 @@ export function useOrganizationMutations() {
     });
     const deleteOrganizationsMutation = useMutation({
         mutationFn: async (ids: number[]) => {
-            const data = await organizationsApi.deleteOrganizations(ids);
-            return data;
+            const response = await organizationsApi.deleteOrganizations(ids);
+            if (response?.status === 409) {
+                toast.error(response.data?.message || t('toast.error.deletingMultiple'));
+                return null;
+            }
+            if (response?.status !== 200) {
+                toast.error(response.data?.message || t('toast.error.deletingMultiple'));
+                return null;
+            }
+            return response;
         },
-        onSuccess: () => {
+        onSuccess: (data) => {
+            if (!data) return;
             toast.success(t('toast.success.deletedMultiple'));
             queryClient.invalidateQueries({ queryKey: ["organizations"] });
         },

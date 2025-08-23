@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import EmployeeCombobox from '@/components/ui/employee-combobox';
 import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { CalendarIcon } from 'lucide-react';
@@ -18,6 +19,7 @@ interface MonthlyRosterAddModalProps {
   onClose: () => void;
   onSubmit: (data: CreateMonthlyRosterRequest) => void;
   isLoading?: boolean;
+  initialData?: Partial<CreateMonthlyRosterRequest> | null;
 }
 
 export const MonthlyRosterAddModal: React.FC<MonthlyRosterAddModalProps> = ({
@@ -25,6 +27,7 @@ export const MonthlyRosterAddModal: React.FC<MonthlyRosterAddModalProps> = ({
   onClose,
   onSubmit,
   isLoading = false,
+  initialData = null,
 }) => {
   const [formData, setFormData] = useState<Partial<CreateMonthlyRosterRequest>>({
     employee_id: undefined,
@@ -35,6 +38,26 @@ export const MonthlyRosterAddModal: React.FC<MonthlyRosterAddModalProps> = ({
   });
   const [fromDate, setFromDate] = useState<Date>();
   const [toDate, setToDate] = useState<Date>();
+  
+
+  useEffect(() => {
+    if (initialData) {
+      setFormData(prev => ({ ...prev, ...initialData }));
+      if (initialData.from_date) {
+        try { setFromDate(new Date(initialData.from_date)); } catch { setFromDate(undefined); }
+      }
+      if (initialData.to_date) {
+        try { setToDate(new Date(initialData.to_date)); } catch { setToDate(undefined); }
+      }
+  // If editing, keep finalize_flag as provided
+    } else {
+      // clear when modal closed or initialData removed
+      setFormData({ employee_id: undefined, from_date: '', to_date: '', version_no: 1, finalize_flag: false });
+      setFromDate(undefined);
+      setToDate(undefined);
+      
+    }
+  }, [initialData, isOpen]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -51,7 +74,7 @@ export const MonthlyRosterAddModal: React.FC<MonthlyRosterAddModalProps> = ({
   };
 
   const handleClose = () => {
-    setFormData({
+    setFormData(initialData ? initialData : {
       employee_id: undefined,
       from_date: '',
       to_date: '',
@@ -67,7 +90,7 @@ export const MonthlyRosterAddModal: React.FC<MonthlyRosterAddModalProps> = ({
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Add Monthly Roster</DialogTitle>
+          <DialogTitle>{initialData ? 'Edit Monthly Roster' : 'Add Monthly Roster'}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
@@ -152,12 +175,22 @@ export const MonthlyRosterAddModal: React.FC<MonthlyRosterAddModalProps> = ({
             />
           </div>
 
+          <div className="flex items-center gap-2">
+            <Checkbox
+              checked={Boolean(formData.finalize_flag)}
+              onCheckedChange={(v) => {
+                setFormData(prev => ({ ...prev, finalize_flag: Boolean(v) }));
+              }}
+            />
+            <Label className="m-0">Finalize roster</Label>
+          </div>
+
           <div className="flex justify-end space-x-2">
             <Button type="button" variant="outline" onClick={handleClose}>
               Cancel
             </Button>
             <Button type="submit" disabled={isLoading || !formData.employee_id || !fromDate || !toDate}>
-              {isLoading ? 'Creating...' : 'Create Roster'}
+              {isLoading ? (initialData ? 'Updating...' : 'Creating...') : (initialData ? 'Update Roster' : 'Create Roster')}
             </Button>
           </div>
         </form>
