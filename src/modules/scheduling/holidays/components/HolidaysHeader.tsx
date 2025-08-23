@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { Search, Filter, Calendar, Clock, Users } from 'lucide-react';
+import { Search, Filter, Calendar, Clock, Users, List } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useTranslations } from '@/hooks/use-translations';
@@ -14,6 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { HolidayFilters } from '../types';
+// Using simple segmented buttons for better UX instead of Toggle
 
 interface HolidaysHeaderProps {
   search: string;
@@ -23,6 +24,9 @@ interface HolidaysHeaderProps {
   onDeleteSelected?: () => void;
   filters: HolidayFilters;
   onFiltersChange: (filters: Partial<HolidayFilters>) => void;
+  // view mode: 'table' or 'calendar'
+  viewMode?: 'table' | 'calendar';
+  onViewModeChange?: (mode: 'table' | 'calendar') => void;
 }
 
 export const HolidaysHeader: React.FC<HolidaysHeaderProps> = ({
@@ -33,6 +37,8 @@ export const HolidaysHeader: React.FC<HolidaysHeaderProps> = ({
   onDeleteSelected,
   filters,
   onFiltersChange,
+  viewMode,
+  onViewModeChange,
 }) => {
   const { t } = useTranslations();
   const { isRTL } = useLanguage();
@@ -59,7 +65,7 @@ export const HolidaysHeader: React.FC<HolidaysHeaderProps> = ({
   }));
 
   return (
-    <div className="sticky top-0 z-10 bg-background/80 rounded-t-3xl px-2 sm:px-4 py-4 sm:py-8 border-b border-border">
+    <div className="sticky top-0 z-10 bg-background rounded-t-3xl px-2 sm:px-4 py-4 sm:py-8 border-b border-border">
       <div className="flex flex-col gap-4 sm:gap-6">
         {/* Title and Description */}
         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4 sm:gap-6">
@@ -79,6 +85,30 @@ export const HolidaysHeader: React.FC<HolidaysHeaderProps> = ({
           
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-2">
+            {/* Segmented view toggle for better UX */}
+            <div className="flex items-center">
+              <div role="tablist" aria-label="View mode" className="inline-flex rounded-lg bg-muted/10 p-1">
+                <button
+                  role="tab"
+                  aria-pressed={viewMode !== 'calendar'}
+                  onClick={() => onViewModeChange && onViewModeChange('table')}
+                  className={`flex items-center gap-2 px-3 py-1 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ring ${!viewMode || viewMode === 'table' ? 'bg-card shadow text-card-foreground' : 'text-muted-foreground'}`}
+                >
+                  <List size={14} />
+                  <span className="hidden sm:inline">Table</span>
+                </button>
+
+                <button
+                  role="tab"
+                  aria-pressed={viewMode === 'calendar'}
+                  onClick={() => onViewModeChange && onViewModeChange('calendar')}
+                  className={`flex items-center gap-2 px-3 py-1 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ring ${viewMode === 'calendar' ? 'bg-card shadow text-card-foreground' : 'text-muted-foreground'}`}
+                >
+                  <Calendar size={14} />
+                  <span className="hidden sm:inline">Calendar</span>
+                </button>
+              </div>
+            </div>
             {selectedCount > 0 && onDeleteSelected && (
               <Button
                 variant="destructive"

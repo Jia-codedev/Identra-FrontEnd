@@ -125,21 +125,6 @@ export const useNavigation = () => {
       ],
     },
     {
-      id: "workforce",
-      label: t("common.workforce"),
-      icon: FiBriefcase,
-      secondary: [
-        {
-          label: t("navigation.approvals"),
-          href: "/workforce/request-authorizations",
-        },
-        {
-          label: t("navigation.reports"),
-          href: "/workforce/analytics-reports",
-        },
-      ],
-    },
-    {
       id: "leaveTracker",
       label: t("navigation.leaveTracker"),
       icon: FiClock,
@@ -156,6 +141,21 @@ export const useNavigation = () => {
         {
           label: t("navigation.punches"),
           href: "/leave-management/attendance-logs",
+        },
+      ],
+    },
+    {
+      id: "workforce",
+      label: t("common.workforce"),
+      icon: FiBriefcase,
+      secondary: [
+        {
+          label: t("navigation.approvals"),
+          href: "/workforce/request-authorizations",
+        },
+        {
+          label: t("navigation.reports"),
+          href: "/workforce/analytics-reports",
         },
       ],
     },

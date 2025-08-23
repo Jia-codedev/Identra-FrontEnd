@@ -17,6 +17,7 @@ import {
   HolidayModal,
   HolidaysHeader
 } from "../index";
+import HolidaysCalendarView from "../components/HolidaysCalendarView";
 import { CustomPagination } from "@/components/common/dashboard/Pagination";
 
 export default function HolidaysPage() {
@@ -57,6 +58,8 @@ export default function HolidaysPage() {
     type: "single" | "bulk" | null;
     id?: number;
   }>({ open: false, type: null });
+
+  const [viewMode, setViewMode] = useState<'table' | 'calendar'>('table');
 
   const handleAddHoliday = () => {
     setModalState({
@@ -125,22 +128,27 @@ export default function HolidaysPage() {
             onDeleteSelected={handleDeleteSelected}
             filters={filters}
             onFiltersChange={setFilters}
+            viewMode={viewMode}
+            onViewModeChange={setViewMode}
           />
-
-          <HolidaysTable
-            holidays={holidays}
-            selected={selected}
-            page={page}
-            pageSize={pageSize}
-            allChecked={allChecked}
-            onSelectHoliday={selectHoliday}
-            onSelectAll={selectAll}
-            isLoading={isLoading}
-            onEditHoliday={handleEditHoliday}
-            onDeleteHoliday={handleDeleteHoliday}
-            onPageChange={setPage}
-            onPageSizeChange={setPageSize}
-          />
+          {viewMode === 'table' ? (
+            <HolidaysTable
+              holidays={holidays}
+              selected={selected}
+              page={page}
+              pageSize={pageSize}
+              allChecked={allChecked}
+              onSelectHoliday={selectHoliday}
+              onSelectAll={selectAll}
+              isLoading={isLoading}
+              onEditHoliday={handleEditHoliday}
+              onDeleteHoliday={handleDeleteHoliday}
+              onPageChange={setPage}
+              onPageSizeChange={setPageSize}
+            />
+          ) : (
+            <HolidaysCalendarView holidays={holidays} />
+          )}
 
           <CustomPagination
             currentPage={page}
