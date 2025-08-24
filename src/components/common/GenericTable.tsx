@@ -10,8 +10,8 @@ import {
   TableRow,
   TableHead,
   TableCell,
-} from "@/components/ui/table";
-import { Checkbox } from "@/components/ui/checkbox";
+} from "@/components/ui/Table";
+import { Checkbox } from "@/components/ui/Checkbox";
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "@/hooks/use-translations";
 import { useLanguage } from "@/providers/language-provider";
@@ -36,8 +36,9 @@ interface GenericTableProps<T> {
   getItemDisplayName: (item: T, isRTL: boolean) => string;
   onSelectItem: (id: number) => void;
   onSelectAll: () => void;
-  onEditItem: (item: T) => void;
-  onDeleteItem: (id: number) => void;
+  onEditItem?: (item: T) => void;
+  onDeleteItem?: (id: number) => void;
+  actions?: (item: T) => React.ReactNode;
   noDataMessage: string;
   isLoading?: boolean;
   onPageChange: (page: number) => void;
@@ -57,6 +58,7 @@ export function GenericTable<T>({
   onSelectAll,
   onEditItem,
   onDeleteItem,
+  actions,
   noDataMessage,
   isLoading = false,
   onPageChange,
@@ -106,9 +108,11 @@ export function GenericTable<T>({
                   {column.header}
                 </TableHead>
               ))}
-              <TableHead className="w-32 text-center text-base font-bold text-primary drop-shadow-sm tracking-wide">
-                {t("common.actions")}
-              </TableHead>
+              { (onEditItem || onDeleteItem || actions) && (
+                <TableHead className="w-32 text-center text-base font-bold text-primary drop-shadow-sm tracking-wide">
+                  {t("common.actions")}
+                </TableHead>
+              ) }
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -142,29 +146,41 @@ export function GenericTable<T>({
                           {column.accessor(item, isRTL)}
                         </TableCell>
                       ))}
-                      <TableCell
-                        className={`text-center flex ${isRTL ? "flex-row-reverse" : "flex-row"
-                          } gap-2 justify-center`}
-                      >
-                        <Button
-                          size="icon"
-                          variant="outline"
-                          className="p-2 rounded-full group cursor-pointer"
-                          onClick={() => onEditItem(item)}
-                          aria-label={t("common.edit")}
+                      { (onEditItem || onDeleteItem || actions) && (
+                        <TableCell
+                          className={`text-center flex ${isRTL ? "flex-row-reverse" : "flex-row"
+                            } gap-2 justify-center`}
                         >
-                          <FiEdit2 className="text-primary group-hover:scale-110 transition-transform" />
-                        </Button>
-                        <Button
-                          size="icon"
-                          variant="destructive"
-                          className="p-2 rounded-full group cursor-pointer"
-                          onClick={() => onDeleteItem(itemId)}
-                          aria-label={t("common.delete")}
-                        >
-                          <FiTrash2 className="text-white group-hover:scale-110 transition-transform" />
-                        </Button>
-                      </TableCell>
+                          {actions ? (
+                            actions(item)
+                          ) : (
+                            <>
+                              {onEditItem && (
+                                <Button
+                                  size="icon"
+                                  variant="outline"
+                                  className="p-2 rounded-full group cursor-pointer"
+                                  onClick={() => onEditItem(item)}
+                                  aria-label={t("common.edit")}
+                                >
+                                  <FiEdit2 className="text-primary group-hover:scale-110 transition-transform" />
+                                </Button>
+                              )}
+                              {onDeleteItem && (
+                                <Button
+                                  size="icon"
+                                  variant="destructive"
+                                  className="p-2 rounded-full group cursor-pointer"
+                                  onClick={() => onDeleteItem(itemId)}
+                                  aria-label={t("common.delete")}
+                                >
+                                  <FiTrash2 className="text-white group-hover:scale-110 transition-transform" />
+                                </Button>
+                              )}
+                            </>
+                          )}
+                        </TableCell>
+                      )}
                     </TableRow>
                   );
                 })}

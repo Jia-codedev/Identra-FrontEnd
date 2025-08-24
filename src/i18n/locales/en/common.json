@@ -134,6 +134,8 @@
     "reports": "Analytics & Reports",
     "leaveTracker": "Leave Management",
     "leaves": "Leave Management",
+    "accept": "Accept",
+    "reject": "Reject",
     "leaveManagement": {
       "processAutomation": {
         "title": "Process Automation",
@@ -147,8 +149,32 @@
     "processAutomation": {
       "title": "Process Automation",
       "description": "Manage workflow types and steps for leave requests and approvals."
+    },
+    "leaves": {
+      "title": "Leaves",
+      "description": "Manage employee leave requests and approvals.",
+      "columns": {
+        "employee": "Employee",
+        "type": "Type",
+        "start": "Start",
+        "end": "End",
+        "status": "Status"
+      },
+      "actionsMenu": {
+        "approve": "Approve",
+        "reject": "Reject",
+        "approveWithRemarks": "Approve with remarks",
+        "rejectWithRemarks": "Reject with remarks",
+        "more": "More"
+      },
+      "confirmApprove": "Are you sure you want to approve this leave?",
+      "rejectRemarks": "Please provide rejection remarks (optional)",
+      "approveFailed": "Failed to approve leave",
+      "rejectFailed": "Failed to reject leave",
+      "noData": "No leaves found"
     }
   },
+  
   "messages": {
     "success": {
       "saved": "Data saved successfully",
@@ -201,7 +227,11 @@
   "noDataFound": "No data found",
   "common": {
     "error": "Error",
-    "noDataFound": "No data found"
+    "noDataFound": "No data found",
+    "approve": "Approve",
+    "reject": "Reject",
+    "approval": "Approval",
+    "rejection": "Rejection"
   },
   "workflow": {
     "add": "Add Workflow",

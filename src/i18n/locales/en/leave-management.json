@@ -1,0 +1,59 @@
+{
+  "title": "Leave Management",
+  "description": "Manage employee leave requests and approvals.",
+  "leaves": {
+    "title": "Leaves",
+    "description": "Manage employee leave requests and approvals.",
+    "columns": {
+      "employee": "Employee",
+      "type": "Type",
+      "start": "Start",
+      "end": "End",
+      "status": "Status"
+    },
+    "noData": "No leaves found"
+  }
+  ,
+  "permissions": {
+    "title": "Permissions",
+    "description": "Manage employee permission requests (late arrival, early departure, missing hours).",
+    "noData": "No permission requests found",
+    "columns": {
+      "employee": "Employee",
+      "type": "Permission Type",
+      "from": "From",
+      "to": "To",
+      "status": "Status",
+      "remarks": "Remarks"
+    },
+    "actionsMenu": {
+      "approve": "Approve",
+      "reject": "Reject"
+    },
+    "actions": {
+      "add": "Add Permission",
+      "edit": "Edit Permission",
+      "delete": "Delete Permission",
+      "cancel": "Cancel",
+      "refresh": "Refresh",
+      "save": "Save",
+      "search": "Search",
+      "selectAll": "Select All",
+      "deselectAll": "Deselect All"
+    },
+    "view": {
+      "table": "Table View",
+      "grid": "Grid View",
+      "toggle": "Toggle View"
+    },
+    "statuses": {
+      "pending": "Pending",
+      "approved": "Approved",
+      "rejected": "Rejected"
+    },
+    "confirmApprove": "Approve this permission?",
+    "approveFailed": "Failed to approve permission",
+    "rejectFailed": "Failed to reject permission",
+    "rejectRemarks": "Please provide rejection remarks (optional)"
+  }
+}

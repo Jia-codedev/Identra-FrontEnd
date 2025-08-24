@@ -2,7 +2,9 @@
 
 import { useLanguage } from '@/providers/language-provider';
 import { useMemo } from 'react';
+
 import enCommon from '@/i18n/locales/en/common.json';
+import enLeaveManagement from '@/i18n/locales/en/leave-management.json';
 import enAuth from '@/i18n/locales/en/auth.json';
 import enDashboard from '@/i18n/locales/en/dashboard.json';
 import enMasterData from '@/i18n/locales/en/master-data.json';
@@ -15,6 +17,7 @@ import enToast from '@/i18n/locales/en/toast.json';
 import enWorkflow from '@/i18n/locales/en/workflow.json';
 import enTranslator from '@/i18n/locales/en/translator.json';
 
+import arLeaveManagement from '@/i18n/locales/ar/leave-management.json';
 import arCommon from '@/i18n/locales/ar/common.json';
 import arAuth from '@/i18n/locales/ar/auth.json';
 import arDashboard from '@/i18n/locales/ar/dashboard.json';
@@ -29,7 +32,7 @@ import arWorkflow from '@/i18n/locales/ar/workflow.json';
 import arTranslator from '@/i18n/locales/ar/translator.json';
 const enTranslations = {
   common: enCommon,
-  leaveManagement: enCommon.leaveManagement || {},
+  leaveManagement: enLeaveManagement,
   auth: enAuth,
   dashboard: enDashboard,
   masterData: enMasterData,
@@ -58,9 +61,10 @@ const enTranslations = {
   employeeMaster: enEmployee.employeeMaster || {}
 };
 
+// If you have Arabic leave management translations, import and use them here
 const arTranslations = {
   common: arCommon,
-  leaveManagement: arCommon.leaveManagement || {},
+  leaveManagement: arLeaveManagement,
   auth: arAuth,
   dashboard: arDashboard,
   masterData: arMasterData,

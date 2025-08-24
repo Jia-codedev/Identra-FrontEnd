@@ -1,14 +1,18 @@
-import { notFound } from 'next/navigation';
-import { getRequestConfig } from 'next-intl/server';
+import { notFound } from "next/navigation";
+import { getRequestConfig } from "next-intl/server";
 
 // Can be imported from a shared config
-export const locales = ['en', 'ar'] as const;
-export const defaultLocale = 'en' as const;
+export const locales = ["en", "ar"] as const;
+export const defaultLocale = "en" as const;
 
 export type Locale = (typeof locales)[number];
 
 export default getRequestConfig(async ({ locale }) => {
-  if (typeof locale !== "string" || !(locales as readonly string[]).includes(locale)) notFound();
+  if (
+    typeof locale !== "string" ||
+    !(locales as readonly string[]).includes(locale)
+  )
+    notFound();
 
   try {
     const [
@@ -21,8 +25,10 @@ export default getRequestConfig(async ({ locale }) => {
       settings,
       validation,
       chatbot,
-  toast,
-  workflow
+      toast,
+      workflow,
+      leaveManagement,
+      translator,
     ] = await Promise.all([
       import(`./locales/${locale}/common.json`),
       import(`./locales/${locale}/auth.json`),
@@ -32,10 +38,11 @@ export default getRequestConfig(async ({ locale }) => {
       import(`./locales/${locale}/scheduling.json`),
       import(`./locales/${locale}/settings.json`),
       import(`./locales/${locale}/validation.json`),
-  import(`./locales/${locale}/chatbot.json`),
-  import(`./locales/${locale}/toast.json`),
-  import(`./locales/${locale}/workflow.json`),
-  import(`./locales/${locale}/translator.json`)
+      import(`./locales/${locale}/chatbot.json`),
+      import(`./locales/${locale}/toast.json`),
+      import(`./locales/${locale}/workflow.json`),
+      import(`./locales/${locale}/leave-management.json`),
+      import(`./locales/${locale}/translator.json`),
     ]);
 
     return {
@@ -49,16 +56,17 @@ export default getRequestConfig(async ({ locale }) => {
         settings: settings.default,
         validation: validation.default,
         chatbot: chatbot.default,
-    toast: toast.default,
+        toast: toast.default,
         ...common.default,
         navigation: common.default.navigation,
         messages: common.default.messages,
         pagination: common.default.pagination,
-  appearance: settings.default.appearance,
-  workflow: workflow?.default ?? {},
-  translator: (await import(`./locales/${locale}/translator.json`)).default || {}
+        appearance: settings.default.appearance,
+        workflow: workflow?.default ?? {},
+        translator: translator?.default ?? {},
+        leaveManagement: leaveManagement?.default ?? {},
       },
-      locale
+      locale,
     };
   } catch (error) {
     console.error(`Failed to load translations for locale: ${locale}`, error);
