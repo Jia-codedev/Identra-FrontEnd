@@ -31,9 +31,6 @@ export async function middleware(request: NextRequest) {
   const token = request.cookies.get("token")?.value;
   const refreshToken = request.cookies.get("refreshToken")?.value;
   if (path === "/") {
-    console.log("Public asset or route, allowing access");
-    console.log("Token:", token);
-    console.log("Refresh Token:", refreshToken);
     return NextResponse.next();
   }
 
