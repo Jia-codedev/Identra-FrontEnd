@@ -10,6 +10,15 @@ export function useEmployeeMutations() {
 
   const createEmployeeMutation = useMutation({
     mutationFn: async (employeeData: IEmployee) => {
+      // Basic client-side validation to avoid sending empty payloads
+      if (!employeeData || typeof employeeData !== 'object') {
+        throw new Error('Invalid employee data');
+      }
+      // emp_no is required by backend schema
+      if (!employeeData.emp_no || employeeData.emp_no.toString().trim() === '') {
+        throw new Error('Employee number (emp_no) is required');
+      }
+
       const response = await employeeApi.addEmployee(employeeData);
       return response.data;
     },

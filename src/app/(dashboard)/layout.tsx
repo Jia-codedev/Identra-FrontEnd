@@ -10,7 +10,6 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    
     <CustomQueryClientProvider>
       <div className="h-screen flex flex-col overflow-hidden">
         <header className="top-0 z-50">
@@ -18,9 +17,7 @@ export default function DashboardLayout({
         </header>
         <DashboardFadeInAnimation>
           <ScrollArea className="w-full h-full py-2">
-            <div className="p-2">
-              {children}
-            </div>
+            <div className="p-2">{children}</div>
           </ScrollArea>
         </DashboardFadeInAnimation>
         {/* <ChatBotDemo /> */}

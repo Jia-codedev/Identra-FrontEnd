@@ -1,8 +1,8 @@
-import { IRegion } from "@/modules/masterdata/regions";
+import { ISite } from "@/modules/masterdata/site-management";
 import apiClient from "@/configs/api/Axios";
 
-class RegionsApi {
-  getRegions(
+class SitesApi {
+  getSites(
     { offset = 0, limit = 10, name = "", code = "" } = {} as {
       offset?: number;
       limit?: number;
@@ -19,24 +19,24 @@ class RegionsApi {
       },
     });
   }
-  getRegionById(id: number) {
+  getSiteById(id: number) {
     return apiClient.get(`/location/${id}`);
-  };
-  getRegionsWithoutPagination() {
-    return apiClient.get("/location").then(response => response.data);
   }
-  addRegion(data: Partial<IRegion>) {
+  getSitesWithoutPagination() {
+    return apiClient.get("/location").then((response) => response.data);
+  }
+  addSite(data: Partial<ISite>) {
     return apiClient.post("/location/add", data);
   }
-  updateRegion(id: number, data: Partial<IRegion>) {
+  updateSite(id: number, data: Partial<ISite>) {
     return apiClient.put(`/location/edit/${id}`, data);
   }
-  deleteRegion(id: number) {
+  deleteSite(id: number) {
     return apiClient.delete(`/location/delete/${id}`);
   }
-  deleteRegions(ids: number[]) {
+  deleteSites(ids: number[]) {
     return apiClient.delete("/location/delete", { data: { ids } });
   }
 }
-const regionsApi = new RegionsApi();
-export default regionsApi;
+const sitesApi = new SitesApi();
+export default sitesApi;

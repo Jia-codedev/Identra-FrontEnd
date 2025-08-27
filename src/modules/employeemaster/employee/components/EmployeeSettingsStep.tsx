@@ -1,6 +1,6 @@
 import React from "react";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Checkbox } from "@/components/ui/Checkbox";
 import { EmployeeStepProps } from "./types";
 
 export const EmployeeSettingsStep: React.FC<EmployeeStepProps> = ({

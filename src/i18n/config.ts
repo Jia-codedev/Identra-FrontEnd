@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
 import { getRequestConfig } from "next-intl/server";
 
-// Can be imported from a shared config
 export const locales = ["en", "ar"] as const;
 export const defaultLocale = "en" as const;
 
@@ -13,59 +12,41 @@ export default getRequestConfig(async ({ locale }) => {
     !(locales as readonly string[]).includes(locale)
   )
     notFound();
-
   try {
-    const [
-      common,
-      auth,
-      dashboard,
-      masterData,
-      employee,
-      scheduling,
-      settings,
-      validation,
-      chatbot,
-      toast,
-      workflow,
-      leaveManagement,
-      translator,
-    ] = await Promise.all([
-      import(`./locales/${locale}/common.json`),
-      import(`./locales/${locale}/auth.json`),
-      import(`./locales/${locale}/dashboard.json`),
-      import(`./locales/${locale}/master-data.json`),
-      import(`./locales/${locale}/employee.json`),
-      import(`./locales/${locale}/scheduling.json`),
-      import(`./locales/${locale}/settings.json`),
-      import(`./locales/${locale}/validation.json`),
-      import(`./locales/${locale}/chatbot.json`),
-      import(`./locales/${locale}/toast.json`),
-      import(`./locales/${locale}/workflow.json`),
-      import(`./locales/${locale}/leave-management.json`),
-      import(`./locales/${locale}/translator.json`),
-    ]);
+    try {
+      const all = await import(`./locales/${locale}/all.json`);
+      const allMessages = all.default as any;
+      if (allMessages?.common || allMessages?.settings) {
+        return {
+          messages: {
+            common: allMessages.common ?? {},
+            auth: allMessages.auth ?? {},
+            dashboard: allMessages.dashboard ?? {},
+            masterData: allMessages.masterData ?? {},
+            employee: allMessages.employee ?? {},
+            scheduling: allMessages.scheduling ?? {},
+            settings: allMessages.settings ?? {},
+            validation: allMessages.validation ?? {},
+            chatbot: allMessages.chatbot ?? {},
+            toast: allMessages.toast ?? {},
+            ...(allMessages.common ?? {}),
+            navigation: allMessages.common?.navigation ?? {},
+            messages: allMessages.common?.messages ?? {},
+            pagination: allMessages.common?.pagination ?? {},
+            appearance: allMessages.settings?.appearance ?? {},
+            workflow: allMessages.workflow ?? {},
+            translator: allMessages.translator ?? {},
+            leaveManagement: allMessages.leaveManagement ?? {},
+            mainMenu: allMessages.mainMenu ?? {},
+          },
+          locale,
+        };
+      }
+      return { messages: allMessages, locale };
+    } catch (_) {
+    }
 
     return {
-      messages: {
-        common: common.default,
-        auth: auth.default,
-        dashboard: dashboard.default,
-        masterData: masterData.default,
-        employee: employee.default,
-        scheduling: scheduling.default,
-        settings: settings.default,
-        validation: validation.default,
-        chatbot: chatbot.default,
-        toast: toast.default,
-        ...common.default,
-        navigation: common.default.navigation,
-        messages: common.default.messages,
-        pagination: common.default.pagination,
-        appearance: settings.default.appearance,
-        workflow: workflow?.default ?? {},
-        translator: translator?.default ?? {},
-        leaveManagement: leaveManagement?.default ?? {},
-      },
       locale,
     };
   } catch (error) {

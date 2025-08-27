@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Input } from "@/components/ui/Input";;
 import { Label } from '@/components/ui/label';
 import { useTranslations } from '@/hooks/use-translations';
 import { useLanguage } from '@/providers/language-provider';
@@ -115,7 +115,7 @@ export const GradeModal: React.FC<GradeModalProps> = ({
               isRTL ? (
                 <div>
                   <Label htmlFor="location_arb" className="text-sm font-medium">
-                    {t('masterData.regions.regionNameArabic')}
+                    {t('masterData.grades.enterGradeName')}
                   </Label>
                   <Input
                     id="grade_arb"
@@ -128,7 +128,7 @@ export const GradeModal: React.FC<GradeModalProps> = ({
               ) : (
                 <div>
                   <Label htmlFor="location_eng" className="text-sm font-medium">
-                    {t('masterData.regions.regionName')} *
+                    {t('masterData.grades.enterGradeName')} *
                   </Label>
                   <Input
                     id="grade_eng"

@@ -1,32 +1,72 @@
 import { motion } from "framer-motion";
 
-export const LogoIcon = ({ color }: { color?: string }) => (
-  <motion.svg
-    width="25"
-    height="25"
-    viewBox="0 0 25 25"
-    fill="none"
+export const LogoIcon = ({
+  color,
+  size = 25,
+}: {
+  color?: string;
+  size?: number;
+}) => (
+  <svg
     xmlns="http://www.w3.org/2000/svg"
-    // Animate the color property, not fill
-    animate={color ? { color } : {}}
-    initial={{ color: "var(--primary, #ab00c5)" }}
-    style={{ color: color || "var(--primary, #ab00c5)" }}
+    width="80"
+    height="40"
+    viewBox="0 0 836.327 337.696"
   >
     <g
-      clipPath="url(#a)"
-      fillRule="evenodd"
-      clipRule="evenodd"
-      fill="currentColor"
+      id="Group_153"
+      data-name="Group 153"
+      transform="translate(-8354.979 -2620.588)"
     >
-      <path d="M15.972 7.303A6.25 6.25 0 0 0 12.5 6.25V0A12.5 12.5 0 1 1 0 12.5h6.25a6.25 6.25 0 1 0 9.722-5.197" />
-      <path d="M6.25 0A6.25 6.25 0 0 1 0 6.25v6.25A12.5 12.5 0 0 0 12.5 0z" />
+      <text
+        id="hronexa"
+        transform="translate(8545.306 2843.011)"
+        fontSize="171"
+        fontFamily="Avenir-Heavy, Avenir"
+        fontWeight="800"
+        fill="var(--accent-foreground)"
+      >
+        <tspan x="0" y="0">
+          hronexa
+        </tspan>
+      </text>
+      <g
+        id="Group_87"
+        data-name="Group 87"
+        transform="translate(8354.979 2620.588)"
+      >
+        <g id="Group_83" data-name="Group 83" transform="translate(0)">
+          <path
+            id="Path_79"
+            data-name="Path 79"
+            d="M302.728,561.585a114.172,114.172,0,0,1-42.022-7.639c-30.3-11.906-51.883-36.958-59.435-69.92a115.176,115.176,0,0,1-3.02-26.923c0-61.479,43.355-104.39,104.482-104.39,27.02,0,50.56,8.967,70.321,26.354,7.238,6.365,18.249,5.861,25.324-.683h0c21.3-19.7,16.747-54.252-8.642-68.288-25.779-14.248-56.546-21.789-90.744-21.789-101.728,0-177.243,70.452-177.243,168.8a174.4,174.4,0,0,0,2.223,28.43c10.659,68.5,60.146,119.315,128.114,135.221A201.853,201.853,0,0,0,298.553,626c35.619,0,67.4-8.051,93.737-23.372,24.131-14.042,26.907-47.991,6.414-66.944l-.19-.174c-7.118-6.587-18.222-7.053-25.448-.586C353.3,552.612,329.754,561.585,302.728,561.585Z"
+            transform="translate(-121.749 -288.306)"
+            fill="var(--primary)"
+          />
+        </g>
+        <ellipse
+          id="Ellipse_4"
+          data-name="Ellipse 4"
+          cx="35.239"
+          cy="35.239"
+          rx="35.239"
+          ry="35.239"
+          transform="translate(310.383 25.938)"
+          fill="var(--primary)"
+        />
+        <ellipse
+          id="Ellipse_5"
+          data-name="Ellipse 5"
+          cx="35.239"
+          cy="35.239"
+          rx="35.239"
+          ry="35.239"
+          transform="translate(310.383 241.292)"
+          fill="var(--primary)"
+        />
+      </g>
     </g>
-    <defs>
-      <clipPath id="a">
-        <path fill="#fff" d="M0 0h25v25H0z" />
-      </clipPath>
-    </defs>
-  </motion.svg>
+  </svg>
 );
 
 export const RefreshIcon = () => (

@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { useTranslations } from "@/hooks/use-translations";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/ui/Input"
 import { Badge } from "@/components/ui/badge";
 import {
   DropdownMenu,

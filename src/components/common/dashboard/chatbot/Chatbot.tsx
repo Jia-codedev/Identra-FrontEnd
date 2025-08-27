@@ -16,7 +16,7 @@ import {
   Maximize2
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Input } from "@/components/ui/Input";;
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { PermissionForm, LeaveForm, ManualPunchForm } from './ChatbotForms';

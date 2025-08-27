@@ -19,7 +19,7 @@ import {
 } from "../index";
 import { CustomPagination } from "@/components/common/dashboard/Pagination";
 
-export default function ScheduleTemplatesPage() {
+export default function ScheduleTypesPage() {
   const { t } = useTranslations();
   const { 
     createSchedule, 

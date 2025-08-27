@@ -5,7 +5,7 @@ import workflowApi from '@/services/workforce/workflowService';
 import workflowStepsApi from '@/services/workforce/workflowStepsService';
 import rolesApi from '@/services/security/rolesService';
 import { Combobox, type ComboboxOption } from '@/components/ui/combobox';
-import { Input } from '@/components/ui/input';
+import { Input } from "@/components/ui/Input";;
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import { useTranslations } from '@/hooks/use-translations';

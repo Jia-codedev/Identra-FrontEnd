@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/ui/Input";;
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Eye, EyeOff, RefreshCw, Copy, Check } from "lucide-react";

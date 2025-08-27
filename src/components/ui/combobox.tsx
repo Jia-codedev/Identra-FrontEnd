@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import ReactDOM from 'react-dom';
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/ui/Input"
 import { X, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 

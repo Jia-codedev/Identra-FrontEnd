@@ -44,8 +44,22 @@ class UserService {
       }
 
       console.log("Refreshing user data for employee ID:", currentUser.employeenumber);
-      const response = await apiClient.get(`/secuser/get-by-emp-id/${currentUser.employeenumber}`);
-      
+      let response = await apiClient.get(`/secuser/get-by-emp-id/${currentUser.employeenumber}`);
+      // If unauthorized, attempt server-side refresh and retry once
+      if (response.status === 401) {
+        try {
+          const refresh = await apiClient.post(`/auth/refresh`, null, { withCredentials: true });
+          if (refresh.status === 200 && refresh.data?.token) {
+            try {
+              localStorage.setItem("token", refresh.data.token);
+            } catch {}
+            response = await apiClient.get(`/secuser/get-by-emp-id/${currentUser.employeenumber}`);
+          }
+        } catch (e) {
+          console.warn("Refresh attempt failed while refreshing user data", e);
+        }
+      }
+
       if (response.status === 200 && response.data.success) {
         const userData = response.data.data;
         const employeeData = userData.employee_master;

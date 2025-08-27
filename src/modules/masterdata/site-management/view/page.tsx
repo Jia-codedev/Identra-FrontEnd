@@ -9,19 +9,20 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { useRegions } from "../hooks/useRegions";
-import { RegionsHeader } from "../components/RegionsHeader";
-import { RegionsTable } from "../components/RegionsTable";
-import { RegionModal } from "../components/RegionModal";
-import { IRegion } from "../types";
-import { useRegionMutations } from "../hooks/useMutations";
+import { useSites } from "../hooks/useSites";
+import { SitesHeader } from "../components/SiteHeader";
+import { SitesTable } from "../components/SiteTable";
+import { SiteModal } from "../components/SiteModal";
+import { ISite } from "../types";
+import { useSiteMutations } from "../hooks/useMutations";
 import { CustomPagination } from "@/components/common/dashboard/Pagination";
 
-export default function RegionsPage() {
+export default function SitesPage() {
   const { t } = useTranslations();
-  const { createRegion, updateRegion, deleteRegion, deleteRegions } = useRegionMutations();
+  const { createSite, updateSite, deleteSite, deleteSites } =
+    useSiteMutations();
   const {
-    regions,
+    sites,
     selected,
     search,
     page,
@@ -32,19 +33,19 @@ export default function RegionsPage() {
     setSearch,
     setPage,
     setPageSize,
-    selectRegion,
+    selectSite,
     selectAll,
     isLoading,
-  } = useRegions();
+  } = useSites();
 
   const [modalState, setModalState] = useState<{
     isOpen: boolean;
     mode: "add" | "edit";
-    region: IRegion | null;
+    site: ISite | null;
   }>({
     isOpen: false,
     mode: "add",
-    region: null,
+    site: null,
   });
 
   const [deleteDialog, setDeleteDialog] = useState<{
@@ -53,19 +54,19 @@ export default function RegionsPage() {
     id?: number;
   }>({ open: false, type: null });
 
-  const handleAddRegion = () => {
+  const handleAddSite = () => {
     setModalState({
       isOpen: true,
       mode: "add",
-      region: null,
+      site: null,
     });
   };
 
-  const handleEditRegion = (region: IRegion) => {
+  const handleEditSite = (site: ISite) => {
     setModalState({
       isOpen: true,
       mode: "edit",
-      region,
+      site,
     });
   };
 
@@ -73,19 +74,30 @@ export default function RegionsPage() {
     setModalState({
       isOpen: false,
       mode: "add",
-      region: null,
+      site: null,
     });
   };
 
-  const handleSaveRegion = (data: IRegion) => {
+  const handleSaveSite = (data: ISite) => {
     if (modalState.mode === "add") {
-      createRegion({ regionData: data, onClose: handleCloseModal, search, pageSize });
-    } else if (modalState.mode === "edit" && modalState.region) {
-      updateRegion({ id: modalState.region.location_id, regionData: data, onClose: handleCloseModal, search, pageSize });
+      createSite({
+        siteData: data,
+        onClose: handleCloseModal,
+        search,
+        pageSize,
+      });
+    } else if (modalState.mode === "edit" && modalState.site) {
+      updateSite({
+        id: modalState.site.location_id,
+        siteData: data,
+        onClose: handleCloseModal,
+        search,
+        pageSize,
+      });
     }
   };
 
-  const handleDeleteRegion = (id: number) => {
+  const handleDeleteSite = (id: number) => {
     setDeleteDialog({ open: true, type: "single", id });
   };
 
@@ -95,9 +107,9 @@ export default function RegionsPage() {
 
   const handleConfirmDelete = () => {
     if (deleteDialog.type === "single" && deleteDialog.id !== undefined) {
-      deleteRegion(deleteDialog.id);
+      deleteSite(deleteDialog.id);
     } else if (deleteDialog.type === "bulk" && selected.length > 0) {
-      deleteRegions(selected);
+      deleteSites(selected);
     }
     setDeleteDialog({ open: false, type: null });
   };
@@ -110,25 +122,25 @@ export default function RegionsPage() {
     <div className="w-full h-full flex flex-col items-center justify-start">
       <div className="w-full relative">
         <div className="rounded-2xl border py-4 border-border bg-background/90">
-          <RegionsHeader
+          <SitesHeader
             search={search}
             onSearchChange={setSearch}
-            onAddRegion={handleAddRegion}
+            onAddSite={handleAddSite}
             selectedCount={selected.length}
             onDeleteSelected={handleDeleteSelected}
           />
 
-          <RegionsTable
-            regions={regions}
+          <SitesTable
+            sites={sites}
             selected={selected}
             page={page}
             pageSize={5}
             allChecked={allChecked}
-            onSelectRegion={selectRegion}
-            onSelectAll={selectAll}
+            onSelectSite={selectSite}
+            onSelectAll={() => selectAll(true)}
             isLoading={isLoading}
-            onEditRegion={handleEditRegion}
-            onDeleteRegion={handleDeleteRegion}
+            onEditSite={handleEditSite}
+            onDeleteSite={handleDeleteSite}
           />
 
           <CustomPagination
@@ -142,23 +154,22 @@ export default function RegionsPage() {
         </div>
       </div>
 
-      <RegionModal
+      <SiteModal
         isOpen={modalState.isOpen}
         onClose={handleCloseModal}
-        onSave={handleSaveRegion}
-        region={modalState.region}
+        onSave={handleSaveSite}
+        site={modalState.site}
         mode={modalState.mode}
       />
-      <Dialog open={deleteDialog.open} onOpenChange={open => !open && handleCancelDelete()}>
-        <DialogContent
-          className="p-0"
-        >
-          <DialogHeader
-            className="p-2"
-          >
-            <DialogTitle
-              className="mb-1 p-2"
-            >{t("common.confirm") + " " + t("common.delete")}</DialogTitle>
+      <Dialog
+        open={deleteDialog.open}
+        onOpenChange={() => handleCancelDelete()}
+      >
+        <DialogContent className="p-0">
+          <DialogHeader className="p-2">
+            <DialogTitle className="mb-1 p-2">
+              {t("common.confirm") + " " + t("common.delete")}
+            </DialogTitle>
             <div className="bg-black/5 p-4 rounded-lg dark:bg-white/5">
               <DialogDescription>
                 {deleteDialog.type === "single"
@@ -166,8 +177,12 @@ export default function RegionsPage() {
                   : t("messages.confirm.delete", { count: selected.length })}
               </DialogDescription>
               <div className="flex justify-end space-x-2 mt-4">
-                <Button variant="outline" onClick={handleCancelDelete}>{t("common.cancel")}</Button>
-                <Button variant="destructive" onClick={handleConfirmDelete}>{t("common.delete")}</Button>
+                <Button variant="outline" onClick={handleCancelDelete}>
+                  {t("common.cancel")}
+                </Button>
+                <Button variant="destructive" onClick={handleConfirmDelete}>
+                  {t("common.delete")}
+                </Button>
               </div>
             </div>
           </DialogHeader>
@@ -175,4 +190,12 @@ export default function RegionsPage() {
       </Dialog>
     </div>
   );
+}
+
+export interface SiteModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSave: (data: ISite) => void;
+  mode: "add" | "edit";
+  site: ISite | null;
 }

@@ -8,7 +8,6 @@ export const NavbarLogo = () => {
     <div className="flex items-center space-x-2 font-semibold text-lg text-primary">
       <Link href="/dashboard" className="flex items-center space-x-2">
         <LogoIcon />
-        <p>Chronexa</p>
       </Link>
     </div>
   );

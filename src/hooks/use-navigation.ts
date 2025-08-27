@@ -1,9 +1,11 @@
 "use client";
 
 import { useTranslations } from "./use-translations";
+import { getRouteFromKey } from "@/utils/routeFromKey";
 import {
   FiHome,
   FiDatabase,
+  FiMap,
   FiUsers,
   FiCalendar,
   FiBriefcase,
@@ -12,161 +14,201 @@ import {
 
 export const useNavigation = () => {
   const { t } = useTranslations();
-
-  const NAV_LINKS = [
+  // Descriptor maps main-menu groups -> their navigation keys and icons
+  const MENU_DESCRIPTOR = [
     {
-      id: "dashboard",
-      label: t("common.dashboard"),
+      id: "workforce-analytics",
+      titleKey: "mainMenu.workforceAnalytics.title",
+      items: [
+        {
+          labelKey: "mainMenu.workforceAnalytics.items.myInsights",
+          routeKey: "mainMenu.workforceAnalytics.myInsights",
+        },
+        {
+          labelKey: "mainMenu.workforceAnalytics.items.teamInsights",
+          routeKey: "mainMenu.workforceAnalytics.teamInsights",
+        },
+        {
+          labelKey: "mainMenu.workforceAnalytics.items.activityLog",
+          routeKey: "mainMenu.workforceAnalytics.activityLog",
+        },
+        {
+          labelKey: "mainMenu.workforceAnalytics.items.productivityMetrics",
+          routeKey: "mainMenu.workforceAnalytics.productivityMetrics",
+        },
+        {
+          labelKey: "mainMenu.workforceAnalytics.items.geoAnalytics",
+          routeKey: "mainMenu.workforceAnalytics.geoTracking",
+        },
+      ],
       icon: FiHome,
-      secondary: [
-        {
-          label: t("navigation.selfStatistics"),
-          href: "/workforce-analytics/my-insights",
-        },
-        {
-          label: t("navigation.teamStatistics"),
-          href: "/workforce-analytics/team-insights",
-        },
-        {
-          label: t("navigation.activityMonitor"),
-          href: "/workforce-analytics/activity-log",
-        },
-        {
-          label: t("navigation.teamEfficiency"),
-          href: "/workforce-analytics/productivity-metrics",
-        },
-        {
-          label: t("navigation.geoTracking"),
-          href: "/workforce-analytics/location-intelligence",
-        },
-      ],
     },
     {
-      id: "masterData",
-      label: t("common.masterData"),
+      id: "enterprise-settings",
+      titleKey: "mainMenu.enterpriseSettings.title",
+      items: [
+        {
+          labelKey: "mainMenu.enterpriseSettings.items.siteManagements",
+          routeKey: "mainMenu.enterpriseSettings.siteManagements",
+        },
+        {
+          labelKey: "mainMenu.enterpriseSettings.items.jobLevels",
+          routeKey: "mainMenu.enterpriseSettings.jobLevels",
+        },
+        {
+          labelKey: "mainMenu.enterpriseSettings.items.jobTitles",
+          routeKey: "mainMenu.enterpriseSettings.jobTitles",
+        },
+        {
+          labelKey: "mainMenu.enterpriseSettings.items.citizenshipInfo",
+          routeKey: "mainMenu.enterpriseSettings.citizenshipInfo",
+        },
+      ],
       icon: FiDatabase,
-      secondary: [
-        {
-          label: t("navigation.regions"),
-          href: "/master-data/site-managements",
-        },
-        { label: t("navigation.grades"), href: "/master-data/job-levels" },
-        {
-          label: t("navigation.designations"),
-          href: "/master-data/job-titles",
-        },
-        {
-          label: t("navigation.nationalities"),
-          href: "/master-data/citizenship-info",
-        },
-        {
-          label: t("navigation.organizations"),
-          href: "/master-data/business-entity",
-        },
-        {
-          label: t("navigation.organizationTypes"),
-          href: "/master-data/business-entity-type",
-        },
-        {
-          label: t("navigation.organizationStructure"),
-          href: "/master-data/hierarchy-management",
-        },
-        {
-          label: t("navigation.departmentAdmins"),
-          href: "/master-data/dept-admins",
-        },
-      ],
     },
     {
-      id: "employeeMaster",
-      label: t("common.employeeMaster"),
+      id: "organization",
+      titleKey: "mainMenu.organization.title",
+      items: [
+        {
+          labelKey: "mainMenu.organization.items.organizationType",
+          routeKey: "mainMenu.organization.items.organizationType",
+        },
+        {
+          labelKey: "mainMenu.organization.items.orgChart",
+          routeKey: "mainMenu.organization.items.orgChart",
+        },
+        {
+          labelKey: "mainMenu.organization.items.divisions",
+          routeKey: "mainMenu.organization.items.divisions",
+        },
+      ],
+      icon: FiMap,
+    },
+    {
+      id: "employee-management",
+      titleKey: "mainMenu.employeeManagement.title",
+      items: [
+        {
+          labelKey: "mainMenu.employeeManagement.items.employeeDirectory",
+          routeKey: "mainMenu.employeeManagement.employeeDirectory",
+        },
+        {
+          labelKey: "mainMenu.employeeManagement.items.contractTypes",
+          routeKey: "mainMenu.employeeManagement.contractTypes",
+        },
+        {
+          labelKey: "mainMenu.employeeManagement.items.teamGrouping",
+          routeKey: "mainMenu.employeeManagement.teamGrouping",
+        },
+      ],
       icon: FiUsers,
-      secondary: [
-        {
-          label: t("navigation.employees"),
-          href: "/employee-management/workforce-directory",
-        },
-        {
-          label: t("navigation.employeeTypes"),
-          href: "/employee-management/contract-types",
-        },
-        {
-          label: t("navigation.employeeGroups"),
-          href: "/employee-management/team-grouping",
-        },
-      ],
     },
     {
-      id: "scheduling",
-      label: t("common.scheduling"),
+      id: "roster-management",
+      titleKey: "mainMenu.rosterManagement.title",
+      items: [
+        {
+          labelKey: "mainMenu.rosterManagement.items.reasons",
+          routeKey: "mainMenu.rosterManagement.reasons",
+        },
+        {
+          labelKey: "mainMenu.rosterManagement.items.holidayCalendar",
+          routeKey: "mainMenu.rosterManagement.holidayCalendar",
+        },
+        {
+          labelKey: "mainMenu.rosterManagement.items.ramadanHours",
+          routeKey: "mainMenu.rosterManagement.ramadanHours",
+        },
+        {
+          labelKey: "mainMenu.rosterManagement.items.shiftPatterns",
+          routeKey: "mainMenu.rosterManagement.shiftPatterns",
+        },
+        {
+          labelKey: "mainMenu.rosterManagement.items.monthlyRoster",
+          routeKey: "mainMenu.rosterManagement.monthlyRoster",
+        },
+        {
+          labelKey: "mainMenu.rosterManagement.items.weeklyRoster",
+          routeKey: "mainMenu.rosterManagement.weeklyRoster",
+        },
+      ],
       icon: FiCalendar,
-      secondary: [
-        // { label: t("navigation.reasons"), href: "/roster-management/reasons" },
-        {
-          label: t("navigation.holidays"),
-          href: "/roster-management/holiday-calendar",
-        },
-        {
-          label: t("navigation.ramadanDates"),
-          href: "/roster-management/ramadan-hours-setup",
-        },
-        {
-          label: t("navigation.scheduleTypes"),
-          href: "/roster-management/schedule-templates",
-        },
-        {
-          label: t("navigation.monthlyRoaster"),
-          href: "/roster-management/monthly-roster",
-        },
-        {
-          label: t("navigation.weeklySchedule"),
-          href: "/roster-management/weekly-roster",
-        },
-      ],
     },
     {
-      id: "leaveTracker",
-      label: t("navigation.leaveTracker"),
-      icon: FiClock,
-      secondary: [
+      id: "self-services",
+      titleKey: "mainMenu.selfServices.title",
+      items: [
         {
-          label: t("navigation.workFlow"),
-          href: "/leave-management/process-automation",
-        },
-        { label: t("navigation.leaves"), href: "/leave-management/leaves" },
-        {
-          label: t("navigation.permissions"),
-          href: "/leave-management/permission-management",
+          labelKey: "mainMenu.selfServices.items.leaveManagement",
+          routeKey: "navigation.leaves",
         },
         {
-          label: t("navigation.punches"),
-          href: "/leave-management/attendance-logs",
+          labelKey: "mainMenu.selfServices.items.permissionManagement",
+          routeKey: "navigation.permissions",
+        },
+        {
+          labelKey: "mainMenu.selfServices.items.attendanceLogs",
+          routeKey: "navigation.punches",
+        },
+        {
+          labelKey: "mainMenu.selfServices.items.workflowAutomation",
+          routeKey: "navigation.workFlow",
+        },
+        {
+          labelKey: "mainMenu.selfServices.items.payrollLocking",
+          routeKey: "navigation.payrollLocking",
         },
       ],
+      icon: FiClock,
     },
     {
       id: "workforce",
-      label: t("common.workforce"),
-      icon: FiBriefcase,
-      secondary: [
-        {
-          label: t("navigation.approvals"),
-          href: "/workforce/request-authorizations",
-        },
-        {
-          label: t("navigation.reports"),
-          href: "/workforce/analytics-reports",
-        },
+      titleKey: "common.workforce",
+      items: [
+        { labelKey: "navigation.approvals", routeKey: "navigation.approvals" },
+        { labelKey: "navigation.reports", routeKey: "navigation.reports" },
       ],
+      icon: FiBriefcase,
     },
   ];
 
+  const NAV_LINKS = MENU_DESCRIPTOR.map((g) => ({
+    id: g.id,
+    label: ((): string => {
+      const val = t(g.titleKey);
+      if (val && !val.includes(".")) return val; 
+      const mm = t(`mainMenu.${g.id}.title`);
+      if (mm && !mm.includes(".")) return mm;
+      return g.id.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+    })(),
+    icon: g.icon,
+    secondary: g.items
+      .map((it) => {
+        const label = t(it.labelKey);
+        const finalLabel =
+          label && !label.includes(".")
+            ? label
+            : t(it.labelKey.replace(/^mainMenu\./, ""));
+        // prefer an explicit routeKey when available to avoid collisions
+        const keyForRoute = it.routeKey ?? it.labelKey;
+        return { label: finalLabel, href: getRouteFromKey(keyForRoute) };
+      })
+      .filter((s) => !!s.label),
+  }));
+
   const PROFILE_LINKS = [
-    { label: t("common.profile"), href: "/my-account" },
+    {
+      label: t("mainMenu.profileIcon.items.myAccount"),
+      href: "/profile/my-account",
+    },
     { label: t("common.security"), href: "/user-security-settings" },
     { label: t("common.language"), href: "/language" },
-    { label: t("common.appearance"), href: "/theme-layout" },
-    { label: t("common.support"), href: "/help-support" },
+    {
+      label: t("mainMenu.profileIcon.items.themeLayout"),
+      href: "/theme-layout",
+    },
+    { label: t("mainMenu.supportCentre.items.faqs"), href: "/support/faqs" },
     { label: t("common.logout"), href: "/", className: "text-red-600" },
   ];
 

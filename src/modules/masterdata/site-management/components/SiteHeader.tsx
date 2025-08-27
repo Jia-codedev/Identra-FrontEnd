@@ -2,23 +2,23 @@
 
 import React from 'react';
 import { Search } from 'lucide-react';
-import { Input } from '@/components/ui/input';
+import { Input } from "@/components/ui/Input";;
 import { Button } from '@/components/ui/button';
 import { useTranslations } from '@/hooks/use-translations';
 import { useLanguage } from '@/providers/language-provider';
 
-interface RegionsHeaderProps {
+interface SitesHeaderProps {
   search: string;
   onSearchChange: (value: string) => void;
-  onAddRegion: () => void;
+  onAddSite: () => void;
   selectedCount: number;
   onDeleteSelected?: () => void;
 }
 
-export const RegionsHeader: React.FC<RegionsHeaderProps> = ({
+export const SitesHeader: React.FC<SitesHeaderProps> = ({
   search,
   onSearchChange,
-  onAddRegion,
+  onAddSite,
   selectedCount,
   onDeleteSelected,
 }) => {
@@ -30,10 +30,10 @@ export const RegionsHeader: React.FC<RegionsHeaderProps> = ({
       <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
         <div className="flex-1">
           <h1 className="text-3xl md:text-4xl font-bold text-primary tracking-tight leading-tight mb-1">
-            {t('masterData.regions.title')}
+            {t('masterData.site.title')}
           </h1>
           <p className="text-base md:text-lg text-muted-foreground font-normal mb-2">
-            {t('masterData.regions.description')}
+            {t('masterData.site.description')}
           </p>
           {selectedCount > 0 && (
             <p className="text-sm text-primary font-medium">
@@ -47,7 +47,7 @@ export const RegionsHeader: React.FC<RegionsHeaderProps> = ({
               <Search size={22} />
             </span>
             <Input
-              placeholder={t('masterData.regions.searchPlaceholder')}
+              placeholder={t('masterData.site.searchPlaceholder')}
               value={search}
               onChange={(e) => onSearchChange(e.target.value)}
               className="border-0 bg-transparent rounded-lg focus:ring-0 focus-visible:ring-0 shadow-none text-base px-2"
@@ -64,11 +64,11 @@ export const RegionsHeader: React.FC<RegionsHeaderProps> = ({
               </Button>
             ) : (
               <Button
-                onClick={onAddRegion}
+                onClick={onAddSite}
                 className="font-semibold text-base px-4 py-2 rounded-lg bg-primary hover:bg-primary/90 transition-all shadow-none"
                 variant="default"
               >
-                <span className="hidden sm:inline">+ {t('masterData.regions.addRegion')}</span>
+                <span className="hidden sm:inline">+ {t('masterData.site.addSite')}</span>
                 <span className="sm:hidden text-xl leading-none">+</span>
               </Button>
             )}
@@ -77,4 +77,4 @@ export const RegionsHeader: React.FC<RegionsHeaderProps> = ({
       </div>
     </div>
   );
-}; 
+};

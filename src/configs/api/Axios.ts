@@ -11,6 +11,7 @@ function buildApiClient(headers = {}) {
     baseURL: frontendSettings.apiBaseUrl,
     timeout: 10000,
     headers: { ...defaultRequestHeaders, ...headers },
+    withCredentials: true,
   });
   setupInterceptors(client);
   return client;

@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "@/hooks/use-translations";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/ui/Input";;
 import { Button } from "@/components/ui/button";
 
 import permissionTypesApi from "@/services/leaveManagement/permissionTypes";

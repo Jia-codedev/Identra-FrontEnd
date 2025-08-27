@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Search, Filter, Calendar, Clock, Users, List } from 'lucide-react';
-import { Input } from '@/components/ui/input';
+import { Input } from "@/components/ui/Input";;
 import { Button } from '@/components/ui/button';
 import { useTranslations } from '@/hooks/use-translations';
 import { useLanguage } from '@/providers/language-provider';

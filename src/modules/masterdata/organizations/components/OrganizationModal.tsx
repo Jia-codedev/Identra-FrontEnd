@@ -4,14 +4,14 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Input } from "@/components/ui/Input";;
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useTranslations } from '@/hooks/use-translations';
 import { useLanguage } from '@/providers/language-provider';
 import { IOrganization } from '../types';
 import organizationTypesApi from '@/services/masterdata/organizationTypes';
-import regionsApi from '@/services/masterdata/regions';
+import siteApi from '@/services/masterdata/site';
 import organizationsApi from '@/services/masterdata/organizations';
 
 interface OrganizationModalProps {
@@ -84,7 +84,7 @@ export const OrganizationModal: React.FC<OrganizationModalProps> = ({
       try {
         const [orgTypesRes, locationsRes, parentsRes] = await Promise.all([
           organizationTypesApi.getOrganizationTypesWithoutPagination(),
-          regionsApi.getRegionsWithoutPagination(),
+          siteApi.getSitesWithoutPagination(),
           organizationsApi.getOrganizationsWithoutPagination(),
         ]);
 

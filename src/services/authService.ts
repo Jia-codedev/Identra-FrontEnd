@@ -9,6 +9,7 @@ class AuthService {
     }
     const { user } = response.data;
     useUserStore.getState().setUser(user);
+    localStorage.setItem("token", response.data.token);
     console.log("User logged in and stored:", user);
     return response;
   }

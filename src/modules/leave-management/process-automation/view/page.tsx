@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useTranslations } from "@/hooks/use-translations";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/ui/Input";;
 import { Button } from "@/components/ui/button";
 import { ProcessAutomationHeader } from "../components/ProcessAutomationHeader";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
