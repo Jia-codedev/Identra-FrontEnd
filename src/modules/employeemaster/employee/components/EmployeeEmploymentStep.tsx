@@ -1,7 +1,7 @@
 import React from "react";
 import { Label } from "@/components/ui/label";
 import { DatePicker } from "@/components/ui/date-picker";
-import { Textarea } from "@/components/ui/textarea";
+import { Textarea } from "@/components/ui/Textarea";
 import { EmployeeStepProps } from "./types";
 
 export const EmployeeEmploymentStep: React.FC<EmployeeStepProps> = ({

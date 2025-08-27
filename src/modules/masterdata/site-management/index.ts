@@ -5,9 +5,9 @@ export * from './types';
 export * from './hooks/useRegions';
 
 // Components
-export { RegionsHeader } from './components/SiteHeader';
-export { RegionsTable } from './components/SiteTable';
-export { RegionModal } from './components/SiteModal';
+export { SitesHeader } from './components/SiteHeader';
+export { SitesTable } from './components/SiteTable';
+export { SiteModal } from './components/SiteModal';
 
 // Main View
-export { default as RegionsPage } from './view/page'; 
+export { default as SitePage } from './view/page'; 
