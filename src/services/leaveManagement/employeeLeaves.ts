@@ -10,9 +10,48 @@ export type ListLeavesRequest = {
   to_date?: string;
 };
 
+export type ListLeavesResponse = {
+  success: boolean;
+  data: any[];
+  total: number;
+  hasNext: boolean;
+  limit?: number;
+  offset?: number;
+};
+
+export type GetEmployeeLeavesRequest = {
+  limit?: number;
+  offset?: number;
+  leave_status?: string;
+  from_date?: string;
+  to_date?: string;
+};
+
+export type GetPendingLeavesRequest = {
+  limit?: number;
+  offset?: number;
+  employee_id?: string;
+  leave_type_id?: string;
+};
+
 class EmployeeLeavesApi {
-  list(req: ListLeavesRequest = {}) {
+  getLeaveTypes() {
+    return apiClient.get('/leaveType/');
+  }
+
+  getApprovers() {
+    return apiClient.get('/employeeLeave/approvers');
+  }
+  list(req: ListLeavesRequest = {}): Promise<ListLeavesResponse> {
     return apiClient.get('/employeeLeave/all', { params: req });
+  }
+
+  getEmployeeLeaves(employeeId: number, req: GetEmployeeLeavesRequest = {}): Promise<ListLeavesResponse> {
+    return apiClient.get(`/employeeLeave/get/${employeeId}`, { params: req });
+  }
+
+  getPendingLeaves(req: GetPendingLeavesRequest = {}): Promise<ListLeavesResponse> {
+    return apiClient.get('/employeeLeave/pending', { params: req });
   }
 
   getById(id: number) {
@@ -37,7 +76,11 @@ class EmployeeLeavesApi {
   }
 
   add(data: any) {
-    return apiClient.post('/employeeLeave/add', data);
+    return apiClient.post('/employeeLeave/add', data, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
   }
 
   edit(id: number, data: any) {

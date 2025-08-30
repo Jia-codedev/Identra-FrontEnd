@@ -36,11 +36,38 @@ export const useLeaves = () => {
     }));
   }, [data]);
   const total = (data as any)?.total ?? 0;
-  const pageCount = total > 0 ? Math.max(1, Math.ceil(total / pageSize)) : 1;
+  const hasNext = (data as any)?.hasNext ?? false;
+  const pageCount = useMemo(() => {
+    if (hasNext) {
+      // If there are more pages, calculate based on current page + 1
+      return page + 1;
+    } else {
+      // If no more pages, this is the last page
+      return page;
+    }
+  }, [page, hasNext]);
 
   const selectItem = useCallback((id: number) => setSelected(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]), []);
   const selectAll = useCallback(() => setSelected(prev => prev.length === leaves.length ? [] : leaves.map(l => l.id)), [leaves]);
   const clearSelection = useCallback(() => setSelected([]), []);
+
+  const goToNextPage = useCallback(() => {
+    if (hasNext) {
+      setPage(prev => prev + 1);
+    }
+  }, [hasNext]);
+
+  const goToPrevPage = useCallback(() => {
+    if (page > 1) {
+      setPage(prev => prev - 1);
+    }
+  }, [page]);
+
+  const goToPage = useCallback((pageNum: number) => {
+    if (pageNum >= 1 && (pageNum <= pageCount || hasNext)) {
+      setPage(pageNum);
+    }
+  }, [pageCount, hasNext]);
 
   return {
     leaves,
@@ -50,7 +77,11 @@ export const useLeaves = () => {
     pageSize,
     pageCount,
     total,
-    setPage,
+    hasNext,
+    hasPrev: page > 1,
+    setPage: goToPage,
+    goToNextPage,
+    goToPrevPage,
     setPageSize,
     search,
     setSearch,

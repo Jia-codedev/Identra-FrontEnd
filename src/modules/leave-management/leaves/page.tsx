@@ -10,10 +10,10 @@ import { Dialog } from "@/components/ui/dialog";
 import { CustomPagination } from "@/components/common/dashboard/Pagination";
 import { useRouter } from "next/navigation";
 
-import { debounce } from 'lodash';
-import useLeaves from './hooks/useLeaves';
-import employeeLeavesApi from '@/services/leaveManagement/employeeLeaves';
-import { format, parseISO } from 'date-fns';
+import { debounce } from "lodash";
+import useLeaves from "./hooks/useLeaves";
+import employeeLeavesApi from "@/services/leaveManagement/employeeLeaves";
+import { format, parseISO } from "date-fns";
 // approval/rejection flow removed for this view
 
 type LeaveType = {
@@ -31,8 +31,8 @@ export default function LeavesPage() {
   const router = useRouter();
 
   const {
-  leaves: data,
-  isLoading,
+    leaves: data,
+    isLoading,
     page,
     pageSize,
     pageCount,
@@ -55,10 +55,9 @@ export default function LeavesPage() {
     }
   };
 
-
   const getItemId = (item: LeaveType) => item.id;
-  const getItemDisplayName = (item: LeaveType) => item.employee_name || String(item.id);
-
+  const getItemDisplayName = (item: LeaveType) =>
+    item.employee_name || String(item.id);
 
   const debouncedSetSearch = debounce((v: string) => setSearch(v), 300);
   const handleSearchChange = (value: string) => {
@@ -72,12 +71,10 @@ export default function LeavesPage() {
     if (refresh) refetch();
   };
 
-
   return (
     <div className="w-full h-full flex flex-col items-center justify-start">
       <div className="w-full relative">
         <div className="rounded-2xl border py-4 border-border bg-background/90 p-4">
-
           <LeavesHeader
             search={search}
             onSearchChange={handleSearchChange}
@@ -86,7 +83,11 @@ export default function LeavesPage() {
           />
 
           <Dialog open={showDialog} onOpenChange={setShowDialog}>
-            <LeaveRequestForm open={showDialog} onSuccess={() => handleDialogClose(true)} onCancel={() => handleDialogClose(false)} />
+            <LeaveRequestForm
+              open={showDialog}
+              onSuccess={() => handleDialogClose(true)}
+              onCancel={() => handleDialogClose(false)}
+            />
           </Dialog>
 
           <div className="w-full mt-4">
@@ -94,7 +95,14 @@ export default function LeavesPage() {
           </div>
 
           <div className="mt-4">
-            <CustomPagination currentPage={page} totalPages={pageCount} onPageChange={setPage} pageSize={pageSize} pageSizeOptions={[5,10,20,50]} onPageSizeChange={setPageSize} />
+            <CustomPagination
+              currentPage={page}
+              totalPages={pageCount}
+              onPageChange={setPage}
+              pageSize={pageSize}
+              pageSizeOptions={[5, 10, 20, 50]}
+              onPageSizeChange={setPageSize}
+            />
           </div>
         </div>
       </div>
