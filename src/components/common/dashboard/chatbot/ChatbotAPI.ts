@@ -72,9 +72,9 @@ export const chatbotAPIHandlers = {
       const response = await fetch(endpoint, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+          'Content-Type': 'application/json'
         },
+        credentials: 'include', // Use cookies for authentication
         body: JSON.stringify({
           type: formData.type,
           data: formData.data,
@@ -107,9 +107,7 @@ export const chatbotAPIHandlers = {
   async getPendingApprovals(endpoint: string) {
     try {
       const response = await fetch(endpoint, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-        }
+        credentials: 'include' // Use cookies for authentication
       });
 
       if (!response.ok) {
@@ -139,9 +137,7 @@ export const chatbotAPIHandlers = {
       });
 
       const response = await fetch(`${endpoint}?${params}`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-        }
+        credentials: 'include' // Use cookies for authentication
       });
 
       if (!response.ok) {

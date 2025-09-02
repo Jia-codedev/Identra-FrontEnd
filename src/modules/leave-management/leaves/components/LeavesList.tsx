@@ -56,50 +56,54 @@ const LeavesList: React.FC<Props> = ({ leaves, loading }) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {leaves.map((l: any) => {
-        // Use leave_status for status, leave_types.leave_type_eng for leave type, employee_remarks for remarks
-        const status = statusMap[l.leave_status?.toLowerCase?.()] || statusMap["pending"];
-        // Use leave_unique_ref_no as key if available, else fallback to employee_leave_id
-        const cardKey = l.leave_unique_ref_no || l.employee_leave_id;
+        // Defensive: support both camelCase and snake_case for API fields
+        const leaveType =
+          l.leave_types?.leave_type_eng || l.leave_type || "Unknown";
+        const fromDate = l.from_date || l.start_date;
+        const toDate = l.to_date || l.end_date;
+        const remarks = l.employee_remarks || l.remarks;
+        const statusRaw = l.leave_status || l.status || "pending";
+        const status =
+          statusMap[statusRaw?.toLowerCase?.()] || statusMap["pending"];
+        const cardKey = l.leave_unique_ref_no || l.employee_leave_id || l.id;
+
         return (
           <Card key={cardKey} className="transition-shadow hover:shadow-lg">
             <CardHeader className="pb-2 flex flex-row items-center justify-between">
               <CardTitle className="text-base font-semibold">
-                {l.leave_types?.leave_type_eng || "Unknown"}
+                {leaveType}
               </CardTitle>
-              <Badge className={status.color + " px-2 py-1 rounded text-xs font-medium"} variant="outline">
-                {leaves.map((l: any) => {
-                  // Defensive: support both camelCase and snake_case for API fields
-                  const leaveType = l.leave_types?.leave_type_eng || l.leave_type || "Unknown";
-                  const fromDate = l.from_date || l.start_date;
-                  const toDate = l.to_date || l.end_date;
-                  const remarks = l.employee_remarks || l.remarks;
-                  const statusRaw = l.leave_status || l.status || "pending";
-                  const status = statusMap[statusRaw?.toLowerCase?.()] || statusMap["pending"];
-                  const cardKey = l.leave_unique_ref_no || l.employee_leave_id || l.id;
-                  return (
-                    <Card key={cardKey} className="transition-shadow hover:shadow-lg">
-                      <CardHeader className="pb-2 flex flex-row items-center justify-between">
-                        <CardTitle className="text-base font-semibold">
-                          {leaveType}
-                        </CardTitle>
-                        <Badge className={status.color + " px-2 py-1 rounded text-xs font-medium"} variant="outline">
-                          {status.label}
-                        </Badge>
-                      </CardHeader>
-                      <CardContent className="space-y-1 text-sm">
-                        <div className="text-muted-foreground">
-                          <span className="font-medium">From:</span> {formatDateTime(fromDate)}
-                        </div>
-                        <div className="text-muted-foreground">
-                          <span className="font-medium">To:</span> {formatDateTime(toDate)}
-                        </div>
-                        <div>
-                          <span className="font-medium">Remarks:</span> {remarks || <span className="italic text-gray-400">None</span>}
-                        </div>
-                        <div className="text-xs text-gray-500 mt-2">
-                          {l.leave_unique_ref_no}
-                        </div>
-                      </CardContent>
-                    </Card>
-                  );
-                })}
+              <Badge
+                className={
+                  status.color + " px-2 py-1 rounded text-xs font-medium"
+                }
+                variant="outline"
+              >
+                {status.label}
+              </Badge>
+            </CardHeader>
+            <CardContent className="space-y-1 text-sm">
+              <div className="text-muted-foreground">
+                <span className="font-medium">From:</span>{" "}
+                {formatDateTime(fromDate)}
+              </div>
+              <div className="text-muted-foreground">
+                <span className="font-medium">To:</span>{" "}
+                {formatDateTime(toDate)}
+              </div>
+              <div>
+                <span className="font-medium">Remarks:</span>{" "}
+                {remarks || <span className="italic text-gray-400">None</span>}
+              </div>
+              <div className="text-xs text-gray-500 mt-2">
+                {l.leave_unique_ref_no}
+              </div>
+            </CardContent>
+          </Card>
+        );
+      })}
+    </div>
+  );
+};
+
+export default LeavesList;

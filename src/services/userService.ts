@@ -1,6 +1,7 @@
 import apiClient from "@/configs/api/Axios";
 import { useUserStore } from "@/store/userStore";
 import tokenService from "@/configs/api/jwtToken";
+import authService from "@/services/authService";
 
 class UserService {
   async restoreUserFromToken(): Promise<boolean> {
@@ -44,21 +45,12 @@ class UserService {
       }
 
       console.log("Refreshing user data for employee ID:", currentUser.employeenumber);
-      let response = await apiClient.get(`/secuser/get-by-emp-id/${currentUser.employeenumber}`);
-      // If unauthorized, attempt server-side refresh and retry once
-      if (response.status === 401) {
-        try {
-          const refresh = await apiClient.post(`/auth/refresh`, null, { withCredentials: true });
-          if (refresh.status === 200 && refresh.data?.token) {
-            try {
-              localStorage.setItem("token", refresh.data.token);
-            } catch {}
-            response = await apiClient.get(`/secuser/get-by-emp-id/${currentUser.employeenumber}`);
-          }
-        } catch (e) {
-          console.warn("Refresh attempt failed while refreshing user data", e);
-        }
-      }
+      let response = await apiClient.get(`/secuser/get-by-emp-id/${currentUser.employeenumber}`, { 
+        withCredentials: true 
+      });
+      
+      // The axios interceptor will handle 401 errors and automatic token refresh
+      // We don't need manual token handling here since we're using HttpOnly cookies
 
       if (response.status === 200 && response.data.success) {
         const userData = response.data.data;
@@ -102,15 +94,62 @@ class UserService {
       return;
     }
 
-    console.log("Attempting to restore user from token...");
-    await this.restoreUserFromToken();
+    console.log("Attempting to restore user session...");
+    await this.restoreUserFromSession();
+  }
+
+  async restoreUserFromSession(): Promise<void> {
+    try {
+      // Check if token exists in localStorage or cookies
+      let token = null;
+      if (typeof window !== "undefined") {
+        token = localStorage.getItem("token");
+        
+        // If no token in localStorage, try cookies
+        if (!token) {
+          const cookies = document.cookie.split(';');
+          const tokenCookie = cookies.find(cookie => cookie.trim().startsWith('token='));
+          if (tokenCookie) {
+            token = tokenCookie.split('=')[1];
+            localStorage.setItem("token", token);
+          }
+        }
+      }
+      
+      if (!token) {
+        console.log("No authentication token found");
+        return;
+      }
+      
+      // Try to get user profile from backend using Bearer token
+      const response = await authService.getProfile();
+      
+      if (response.status === 200 && response.data.user) {
+        const user = response.data.user;
+        useUserStore.getState().setUser(user);
+        console.log("User session restored successfully:", user);
+      } else {
+        console.log("No valid user session found");
+      }
+    } catch (error) {
+      console.error("Error restoring user session:", error);
+      // Clear invalid tokens
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("token");
+        document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      }
+    }
   }
 
   clearUser(): void {
     useUserStore.getState().clearUser();
-    // Clear cookies
-    document.cookie = "_authToken=; path=/; max-age=0; secure; samesite=strict";
-    sessionStorage.removeItem("authToken");
+    // Clear tokens from both localStorage and cookies
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("token");
+      localStorage.removeItem("refreshToken");
+      localStorage.removeItem("user");
+      document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    }
   }
 }
 

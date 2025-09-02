@@ -14,14 +14,12 @@ export const useAuth = () => {
   const logout = async () => {
     try {
       await authService.logout();
-      clearUser();
       toast.success(t("auth.loggedOutSuccessfully"));
       router.push("/login");
     } catch (error) {
       console.error("Logout error:", error);
+      // Force clear user data even if logout request fails
       clearUser();
-      document.cookie = "_authToken=; path=/; max-age=0; secure; samesite=strict";
-      sessionStorage.removeItem("authToken");
       toast.error(t("auth.logoutFailed"));
       router.push("/login");
     }
@@ -30,6 +28,6 @@ export const useAuth = () => {
   return {
     user,
     logout,
-    isAuthenticated: !!user,
+    isAuthenticated: authService.isAuthenticated(),
   };
 };

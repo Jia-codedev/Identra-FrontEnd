@@ -27,24 +27,15 @@ export const LogoutConfirmation: React.FC<LogoutConfirmationProps> = ({
   const { logout } = useAuth();
 
   const handleLogout = async () => {
-    // Call the logout logic (if any server-side/session logic)
-    await logout();
-
-    // Clear session storage
-    if (typeof window !== "undefined") {
-      sessionStorage.clear();
-
-      // Delete all cookies
-      document.cookie.split(";").forEach((c) => {
-        document.cookie = c
-          .replace(/^ +/, "")
-          .replace(/=.*/, "=;expires=" + new Date(0).toUTCString() + ";path=/");
-      });
-    }
-
-    // Route to root
-    if (typeof window !== "undefined") {
-      window.location.href = "/";
+    try {
+      // Call the logout service which handles cookie-based logout
+      await logout();
+    } catch (error) {
+      console.error("Logout error:", error);
+      // Force logout even if request fails
+      if (typeof window !== "undefined") {
+        window.location.href = "/";
+      }
     }
 
     onClose();
