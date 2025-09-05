@@ -48,22 +48,22 @@ export default function PunchesPage() {
 
   const handleEdit = (punch: any) => {
     // TODO: Implement edit punch functionality
-    console.log(t('punches.edit') || "Edit punch:", punch);
+    console.log(t('common.edit') || "Edit punch:", punch);
   };
 
   const handleDelete = (id: number) => {
     // TODO: Implement delete punch functionality
-    console.log(t('punches.delete') || "Delete punch:", id);
+    console.log(t('common.delete') || "Delete punch:", id);
   };
 
   const handleExport = () => {
     // TODO: Implement export functionality
-    console.log(t('punches.export') || "Export punches");
+    console.log(t('common.export') || "Export punches");
   };
 
   const handleImport = () => {
     // TODO: Implement import functionality
-    console.log(t('punches.import') || "Import punches");
+    console.log(t('common.import') || "Import punches");
   };
 
   if (error) {
@@ -73,7 +73,7 @@ export default function PunchesPage() {
           <div className="rounded-2xl border py-4 border-border bg-background/90 p-4">
             <div className="text-center py-16">
               <h3 className="text-lg font-medium text-destructive">
-                {t('punches.errorLoading') || 'Error loading punches'}
+                {t('punches.errorLoading') || t('common.errorLoading') || 'Error loading punches'}
               </h3>
               <p className="text-sm text-muted-foreground mt-1">{error.message}</p>
             </div>

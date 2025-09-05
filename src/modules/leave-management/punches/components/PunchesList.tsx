@@ -87,17 +87,17 @@ export default function PunchesList({
   const columns: TableColumn<AttendanceRecord>[] = [
     {
       key: 'employee',
-      header: t('punches.employee') || 'Employee',
+      header: t('employee.employeeName') || 'Employee',
       accessor: (punch: AttendanceRecord) => (
         <div>
-          <div className="font-medium text-foreground">{punch.employee_name || t('common.unknown') || 'Unknown'}</div>
+          <div className="font-medium text-foreground">{punch.employee_name || t('common.notAvailable') || 'Unknown'}</div>
           <div className="text-sm text-muted-foreground">#{punch.employee_no}</div>
         </div>
       ),
     },
     {
       key: 'date',
-      header: t('punches.date') || 'Date',
+      header: t('common.date') || 'Date',
       accessor: (punch: AttendanceRecord) => (
         <div className="text-sm">
           <div className="font-medium text-foreground">{formatDateTime(punch.Ddate)}</div>
@@ -106,7 +106,7 @@ export default function PunchesList({
     },
     {
       key: 'checkIn',
-      header: t('punches.checkIn') || 'Check In',
+      header: t('scheduling.attendance') + ' ' + t('common.in') || 'Check In',
       accessor: (punch: AttendanceRecord) => (
         <div className="text-sm text-muted-foreground">
           {formatTime(punch.check_in || '')}
@@ -115,7 +115,7 @@ export default function PunchesList({
     },
     {
       key: 'checkOut',
-      header: t('punches.checkOut') || 'Check Out',
+      header: t('scheduling.attendance') + ' ' + t('common.out') || 'Check Out',
       accessor: (punch: AttendanceRecord) => (
         <div className="text-sm text-muted-foreground">
           {formatTime(punch.check_out || '')}
@@ -124,44 +124,44 @@ export default function PunchesList({
     },
     {
       key: 'break',
-      header: t('punches.break') || 'Break',
+      header: t('scheduling.breakTime') || 'Break',
       accessor: (punch: AttendanceRecord) => (
         <div className="text-sm text-muted-foreground">
           {punch.break_start && punch.break_end ? 
             `${formatTime(punch.break_start)} - ${formatTime(punch.break_end)}` : 
-            'N/A'
+            t('common.notAvailable') || 'N/A'
           }
         </div>
       ),
     },
     {
       key: 'workHours',
-      header: t('punches.workHours') || 'Work Hours',
+      header: t('scheduling.workHours') || 'Work Hours',
       accessor: (punch: AttendanceRecord) => (
         <div className="text-sm">
           <div className="font-medium text-foreground">{punch.total_work_hours || 0}h</div>
           {punch.overtime_hours && punch.overtime_hours > 0 && (
-            <div className="text-xs text-primary">+{punch.overtime_hours}h {t('punches.overtime') || 'OT'}</div>
+            <div className="text-xs text-primary">+{punch.overtime_hours}h {t('scheduling.overtime') || 'OT'}</div>
           )}
         </div>
       ),
     },
     {
       key: 'location',
-      header: t('punches.location') || 'Location',
+      header: t('common.location') || 'Location',
       accessor: (punch: AttendanceRecord) => (
         <div className="flex items-center text-sm text-muted-foreground">
           <MapPin className="w-3 h-3 mr-1" />
-          {punch.location || t('common.unknown') || 'Unknown'}
+          {punch.location || t('common.notAvailable') || 'Unknown'}
         </div>
       ),
     },
     {
       key: 'status',
-      header: t('punches.status') || 'Status',
+      header: t('common.status') || 'Status',
       accessor: (punch: AttendanceRecord) => (
         <Badge className={getStatusColor(punch.status || '')}>
-          {punch.status || t('common.unknown') || 'Unknown'}
+          {punch.status || t('common.notAvailable') || 'Unknown'}
         </Badge>
       ),
     },
@@ -212,10 +212,10 @@ export default function PunchesList({
       <div className="text-center py-16">
         <Clock className="mx-auto h-12 w-12 text-muted-foreground" />
         <h3 className="mt-2 text-sm font-medium text-foreground">
-          {t('punches.noPunchesFound') || 'No punches found'}
+          {t('common.noResults') || 'No punches found'}
         </h3>
         <p className="mt-1 text-sm text-muted-foreground">
-          {t('punches.noPunchesDescription') || 'No attendance records match your current filters.'}
+          {t('common.noDataFound') || 'No attendance records match your current filters.'}
         </p>
       </div>
     );
@@ -237,7 +237,7 @@ export default function PunchesList({
         onEditItem={onEdit}
         onDeleteItem={onDelete}
         actions={renderActions}
-        noDataMessage={t('punches.noPunchesFound') || 'No punches found'}
+        noDataMessage={t('common.noResults') || 'No punches found'}
         isLoading={isLoading}
         onPageChange={() => {}}
         onPageSizeChange={() => {}}
@@ -254,12 +254,12 @@ export default function PunchesList({
             <CardContent className="p-4">
               <div className="flex items-start justify-between mb-3">
                 <div>
-                  <h3 className="font-medium text-foreground">{punch.employee_name || t('common.unknown') || 'Unknown'}</h3>
+                  <h3 className="font-medium text-foreground">{punch.employee_name || t('common.notAvailable') || 'Unknown'}</h3>
                   <p className="text-sm text-muted-foreground">#{punch.employee_no}</p>
                 </div>
                 <div className="flex gap-1">
                   <Badge className={getStatusColor(punch.status || '')}>
-                    {punch.status || t('common.unknown') || 'Unknown'}
+                    {punch.status || t('common.notAvailable') || 'Unknown'}
                   </Badge>
                 </div>
               </div>
@@ -272,39 +272,39 @@ export default function PunchesList({
                 
                 <div className="grid grid-cols-2 gap-2 text-sm">
                   <div>
-                    <span className="text-muted-foreground">{t('punches.in') || 'In'}:</span> <span className="text-foreground">{formatTime(punch.check_in || '')}</span>
+                    <span className="text-muted-foreground">{t('common.in') || 'In'}:</span> <span className="text-foreground">{formatTime(punch.check_in || '')}</span>
                   </div>
                   <div>
-                    <span className="text-muted-foreground">{t('punches.out') || 'Out'}:</span> <span className="text-foreground">{formatTime(punch.check_out || '')}</span>
+                    <span className="text-muted-foreground">{t('common.out') || 'Out'}:</span> <span className="text-foreground">{formatTime(punch.check_out || '')}</span>
                   </div>
                 </div>
 
                 {punch.break_start && punch.break_end && (
                   <div className="text-sm text-muted-foreground">
-                    <span className="font-medium">{t('punches.break') || 'Break'}:</span> <span className="text-foreground">{formatTime(punch.break_start)} - {formatTime(punch.break_end)}</span>
+                    <span className="font-medium">{t('scheduling.breakTime') || 'Break'}:</span> <span className="text-foreground">{formatTime(punch.break_start)} - {formatTime(punch.break_end)}</span>
                   </div>
                 )}
 
                 <div className="flex items-center justify-between text-sm">
                   <div>
-                    <span className="text-muted-foreground">{t('punches.work') || 'Work'}:</span> <span className="text-foreground">{punch.total_work_hours || 0}h</span>
+                    <span className="text-muted-foreground">{t('scheduling.workHours') || 'Work'}:</span> <span className="text-foreground">{punch.total_work_hours || 0}h</span>
                   </div>
                   {punch.overtime_hours && punch.overtime_hours > 0 && (
                     <div className="text-primary">
-                      <span className="font-medium">{t('punches.overtime') || 'OT'}:</span> {punch.overtime_hours}h
+                      <span className="font-medium">{t('scheduling.overtime') || 'OT'}:</span> {punch.overtime_hours}h
                     </div>
                   )}
                 </div>
 
                 <div className="flex items-center text-sm text-muted-foreground">
                   <MapPin className="w-4 h-4 mr-2" />
-                  <span>{punch.location || t('punches.unknownLocation') || 'Unknown Location'}</span>
+                  <span>{punch.location || t('common.notAvailable') || 'Unknown Location'}</span>
                 </div>
 
                 {punch.device_id && (
                   <div className="flex items-center text-sm text-muted-foreground">
                     <Smartphone className="w-4 h-4 mr-2" />
-                    <span>{t('punches.device') || 'Device'}: {punch.device_id}</span>
+                    <span>{t('common.device') || 'Device'}: {punch.device_id}</span>
                   </div>
                 )}
               </div>
