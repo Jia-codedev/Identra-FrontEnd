@@ -2,6 +2,7 @@ import apiClient from "@/configs/api/Axios";
 import { useUserStore } from "@/store/userStore";
 import tokenService from "@/configs/api/jwtToken";
 import authService from "@/services/authService";
+import { CookieUtils } from "@/utils/cookieUtils";
 
 class UserService {
   async restoreUserFromToken(): Promise<boolean> {
@@ -98,12 +99,10 @@ class UserService {
       if (typeof window !== "undefined") {
         token = localStorage.getItem("token");
         
-        // If no token in localStorage, try cookies
+        // If no token in localStorage, try cookies using utility
         if (!token) {
-          const cookies = document.cookie.split(';');
-          const tokenCookie = cookies.find(cookie => cookie.trim().startsWith('token='));
-          if (tokenCookie) {
-            token = tokenCookie.split('=')[1];
+          token = CookieUtils.getCookie('token');
+          if (token) {
             localStorage.setItem("token", token);
           }
         }
@@ -125,7 +124,7 @@ class UserService {
       // Clear invalid tokens
       if (typeof window !== "undefined") {
         localStorage.removeItem("token");
-        document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        CookieUtils.removeAuthToken();
       }
     }
   }
@@ -137,7 +136,7 @@ class UserService {
       localStorage.removeItem("token");
       localStorage.removeItem("refreshToken");
       localStorage.removeItem("user");
-      document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      CookieUtils.removeAuthToken();
     }
   }
 }

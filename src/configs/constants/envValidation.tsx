@@ -9,7 +9,7 @@ class FrontendSettings {
   constructor() {
     this.environment = (process.env.NODE_ENV as Environment) || "development";
     const envValue = process.env.NEXT_PUBLIC_IDENTRA_BE_URI;
-    const socketEnvValue = process.env.NEXT_PUBLIC_SOCKET_URL;
+    const socketEnvValue = process.env.NEXT_PUBLIC_IDENTRA_SOCKET_URL;
     if (typeof envValue === "string" && envValue.trim() !== "") {
       console.log(
         `✅ Environment variable NEXT_PUBLIC_IDENTRA_BE_URI loaded successfully: ${envValue}`

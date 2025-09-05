@@ -1,0 +1,4 @@
+> Ready on port \\.\pipe\179fedfd-0a79-45dc-8f7a-e44cb485c2cb
+> Environment: production
+> Cookie handling configured for IIS
+✅ Environment variable NEXT_PUBLIC_IDENTRA_BE_URI loaded successfully: http://192.168.2.112:8000
