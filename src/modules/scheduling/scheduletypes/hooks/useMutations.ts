@@ -94,19 +94,15 @@ export const useScheduleMutations = () => {
 
   return {
     createSchedule: (params: CreateMutationParams) => {
-      console.log('createSchedule mutation called with:', params);
       createSchedule.mutate(params.scheduleData, {
         onSuccess: () => {
-          console.log('createSchedule mutation successful');
           params.onClose?.();
         },
       });
     },
     updateSchedule: (params: UpdateMutationParams) => {
-      console.log('updateSchedule mutation called with:', params);
       updateSchedule.mutate({ id: params.id, data: params.scheduleData }, {
         onSuccess: () => {
-          console.log('updateSchedule mutation successful');
           params.onClose?.();
         },
       });

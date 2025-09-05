@@ -84,40 +84,44 @@ type ScheduleFormData = z.infer<typeof scheduleSchema>;
 
 // Custom transform function for form data
 const transformFormData = (data: any): ScheduleFormData => {
-  console.log('Transform input data:', data);
-  
   // Helper function to safely convert values
   const safeTransform = (value: any, fieldName: string) => {
-    console.log(`Transforming ${fieldName}:`, value, typeof value);
-    
-    if (value === null || value === undefined || value === '' || value === 'none') {
+    if (
+      value === null ||
+      value === undefined ||
+      value === "" ||
+      value === "none"
+    ) {
       return undefined;
     }
-    
+
     // If it's already a number, return it
-    if (typeof value === 'number') {
+    if (typeof value === "number") {
       return value;
     }
-    
+
     // If it's a string, try to parse it
-    if (typeof value === 'string') {
+    if (typeof value === "string") {
       const parsed = parseInt(value, 10);
       return isNaN(parsed) ? undefined : parsed;
     }
-    
+
     // If it's an object, it might be a React event or invalid data
-    if (typeof value === 'object') {
+    if (typeof value === "object") {
       console.warn(`${fieldName} received object value:`, value);
       return undefined;
     }
-    
+
     return undefined;
   };
 
   return {
     ...data,
-    sch_parent_id: safeTransform(data.sch_parent_id, 'sch_parent_id'),
-    schedule_location: safeTransform(data.schedule_location, 'schedule_location'),
+    sch_parent_id: safeTransform(data.sch_parent_id, "sch_parent_id"),
+    schedule_location: safeTransform(
+      data.schedule_location,
+      "schedule_location"
+    ),
   };
 };
 
@@ -145,7 +149,7 @@ export const ScheduleModal: React.FC<ScheduleModalProps> = ({
   } = useForm<ScheduleFormData>({
     // Temporarily disable zodResolver to handle validation manually
     // resolver: zodResolver(scheduleSchema),
-    mode: 'onChange',
+    mode: "onChange",
     defaultValues: {
       organization_id: 1, // Set a default organization ID
       schedule_code: "",
@@ -172,10 +176,7 @@ export const ScheduleModal: React.FC<ScheduleModalProps> = ({
   const watchedValues = watch();
 
   useEffect(() => {
-    console.log("useEffect triggered:", { schedule, mode, isOpen });
-
     if (schedule && mode === "edit") {
-      console.log("Resetting form for edit mode with schedule:", schedule);
       reset({
         organization_id: schedule.organization_id,
         schedule_code: schedule.schedule_code,
@@ -205,7 +206,6 @@ export const ScheduleModal: React.FC<ScheduleModalProps> = ({
         inactive_date: schedule.inactive_date ? schedule.inactive_date : "",
       });
     } else if (mode === "add") {
-      console.log("Resetting form for add mode");
       reset({
         organization_id: 1, // Set a default organization ID
         schedule_code: "",
@@ -235,39 +235,29 @@ export const ScheduleModal: React.FC<ScheduleModalProps> = ({
   // Refresh dropdown data when modal opens
   useEffect(() => {
     if (isOpen) {
-      console.log("Modal opened, refreshing dropdown data");
-      setRefreshTrigger(prev => prev + 1);
+      setRefreshTrigger((prev) => prev + 1);
     }
   }, [isOpen]);
 
   const onSubmit = (rawData: any) => {
-    console.log("=== Form Submission ===");
-    console.log("Raw form data:", rawData);
+    const hasObjectValues =
+      typeof rawData.sch_parent_id === "object" ||
+      typeof rawData.schedule_location === "object";
 
-    // Check if we're getting problematic object values and fallback to watchedValues
-    const hasObjectValues = typeof rawData.sch_parent_id === 'object' || typeof rawData.schedule_location === 'object';
-    
     let dataToUse = rawData;
     if (hasObjectValues) {
-      console.log("⚠️ Detected object values in form data, using watchedValues instead");
       dataToUse = watchedValues;
-      console.log("Using watched values:", dataToUse);
     }
 
     // Use the same transform logic that works in the test
     const transformedValues = transformFormData(dataToUse);
-    console.log("Transformed values:", transformedValues);
 
     // Test validation using the same logic as the working test
     const validationResult = scheduleSchema.safeParse(transformedValues);
-    console.log("Validation result:", validationResult);
 
     if (!validationResult.success) {
-      console.log("❌ Validation failed:", validationResult.error.format());
       return;
     }
-
-    console.log("✅ Validation passed!");
 
     const formattedData = {
       ...validationResult.data,
@@ -282,17 +272,12 @@ export const ScheduleModal: React.FC<ScheduleModalProps> = ({
         : undefined,
     };
 
-    console.log("Formatted data being sent:", formattedData);
-    
-    // Call the parent's onSave function
     onSave(formattedData as CreateScheduleRequest);
-    
-    // Invalidate the parent schedules cache to ensure fresh data for next time
-    if (mode === 'add') {
-      console.log("Invalidating parent schedules cache after creating new schedule");
-      queryClient.invalidateQueries({ 
-        queryKey: ['parent-schedules-search'],
-        exact: false // This will invalidate all queries that start with this key
+
+    if (mode === "add") {
+      queryClient.invalidateQueries({
+        queryKey: ["parent-schedules-search"],
+        exact: false, // This will invalidate all queries that start with this key
       });
     }
   };
@@ -327,10 +312,7 @@ export const ScheduleModal: React.FC<ScheduleModalProps> = ({
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="space-y-6 pt-4"
-          onSubmitCapture={(e) => {
-            console.log("Form onSubmitCapture triggered");
-            console.log("Event:", e);
-          }}
+          onSubmitCapture={(e) => {}}
         >
           <Tabs
             value={activeTab}
@@ -460,7 +442,6 @@ export const ScheduleModal: React.FC<ScheduleModalProps> = ({
                       <OptimizedLocationSelect
                         value={field.value}
                         onValueChange={(value) => {
-                          console.log('Location select onChange:', value, typeof value);
                           field.onChange(value);
                         }}
                         placeholder={t("scheduling.schedules.selectLocation")}
@@ -688,7 +669,6 @@ export const ScheduleModal: React.FC<ScheduleModalProps> = ({
                     <OptimizedParentScheduleSelect
                       value={field.value}
                       onValueChange={(value) => {
-                        console.log('Parent schedule select onChange:', value, typeof value);
                         field.onChange(value);
                       }}
                       placeholder={t(

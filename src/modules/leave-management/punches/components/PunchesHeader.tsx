@@ -54,14 +54,14 @@ const PunchesHeader: React.FC<Props> = ({
       <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
         <div className="flex-1">
           <h1 className="text-3xl md:text-4xl font-bold text-primary tracking-tight leading-tight mb-1">
-            Punches & Attendance
+            {t('punches.title') || 'Punches & Attendance'}
           </h1>
           <p className="text-base md:text-lg text-muted-foreground font-normal mb-2">
-            Manage employee attendance records and punch data
+            {t('punches.description') || 'Manage employee attendance records and punch data'}
           </p>
           {selectedCount > 0 && (
             <p className="text-sm text-primary font-medium">
-              {selectedCount} records selected
+              {t('common.selectedCount', { count: selectedCount }) || `${selectedCount} records selected`}
             </p>
           )}
         </div>
@@ -82,7 +82,7 @@ const PunchesHeader: React.FC<Props> = ({
               <Search size={22} />
             </span>
             <Input
-              placeholder="Search by employee number..."
+              placeholder={t('punches.searchPlaceholder') || 'Search by employee number...'}
               value={searchTerm}
               onChange={(e) => handleSearch(e.target.value)}
               className="border-0 bg-transparent rounded-lg focus:ring-0 focus-visible:ring-0 shadow-none text-base px-2"
@@ -94,6 +94,7 @@ const PunchesHeader: React.FC<Props> = ({
               size="sm"
               onClick={() => setShowFilters(!showFilters)}
               className="px-2 py-1 rounded-lg"
+              title={t('common.filters') || 'Filters'}
             >
               <Filter className="h-4 w-4" />
             </Button>
@@ -104,6 +105,7 @@ const PunchesHeader: React.FC<Props> = ({
               onClick={handleExport}
               disabled={mutations.exportData.isPending}
               className="px-2 py-1 rounded-lg"
+              title={t('common.export') || 'Export'}
             >
               <Download className="h-4 w-4" />
             </Button>
@@ -113,6 +115,7 @@ const PunchesHeader: React.FC<Props> = ({
               size="sm"
               onClick={onRefresh}
               className="px-2 py-1 rounded-lg"
+              title={t('common.refresh') || 'Refresh'}
             >
               <RefreshCw className="h-4 w-4" />
             </Button>
@@ -121,33 +124,41 @@ const PunchesHeader: React.FC<Props> = ({
       </div>
 
       {showFilters && (
-        <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+        <div className="mt-4 p-4 bg-muted/50 rounded-lg border border-border">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-2">From Date</label>
+              <label className="block text-sm font-medium mb-2 text-foreground">
+                {t('punches.fromDate') || 'From Date'}
+              </label>
               <Input
                 type="date"
                 onChange={(e) => onFiltersChange({ from_date: e.target.value })}
+                className="bg-background border-border"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2">To Date</label>
+              <label className="block text-sm font-medium mb-2 text-foreground">
+                {t('punches.toDate') || 'To Date'}
+              </label>
               <Input
                 type="date"
                 onChange={(e) => onFiltersChange({ to_date: e.target.value })}
+                className="bg-background border-border"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2">Status</label>
+              <label className="block text-sm font-medium mb-2 text-foreground">
+                {t('punches.status') || 'Status'}
+              </label>
               <select
-                className="w-full p-2 border border-gray-300 rounded-md"
+                className="w-full p-2 border border-border rounded-md bg-background text-foreground"
                 onChange={(e) => onFiltersChange({ status: e.target.value })}
               >
-                <option value="">All Status</option>
-                <option value="Present">Present</option>
-                <option value="Absent">Absent</option>
-                <option value="Late">Late</option>
-                <option value="Half Day">Half Day</option>
+                <option value="">{t('punches.allStatus') || 'All Status'}</option>
+                <option value="Present">{t('punches.present') || 'Present'}</option>
+                <option value="Absent">{t('punches.absent') || 'Absent'}</option>
+                <option value="Late">{t('punches.late') || 'Late'}</option>
+                <option value="Half Day">{t('punches.halfDay') || 'Half Day'}</option>
               </select>
             </div>
           </div>

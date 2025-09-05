@@ -21,8 +21,6 @@ class AuthService {
         
         // Store user data
         useUserStore.getState().setUser(user);
-        console.log("User logged in and stored:", user);
-        console.log("Token stored in localStorage and cookie");
         
         return response;
       }
@@ -50,7 +48,6 @@ class AuthService {
       // Clear token cookie
       document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
       
-      console.log("User logged out and cleared from store");
       return response;
     } catch (error) {
       // Clear user data even if logout request fails
@@ -97,8 +94,6 @@ class AuthService {
         // Update token in cookie
         const expires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 1 day
         document.cookie = `token=${token}; expires=${expires.toUTCString()}; path=/; secure; samesite=strict`;
-        
-        console.log("Token refreshed successfully");
         return response;
       }
       

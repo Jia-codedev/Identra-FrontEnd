@@ -91,14 +91,10 @@ export default function ScheduleTypesPage() {
   };
 
   const handleSaveSchedule = (data: CreateScheduleRequest) => {
-    console.log('handleSaveSchedule called with:', data);
-    console.log('Modal state:', modalState);
     
     if (modalState.mode === "add") {
-      console.log('Creating new schedule');
       createSchedule({ scheduleData: data, onClose: handleCloseModal, search, pageSize });
     } else if (modalState.mode === "edit" && modalState.schedule) {
-      console.log('Updating schedule with ID:', modalState.schedule.schedule_id);
       updateSchedule({ 
         id: modalState.schedule.schedule_id, 
         scheduleData: data, 

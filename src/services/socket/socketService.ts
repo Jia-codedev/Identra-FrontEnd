@@ -51,14 +51,12 @@ class SocketService {
 
     // Connection events
     this.socket.on(SOCKET_EVENTS.CONNECT, () => {
-      console.log('Socket connected:', this.socket?.id);
       this.connectionRetries = 0;
       this._isConnecting = false;
       this.triggerEvent('connect', null);
     });
 
     this.socket.on(SOCKET_EVENTS.DISCONNECT, (reason: string) => {
-      console.log('Socket disconnected:', reason);
       this._isConnecting = false;
       this.triggerEvent('disconnect', reason);
     });
@@ -70,7 +68,6 @@ class SocketService {
     });
 
     this.socket.on(SOCKET_EVENTS.RECONNECT, () => {
-      console.log('Socket reconnected');
       this.connectionRetries = 0;
       this.triggerEvent('reconnect', null);
     });

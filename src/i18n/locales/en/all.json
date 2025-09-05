@@ -258,6 +258,52 @@
         "noStepRole": "Each step requires a role."
       }
     },
+    "workflowAutomation": {
+      "title": "Workflow Automation",
+      "description": "Manage automated workflows and approval processes",
+      "searchPlaceholder": "Search workflows...",
+      "createWorkflow": "Create Workflow",
+      "noWorkflows": "No workflows found",
+      "noWorkflowsDescription": "Get started by creating your first workflow automation.",
+      "errorLoading": "Error loading workflows",
+      "columns": {
+        "workflowName": "Workflow Name",
+        "type": "Type",
+        "status": "Status",
+        "triggerCondition": "Trigger Condition",
+        "assignedUsers": "Assigned Users",
+        "executions": "Executions",
+        "lastExecuted": "Last Executed",
+        "actions": "Actions"
+      },
+      "types": {
+        "APPROVAL": "Approval",
+        "NOTIFICATION": "Notification",
+        "ESCALATION": "Escalation",
+        "AUTOMATION": "Automation"
+      },
+      "statuses": {
+        "ACTIVE": "Active",
+        "INACTIVE": "Inactive", 
+        "DRAFT": "Draft",
+        "PENDING": "Pending"
+      },
+      "actions": {
+        "activate": "Activate",
+        "deactivate": "Deactivate",
+        "edit": "Edit Workflow",
+        "delete": "Delete Workflow",
+        "view": "View Details"
+      },
+      "grid": {
+        "runs": "runs",
+        "assignedUsers": "assigned users",
+        "lastRun": "Last run:",
+        "trigger": "Trigger:",
+        "created": "Created:",
+        "never": "Never"
+      }
+    },
     "children": "children",
     "switchToArabic": "Switch to Arabic",
     "switchToEnglish": "Switch to English",

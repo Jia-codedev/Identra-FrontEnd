@@ -96,12 +96,10 @@ export const SitesTable: React.FC<SitesTableProps> = ({
       onDeleteItem={onDeleteSite}
       onPageChange={(newPage) => {
         if (newPage > 0 && newPage <= Math.ceil(sites.length / pageSize)) {
-          console.log("Page changed to:", newPage);
         }
       }}
       onPageSizeChange={(newPageSize) => {
         if (newPageSize > 0) {
-          console.log("Page size changed to:", newPageSize);
         }
       }}
       noDataMessage={t("masterData.site.noSitesFound")}

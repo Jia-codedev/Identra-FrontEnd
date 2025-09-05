@@ -4,9 +4,10 @@ import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/Table";
-import { CustomPagination } from "@/components/common/dashboard/Pagination";
+import { GenericTable, TableColumn } from "@/components/common/GenericTable";
 import { Clock, MapPin, Smartphone, Edit, Trash2 } from "lucide-react";
+import { useTranslations } from "@/hooks/use-translations";
+import { useLanguage } from "@/providers/language-provider";
 
 const formatDateTime = (dateString: string) => {
   if (!dateString) return 'N/A';
@@ -18,6 +19,21 @@ const formatTime = (timeString: string) => {
   if (!timeString) return 'N/A';
   const date = new Date(timeString);
   return date.toLocaleTimeString();
+};
+
+const getStatusColor = (status: string) => {
+  switch (status?.toLowerCase()) {
+    case 'present':
+      return 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400';
+    case 'absent':
+      return 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400';
+    case 'late':
+      return 'bg-orange-100 text-orange-800 dark:bg-orange-900/20 dark:text-orange-400';
+    case 'half day':
+      return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400';
+    default:
+      return 'bg-muted text-muted-foreground';
+  }
 };
 
 type ViewMode = 'table' | 'grid';
@@ -44,43 +60,145 @@ interface AttendanceRecord {
 interface PunchesListProps {
   punches: AttendanceRecord[];
   viewMode: ViewMode;
-  currentPage: number;
-  totalPages: number;
-  pageSize: number;
-  onPageChange: (page: number) => void;
-  onPageSizeChange: (size: number) => void;
+  selected?: number[];
+  allChecked?: boolean;
+  onSelectItem?: (id: number) => void;
+  onSelectAll?: () => void;
   onEdit?: (punch: AttendanceRecord) => void;
   onDelete?: (id: number) => void;
   isLoading?: boolean;
 }
 
-const getStatusColor = (status: string) => {
-  switch (status?.toLowerCase()) {
-    case 'present':
-      return 'bg-green-100 text-green-800';
-    case 'absent':
-      return 'bg-red-100 text-red-800';
-    case 'late':
-      return 'bg-yellow-100 text-yellow-800';
-    case 'half day':
-      return 'bg-blue-100 text-blue-800';
-    default:
-      return 'bg-gray-100 text-gray-800';
-  }
-};
-
 export default function PunchesList({
   punches,
   viewMode,
-  currentPage,
-  totalPages,
-  pageSize,
-  onPageChange,
-  onPageSizeChange,
+  selected = [],
+  allChecked = false,
+  onSelectItem,
+  onSelectAll,
   onEdit,
   onDelete,
   isLoading = false,
 }: PunchesListProps) {
+  const { t } = useTranslations();
+  const { isRTL } = useLanguage();
+
+  // Define table columns for GenericTable
+  const columns: TableColumn<AttendanceRecord>[] = [
+    {
+      key: 'employee',
+      header: t('punches.employee') || 'Employee',
+      accessor: (punch: AttendanceRecord) => (
+        <div>
+          <div className="font-medium text-foreground">{punch.employee_name || t('common.unknown') || 'Unknown'}</div>
+          <div className="text-sm text-muted-foreground">#{punch.employee_no}</div>
+        </div>
+      ),
+    },
+    {
+      key: 'date',
+      header: t('punches.date') || 'Date',
+      accessor: (punch: AttendanceRecord) => (
+        <div className="text-sm">
+          <div className="font-medium text-foreground">{formatDateTime(punch.Ddate)}</div>
+        </div>
+      ),
+    },
+    {
+      key: 'checkIn',
+      header: t('punches.checkIn') || 'Check In',
+      accessor: (punch: AttendanceRecord) => (
+        <div className="text-sm text-muted-foreground">
+          {formatTime(punch.check_in || '')}
+        </div>
+      ),
+    },
+    {
+      key: 'checkOut',
+      header: t('punches.checkOut') || 'Check Out',
+      accessor: (punch: AttendanceRecord) => (
+        <div className="text-sm text-muted-foreground">
+          {formatTime(punch.check_out || '')}
+        </div>
+      ),
+    },
+    {
+      key: 'break',
+      header: t('punches.break') || 'Break',
+      accessor: (punch: AttendanceRecord) => (
+        <div className="text-sm text-muted-foreground">
+          {punch.break_start && punch.break_end ? 
+            `${formatTime(punch.break_start)} - ${formatTime(punch.break_end)}` : 
+            'N/A'
+          }
+        </div>
+      ),
+    },
+    {
+      key: 'workHours',
+      header: t('punches.workHours') || 'Work Hours',
+      accessor: (punch: AttendanceRecord) => (
+        <div className="text-sm">
+          <div className="font-medium text-foreground">{punch.total_work_hours || 0}h</div>
+          {punch.overtime_hours && punch.overtime_hours > 0 && (
+            <div className="text-xs text-primary">+{punch.overtime_hours}h {t('punches.overtime') || 'OT'}</div>
+          )}
+        </div>
+      ),
+    },
+    {
+      key: 'location',
+      header: t('punches.location') || 'Location',
+      accessor: (punch: AttendanceRecord) => (
+        <div className="flex items-center text-sm text-muted-foreground">
+          <MapPin className="w-3 h-3 mr-1" />
+          {punch.location || t('common.unknown') || 'Unknown'}
+        </div>
+      ),
+    },
+    {
+      key: 'status',
+      header: t('punches.status') || 'Status',
+      accessor: (punch: AttendanceRecord) => (
+        <Badge className={getStatusColor(punch.status || '')}>
+          {punch.status || t('common.unknown') || 'Unknown'}
+        </Badge>
+      ),
+    },
+  ];
+
+  // Helper functions for GenericTable
+  const getItemId = (punch: AttendanceRecord) => punch.id;
+  const getItemDisplayName = (punch: AttendanceRecord) => punch.employee_name || `Employee ${punch.employee_no}`;
+
+  // Custom actions component
+  const renderActions = (punch: AttendanceRecord) => (
+    <div className="flex items-center justify-center gap-2">
+      {onEdit && (
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => onEdit(punch)}
+          className="p-1 h-8 w-8"
+          title={t('common.edit') || 'Edit'}
+        >
+          <Edit className="w-4 h-4" />
+        </Button>
+      )}
+      {onDelete && (
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => onDelete(punch.id)}
+          className="p-1 h-8 w-8 text-destructive hover:text-destructive"
+          title={t('common.delete') || 'Delete'}
+        >
+          <Trash2 className="w-4 h-4" />
+        </Button>
+      )}
+    </div>
+  );
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -92,10 +210,12 @@ export default function PunchesList({
   if (punches.length === 0) {
     return (
       <div className="text-center py-16">
-        <Clock className="mx-auto h-12 w-12 text-gray-400" />
-        <h3 className="mt-2 text-sm font-medium text-gray-900">No attendance records found</h3>
-        <p className="mt-1 text-sm text-gray-500">
-          No attendance records match your current filters.
+        <Clock className="mx-auto h-12 w-12 text-muted-foreground" />
+        <h3 className="mt-2 text-sm font-medium text-foreground">
+          {t('punches.noPunchesFound') || 'No punches found'}
+        </h3>
+        <p className="mt-1 text-sm text-muted-foreground">
+          {t('punches.noPunchesDescription') || 'No attendance records match your current filters.'}
         </p>
       </div>
     );
@@ -103,109 +223,25 @@ export default function PunchesList({
 
   if (viewMode === 'table') {
     return (
-      <div className="space-y-4">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Employee</TableHead>
-              <TableHead>Date</TableHead>
-              <TableHead>Check In</TableHead>
-              <TableHead>Check Out</TableHead>
-              <TableHead>Break</TableHead>
-              <TableHead>Work Hours</TableHead>
-              <TableHead>Location</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {punches.map((punch) => (
-              <TableRow key={punch.id}>
-                <TableCell>
-                  <div>
-                    <div className="font-medium text-gray-900">{punch.employee_name || 'Unknown'}</div>
-                    <div className="text-sm text-gray-500">#{punch.employee_no}</div>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="text-sm">
-                    <div className="font-medium">{formatDateTime(punch.Ddate)}</div>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="text-sm text-gray-600">
-                    {formatTime(punch.check_in || '')}
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="text-sm text-gray-600">
-                    {formatTime(punch.check_out || '')}
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="text-sm text-gray-600">
-                    {punch.break_start && punch.break_end ? 
-                      `${formatTime(punch.break_start)} - ${formatTime(punch.break_end)}` : 
-                      'N/A'
-                    }
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="text-sm">
-                    <div className="font-medium">{punch.total_work_hours || 0}h</div>
-                    {punch.overtime_hours && punch.overtime_hours > 0 && (
-                      <div className="text-xs text-blue-600">+{punch.overtime_hours}h OT</div>
-                    )}
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center text-sm text-gray-600">
-                    <MapPin className="w-3 h-3 mr-1" />
-                    {punch.location || 'Unknown'}
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <Badge className={getStatusColor(punch.status || '')}>
-                    {punch.status || 'Unknown'}
-                  </Badge>
-                </TableCell>
-                <TableCell className="text-right">
-                  <div className="flex items-center justify-end gap-2">
-                    {onEdit && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => onEdit(punch)}
-                      >
-                        <Edit className="w-4 h-4" />
-                      </Button>
-                    )}
-                    {onDelete && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => onDelete(punch.id)}
-                        className="text-red-600 hover:text-red-800"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
-                    )}
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-
-        <CustomPagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          pageSize={pageSize}
-          pageSizeOptions={[10, 25, 50, 100]}
-          onPageChange={onPageChange}
-          onPageSizeChange={onPageSizeChange}
-        />
-      </div>
+      <GenericTable
+        data={punches}
+        columns={columns}
+        selected={selected}
+        page={1}
+        pageSize={punches.length}
+        allChecked={allChecked}
+        getItemId={getItemId}
+        getItemDisplayName={getItemDisplayName}
+        onSelectItem={onSelectItem || (() => {})}
+        onSelectAll={onSelectAll || (() => {})}
+        onEditItem={onEdit}
+        onDeleteItem={onDelete}
+        actions={renderActions}
+        noDataMessage={t('punches.noPunchesFound') || 'No punches found'}
+        isLoading={isLoading}
+        onPageChange={() => {}}
+        onPageSizeChange={() => {}}
+      />
     );
   }
 
@@ -214,71 +250,73 @@ export default function PunchesList({
     <div className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {punches.map((punch) => (
-          <Card key={punch.id} className="hover:shadow-md transition-shadow">
+          <Card key={punch.id} className="hover:shadow-md transition-shadow border-border bg-card">
             <CardContent className="p-4">
               <div className="flex items-start justify-between mb-3">
                 <div>
-                  <h3 className="font-medium text-gray-900">{punch.employee_name || 'Unknown'}</h3>
-                  <p className="text-sm text-gray-500">#{punch.employee_no}</p>
+                  <h3 className="font-medium text-foreground">{punch.employee_name || t('common.unknown') || 'Unknown'}</h3>
+                  <p className="text-sm text-muted-foreground">#{punch.employee_no}</p>
                 </div>
                 <div className="flex gap-1">
                   <Badge className={getStatusColor(punch.status || '')}>
-                    {punch.status || 'Unknown'}
+                    {punch.status || t('common.unknown') || 'Unknown'}
                   </Badge>
                 </div>
               </div>
 
               <div className="space-y-2 mb-4">
                 <div className="flex items-center text-sm">
-                  <Clock className="w-4 h-4 mr-2 text-gray-400" />
-                  <span className="font-medium">{formatDateTime(punch.Ddate)}</span>
+                  <Clock className="w-4 h-4 mr-2 text-muted-foreground" />
+                  <span className="font-medium text-foreground">{formatDateTime(punch.Ddate)}</span>
                 </div>
                 
                 <div className="grid grid-cols-2 gap-2 text-sm">
                   <div>
-                    <span className="text-gray-500">In:</span> {formatTime(punch.check_in || '')}
+                    <span className="text-muted-foreground">{t('punches.in') || 'In'}:</span> <span className="text-foreground">{formatTime(punch.check_in || '')}</span>
                   </div>
                   <div>
-                    <span className="text-gray-500">Out:</span> {formatTime(punch.check_out || '')}
+                    <span className="text-muted-foreground">{t('punches.out') || 'Out'}:</span> <span className="text-foreground">{formatTime(punch.check_out || '')}</span>
                   </div>
                 </div>
 
                 {punch.break_start && punch.break_end && (
-                  <div className="text-sm text-gray-600">
-                    <span className="font-medium">Break:</span> {formatTime(punch.break_start)} - {formatTime(punch.break_end)}
+                  <div className="text-sm text-muted-foreground">
+                    <span className="font-medium">{t('punches.break') || 'Break'}:</span> <span className="text-foreground">{formatTime(punch.break_start)} - {formatTime(punch.break_end)}</span>
                   </div>
                 )}
 
                 <div className="flex items-center justify-between text-sm">
                   <div>
-                    <span className="text-gray-500">Work:</span> {punch.total_work_hours || 0}h
+                    <span className="text-muted-foreground">{t('punches.work') || 'Work'}:</span> <span className="text-foreground">{punch.total_work_hours || 0}h</span>
                   </div>
                   {punch.overtime_hours && punch.overtime_hours > 0 && (
-                    <div className="text-blue-600">
-                      <span className="font-medium">OT:</span> {punch.overtime_hours}h
+                    <div className="text-primary">
+                      <span className="font-medium">{t('punches.overtime') || 'OT'}:</span> {punch.overtime_hours}h
                     </div>
                   )}
                 </div>
 
-                <div className="flex items-center text-sm text-gray-600">
+                <div className="flex items-center text-sm text-muted-foreground">
                   <MapPin className="w-4 h-4 mr-2" />
-                  <span>{punch.location || 'Unknown Location'}</span>
+                  <span>{punch.location || t('punches.unknownLocation') || 'Unknown Location'}</span>
                 </div>
 
                 {punch.device_id && (
-                  <div className="flex items-center text-sm text-gray-600">
+                  <div className="flex items-center text-sm text-muted-foreground">
                     <Smartphone className="w-4 h-4 mr-2" />
-                    <span>Device: {punch.device_id}</span>
+                    <span>{t('punches.device') || 'Device'}: {punch.device_id}</span>
                   </div>
                 )}
               </div>
 
-              <div className="flex items-center justify-end gap-2 pt-2 border-t">
+              <div className="flex items-center justify-end gap-2 pt-2 border-t border-border">
                 {onEdit && (
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={() => onEdit(punch)}
+                    className="p-1 h-8 w-8"
+                    title={t('common.edit') || 'Edit'}
                   >
                     <Edit className="w-4 h-4" />
                   </Button>
@@ -288,7 +326,8 @@ export default function PunchesList({
                     variant="ghost"
                     size="sm"
                     onClick={() => onDelete(punch.id)}
-                    className="text-red-600 hover:text-red-800"
+                    className="p-1 h-8 w-8 text-destructive hover:text-destructive"
+                    title={t('common.delete') || 'Delete'}
                   >
                     <Trash2 className="w-4 h-4" />
                   </Button>
@@ -298,15 +337,6 @@ export default function PunchesList({
           </Card>
         ))}
       </div>
-
-      <CustomPagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        pageSize={pageSize}
-        pageSizeOptions={[10, 25, 50, 100]}
-        onPageChange={onPageChange}
-        onPageSizeChange={onPageSizeChange}
-      />
     </div>
   );
 }

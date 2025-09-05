@@ -882,10 +882,6 @@ export const OrganizationChart: React.FC<OrganizationChartProps> = ({
         }
         break;
     }
-
-    console.log(
-      `Generated ${nodes.length} nodes and ${edges.length} edges for ${style} style`
-    );
     return { nodes, edges };
   }, [data, style]); // Removed unnecessary currentLocale dependency
 

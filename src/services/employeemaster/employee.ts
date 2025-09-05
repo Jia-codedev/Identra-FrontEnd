@@ -35,14 +35,14 @@ class EmployeeApi {
   }
 
   addEmployee(data: Partial<IEmployee>) {
-    try {
-      console.log('addEmployee sending payload:', data);
-    } catch {}
     return apiClient.post("/employee/add", data).catch((err) => {
       // Attach request payload to error for easier debugging
       try {
         console.error("addEmployee payload:", data);
-        console.error("addEmployee error response:", err?.response?.data || err.message);
+        console.error(
+          "addEmployee error response:",
+          err?.response?.data || err.message
+        );
       } catch {}
       throw err;
     });

@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/Table";
 import { Workflow, Play, Pause, Edit, Trash2, Clock, Users, CheckCircle } from "lucide-react";
+import { useTranslations } from "@/hooks/use-translations";
 
 type ViewMode = 'table' | 'grid';
 
@@ -76,6 +77,7 @@ export default function WorkflowList({
   onToggleStatus,
   isLoading = false,
 }: WorkflowListProps) {
+  const { t } = useTranslations();
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -88,9 +90,11 @@ export default function WorkflowList({
     return (
       <div className="text-center py-16">
         <Workflow className="mx-auto h-12 w-12 text-muted-foreground" />
-        <h3 className="mt-2 text-sm font-medium text-foreground">No workflows found</h3>
+        <h3 className="mt-2 text-sm font-medium text-foreground">
+          {t('workflowAutomation.noWorkflows') || 'No workflows found'}
+        </h3>
         <p className="mt-1 text-sm text-muted-foreground">
-          Get started by creating your first workflow automation.
+          {t('workflowAutomation.noWorkflowsDescription') || 'Get started by creating your first workflow automation.'}
         </p>
       </div>
     );
@@ -103,14 +107,14 @@ export default function WorkflowList({
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Workflow Name</TableHead>
-                <TableHead>Type</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Trigger Condition</TableHead>
-                <TableHead>Assigned Users</TableHead>
-                <TableHead>Executions</TableHead>
-                <TableHead>Last Executed</TableHead>
-                <TableHead className="w-32">Actions</TableHead>
+                <TableHead>{t('workflowAutomation.columns.workflowName') || 'Workflow Name'}</TableHead>
+                <TableHead>{t('workflowAutomation.columns.type') || 'Type'}</TableHead>
+                <TableHead>{t('workflowAutomation.columns.status') || 'Status'}</TableHead>
+                <TableHead>{t('workflowAutomation.columns.triggerCondition') || 'Trigger Condition'}</TableHead>
+                <TableHead>{t('workflowAutomation.columns.assignedUsers') || 'Assigned Users'}</TableHead>
+                <TableHead>{t('workflowAutomation.columns.executions') || 'Executions'}</TableHead>
+                <TableHead>{t('workflowAutomation.columns.lastExecuted') || 'Last Executed'}</TableHead>
+                <TableHead className="w-32">{t('workflowAutomation.columns.actions') || 'Actions'}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -126,12 +130,12 @@ export default function WorkflowList({
                   </TableCell>
                   <TableCell>
                     <Badge className={getTypeColor(workflow.type)}>
-                      {workflow.type}
+                      {t(`workflowAutomation.types.${workflow.type}`) || workflow.type}
                     </Badge>
                   </TableCell>
                   <TableCell>
                     <Badge className={getStatusColor(workflow.status)}>
-                      {workflow.status}
+                      {t(`workflowAutomation.statuses.${workflow.status}`) || workflow.status}
                     </Badge>
                   </TableCell>
                   <TableCell className="text-muted-foreground">
@@ -156,7 +160,7 @@ export default function WorkflowList({
                         {formatDateTime(workflow.lastExecuted)}
                       </div>
                     ) : (
-                      <span className="text-muted-foreground">Never</span>
+                      <span className="text-muted-foreground">{t('workflowAutomation.grid.never') || 'Never'}</span>
                     )}
                   </TableCell>
                   <TableCell>
@@ -225,7 +229,7 @@ export default function WorkflowList({
                 </div>
                 <div className="flex gap-1">
                   <Badge className={getStatusColor(workflow.status)}>
-                    {workflow.status}
+                    {t(`workflowAutomation.statuses.${workflow.status}`) || workflow.status}
                   </Badge>
                 </div>
               </div>
@@ -233,32 +237,32 @@ export default function WorkflowList({
               <div className="space-y-2 mb-4">
                 <div className="flex items-center justify-between">
                   <Badge className={getTypeColor(workflow.type)}>
-                    {workflow.type}
+                    {t(`workflowAutomation.types.${workflow.type}`) || workflow.type}
                   </Badge>
                   <div className="flex items-center text-sm text-muted-foreground">
                     <CheckCircle className="w-4 h-4 mr-1" />
-                    {workflow.executionCount} runs
+                    {workflow.executionCount} {t('workflowAutomation.grid.runs') || 'runs'}
                   </div>
                 </div>
 
                 <div className="text-sm text-muted-foreground">
-                  <span className="font-medium text-foreground">Trigger:</span> {workflow.triggerCondition}
+                  <span className="font-medium text-foreground">{t('workflowAutomation.grid.trigger') || 'Trigger'}:</span> {workflow.triggerCondition}
                 </div>
 
                 <div className="flex items-center text-sm text-muted-foreground">
                   <Users className="w-4 h-4 mr-2" />
-                  <span>{workflow.assignedUsers?.length || 0} assigned users</span>
+                  <span>{workflow.assignedUsers?.length || 0} {t('workflowAutomation.grid.assignedUsers') || 'assigned users'}</span>
                 </div>
 
                 {workflow.lastExecuted && (
                   <div className="flex items-center text-sm text-muted-foreground">
                     <Clock className="w-4 h-4 mr-2" />
-                    <span>Last run: {formatDateTime(workflow.lastExecuted)}</span>
+                    <span>{t('workflowAutomation.grid.lastRun') || 'Last run'}: {formatDateTime(workflow.lastExecuted)}</span>
                   </div>
                 )}
 
                 <div className="text-sm text-muted-foreground">
-                  <span className="font-medium text-foreground">Created:</span> {formatDateTime(workflow.createdAt)}
+                  <span className="font-medium text-foreground">{t('workflowAutomation.grid.created') || 'Created'}:</span> {formatDateTime(workflow.createdAt)}
                 </div>
               </div>
 

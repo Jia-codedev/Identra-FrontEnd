@@ -40,11 +40,9 @@ class UserService {
     try {
       const currentUser = useUserStore.getState().user;
       if (!currentUser?.employeenumber) {
-        console.log("No current user to refresh");
         return false;
       }
 
-      console.log("Refreshing user data for employee ID:", currentUser.employeenumber);
       let response = await apiClient.get(`/secuser/get-by-emp-id/${currentUser.employeenumber}`, { 
         withCredentials: true 
       });
@@ -72,10 +70,8 @@ class UserService {
         };
 
         useUserStore.getState().setUser(updatedUser);
-        console.log("User data refreshed successfully:", updatedUser);
         return true;
       } else {
-        console.log("Failed to refresh user data from backend");
         return false;
       }
     } catch (error) {
@@ -88,13 +84,10 @@ class UserService {
     const existingUser = useUserStore.getState().user;
     
     if (existingUser) {
-      console.log("User already exists in store:", existingUser);
-      // Still refresh to get latest data from backend
       await this.refreshUserData();
       return;
     }
 
-    console.log("Attempting to restore user session...");
     await this.restoreUserFromSession();
   }
 
@@ -117,7 +110,6 @@ class UserService {
       }
       
       if (!token) {
-        console.log("No authentication token found");
         return;
       }
       
@@ -127,12 +119,9 @@ class UserService {
       if (response.status === 200 && response.data.user) {
         const user = response.data.user;
         useUserStore.getState().setUser(user);
-        console.log("User session restored successfully:", user);
       } else {
-        console.log("No valid user session found");
       }
     } catch (error) {
-      console.error("Error restoring user session:", error);
       // Clear invalid tokens
       if (typeof window !== "undefined") {
         localStorage.removeItem("token");

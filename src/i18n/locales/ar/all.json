@@ -258,6 +258,52 @@
         "noStepRole": "كل خطوة تتطلب دورًا."
       }
     },
+    "workflowAutomation": {
+      "title": "أتمتة سير العمل",
+      "description": "إدارة سير العمل الآلي وعمليات الموافقة",
+      "searchPlaceholder": "البحث في سير العمل...",
+      "createWorkflow": "إنشاء سير عمل",
+      "noWorkflows": "لم يتم العثور على سير عمل",
+      "noWorkflowsDescription": "ابدأ بإنشاء أول سير عمل آلي.",
+      "errorLoading": "خطأ في تحميل سير العمل",
+      "columns": {
+        "workflowName": "اسم سير العمل",
+        "type": "النوع",
+        "status": "الحالة",
+        "triggerCondition": "شرط التشغيل",
+        "assignedUsers": "المستخدمون المخصصون",
+        "executions": "التنفيذات",
+        "lastExecuted": "آخر تنفيذ",
+        "actions": "الإجراءات"
+      },
+      "types": {
+        "APPROVAL": "موافقة",
+        "NOTIFICATION": "إشعار",
+        "ESCALATION": "تصعيد",
+        "AUTOMATION": "أتمتة"
+      },
+      "statuses": {
+        "ACTIVE": "نشط",
+        "INACTIVE": "غير نشط",
+        "DRAFT": "مسودة",
+        "PENDING": "في الانتظار"
+      },
+      "actions": {
+        "activate": "تفعيل",
+        "deactivate": "إلغاء التفعيل",
+        "edit": "تعديل سير العمل",
+        "delete": "حذف سير العمل",
+        "view": "عرض التفاصيل"
+      },
+      "grid": {
+        "runs": "تشغيل",
+        "assignedUsers": "مستخدمون مخصصون",
+        "lastRun": "آخر تشغيل:",
+        "trigger": "المشغل:",
+        "created": "تم الإنشاء:",
+        "never": "أبداً"
+      }
+    },
     "switchToArabic": "التبديل إلى العربية",
     "switchToEnglish": "التبديل إلى الإنجليزية",
     "notAvailable": "غير متوفر",
