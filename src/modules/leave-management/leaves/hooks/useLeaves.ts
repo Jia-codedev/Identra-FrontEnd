@@ -2,11 +2,13 @@
 
 import { useState, useMemo, useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useLanguage } from "@/providers/language-provider";
 import employeeLeavesApi, { ListLeavesRequest } from "@/services/leaveManagement/employeeLeaves";
 
 const DEFAULT_PAGE_SIZE = 10;
 
 export const useLeaves = () => {
+  const { isRTL } = useLanguage();
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
@@ -14,7 +16,7 @@ export const useLeaves = () => {
 
   const params: ListLeavesRequest = useMemo(() => ({
     limit: pageSize,
-    offset: page,
+    offset: (page - 1) * pageSize,
     ...(search ? { employee_id: search } : {}),
   }), [page, pageSize, search]);
 
@@ -25,16 +27,38 @@ export const useLeaves = () => {
 
   const leaves = useMemo(() => {
     const items: any[] = Array.isArray((data as any)?.data) ? (data as any).data : [];
-    return items.map(it => ({
-      id: it.employee_leave_id,
-      employee_name: it.employee_name || `${it.firstname_eng || ''} ${it.lastname_eng || ''}`.trim(),
-      leave_type: it.leave_type_name || it.leave_type || String(it.leave_type_id || ''),
-      start_date: it.from_date,
-      end_date: it.to_date,
-      status: it.leave_status,
-      raw: it,
-    }));
-  }, [data]);
+    return items.map(it => {
+      // Employee information
+      const employee = it.employee_master_employee_leaves_employee_idToemployee_master;
+      const employeeName = employee ? 
+        (isRTL ? 
+          `${employee.firstname_arb || employee.firstname_eng || ''} ${employee.lastname_arb || employee.lastname_eng || ''}`.trim() :
+          `${employee.firstname_eng || employee.firstname_arb || ''} ${employee.lastname_eng || employee.lastname_arb || ''}`.trim()
+        ) : 'N/A';
+      
+      // Leave type information based on language
+      const leaveType = it.leave_types ? 
+        (isRTL ? 
+          (it.leave_types.leave_type_arb || it.leave_types.leave_type_eng || 'Unknown') :
+          (it.leave_types.leave_type_eng || it.leave_types.leave_type_arb || 'Unknown')
+        ) : 'Unknown';
+
+      return {
+        id: it.employee_leave_id,
+        employee_name: employeeName,
+        employee_no: employee?.emp_no || 'N/A',
+        leave_type: leaveType,
+        start_date: it.from_date,
+        end_date: it.to_date,
+        status: it.leave_status,
+        total_days: it.number_of_leaves,
+        employee_remarks: it.employee_remarks,
+        approver_remarks: it.approver_remarks,
+        leave_unique_ref_no: it.leave_unique_ref_no,
+        raw: it,
+      };
+    });
+  }, [data, isRTL]);
   const total = (data as any)?.total ?? 0;
   const hasNext = (data as any)?.hasNext ?? false;
   const pageCount = useMemo(() => {

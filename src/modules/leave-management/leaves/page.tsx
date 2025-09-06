@@ -2,8 +2,8 @@
 
 import React, { useState } from "react";
 import { useTranslations } from "@/hooks/use-translations";
-import { LeavesHeader } from "./components/LeavesHeader";
-// import { GenericTable, TableColumn } from "@/components/common/GenericTable";
+import { LeavesHeader, ViewMode } from "./components/LeavesHeader";
+import { GenericTable, TableColumn } from "@/components/common/GenericTable";
 import LeavesList from "./components/LeavesList";
 import LeaveRequestForm from "./components/LeaveRequestForm";
 import { Dialog } from "@/components/ui/dialog";
@@ -29,6 +29,7 @@ type LeaveType = {
 export default function LeavesPage() {
   const { t } = useTranslations();
   const router = useRouter();
+  const [viewMode, setViewMode] = useState<ViewMode>('grid');
 
   const {
     leaves: data,
@@ -71,6 +72,13 @@ export default function LeavesPage() {
     if (refresh) refetch();
   };
 
+  const allChecked = selected.length > 0 && selected.length === data.length;
+
+  const handleEdit = (leave: any) => {
+    // TODO: Implement edit functionality
+    console.log('Edit leave:', leave);
+  };
+
   return (
     <div className="w-full h-full flex flex-col items-center justify-start">
       <div className="w-full relative">
@@ -80,6 +88,9 @@ export default function LeavesPage() {
             onSearchChange={handleSearchChange}
             onAdd={handleAdd}
             selectedCount={selected.length}
+            viewMode={viewMode}
+            onViewModeChange={setViewMode}
+            onRefresh={refetch}
           />
 
           <Dialog open={showDialog} onOpenChange={setShowDialog}>
@@ -90,8 +101,21 @@ export default function LeavesPage() {
             />
           </Dialog>
 
-          <div className="w-full mt-4">
-            <LeavesList leaves={data} loading={isLoading} />
+                    <div className="w-full mt-4">
+            <LeavesList 
+              leaves={data} 
+              loading={isLoading}
+              viewMode={viewMode}
+              selected={selected}
+              onSelectItem={selectItem}
+              onSelectAll={selectAll}
+              allChecked={allChecked}
+              onEdit={handleEdit}
+              currentPage={page}
+              pageSize={pageSize}
+              onPageChange={setPage}
+              onPageSizeChange={setPageSize}
+            />
           </div>
 
           <div className="mt-4">
