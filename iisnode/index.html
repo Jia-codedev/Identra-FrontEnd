@@ -1,0 +1,87 @@
+<html>
+<head>
+    <title>iisnode logs</title>
+    <style type="text/css">
+        body
+        {
+            font-family: "Trebuchet MS" , Arial, Helvetica, sans-serif;
+        }
+        table
+        {
+            border-collapse: collapse;
+        }
+        td, th
+        {
+            border: 1px solid lightgray;
+            padding: 3px 7px 2px 7px;
+        }
+        th
+        {
+            text-align: left;
+            padding-top: 5px;
+            padding-bottom: 4px;
+            background-color: Gray;
+            color: #ffffff;
+        }
+        td.stderr
+        {
+            color: Red;
+        }
+    </style>
+</head>
+<body>
+    <table id="logFilesTable">
+        <tr>
+            <th>
+                Computer name
+            </th>
+            <th>
+                PID
+            </th>
+            <th>
+                Type
+            </th>
+            <th>
+                Created
+            </th>
+            <th>
+                Link
+            </th>
+        </tr>
+    </table>
+    <p id="lastUpdated"></p>
+    <script type="text/javascript">
+
+        // this is replaced with actual data at runtime by code in interceptor.js
+        var logFiles = [{"file":"CC-WFMDEV003-1840-stderr-1757064034454.txt","computername":"CC-WFMDEV003","pid":1840,"type":"stderr","created":1757064034454},{"file":"CC-WFMDEV003-2292-stderr-1757063884191.txt","computername":"CC-WFMDEV003","pid":2292,"type":"stderr","created":1757063884191},{"file":"CC-WFMDEV003-2532-stderr-1757063826305.txt","computername":"CC-WFMDEV003","pid":2532,"type":"stderr","created":1757063826305},{"file":"CC-WFMDEV003-5496-stderr-1757063937759.txt","computername":"CC-WFMDEV003","pid":5496,"type":"stderr","created":1757063937759},{"file":"CC-WFMDEV003-7864-stderr-1757063833304.txt","computername":"CC-WFMDEV003","pid":7864,"type":"stderr","created":1757063833304},{"file":"CC-WFMDEV003-7888-stderr-1757063970180.txt","computername":"CC-WFMDEV003","pid":7888,"type":"stderr","created":1757063970180},{"file":"CC-WFMDEV003-7948-stderr-1757063957304.txt","computername":"CC-WFMDEV003","pid":7948,"type":"stderr","created":1757063957304},{"file":"CC-WFMDEV003-8208-stderr-1757066276897.txt","computername":"CC-WFMDEV003","pid":8208,"type":"stderr","created":1757066276897},{"file":"CC-WFMDEV003-8208-stdout-1757066276896.txt","computername":"CC-WFMDEV003","pid":8208,"type":"stdout","created":1757066276896},{"file":"CC-WFMDEV003-8288-stderr-1757065533600.txt","computername":"CC-WFMDEV003","pid":8288,"type":"stderr","created":1757065533600},{"file":"CC-WFMDEV003-8288-stdout-1757065533599.txt","computername":"CC-WFMDEV003","pid":8288,"type":"stdout","created":1757065533599},{"file":"CC-WFMDEV003-8596-stderr-1757063870750.txt","computername":"CC-WFMDEV003","pid":8596,"type":"stderr","created":1757063870750},{"file":"CC-WFMDEV003-8776-stderr-1757064043039.txt","computername":"CC-WFMDEV003","pid":8776,"type":"stderr","created":1757064043039},{"file":"CC-WFMDEV003-9036-stderr-1757063836899.txt","computername":"CC-WFMDEV003","pid":9036,"type":"stderr","created":1757063836899},{"file":"CC-WFMDEV003-9076-stderr-1757064157556.txt","computername":"CC-WFMDEV003","pid":9076,"type":"stderr","created":1757064157556},{"file":"CC-WFMDEV003-9172-stderr-1757063873912.txt","computername":"CC-WFMDEV003","pid":9172,"type":"stderr","created":1757063873912},{"file":"CC-WFMDEV003-9600-stderr-1757064256072.txt","computername":"CC-WFMDEV003","pid":9600,"type":"stderr","created":1757064256072},{"file":"CC-WFMDEV003-9600-stderr-1757065790552.txt","computername":"CC-WFMDEV003","pid":9600,"type":"stderr","created":1757065790552},{"file":"CC-WFMDEV003-9600-stdout-1757064256071.txt","computername":"CC-WFMDEV003","pid":9600,"type":"stdout","created":1757064256071},{"file":"CC-WFMDEV003-9600-stdout-1757065790551.txt","computername":"CC-WFMDEV003","pid":9600,"type":"stdout","created":1757065790551},{"file":"CC-WFMDEV003-9932-stderr-1757064630857.txt","computername":"CC-WFMDEV003","pid":9932,"type":"stderr","created":1757064630857},{"file":"CC-WFMDEV003-9932-stdout-1757064630856.txt","computername":"CC-WFMDEV003","pid":9932,"type":"stdout","created":1757064630856}];
+        var lastUpdated = 1757066277880;
+        var date = new Date();
+
+        date.setTime(lastUpdated);
+        document.getElementById('lastUpdated').innerHTML = 'Index was last updated ' + date;
+
+        logFiles.sort(function (a, b) {
+            return b.created - a.created;
+        });
+
+        var logFilesTable = document.getElementById("logFilesTable");
+        for (var i = 0; i < logFiles.length; i++) {
+            var logFile = logFiles[i];
+            date.setTime(logFile.created);
+            var row = logFilesTable.insertRow(-1);
+            var computerNameCell = row.insertCell(0);
+            var pidCell = row.insertCell(1);
+            var typeCell = row.insertCell(2);
+            var dateCell = row.insertCell(3);
+            var logCell = row.insertCell(4);
+            computerNameCell.innerHTML = logFile.computername;
+            pidCell.innerHTML = logFile.pid.toString();
+            typeCell.innerHTML = logFile.type;
+            typeCell.setAttribute('class', logFile.type);
+            dateCell.innerHTML = date.toString();
+            logCell.innerHTML = '<a href="' + logFile.file + '">log</a>';
+        };
+
+    </script>
+</body>
+</html>

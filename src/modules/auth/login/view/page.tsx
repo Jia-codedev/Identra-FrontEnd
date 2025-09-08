@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 import { useLanguage } from "@/providers/language-provider";
 import authService from "@/services/authService";
 import { useRouter } from "next/navigation";
+import { CookieDebugger } from "@/utils/cookieDebugger";
 function AuthComponent() {
   const { t } = useTranslations();
   const { isRTL } = useLanguage();
@@ -28,6 +29,11 @@ function AuthComponent() {
 
   const onSubmit = async (data: LoginForm) => {
     try {
+      // Debug cookie functionality before login
+      console.log('Login attempt - debugging cookies...');
+      CookieDebugger.logEnvironment();
+      CookieDebugger.testCookies();
+      
       const response = await authService.login({
         login: data.login,
         password: data.password,
@@ -39,6 +45,13 @@ function AuthComponent() {
       } else {
         setError(null);
         setSubmitted(true);
+        
+        // Debug cookies after successful login
+        setTimeout(() => {
+          console.log('After login - debugging cookies...');
+          CookieDebugger.debugCurrentCookies();
+        }, 500);
+        
         setTimeout(() => {
           router.push("/dashboard");
         }, 2000);

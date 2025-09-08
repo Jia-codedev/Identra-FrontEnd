@@ -4,6 +4,7 @@ import type {
   InternalAxiosRequestConfig,
   AxiosError,
 } from "axios";
+import { CookieUtils } from "@/utils/cookieUtils";
 
 // Extend the AxiosRequestConfig to include _retry flag
 interface ExtendedAxiosRequestConfig extends InternalAxiosRequestConfig {
@@ -18,12 +19,10 @@ export function setupInterceptors(client: AxiosInstance) {
       if (typeof window !== "undefined") {
         let token = localStorage.getItem("token");
         
-        // If no token in localStorage, try to get from cookies
+        // If no token in localStorage, try to get from cookies using utility
         if (!token) {
-          const cookies = document.cookie.split(';');
-          const tokenCookie = cookies.find(cookie => cookie.trim().startsWith('token='));
-          if (tokenCookie) {
-            token = tokenCookie.split('=')[1];
+          token = CookieUtils.getCookie('token');
+          if (token) {
             // Store in localStorage for future requests
             localStorage.setItem("token", token);
           }
@@ -68,8 +67,8 @@ export function setupInterceptors(client: AxiosInstance) {
             localStorage.removeItem("token");
             localStorage.removeItem("user");
             
-            // Clear token cookie
-            document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            // Clear token cookie using utility function
+            CookieUtils.removeAuthToken();
             
             // Clear user store if available
             try {

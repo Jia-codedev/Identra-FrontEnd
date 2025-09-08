@@ -1,5 +1,6 @@
 import apiClient from "@/configs/api/Axios";
 import { useUserStore } from "@/store/userStore";
+import { CookieUtils } from "@/utils/cookieUtils";
 
 class AuthService {
   async login(credentials: IAuth) {
@@ -12,12 +13,8 @@ class AuthService {
         // Store token in localStorage for Bearer auth
         localStorage.setItem("token", token);
         
-        // Store token in cookie as well (with proper expiration)
-        const expires = credentials.rememberMe 
-          ? new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days
-          : new Date(Date.now() + 24 * 60 * 60 * 1000); // 1 day
-          
-        document.cookie = `token=${token}; expires=${expires.toUTCString()}; path=/; secure; samesite=strict`;
+        // Store token in cookie using utility function
+        CookieUtils.setAuthToken(token, credentials.rememberMe || false);
         
         // Store user data
         useUserStore.getState().setUser(user);
@@ -45,8 +42,8 @@ class AuthService {
       localStorage.removeItem("refreshToken");
       localStorage.removeItem("user");
       
-      // Clear token cookie
-      document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      // Clear token cookie using utility function
+      CookieUtils.removeAuthToken();
       
       return response;
     } catch (error) {
@@ -56,8 +53,8 @@ class AuthService {
       localStorage.removeItem("refreshToken");
       localStorage.removeItem("user");
       
-      // Clear token cookie
-      document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      // Clear token cookie using utility function
+      CookieUtils.removeAuthToken();
       
       console.error("Logout error:", error);
       throw error;
@@ -91,9 +88,8 @@ class AuthService {
         // Update token in localStorage
         localStorage.setItem("token", token);
         
-        // Update token in cookie
-        const expires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 1 day
-        document.cookie = `token=${token}; expires=${expires.toUTCString()}; path=/; secure; samesite=strict`;
+        // Update token in cookie using utility function
+        CookieUtils.setAuthToken(token, false);
         return response;
       }
       
