@@ -118,12 +118,13 @@ export function GenericTable<T>({
           <TableBody>
             <AnimatePresence>
               {data
-                .filter((item) => item && getItemId(item) !== undefined)
+                .filter((item) => item && getItemId(item) !== undefined && getItemId(item) !== null)
                 .map((item, idx) => {
                   const itemId = getItemId(item);
+                  const uniqueKey = `${itemId}-${idx}`; // Ensure unique key even with duplicate IDs
                   return (
                     <TableRow
-                      key={itemId}
+                      key={uniqueKey}
                       className={
                         ((page - 1) * pageSize + idx) % 2 === 0
                           ? "bg-card/60 hover:bg-primary/10 transition-all border-b border-border"
@@ -154,9 +155,10 @@ export function GenericTable<T>({
                           {actions ? (
                             actions(item)
                           ) : (
-                            <>
+                            <React.Fragment key={`actions-${itemId}`}>
                               {onEditItem && (
                                 <Button
+                                  key={`edit-${itemId}`}
                                   size="icon"
                                   variant="outline"
                                   className="p-2 rounded-full group cursor-pointer"
@@ -168,6 +170,7 @@ export function GenericTable<T>({
                               )}
                               {onDeleteItem && (
                                 <Button
+                                  key={`delete-${itemId}`}
                                   size="icon"
                                   variant="destructive"
                                   className="p-2 rounded-full group cursor-pointer"
@@ -177,7 +180,7 @@ export function GenericTable<T>({
                                   <FiTrash2 className="text-white group-hover:scale-110 transition-transform" />
                                 </Button>
                               )}
-                            </>
+                            </React.Fragment>
                           )}
                         </TableCell>
                       )}

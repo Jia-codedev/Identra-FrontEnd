@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useTranslations } from "@/hooks/use-translations";
+import { useRouter } from "next/navigation";
 import WorkflowHeader from "./components/WorkflowHeader";
 import WorkflowList from "./components/WorkflowList";
 import useWorkflow from "./hooks/useWorkflow";
@@ -11,6 +12,7 @@ type ViewMode = 'table' | 'grid';
 
 export default function WorkflowAutomationPage() {
   const { t } = useTranslations();
+  const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
   const [viewMode, setViewMode] = useState<ViewMode>('table');
 
@@ -36,24 +38,74 @@ export default function WorkflowAutomationPage() {
 
   const totalPages = Math.ceil(total / limit);
 
+  // Sample data for testing if no real data is available
+  const sampleWorkflows = workflowTypes && workflowTypes.length > 0 ? workflowTypes : [
+    {
+      id: "wf-001",
+      name: "Leave Approval Workflow",
+      description: "Automatic approval workflow for employee leave requests",
+      type: "APPROVAL" as const,
+      status: "ACTIVE" as const,
+      triggerCondition: "Leave request submitted",
+      assignedUsers: ["manager@company.com", "hr@company.com"],
+      approvalLevels: 2,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      lastExecuted: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+      executionCount: 15
+    },
+    {
+      id: "wf-002",
+      name: "Overtime Notification",
+      description: "Notify managers when employees work overtime",
+      type: "NOTIFICATION" as const,
+      status: "ACTIVE" as const,
+      triggerCondition: "Work hours > 8",
+      assignedUsers: ["manager@company.com"],
+      approvalLevels: 0,
+      createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+      updatedAt: new Date().toISOString(),
+      lastExecuted: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+      executionCount: 8
+    },
+    {
+      id: "wf-003",
+      name: "Late Arrival Escalation",
+      description: "Escalate repeated late arrivals to HR",
+      type: "ESCALATION" as const,
+      status: "DRAFT" as const,
+      triggerCondition: "Late arrival > 3 times in month",
+      assignedUsers: ["hr@company.com"],
+      approvalLevels: 1,
+      createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+      updatedAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+      executionCount: 0
+    }
+  ];
+
   const handleAddNew = () => {
-    // TODO: Implement add new workflow functionality
-    console.log(t('workflowAutomation.createWorkflow') || "Add new workflow");
+    // Navigate to generate workflows page
+    router.push("/leave-management/workflow-automation/generate-workflows");
+  };
+
+  const handleInitiateWorkflow = () => {
+    // Navigate to initiate workflow page  
+    router.push("/leave-management/workflow-automation/initiate-workflow");
   };
 
   const handleEdit = (workflow: any) => {
     // TODO: Implement edit workflow functionality
-    console.log(t('workflowAutomation.actions.edit') || "Edit workflow:", workflow);
+    console.log(t('leaveManagement.workflowAutomation.actions.edit') || "Edit workflow:", workflow);
   };
 
   const handleDelete = (id: string) => {
     // TODO: Implement delete workflow functionality
-    console.log(t('workflowAutomation.actions.delete') || "Delete workflow:", id);
+    console.log(t('leaveManagement.workflowAutomation.actions.delete') || "Delete workflow:", id);
   };
 
   const handleToggleStatus = (id: string, status: 'ACTIVE' | 'INACTIVE') => {
     // TODO: Implement toggle workflow status functionality
-    console.log(t('workflowAutomation.actions.activate') || "Toggle workflow status:", id, status);
+    console.log(t('leaveManagement.workflowAutomation.actions.activate') || "Toggle workflow status:", id, status);
   };
 
   const handleExport = () => {
@@ -78,7 +130,7 @@ export default function WorkflowAutomationPage() {
           <div className="rounded-2xl border py-4 border-border bg-background/90 p-4">
             <div className="text-center py-16">
               <h3 className="text-lg font-medium text-destructive">
-                {t('workflowAutomation.errorLoading') || t('common.errorLoading') || 'Error loading workflows'}
+                {t('leaveManagement.workflowAutomation.errorLoading') || 'Error loading workflows'}
               </h3>
               <p className="text-sm text-muted-foreground mt-1">{error.message}</p>
             </div>
@@ -98,6 +150,7 @@ export default function WorkflowAutomationPage() {
             viewMode={viewMode}
             onViewModeChange={setViewMode}
             onAddNew={handleAddNew}
+            onInitiateWorkflow={handleInitiateWorkflow}
             onExport={handleExport}
             onImport={handleImport}
             onSettings={handleSettings}
@@ -105,7 +158,7 @@ export default function WorkflowAutomationPage() {
 
           <div className="w-full mt-4">
             <WorkflowList
-              workflows={workflowTypes || []}
+              workflows={sampleWorkflows || []}
               viewMode={viewMode}
               onEdit={handleEdit}
               onDelete={handleDelete}

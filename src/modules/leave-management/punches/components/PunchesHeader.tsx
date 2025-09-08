@@ -3,13 +3,14 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/Input";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { RefreshCw, Download, Filter, Search, Table, Grid3X3 } from "lucide-react";
+import { RefreshCw, Download, Filter, Search, Table2, Grid3X3, User, Users } from "lucide-react";
 import { useTranslations } from "@/hooks/use-translations";
 import { useLanguage } from '@/providers/language-provider';
+import { toast } from "sonner";
 import useAttendanceMutations from "../hooks/useMutations";
 
 export type ViewMode = 'table' | 'grid';
+export type PunchViewType = 'self' | 'team';
 
 interface Props {
   selectedCount: number;
@@ -19,6 +20,9 @@ interface Props {
   onSearchChange: (value: string) => void;
   viewMode: ViewMode;
   onViewModeChange: (mode: ViewMode) => void;
+  punchViewType?: PunchViewType;
+  onPunchViewTypeChange?: (type: PunchViewType) => void;
+  isManager?: boolean;
 }
 
 const PunchesHeader: React.FC<Props> = ({
@@ -29,6 +33,9 @@ const PunchesHeader: React.FC<Props> = ({
   onSearchChange,
   viewMode,
   onViewModeChange,
+  punchViewType = 'self',
+  onPunchViewTypeChange,
+  isManager = false,
 }) => {
   const { t } = useTranslations();
   const { isRTL } = useLanguage();
@@ -45,6 +52,23 @@ const PunchesHeader: React.FC<Props> = ({
     });
   };
 
+  const handlePunchViewChange = (type: PunchViewType) => {
+    if (onPunchViewTypeChange) {
+      onPunchViewTypeChange(type);
+      // Show toast notification
+      const message = type === 'self' 
+        ? t('leaveManagement.punches.toast.switchedToSelf') || 'Viewing your punches'
+        : t('leaveManagement.punches.toast.switchedToTeam') || 'Viewing team punches';
+      
+      toast.success(message, {
+        description: type === 'self' 
+          ? t('leaveManagement.punches.toast.selfDescription') || 'Now showing only your attendance records'
+          : t('leaveManagement.punches.toast.teamDescription') || 'Now showing all team member attendance records',
+        duration: 3000,
+      });
+    }
+  };
+
   const handleExport = () => {
     mutations.exportData.mutate({});
   };
@@ -54,10 +78,10 @@ const PunchesHeader: React.FC<Props> = ({
       <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
         <div className="flex-1">
           <h1 className="text-3xl md:text-4xl font-bold text-primary tracking-tight leading-tight mb-1">
-            {t('punches.title') || 'Punches & Attendance'}
+            {t('leaveManagement.punches.title') || 'Punches & Attendance'}
           </h1>
           <p className="text-base md:text-lg text-muted-foreground font-normal mb-2">
-            {t('punches.description') || 'Manage employee attendance records and punch data'}
+            {t('leaveManagement.punches.description') || 'Manage employee attendance records and punch data'}
           </p>
           {selectedCount > 0 && (
             <p className="text-sm text-primary font-medium">
@@ -67,15 +91,53 @@ const PunchesHeader: React.FC<Props> = ({
         </div>
 
         <div className="w-full sm:w-auto flex flex-col sm:flex-row gap-2 items-center">
-          {/* View Toggle */}
-          <ToggleGroup type="single" value={viewMode} onValueChange={(value) => value && onViewModeChange(value as ViewMode)}>
-            <ToggleGroupItem value="table" aria-label="Table view" size="sm">
-              <Table className="h-4 w-4" />
-            </ToggleGroupItem>
-            <ToggleGroupItem value="grid" aria-label="Grid view" size="sm">
-              <Grid3X3 className="h-4 w-4" />
-            </ToggleGroupItem>
-          </ToggleGroup>
+          {/* Manager View Toggle - Show only if user is a manager */}
+          {isManager && (
+            <div className="flex items-center bg-card/80 border border-border rounded-xl p-1">
+              <Button
+                onClick={() => handlePunchViewChange('self')}
+                variant={punchViewType === 'self' ? 'default' : 'ghost'}
+                size="sm"
+                className="h-8 px-3"
+              >
+                <User size={16} className={`${isRTL ? 'ml-1' : 'mr-1'}`} />
+                <span className="hidden sm:inline">{t('leaveManagement.punches.selfPunches') || 'My Punches'}</span>
+                <span className="sm:hidden">{t('common.self') || 'Self'}</span>
+              </Button>
+              <Button
+                onClick={() => handlePunchViewChange('team')}
+                variant={punchViewType === 'team' ? 'default' : 'ghost'}
+                size="sm"
+                className="h-8 px-3"
+              >
+                <Users size={16} className={`${isRTL ? 'ml-1' : 'mr-1'}`} />
+                <span className="hidden sm:inline">{t('leaveManagement.punches.teamPunches') || 'Team Punches'}</span>
+                <span className="sm:hidden">{t('common.team') || 'Team'}</span>
+              </Button>
+            </div>
+          )}
+
+          {/* View Mode Toggle */}
+          <div className="flex items-center bg-card/80 border border-border rounded-xl p-1">
+            <Button
+              onClick={() => onViewModeChange('table')}
+              variant={viewMode === 'table' ? 'default' : 'ghost'}
+              size="sm"
+              className="h-8 px-3"
+            >
+              <Table2 size={16} className={`${isRTL ? 'ml-1' : 'mr-1'}`} />
+              <span className="hidden sm:inline">{t('view.table')}</span>
+            </Button>
+            <Button
+              onClick={() => onViewModeChange('grid')}
+              variant={viewMode === 'grid' ? 'default' : 'ghost'}
+              size="sm"
+              className="h-8 px-3"
+            >
+              <Grid3X3 size={16} className={`${isRTL ? 'ml-1' : 'mr-1'}`} />
+              <span className="hidden sm:inline">{t('view.grid')}</span>
+            </Button>
+          </div>
 
           <div className={`flex items-center gap-0 bg-card/80 border border-border rounded-xl px-2 py-1 ${isRTL ? 'flex-row-reverse' : 'flex-row'}`}>
             <span className={`${isRTL ? 'pr-2 pl-1' : 'pl-2 pr-1'} text-xl text-primary/80`}>

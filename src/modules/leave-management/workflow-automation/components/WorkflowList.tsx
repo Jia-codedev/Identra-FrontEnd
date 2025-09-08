@@ -122,7 +122,7 @@ export default function WorkflowList({
   const columns: TableColumn<WorkflowItem>[] = React.useMemo(() => [
     {
       key: 'name',
-      header: t('workflowAutomation.columns.workflowName') || t('common.name') || 'Workflow Name',
+      header: t('leaveManagement.workflowAutomation.columns.workflowName') || 'Workflow Name',
       accessor: (workflow: WorkflowItem, isRTL: boolean) => (
         <div>
           <div className="font-medium text-foreground">{workflow?.name || 'N/A'}</div>
@@ -134,32 +134,32 @@ export default function WorkflowList({
     },
     {
       key: 'type',
-      header: t('workflowAutomation.columns.type') || t('common.type') || 'Type',
+      header: t('leaveManagement.workflowAutomation.columns.type') || 'Type',
       accessor: (workflow: WorkflowItem, isRTL: boolean) => (
         <Badge className={getTypeColor(workflow?.type || '')}>
-          {t(`workflowAutomation.types.${workflow?.type}`) || workflow?.type || 'Unknown'}
+          {t(`leaveManagement.workflowAutomation.types.${workflow?.type}`) || workflow?.type || 'Unknown'}
         </Badge>
       ),
     },
     {
       key: 'status',
-      header: t('workflowAutomation.columns.status') || t('common.status') || 'Status',
+      header: t('leaveManagement.workflowAutomation.columns.status') || 'Status',
       accessor: (workflow: WorkflowItem, isRTL: boolean) => (
         <Badge className={getStatusColor(workflow?.status || '')}>
-          {t(`workflowAutomation.statuses.${workflow?.status}`) || workflow?.status || 'Unknown'}
+          {t(`leaveManagement.workflowAutomation.statuses.${workflow?.status}`) || workflow?.status || 'Unknown'}
         </Badge>
       ),
     },
     {
       key: 'trigger',
-      header: t('workflowAutomation.columns.triggerCondition') || 'Trigger Condition',
+      header: t('leaveManagement.workflowAutomation.columns.triggerCondition') || 'Trigger Condition',
       accessor: (workflow: WorkflowItem, isRTL: boolean) => (
         <span className="text-muted-foreground">{workflow?.triggerCondition || 'N/A'}</span>
       ),
     },
     {
       key: 'assignedUsers',
-      header: t('workflowAutomation.columns.assignedUsers') || 'Assigned Users',
+      header: t('leaveManagement.workflowAutomation.columns.assignedUsers') || 'Assigned Users',
       accessor: (workflow: WorkflowItem, isRTL: boolean) => (
         <div className="flex items-center text-muted-foreground">
           <Users className="w-4 h-4 mr-1" />
@@ -169,7 +169,7 @@ export default function WorkflowList({
     },
     {
       key: 'executions',
-      header: t('workflowAutomation.columns.executions') || 'Executions',
+      header: t('leaveManagement.workflowAutomation.columns.executions') || 'Executions',
       accessor: (workflow: WorkflowItem, isRTL: boolean) => (
         <div className="flex items-center text-muted-foreground">
           <CheckCircle className="w-4 h-4 mr-1" />
@@ -179,7 +179,7 @@ export default function WorkflowList({
     },
     {
       key: 'lastExecuted',
-      header: t('workflowAutomation.columns.lastExecuted') || 'Last Executed',
+      header: t('leaveManagement.workflowAutomation.columns.lastExecuted') || 'Last Executed',
       accessor: (workflow: WorkflowItem, isRTL: boolean) => (
         workflow?.lastExecuted ? (
           <div className="flex items-center text-muted-foreground">
@@ -187,7 +187,7 @@ export default function WorkflowList({
             {formatDateTime(workflow.lastExecuted)}
           </div>
         ) : (
-          <span className="text-muted-foreground">{t('workflowAutomation.grid.never') || 'Never'}</span>
+          <span className="text-muted-foreground">{t('leaveManagement.workflowAutomation.grid.never') || 'Never'}</span>
         )
       ),
     },
@@ -208,7 +208,7 @@ export default function WorkflowList({
               workflow.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE'
             )}
             className="p-1 h-8 w-8"
-            title={workflow.status === 'ACTIVE' ? t('workflowAutomation.actions.deactivate') || t('common.deactivate') : t('workflowAutomation.actions.activate') || t('common.activate')}
+            title={workflow.status === 'ACTIVE' ? t('leaveManagement.workflowAutomation.actions.deactivate') || 'Deactivate' : t('leaveManagement.workflowAutomation.actions.activate') || 'Activate'}
           >
             {workflow.status === 'ACTIVE' ? (
               <Pause className="w-4 h-4" />
@@ -223,7 +223,7 @@ export default function WorkflowList({
             size="sm"
             onClick={() => onEdit(workflow)}
             className="p-1 h-8 w-8"
-            title={t('workflowAutomation.actions.edit') || t('common.edit') || 'Edit'}
+            title={t('leaveManagement.workflowAutomation.actions.edit') || 'Edit'}
           >
             <Edit className="w-4 h-4" />
           </Button>
@@ -234,7 +234,7 @@ export default function WorkflowList({
             size="sm"
             onClick={() => onDelete(workflow.id)}
             className="p-1 h-8 w-8 text-destructive hover:text-destructive"
-            title={t('workflowAutomation.actions.delete') || t('common.delete') || 'Delete'}
+            title={t('leaveManagement.workflowAutomation.actions.delete') || 'Delete'}
           >
             <Trash2 className="w-4 h-4" />
           </Button>
@@ -256,10 +256,10 @@ export default function WorkflowList({
       <div className="text-center py-16">
         <Workflow className="mx-auto h-12 w-12 text-muted-foreground" />
         <h3 className="mt-2 text-sm font-medium text-foreground">
-          {t('workflowAutomation.noWorkflows') || t('common.noResults') || 'No workflows found'}
+          {t('leaveManagement.workflowAutomation.noData') || 'No workflows found'}
         </h3>
         <p className="mt-1 text-sm text-muted-foreground">
-          {t('workflowAutomation.noWorkflowsDescription') || 'Get started by creating your first workflow automation.'}
+          {t('leaveManagement.workflowAutomation.noDataDescription') || 'Get started by creating your first workflow automation.'}
         </p>
       </div>
     );
@@ -280,7 +280,7 @@ export default function WorkflowList({
         onSelectAll={() => {}}
         onEditItem={onEdit}
         actions={renderActions}
-        noDataMessage={t('workflowAutomation.noWorkflows') || t('common.noResults') || 'No workflows found'}
+        noDataMessage={t('leaveManagement.workflowAutomation.noData') || 'No workflows found'}
         isLoading={isLoading}
         onPageChange={() => {}}
         onPageSizeChange={() => {}}
@@ -304,7 +304,7 @@ export default function WorkflowList({
                 </div>
                 <div className="flex gap-1">
                   <Badge className={getStatusColor(workflow?.status || '')}>
-                    {t(`workflowAutomation.statuses.${workflow?.status}`) || workflow?.status || 'Unknown'}
+                    {t(`leaveManagement.workflowAutomation.statuses.${workflow?.status}`) || workflow?.status || 'Unknown'}
                   </Badge>
                 </div>
               </div>
@@ -312,32 +312,32 @@ export default function WorkflowList({
               <div className="space-y-2 mb-4">
                 <div className="flex items-center justify-between">
                   <Badge className={getTypeColor(workflow?.type || '')}>
-                    {t(`workflowAutomation.types.${workflow?.type}`) || workflow?.type || 'Unknown'}
+                    {t(`leaveManagement.workflowAutomation.types.${workflow?.type}`) || workflow?.type || 'Unknown'}
                   </Badge>
                   <div className="flex items-center text-sm text-muted-foreground">
                     <CheckCircle className="w-4 h-4 mr-1" />
-                    {workflow?.executionCount || 0} {t('workflowAutomation.grid.runs') || 'runs'}
+                    {workflow?.executionCount || 0} {t('leaveManagement.workflowAutomation.grid.runs') || 'runs'}
                   </div>
                 </div>
 
                 <div className="text-sm text-muted-foreground">
-                  <span className="font-medium text-foreground">{t('workflowAutomation.grid.trigger') || 'Trigger'}:</span> {workflow?.triggerCondition || 'N/A'}
+                  <span className="font-medium text-foreground">{t('leaveManagement.workflowAutomation.grid.trigger') || 'Trigger'}:</span> {workflow?.triggerCondition || 'N/A'}
                 </div>
 
                 <div className="flex items-center text-sm text-muted-foreground">
                   <Users className="w-4 h-4 mr-2" />
-                  <span>{workflow?.assignedUsers?.length || 0} {t('workflowAutomation.grid.assignedUsers') || 'assigned users'}</span>
+                  <span>{workflow?.assignedUsers?.length || 0} {t('leaveManagement.workflowAutomation.grid.assignedUsers') || 'assigned users'}</span>
                 </div>
 
                 {workflow?.lastExecuted && (
                   <div className="flex items-center text-sm text-muted-foreground">
                     <Clock className="w-4 h-4 mr-2" />
-                    <span>{t('workflowAutomation.grid.lastRun') || 'Last run'}: {formatDateTime(workflow.lastExecuted)}</span>
+                    <span>{t('leaveManagement.workflowAutomation.grid.lastRun') || 'Last run'}: {formatDateTime(workflow.lastExecuted)}</span>
                   </div>
                 )}
 
                 <div className="text-sm text-muted-foreground">
-                  <span className="font-medium text-foreground">{t('workflowAutomation.grid.created') || t('common.created') || 'Created'}:</span> {formatDateTime(workflow?.createdAt)}
+                  <span className="font-medium text-foreground">{t('leaveManagement.workflowAutomation.grid.created') || 'Created'}:</span> {formatDateTime(workflow?.createdAt)}
                 </div>
               </div>
 
@@ -351,7 +351,7 @@ export default function WorkflowList({
                       workflow.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE'
                     )}
                     className="p-2 h-8 w-8"
-                    title={workflow.status === 'ACTIVE' ? t('workflowAutomation.actions.deactivate') : t('workflowAutomation.actions.activate')}
+                    title={workflow.status === 'ACTIVE' ? t('leaveManagement.workflowAutomation.actions.deactivate') : t('leaveManagement.workflowAutomation.actions.activate')}
                   >
                     {workflow.status === 'ACTIVE' ? (
                       <Pause className="w-4 h-4" />
@@ -366,7 +366,7 @@ export default function WorkflowList({
                     size="sm"
                     onClick={() => onEdit(workflow)}
                     className="p-2 h-8 w-8"
-                    title={t('workflowAutomation.actions.edit') || t('common.edit')}
+                    title={t('leaveManagement.workflowAutomation.actions.edit') || 'Edit'}
                   >
                     <Edit className="w-4 h-4" />
                   </Button>
@@ -377,7 +377,7 @@ export default function WorkflowList({
                     size="sm"
                     onClick={() => onDelete(workflow.id)}
                     className="p-2 h-8 w-8 text-destructive hover:text-destructive"
-                    title={t('workflowAutomation.actions.delete') || t('common.delete')}
+                    title={t('leaveManagement.workflowAutomation.actions.delete') || 'Delete'}
                   >
                     <Trash2 className="w-4 h-4" />
                   </Button>

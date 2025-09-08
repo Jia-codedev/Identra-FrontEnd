@@ -88,7 +88,6 @@ const PermissionsList: React.FC<Props> = ({
       accessor: (permission) => (
         <div>
           <div className="font-medium">{permission.employee?.employee_name || 'N/A'}</div>
-          <div className="text-sm text-gray-500">{permission.employee?.employee_no || 'N/A'}</div>
         </div>
       ),
     },
@@ -117,11 +116,18 @@ const PermissionsList: React.FC<Props> = ({
     {
       key: "status",
       header: t('leaveManagement.permissions.columns.status') || 'Status',
-      accessor: (permission) => (
-        <Badge className={statusMap[permission.status]?.color || 'bg-gray-100 text-gray-800'}>
-          {statusMap[permission.status]?.label || permission.status || 'Unknown'}
-        </Badge>
-      ),
+      accessor: (permission) => {
+        const statusValue = permission.status || "pending";
+        const statusKey = `leaveManagement.permissions.statuses.${statusValue?.toLowerCase()}`;
+        const translatedStatus = t(statusKey);
+        const status = statusMap[permission.status] || statusMap["pending"];
+        
+        return (
+          <Badge className={status.color}>
+            {translatedStatus !== statusKey ? translatedStatus : status.label}
+          </Badge>
+        );
+      },
     },
     {
       key: "remarks",
@@ -157,11 +163,16 @@ const PermissionsList: React.FC<Props> = ({
                     <CardTitle className="text-sm font-medium">
                       {permission.employee?.employee_name || 'N/A'}
                     </CardTitle>
-                    <p className="text-xs text-gray-500">{permission.employee?.employee_no || 'N/A'}</p>
                   </div>
                 </div>
                 <Badge className={statusMap[permission.status]?.color || 'bg-gray-100 text-gray-800'}>
-                  {statusMap[permission.status]?.label || permission.status || 'Unknown'}
+                  {(() => {
+                    const statusValue = permission.status || "pending";
+                    const statusKey = `leaveManagement.permissions.statuses.${statusValue?.toLowerCase()}`;
+                    const translatedStatus = t(statusKey);
+                    const status = statusMap[permission.status] || statusMap["pending"];
+                    return translatedStatus !== statusKey ? translatedStatus : status.label;
+                  })()}
                 </Badge>
               </div>
             </CardHeader>

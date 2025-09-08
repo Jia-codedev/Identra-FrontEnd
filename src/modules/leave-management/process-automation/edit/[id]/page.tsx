@@ -65,7 +65,7 @@ export default function EditWorkflowPage() {
 
     // load roles
     setRolesLoading(true);
-    rolesApi.getRoles({ offset: 1, limit: 10 }).then((res) => {
+    rolesApi.getRoles().then((res) => {
       const data = (res?.data && res.data.data) || res?.data || [];
       const arr = Array.isArray(data) ? data : [];
       const opts = arr.map((r: any) => ({ label: r.role_name_eng || r.role_name || r.role_name_arb || String(r.role_id), value: r.role_id }));
@@ -77,7 +77,7 @@ export default function EditWorkflowPage() {
 
   const handleRoleSearch = (q: string) => {
     setRolesLoading(true);
-    rolesApi.getRoles({ offset: 1, limit: 10, search: q }).then((res) => {
+    rolesApi.getRoles().then((res) => {
       const data = (res?.data && res.data.data) || res?.data || [];
       const arr = Array.isArray(data) ? data : [];
       const opts = arr.map((r: any) => ({ label: r.role_name_eng || r.role_name || r.role_name_arb || String(r.role_id), value: r.role_id }));

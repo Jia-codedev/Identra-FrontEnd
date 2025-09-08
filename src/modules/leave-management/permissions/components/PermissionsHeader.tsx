@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react';
 import { Search, Table, Grid3X3, Filter, RefreshCw } from 'lucide-react';
 import { Input } from "@/components/ui/Input";
 import { Button } from '@/components/ui/button';
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useTranslations } from '@/hooks/use-translations';
 import { useLanguage } from '@/providers/language-provider';
 
@@ -60,15 +59,37 @@ export const PermissionsHeader: React.FC<PermissionsHeaderProps> = ({
         </div>
 
         <div className="w-full sm:w-auto flex flex-col sm:flex-row gap-2 items-center">
-          {/* View Toggle */}
-          <ToggleGroup type="single" value={viewMode} onValueChange={(value) => value && onViewModeChange(value as ViewMode)}>
-            <ToggleGroupItem value="table" aria-label="Table view" size="sm">
-              <Table className="h-4 w-4" />
-            </ToggleGroupItem>
-            <ToggleGroupItem value="grid" aria-label="Grid view" size="sm">
-              <Grid3X3 className="h-4 w-4" />
-            </ToggleGroupItem>
-          </ToggleGroup>
+          {/* View Mode Toggle */}
+          <div className="flex items-center bg-card/80 border border-border rounded-xl p-1">
+            <Button
+              onClick={() => onViewModeChange('table')}
+              variant={viewMode === 'table' ? 'default' : 'ghost'}
+              size="sm"
+              className="h-8 px-3"
+            >
+              <Table className={`h-4 w-4 ${isRTL ? 'ml-1' : 'mr-1'}`} />
+              <span className="hidden sm:inline">{t('view.table')}</span>
+            </Button>
+            <Button
+              onClick={() => onViewModeChange('grid')}
+              variant={viewMode === 'grid' ? 'default' : 'ghost'}
+              size="sm"
+              className="h-8 px-3"
+            >
+              <Grid3X3 className={`h-4 w-4 ${isRTL ? 'ml-1' : 'mr-1'}`} />
+              <span className="hidden sm:inline">{t('view.grid')}</span>
+            </Button>
+          </div>
+
+          {/* Refresh Button */}
+          <Button
+            onClick={onRefresh}
+            variant="outline"
+            size="sm"
+            className="h-8 px-3"
+          >
+            <RefreshCw className="h-4 w-4" />
+          </Button>
 
           <div className={`flex items-center gap-0 bg-card/80 border border-border rounded-xl px-2 py-1 ${isRTL ? 'flex-row-reverse' : 'flex-row'}`}>
             <span className={`${isRTL ? 'pr-2 pl-1' : 'pl-2 pr-1'} text-xl text-primary/80`}>
@@ -78,36 +99,22 @@ export const PermissionsHeader: React.FC<PermissionsHeaderProps> = ({
               type="text"
               value={searchTerm}
               onChange={(e) => handleSearchChange(e.target.value)}
-              placeholder={t('leaveManagement.permissions.actions.search')}
+              placeholder={t('common.search')}
               className="border-0 bg-transparent outline-none focus:outline-none focus:border-0 focus:ring-0 shadow-none"
             />
             <span className="mx-2 h-6 w-px bg-border" />
             
-            {/* Refresh Button */}
-            <Button 
-              onClick={onRefresh} 
-              variant="ghost" 
-              size="sm"
-              className="px-2 py-1 rounded-lg"
-            >
-              <RefreshCw className="h-4 w-4" />
-            </Button>
-          </div>
-
-          <div className="flex gap-2">
-            {selectedCount > 0 && onDeleteSelected && (
-              <Button
-                variant="destructive"
-                size="sm"
-                onClick={onDeleteSelected}
-                className="h-10"
-              >
-                {t('common.deleteSelected', { count: selectedCount })}
+            {selectedCount > 0 && onDeleteSelected ? (
+              <Button onClick={onDeleteSelected} className="font-semibold text-base px-4 py-2 rounded-lg bg-destructive hover:bg-destructive/90 transition-all shadow-none" variant="destructive">
+                <span className="hidden sm:inline">{t('common.delete')}</span>
+                <span className="sm:hidden text-xl leading-none">🗑️</span>
+              </Button>
+            ) : (
+              <Button onClick={onAdd} className="font-semibold text-base px-4 py-2 rounded-lg bg-primary hover:bg-primary/90 transition-all shadow-none" variant="default">
+                <span className="hidden sm:inline">+ {t('common.add')}</span>
+                <span className="sm:hidden text-xl leading-none">+</span>
               </Button>
             )}
-            <Button onClick={onAdd} className="h-10">
-              {t('leaveManagement.permissions.actions.add')}
-            </Button>
           </div>
         </div>
       </div>

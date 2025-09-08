@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { GenericTable, TableColumn } from "@/components/common/GenericTable";
-import { Clock, MapPin, Smartphone, Edit, Trash2 } from "lucide-react";
+import { Clock, MapPin, Smartphone } from "lucide-react";
 import { useTranslations } from "@/hooks/use-translations";
 import { useLanguage } from "@/providers/language-provider";
 
@@ -24,11 +24,16 @@ const formatTime = (timeString: string) => {
 const getStatusColor = (status: string) => {
   switch (status?.toLowerCase()) {
     case 'present':
+    case 'checkin':
       return 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400';
+    case 'checkout':
+      return 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400';
     case 'absent':
       return 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400';
     case 'late':
       return 'bg-orange-100 text-orange-800 dark:bg-orange-900/20 dark:text-orange-400';
+    case 'manual':
+      return 'bg-amber-100 text-amber-800 dark:bg-amber-900/20 dark:text-amber-400';
     case 'half day':
       return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400';
     default:
@@ -44,17 +49,31 @@ interface AttendanceRecord {
   employee_no: string;
   employee_name?: string;
   Ddate: string;
-  check_in?: string;
-  check_out?: string;
+  time_in?: string;
+  time_out?: string;
+  check_in?: string; // Backwards compatibility
+  check_out?: string; // Backwards compatibility
   break_start?: string;
   break_end?: string;
   total_work_hours?: number;
   overtime_hours?: number;
+  overtime?: number;
+  late?: number;
+  early?: number;
   status?: string;
   location?: string;
   device_id?: string;
   created_date?: string;
   last_updated_date?: string;
+  comment?: string;
+  remarks?: string;
+  // Event transaction specific fields
+  transaction_id?: number;
+  transaction_time?: string;
+  transaction_type?: string; // IN/OUT
+  reason?: string;
+  user_entry_flag?: boolean;
+  geolocation?: string;
 }
 
 interface PunchesListProps {
@@ -64,8 +83,6 @@ interface PunchesListProps {
   allChecked?: boolean;
   onSelectItem?: (id: number) => void;
   onSelectAll?: () => void;
-  onEdit?: (punch: AttendanceRecord) => void;
-  onDelete?: (id: number) => void;
   isLoading?: boolean;
 }
 
@@ -76,18 +93,21 @@ export default function PunchesList({
   allChecked = false,
   onSelectItem,
   onSelectAll,
-  onEdit,
-  onDelete,
   isLoading = false,
 }: PunchesListProps) {
   const { t } = useTranslations();
   const { isRTL } = useLanguage();
 
+  // Ensure punches is always an array and filter out invalid items
+  const validPunches = Array.isArray(punches) 
+    ? punches.filter(punch => punch && typeof punch === 'object' && punch.id !== undefined)
+    : [];
+
   // Define table columns for GenericTable
   const columns: TableColumn<AttendanceRecord>[] = [
     {
       key: 'employee',
-      header: t('employee.employeeName') || 'Employee',
+      header: t('leaveManagement.punches.columns.employee') || 'Employee',
       accessor: (punch: AttendanceRecord) => (
         <div>
           <div className="font-medium text-foreground">{punch.employee_name || t('common.notAvailable') || 'Unknown'}</div>
@@ -96,69 +116,55 @@ export default function PunchesList({
       ),
     },
     {
-      key: 'date',
-      header: t('common.date') || 'Date',
+      key: 'transaction',
+      header: t('leaveManagement.punches.columns.transaction') || 'Transaction',
       accessor: (punch: AttendanceRecord) => (
         <div className="text-sm">
-          <div className="font-medium text-foreground">{formatDateTime(punch.Ddate)}</div>
+          <div className="font-medium text-foreground">{punch.transaction_type || punch.reason || 'Unknown'}</div>
+          <div className="text-xs text-muted-foreground">
+            {punch.transaction_time ? formatDateTime(punch.transaction_time) : formatDateTime(punch.Ddate)}
+          </div>
         </div>
       ),
     },
     {
-      key: 'checkIn',
-      header: t('scheduling.attendance') + ' ' + t('common.in') || 'Check In',
-      accessor: (punch: AttendanceRecord) => (
-        <div className="text-sm text-muted-foreground">
-          {formatTime(punch.check_in || '')}
-        </div>
-      ),
-    },
-    {
-      key: 'checkOut',
-      header: t('scheduling.attendance') + ' ' + t('common.out') || 'Check Out',
-      accessor: (punch: AttendanceRecord) => (
-        <div className="text-sm text-muted-foreground">
-          {formatTime(punch.check_out || '')}
-        </div>
-      ),
-    },
-    {
-      key: 'break',
-      header: t('scheduling.breakTime') || 'Break',
-      accessor: (punch: AttendanceRecord) => (
-        <div className="text-sm text-muted-foreground">
-          {punch.break_start && punch.break_end ? 
-            `${formatTime(punch.break_start)} - ${formatTime(punch.break_end)}` : 
-            t('common.notAvailable') || 'N/A'
-          }
-        </div>
-      ),
-    },
-    {
-      key: 'workHours',
-      header: t('scheduling.workHours') || 'Work Hours',
+      key: 'time',
+      header: t('leaveManagement.punches.columns.time') || 'Time',
       accessor: (punch: AttendanceRecord) => (
         <div className="text-sm">
-          <div className="font-medium text-foreground">{punch.total_work_hours || 0}h</div>
-          {punch.overtime_hours && punch.overtime_hours > 0 && (
-            <div className="text-xs text-primary">+{punch.overtime_hours}h {t('scheduling.overtime') || 'OT'}</div>
+          <div className="font-medium text-foreground">
+            {punch.transaction_time ? formatTime(punch.transaction_time) : 
+             formatTime(punch.time_in || punch.time_out || punch.check_in || punch.check_out || '')}
+          </div>
+          {punch.user_entry_flag && (
+            <div className="text-xs text-amber-600">Manual Entry</div>
           )}
         </div>
       ),
     },
     {
       key: 'location',
-      header: t('common.location') || 'Location',
+      header: t('leaveManagement.punches.columns.location') || 'Location',
       accessor: (punch: AttendanceRecord) => (
         <div className="flex items-center text-sm text-muted-foreground">
           <MapPin className="w-3 h-3 mr-1" />
-          {punch.location || t('common.notAvailable') || 'Unknown'}
+          {punch.geolocation || punch.location || t('common.notAvailable') || 'Unknown'}
+        </div>
+      ),
+    },
+    {
+      key: 'device',
+      header: t('leaveManagement.punches.columns.device') || 'Device',
+      accessor: (punch: AttendanceRecord) => (
+        <div className="flex items-center text-sm text-muted-foreground">
+          <Smartphone className="w-3 h-3 mr-1" />
+          {punch.device_id ? `Device ${punch.device_id}` : t('common.notAvailable') || 'N/A'}
         </div>
       ),
     },
     {
       key: 'status',
-      header: t('common.status') || 'Status',
+      header: t('leaveManagement.punches.columns.status') || 'Status',
       accessor: (punch: AttendanceRecord) => (
         <Badge className={getStatusColor(punch.status || '')}>
           {punch.status || t('common.notAvailable') || 'Unknown'}
@@ -171,34 +177,6 @@ export default function PunchesList({
   const getItemId = (punch: AttendanceRecord) => punch.id;
   const getItemDisplayName = (punch: AttendanceRecord) => punch.employee_name || `Employee ${punch.employee_no}`;
 
-  // Custom actions component
-  const renderActions = (punch: AttendanceRecord) => (
-    <div className="flex items-center justify-center gap-2">
-      {onEdit && (
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => onEdit(punch)}
-          className="p-1 h-8 w-8"
-          title={t('common.edit') || 'Edit'}
-        >
-          <Edit className="w-4 h-4" />
-        </Button>
-      )}
-      {onDelete && (
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => onDelete(punch.id)}
-          className="p-1 h-8 w-8 text-destructive hover:text-destructive"
-          title={t('common.delete') || 'Delete'}
-        >
-          <Trash2 className="w-4 h-4" />
-        </Button>
-      )}
-    </div>
-  );
-
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -207,12 +185,12 @@ export default function PunchesList({
     );
   }
 
-  if (punches.length === 0) {
+  if (validPunches.length === 0 && !isLoading) {
     return (
       <div className="text-center py-16">
         <Clock className="mx-auto h-12 w-12 text-muted-foreground" />
         <h3 className="mt-2 text-sm font-medium text-foreground">
-          {t('common.noResults') || 'No punches found'}
+          {t('leaveManagement.punches.noData') || 'No punches found'}
         </h3>
         <p className="mt-1 text-sm text-muted-foreground">
           {t('common.noDataFound') || 'No attendance records match your current filters.'}
@@ -224,20 +202,17 @@ export default function PunchesList({
   if (viewMode === 'table') {
     return (
       <GenericTable
-        data={punches}
+        data={validPunches}
         columns={columns}
         selected={selected}
         page={1}
-        pageSize={punches.length}
+        pageSize={validPunches.length}
         allChecked={allChecked}
         getItemId={getItemId}
         getItemDisplayName={getItemDisplayName}
         onSelectItem={onSelectItem || (() => {})}
         onSelectAll={onSelectAll || (() => {})}
-        onEditItem={onEdit}
-        onDeleteItem={onDelete}
-        actions={renderActions}
-        noDataMessage={t('common.noResults') || 'No punches found'}
+        noDataMessage={t('leaveManagement.punches.noData') || 'No punches found'}
         isLoading={isLoading}
         onPageChange={() => {}}
         onPageSizeChange={() => {}}
@@ -249,7 +224,7 @@ export default function PunchesList({
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {punches.map((punch) => (
+        {validPunches.map((punch) => (
           <Card key={punch.id} className="hover:shadow-md transition-shadow border-border bg-card">
             <CardContent className="p-4">
               <div className="flex items-start justify-between mb-3">
@@ -265,72 +240,52 @@ export default function PunchesList({
               </div>
 
               <div className="space-y-2 mb-4">
-                <div className="flex items-center text-sm">
-                  <Clock className="w-4 h-4 mr-2 text-muted-foreground" />
-                  <span className="font-medium text-foreground">{formatDateTime(punch.Ddate)}</span>
+                <div className="flex items-center justify-between text-sm">
+                  <div className="flex items-center">
+                    <Clock className="w-4 h-4 mr-2 text-muted-foreground" />
+                    <span className="font-medium text-foreground">
+                      {punch.transaction_time ? formatDateTime(punch.transaction_time) : formatDateTime(punch.Ddate)}
+                    </span>
+                  </div>
+                  <Badge variant="outline" className="text-xs">
+                    {punch.transaction_type || punch.reason || 'Transaction'}
+                  </Badge>
                 </div>
                 
-                <div className="grid grid-cols-2 gap-2 text-sm">
-                  <div>
-                    <span className="text-muted-foreground">{t('common.in') || 'In'}:</span> <span className="text-foreground">{formatTime(punch.check_in || '')}</span>
+                <div className="text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">{t('common.time') || 'Time'}:</span>
+                    <span className="text-foreground font-medium">
+                      {punch.transaction_time ? formatTime(punch.transaction_time) : 
+                       formatTime(punch.time_in || punch.time_out || punch.check_in || punch.check_out || '')}
+                    </span>
                   </div>
-                  <div>
-                    <span className="text-muted-foreground">{t('common.out') || 'Out'}:</span> <span className="text-foreground">{formatTime(punch.check_out || '')}</span>
-                  </div>
-                </div>
-
-                {punch.break_start && punch.break_end && (
-                  <div className="text-sm text-muted-foreground">
-                    <span className="font-medium">{t('scheduling.breakTime') || 'Break'}:</span> <span className="text-foreground">{formatTime(punch.break_start)} - {formatTime(punch.break_end)}</span>
-                  </div>
-                )}
-
-                <div className="flex items-center justify-between text-sm">
-                  <div>
-                    <span className="text-muted-foreground">{t('scheduling.workHours') || 'Work'}:</span> <span className="text-foreground">{punch.total_work_hours || 0}h</span>
-                  </div>
-                  {punch.overtime_hours && punch.overtime_hours > 0 && (
-                    <div className="text-primary">
-                      <span className="font-medium">{t('scheduling.overtime') || 'OT'}:</span> {punch.overtime_hours}h
+                  {punch.user_entry_flag && (
+                    <div className="flex justify-between mt-1">
+                      <span className="text-muted-foreground">{t('common.type') || 'Type'}:</span>
+                      <span className="text-amber-600 font-medium text-xs">{t('common.manual') || 'Manual Entry'}</span>
                     </div>
                   )}
                 </div>
 
                 <div className="flex items-center text-sm text-muted-foreground">
                   <MapPin className="w-4 h-4 mr-2" />
-                  <span>{punch.location || t('common.notAvailable') || 'Unknown Location'}</span>
+                  <span>{punch.geolocation || punch.location || t('common.notAvailable') || 'Unknown Location'}</span>
                 </div>
 
-                {punch.device_id && (
-                  <div className="flex items-center text-sm text-muted-foreground">
-                    <Smartphone className="w-4 h-4 mr-2" />
-                    <span>{t('common.device') || 'Device'}: {punch.device_id}</span>
-                  </div>
-                )}
-              </div>
+                <div className="flex items-center text-sm text-muted-foreground">
+                  <Smartphone className="w-4 h-4 mr-2" />
+                  <span>
+                    {punch.device_id ? `${t('common.device') || 'Device'}: ${punch.device_id}` : 
+                     t('common.notAvailable') || 'No device info'}
+                  </span>
+                </div>
 
-              <div className="flex items-center justify-end gap-2 pt-2 border-t border-border">
-                {onEdit && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => onEdit(punch)}
-                    className="p-1 h-8 w-8"
-                    title={t('common.edit') || 'Edit'}
-                  >
-                    <Edit className="w-4 h-4" />
-                  </Button>
-                )}
-                {onDelete && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => onDelete(punch.id)}
-                    className="p-1 h-8 w-8 text-destructive hover:text-destructive"
-                    title={t('common.delete') || 'Delete'}
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
+                {punch.remarks && (
+                  <div className="text-sm">
+                    <span className="text-muted-foreground">{t('common.remarks') || 'Remarks'}:</span>
+                    <div className="text-foreground text-xs mt-1 p-2 bg-muted rounded">{punch.remarks}</div>
+                  </div>
                 )}
               </div>
             </CardContent>

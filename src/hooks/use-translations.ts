@@ -15,10 +15,14 @@ function buildLocale(allMessages: Messages) {
   const employee = (all.employee as Record<string, unknown>) || {};
   const mainMenuWrapper = (all.mainMenu as Record<string, unknown>) || {};
   const mainMenu = (mainMenuWrapper as any).mainMenu || {};
+  const leaveManagement = (all.leaveManagement as Record<string, unknown>) || {};
+  const view = (all.view as Record<string, unknown>) || {};
 
   return {
     ...all,
     mainMenu,
+    leaveManagement,
+    view,
     search: (common as any).search,
     add: (common as any).add,
     edit: (common as any).edit,

@@ -49,6 +49,20 @@ export default function useAttendanceMutations() {
     },
   });
 
+  // Bulk delete attendance records
+  const bulkDelete = useMutation({
+    mutationFn: (ids: number[]) =>
+      attendanceApi.bulkDeleteAttendance(ids),
+    onSuccess: (response: any) => {
+      invalidateQueries();
+      const { deleted_count, requested_count } = response?.data?.data || {};
+      toast.success(`${deleted_count || requested_count} attendance records deleted successfully`);
+    },
+    onError: (error: any) => {
+      toast.error(error?.message || "Failed to delete attendance records");
+    },
+  });
+
   // Bulk update attendance records
   const bulkUpdate = useMutation({
     mutationFn: attendanceApi.bulkUpdateAttendance,
@@ -85,6 +99,7 @@ export default function useAttendanceMutations() {
     create,
     update,
     remove,
+    bulkDelete,
     bulkUpdate,
     exportData,
   };

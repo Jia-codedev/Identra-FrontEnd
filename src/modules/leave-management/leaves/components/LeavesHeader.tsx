@@ -1,10 +1,9 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { Search, Table, Grid3X3, RefreshCw } from 'lucide-react';
-import { Input } from "@/components/ui/Input";
+import { Search, Table2, Grid3X3, RefreshCw } from 'lucide-react';
+import { Input } from "@/components/ui/Input";;
 import { Button } from '@/components/ui/button';
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useTranslations } from '@/hooks/use-translations';
 import { useLanguage } from '@/providers/language-provider';
 
@@ -15,10 +14,10 @@ interface LeavesHeaderProps {
   onSearchChange: (value: string) => void;
   onAdd: () => void;
   selectedCount: number;
-  onDeleteSelected?: () => void;
   viewMode: ViewMode;
   onViewModeChange: (mode: ViewMode) => void;
-  onRefresh?: () => void;
+  onRefresh: () => void;
+  onDeleteSelected?: () => void;
 }
 
 export const LeavesHeader: React.FC<LeavesHeaderProps> = ({ 
@@ -26,10 +25,10 @@ export const LeavesHeader: React.FC<LeavesHeaderProps> = ({
   onSearchChange, 
   onAdd, 
   selectedCount, 
-  onDeleteSelected,
-  viewMode,
-  onViewModeChange,
-  onRefresh
+  viewMode, 
+  onViewModeChange, 
+  onRefresh, 
+  onDeleteSelected 
 }) => {
   const { t } = useTranslations();
   const { isRTL } = useLanguage();
@@ -58,27 +57,37 @@ export const LeavesHeader: React.FC<LeavesHeaderProps> = ({
         </div>
 
         <div className="w-full sm:w-auto flex flex-col sm:flex-row gap-2 items-center">
-          {/* View Toggle */}
-          <ToggleGroup type="single" value={viewMode} onValueChange={(value) => value && onViewModeChange(value as ViewMode)}>
-            <ToggleGroupItem value="table" aria-label="Table view" size="sm">
-              <Table className="h-4 w-4" />
-            </ToggleGroupItem>
-            <ToggleGroupItem value="grid" aria-label="Grid view" size="sm">
-              <Grid3X3 className="h-4 w-4" />
-            </ToggleGroupItem>
-          </ToggleGroup>
+          {/* View Mode Toggle */}
+          <div className="flex items-center bg-card/80 border border-border rounded-xl p-1">
+            <Button
+              onClick={() => onViewModeChange('table')}
+              variant={viewMode === 'table' ? 'default' : 'ghost'}
+              size="sm"
+              className="h-8 px-3"
+            >
+              <Table2 size={16} className={`${isRTL ? 'ml-1' : 'mr-1'}`} />
+              <span className="hidden sm:inline">{t('view.table') || 'Table'}</span>
+            </Button>
+            <Button
+              onClick={() => onViewModeChange('grid')}
+              variant={viewMode === 'grid' ? 'default' : 'ghost'}
+              size="sm"
+              className="h-8 px-3"
+            >
+              <Grid3X3 size={16} className={`${isRTL ? 'ml-1' : 'mr-1'}`} />
+              <span className="hidden sm:inline">{t('view.grid') || 'Grid'}</span>
+            </Button>
+          </div>
 
           {/* Refresh Button */}
-          {onRefresh && (
-            <Button 
-              onClick={onRefresh} 
-              variant="outline" 
-              size="sm"
-              className="px-3"
-            >
-              <RefreshCw className="h-4 w-4" />
-            </Button>
-          )}
+          <Button
+            onClick={onRefresh}
+            variant="outline"
+            size="sm"
+            className="h-8 px-3"
+          >
+            <RefreshCw size={16} />
+          </Button>
 
           <div className={`flex items-center gap-0 bg-card/80 border border-border rounded-xl px-2 py-1 ${isRTL ? 'flex-row-reverse' : 'flex-row'}`}>
             <span className={`${isRTL ? 'pr-2 pl-1' : 'pl-2 pr-1'} text-xl text-primary/80`}>

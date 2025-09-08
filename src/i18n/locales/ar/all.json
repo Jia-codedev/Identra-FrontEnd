@@ -35,6 +35,7 @@
     "reset": "إعادة تعيين",
     "confirm": "تأكيد",
     "select": "اختيار",
+    "enter": "أدخل",
     "selectAll": "اختيار الكل",
     "selectedCount": "{count} مختار",
     "deleteSelected": "حذف المحدد",
@@ -66,6 +67,8 @@
     "create": "إنشاء",
     "createdBy": "تم الإنشاء بواسطة",
     "updatedBy": "تم التحديث بواسطة",
+    "self": "شخصي",
+    "team": "الفريق",
     "limit": "الحد",
     "active": "نشط",
     "inactive": "غير نشط",
@@ -155,10 +158,29 @@
         "description": "إدارة طلبات الإجازة والموافقات للموظفين.",
         "columns": {
           "employee": "الموظف",
-          "type": "النوع",
-          "start": "من",
-          "end": "إلى",
-          "status": "الحالة"
+          "type": "نوع الإجازة",
+          "start": "تاريخ البداية",
+          "end": "تاريخ النهاية",
+          "days": "الأيام",
+          "status": "الحالة",
+          "remarks": "الملاحظات"
+        },
+        "actions": {
+          "add": "إضافة طلب إجازة",
+          "edit": "تعديل الإجازة",
+          "delete": "حذف الإجازة",
+          "approve": "الموافقة",
+          "reject": "رفض"
+        },
+        "status": {
+          "pending": "في الانتظار",
+          "approved": "موافق عليها",
+          "rejected": "مرفوضة",
+          "cancelled": "ملغاة",
+          "0": "في الانتظار",
+          "1": "موافق عليها",
+          "2": "مرفوضة",
+          "3": "ملغاة"
         },
         "actionsMenu": {
           "approve": "الموافقة",
@@ -1147,6 +1169,8 @@
         "type": "نوع الإذن",
         "from": "من",
         "to": "إلى",
+        "date": "التاريخ",
+        "time": "الوقت",
         "status": "الحالة",
         "remarks": "ملاحظات"
       },
@@ -1165,10 +1189,113 @@
         "selectAll": "تحديد الكل",
         "deselectAll": "إلغاء تحديد الكل"
       },
+      "view": {
+        "table": "عرض الجدول",
+        "grid": "عرض الشبكة",
+        "toggle": "تبديل العرض"
+      },
+      "statuses": {
+        "pending": "في الانتظار",
+        "approved": "موافق عليها",
+        "rejected": "مرفوضة"
+      },
       "confirmApprove": "هل تريد الموافقة على هذا الإذن؟",
       "approveFailed": "فشل في الموافقة على الإذن",
       "rejectFailed": "فشل في رفض الإذن",
       "rejectRemarks": "يرجى تقديم ملاحظات الرفض (اختياري)"
+    },
+    "punches": {
+      "title": "البصمات والحضور",
+      "description": "إدارة سجلات حضور الموظفين وبيانات البصمات",
+      "noData": "لم يتم العثور على سجلات حضور",
+      "selfPunches": "بصماتي",
+      "teamPunches": "بصمات الفريق",
+      "toast": {
+        "switchedToSelf": "تم التبديل إلى بصماتي",
+        "switchedToTeam": "تم التبديل إلى بصمات الفريق",
+        "selfDescription": "الآن يتم عرض سجلات حضورك فقط",
+        "teamDescription": "الآن يتم عرض جميع سجلات حضور أعضاء الفريق"
+      },
+      "columns": {
+        "employee": "الموظف",
+        "transaction": "المعاملة",
+        "time": "الوقت",
+        "date": "التاريخ",
+        "timeIn": "وقت الدخول",
+        "timeOut": "وقت الخروج",
+        "duration": "المدة",
+        "status": "الحالة",
+        "location": "الموقع",
+        "device": "الجهاز",
+        "remarks": "ملاحظات"
+      },
+      "actions": {
+        "add": "إضافة حضور",
+        "edit": "تعديل حضور",
+        "delete": "حذف حضور",
+        "cancel": "إلغاء",
+        "refresh": "تحديث",
+        "save": "حفظ",
+        "search": "بحث",
+        "selectAll": "تحديد الكل",
+        "deselectAll": "إلغاء تحديد الكل"
+      },
+      "statuses": {
+        "present": "حاضر",
+        "absent": "غائب",
+        "late": "متأخر",
+        "early": "مغادرة مبكرة",
+        "overtime": "وقت إضافي",
+        "checkin": "تسجيل دخول",
+        "checkout": "تسجيل خروج",
+        "manual": "إدخال يدوي"
+      }
+    },
+    "workflowAutomation": {
+      "title": "أتمتة سير العمل",
+      "description": "إدارة سير العمل الآلي وعمليات الموافقة",
+      "searchPlaceholder": "البحث في سير العمل...",
+      "noData": "لم يتم العثور على سير عمل",
+      "noDataDescription": "ابدأ بإنشاء أول أتمتة سير عمل.",
+      "errorLoading": "خطأ في تحميل سير العمل",
+      "columns": {
+        "workflowName": "اسم سير العمل",
+        "type": "النوع",
+        "status": "الحالة",
+        "triggerCondition": "شرط التشغيل",
+        "assignedUsers": "المستخدمين المعينين",
+        "executions": "التنفيذات",
+        "lastExecuted": "آخر تنفيذ"
+      },
+      "types": {
+        "APPROVAL": "موافقة",
+        "NOTIFICATION": "إشعار",
+        "ESCALATION": "تصعيد",
+        "AUTOMATION": "أتمتة"
+      },
+      "statuses": {
+        "ACTIVE": "نشط",
+        "INACTIVE": "غير نشط",
+        "DRAFT": "مسودة",
+        "PENDING": "في الانتظار"
+      },
+      "actions": {
+        "create": "إنشاء سير عمل",
+        "edit": "تعديل سير العمل",
+        "delete": "حذف سير العمل",
+        "activate": "تنشيط",
+        "deactivate": "إلغاء التنشيط",
+        "cancel": "إلغاء",
+        "save": "حفظ"
+      },
+      "grid": {
+        "runs": "تشغيل",
+        "trigger": "المشغل",
+        "assignedUsers": "مستخدمين معينين",
+        "lastRun": "آخر تشغيل",
+        "created": "تم الإنشاء",
+        "never": "أبداً"
+      }
     }
   },
   "translator": {
@@ -1291,5 +1418,10 @@
         }
       }
     }
+  },
+  "view": {
+    "table": "عرض الجدول",
+    "grid": "عرض الشبكة",
+    "toggle": "تبديل العرض"
   }
 }

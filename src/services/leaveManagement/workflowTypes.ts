@@ -42,23 +42,26 @@ const workflowTypesApi = {
     apiClient.get("/workflowType/all"),
 
   getWorkflowTypeById: (id: number) =>
-    apiClient.get(`/workflowType/${id}`),
+    apiClient.get(`/workflowType/get/${id}`),
 
   createWorkflowType: (data: Partial<WorkflowType>) =>
     apiClient.post("/workflowType/add", data),
 
   updateWorkflowType: (id: number, data: Partial<WorkflowType>) =>
-    apiClient.put(`/workflowType/${id}`, data),
+    apiClient.put(`/workflowType/edit/${id}`, data),
 
   deleteWorkflowType: (id: number) =>
-    apiClient.delete(`/workflowType/${id}`),
+    apiClient.delete(`/workflowType/delete/${id}`),
+
+  searchWorkflowTypes: (params: { code?: string; name?: string; limit?: number; offset?: number }) =>
+    apiClient.get("/workflowType/search", { params }),
 
   // Workflow Type Steps
   getAllWorkflowSteps: () =>
     apiClient.get("/workflowTypeStep/all"),
 
   getWorkflowStepById: (id: number) =>
-    apiClient.get(`/workflowTypeStep/${id}`),
+    apiClient.get(`/workflowTypeStep/get/${id}`),
 
   getWorkflowStepsByWorkflowId: (workflowId: number) =>
     apiClient.get(`/workflowTypeStep/workflow/${workflowId}`),
@@ -67,12 +70,12 @@ const workflowTypesApi = {
     apiClient.post("/workflowTypeStep/add", data),
 
   updateWorkflowStep: (id: number, data: Partial<WorkflowTypeStep>) =>
-    apiClient.put(`/workflowTypeStep/${id}`, data),
+    apiClient.put(`/workflowTypeStep/edit/${id}`, data),
 
   deleteWorkflowStep: (id: number) =>
-    apiClient.delete(`/workflowTypeStep/${id}`),
+    apiClient.delete(`/workflowTypeStep/delete/${id}`),
 
-  // Workflow Requests
+  // Workflow Requests (if needed later)
   getAllWorkflowRequests: () =>
     apiClient.get("/workflowRequest/all"),
 
@@ -81,6 +84,16 @@ const workflowTypesApi = {
 
   createWorkflowRequest: (data: Partial<WorkflowRequest>) =>
     apiClient.post("/workflowRequest/add", data),
+
+  // Initiate workflow - creates request with all approval steps
+  initiateWorkflow: (data: {
+    workflow_id: number;
+    transaction_id: number;
+    requestor_id: number;
+    request_date?: string;
+    action_remarks?: string;
+  }) =>
+    apiClient.post("/workflowRequest/initiate", data),
 
   updateWorkflowRequest: (id: number, data: Partial<WorkflowRequest>) =>
     apiClient.put(`/workflowRequest/${id}`, data),

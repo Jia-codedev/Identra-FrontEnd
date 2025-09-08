@@ -35,6 +35,7 @@
     "reset": "Reset",
     "confirm": "Confirm",
     "select": "Select",
+    "enter": "Enter",
     "selectAll": "Select All",
     "selectedCount": "{count} selected",
     "deleteSelected": "Delete Selected",
@@ -66,6 +67,8 @@
     "create": "Create",
     "createdBy": "Created By",
     "updatedBy": "Updated By",
+    "self": "Self",
+    "team": "Team",
     "limit": "Limit",
     "active": "Active",
     "inactive": "Inactive",
@@ -156,10 +159,29 @@
         "description": "Manage employee leave requests and approvals.",
         "columns": {
           "employee": "Employee",
-          "type": "Type",
-          "start": "Start",
-          "end": "End",
-          "status": "Status"
+          "type": "Leave Type",
+          "start": "Start Date",
+          "end": "End Date",
+          "days": "Days",
+          "status": "Status",
+          "remarks": "Remarks"
+        },
+        "actions": {
+          "add": "Add Leave Request",
+          "edit": "Edit Leave",
+          "delete": "Delete Leave",
+          "approve": "Approve",
+          "reject": "Reject"
+        },
+        "status": {
+          "pending": "Pending",
+          "approved": "Approved",
+          "rejected": "Rejected",
+          "cancelled": "Cancelled",
+          "0": "Pending",
+          "1": "Approved",
+          "2": "Rejected",
+          "3": "Cancelled"
         },
         "actionsMenu": {
           "approve": "Approve",
@@ -1284,6 +1306,8 @@
         "type": "Permission Type",
         "from": "From",
         "to": "To",
+        "date": "Date",
+        "time": "Time",
         "status": "Status",
         "remarks": "Remarks"
       },
@@ -1316,6 +1340,99 @@
       "approveFailed": "Failed to approve permission",
       "rejectFailed": "Failed to reject permission",
       "rejectRemarks": "Please provide rejection remarks (optional)"
+    },
+    "punches": {
+      "title": "Punches & Attendance",
+      "description": "Manage employee attendance records and punch data",
+      "noData": "No attendance records found",
+      "selfPunches": "My Punches",
+      "teamPunches": "Team Punches",
+      "toast": {
+        "switchedToSelf": "Switched to My Punches",
+        "switchedToTeam": "Switched to Team Punches",
+        "selfDescription": "Now showing only your attendance records",
+        "teamDescription": "Now showing all team member attendance records"
+      },
+      "columns": {
+        "employee": "Employee",
+        "transaction": "Transaction",
+        "time": "Time",
+        "date": "Date",
+        "timeIn": "Time In",
+        "timeOut": "Time Out",
+        "duration": "Duration",
+        "status": "Status",
+        "location": "Location",
+        "device": "Device",
+        "remarks": "Remarks"
+      },
+      "actions": {
+        "add": "Add Attendance",
+        "edit": "Edit Attendance",
+        "delete": "Delete Attendance",
+        "cancel": "Cancel",
+        "refresh": "Refresh",
+        "save": "Save",
+        "search": "Search",
+        "selectAll": "Select All",
+        "deselectAll": "Deselect All"
+      },
+      "statuses": {
+        "present": "Present",
+        "absent": "Absent",
+        "late": "Late",
+        "early": "Early Departure",
+        "overtime": "Overtime",
+        "checkin": "Check In",
+        "checkout": "Check Out",
+        "manual": "Manual Entry"
+      }
+    },
+    "workflowAutomation": {
+      "title": "Workflow Automation",
+      "description": "Manage automated workflows and approval processes",
+      "searchPlaceholder": "Search workflows...",
+      "noData": "No workflows found",
+      "noDataDescription": "Get started by creating your first workflow automation.",
+      "errorLoading": "Error loading workflows",
+      "columns": {
+        "workflowName": "Workflow Name",
+        "type": "Type",
+        "status": "Status",
+        "triggerCondition": "Trigger Condition",
+        "assignedUsers": "Assigned Users",
+        "executions": "Executions",
+        "lastExecuted": "Last Executed"
+      },
+      "types": {
+        "APPROVAL": "Approval",
+        "NOTIFICATION": "Notification",
+        "ESCALATION": "Escalation",
+        "AUTOMATION": "Automation"
+      },
+      "statuses": {
+        "ACTIVE": "Active",
+        "INACTIVE": "Inactive",
+        "DRAFT": "Draft",
+        "PENDING": "Pending"
+      },
+      "actions": {
+        "create": "Create Workflow",
+        "edit": "Edit Workflow",
+        "delete": "Delete Workflow",
+        "activate": "Activate",
+        "deactivate": "Deactivate",
+        "cancel": "Cancel",
+        "save": "Save"
+      },
+      "grid": {
+        "runs": "runs",
+        "trigger": "Trigger",
+        "assignedUsers": "assigned users",
+        "lastRun": "Last run",
+        "created": "Created",
+        "never": "Never"
+      }
     }
   },
   "translator": {
@@ -1438,5 +1555,10 @@
         }
       }
     }
+  },
+  "view": {
+    "table": "Table View",
+    "grid": "Grid View",
+    "toggle": "Toggle View"
   }
 }

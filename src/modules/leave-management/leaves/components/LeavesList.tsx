@@ -72,7 +72,6 @@ const LeavesList: React.FC<Props> = ({
       accessor: (leave) => (
         <div>
           <div className="font-medium">{leave.employee_name || 'N/A'}</div>
-          <div className="text-sm text-gray-500">{leave.employee_no || 'N/A'}</div>
         </div>
       ),
     },
@@ -93,25 +92,40 @@ const LeavesList: React.FC<Props> = ({
     },
     {
       key: "days",
-      header: t('leaveManagement.leaves.columns.days') || 'Days',
+      header: (() => {
+        const daysTranslation = t('leaveManagement.leaves.columns.days');
+        return daysTranslation !== 'leaveManagement.leaves.columns.days' ? daysTranslation : 'Days';
+      })(),
       accessor: (leave) => leave.total_days || '-',
     },
     {
       key: "status",
-      header: t('leaveManagement.leaves.columns.status') || 'Status',
+      header: (() => {
+        const statusTranslation = t('leaveManagement.leaves.columns.status');
+        return statusTranslation !== 'leaveManagement.leaves.columns.status' ? statusTranslation : 'Status';
+      })(),
       accessor: (leave) => {
         const statusRaw = leave.status || "pending";
         const status = statusMap[statusRaw?.toLowerCase?.()] || statusMap["pending"];
+        
+        // Try specific status translation first, then fall back to generic label
+        const statusKey = `leaveManagement.leaves.status.${statusRaw?.toLowerCase()}`;
+        const translatedStatus = t(statusKey);
+        const displayStatus = translatedStatus !== statusKey ? translatedStatus : status.label;
+        
         return (
           <Badge className={status.color}>
-            {t(`leaveManagement.leaves.status.${statusRaw?.toLowerCase()}`) || status.label}
+            {displayStatus}
           </Badge>
         );
       },
     },
     {
       key: "remarks",
-      header: t('leaveManagement.leaves.columns.remarks') || 'Remarks',
+      header: (() => {
+        const remarksTranslation = t('leaveManagement.leaves.columns.remarks');
+        return remarksTranslation !== 'leaveManagement.leaves.columns.remarks' ? remarksTranslation : 'Remarks';
+      })(),
       accessor: (leave) => (
         <div className="max-w-xs truncate" title={leave.employee_remarks}>
           {leave.employee_remarks || '-'}
@@ -151,17 +165,17 @@ const LeavesList: React.FC<Props> = ({
                   className={status.color + " px-2 py-1 rounded text-xs font-medium"}
                   variant="outline"
                 >
-                  {t(`leaveManagement.leaves.status.${statusRaw?.toLowerCase()}`) || status.label}
+                  {(() => {
+                    const statusKey = `leaveManagement.leaves.status.${statusRaw?.toLowerCase()}`;
+                    const translatedStatus = t(statusKey);
+                    return translatedStatus !== statusKey ? translatedStatus : status.label;
+                  })()}
                 </Badge>
               </CardHeader>
               <CardContent className="space-y-1 text-sm">
                 <div className="text-muted-foreground">
                   <span className="font-medium">{t('leaveManagement.leaves.columns.employee') || 'Employee'}:</span>{" "}
                   {l.employee_name}
-                </div>
-                <div className="text-muted-foreground">
-                  <span className="font-medium">{t('leaveManagement.leaves.columns.empNo') || 'Emp No'}:</span>{" "}
-                  {l.employee_no}
                 </div>
                 <div className="text-muted-foreground">
                   <span className="font-medium">{t('leaveManagement.leaves.columns.start') || 'From'}:</span>{" "}

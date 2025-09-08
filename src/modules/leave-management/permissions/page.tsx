@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import { useTranslations } from "@/hooks/use-translations";
 import PermissionsHeader from "./components/PermissionsHeader";
 import PermissionsList from "./components/PermissionsList";
+import PermissionRequestForm from "./components/PermissionRequestForm";
+import { Dialog } from "@/components/ui/dialog";
 import usePermissions from "./hooks/usePermissions";
 
 type ViewMode = 'table' | 'grid';
@@ -11,6 +13,8 @@ type ViewMode = 'table' | 'grid';
 export default function PermissionsPage() {
   const { t } = useTranslations();
   const [viewMode, setViewMode] = useState<ViewMode>('table');
+  const [showAddDialog, setShowAddDialog] = useState(false);
+  const [editingPermission, setEditingPermission] = useState<any>(null);
 
   const { 
     permissions, 
@@ -31,13 +35,21 @@ export default function PermissionsPage() {
   } = usePermissions();
 
   const handleAddNew = () => {
-    // TODO: Implement add new permission functionality
-    console.log(t('permissions.add') || t('common.add') || "Add new permission");
+    setEditingPermission(null);
+    setShowAddDialog(true);
   };
 
   const handleEdit = (permission: any) => {
-    // TODO: Implement edit permission functionality
-    console.log(t('permissions.edit') || t('common.edit') || "Edit permission:", permission);
+    setEditingPermission(permission);
+    setShowAddDialog(true);
+  };
+
+  const handleDialogClose = (refresh = false) => {
+    setShowAddDialog(false);
+    setEditingPermission(null);
+    if (refresh) {
+      refetch();
+    }
   };
 
   const handleDeleteSelected = () => {
@@ -62,6 +74,13 @@ export default function PermissionsPage() {
             onViewModeChange={setViewMode}
             onRefresh={refetch}
           />
+
+          <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
+            <PermissionRequestForm
+              permission={editingPermission}
+              onClose={handleDialogClose}
+            />
+          </Dialog>
 
           <div className="w-full mt-4">
             <PermissionsList

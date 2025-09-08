@@ -3,8 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/Input";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { Search, Plus, FileText, Download, TableIcon, Grid3X3, Settings } from "lucide-react";
+import { Search, Plus, FileText, Download, Table2, Grid3X3, Settings, Play } from "lucide-react";
 import { useTranslations } from "@/hooks/use-translations";
 import { useLanguage } from "@/providers/language-provider";
 
@@ -14,6 +13,7 @@ interface WorkflowHeaderProps {
   viewMode: 'table' | 'grid';
   onViewModeChange: (mode: 'table' | 'grid') => void;
   onAddNew?: () => void;
+  onInitiateWorkflow?: () => void;
   onExport?: () => void;
   onImport?: () => void;
   onSettings?: () => void;
@@ -25,6 +25,7 @@ export default function WorkflowHeader({
   viewMode,
   onViewModeChange,
   onAddNew,
+  onInitiateWorkflow,
   onExport,
   onImport,
   onSettings,
@@ -45,10 +46,10 @@ export default function WorkflowHeader({
       <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
         <div className="flex-1">
           <h1 className="text-3xl md:text-4xl font-bold text-primary tracking-tight leading-tight mb-1">
-            {t('workflowAutomation.title') || 'Workflow Automation'}
+            {t('leaveManagement.workflowAutomation.title') || 'Workflow Automation'}
           </h1>
           <p className="text-base md:text-lg text-muted-foreground font-normal mb-2">
-            {t('workflowAutomation.description') || 'Manage automated workflows and approval processes'}
+            {t('leaveManagement.workflowAutomation.description') || 'Manage automated workflows and approval processes'}
           </p>
         </div>
 
@@ -59,7 +60,7 @@ export default function WorkflowHeader({
               <Search size={22} />
             </span>
             <Input
-              placeholder={t('workflowAutomation.searchPlaceholder') || 'Search workflows...'}
+              placeholder={t('leaveManagement.workflowAutomation.searchPlaceholder') || 'Search workflows...'}
               value={search}
               onChange={(e) => handleSearchChange(e.target.value)}
               className="border-0 bg-transparent rounded-lg focus:ring-0 focus-visible:ring-0 shadow-none text-base px-2"
@@ -67,29 +68,26 @@ export default function WorkflowHeader({
             <span className="mx-2 h-6 w-px bg-border" />
             
             {/* View Mode Toggle */}
-            <ToggleGroup
-              type="single"
-              value={viewMode}
-              onValueChange={(value) => {
-                if (value) onViewModeChange(value as 'table' | 'grid');
-              }}
-              className="mr-2"
-            >
-              <ToggleGroupItem
-                value="table"
-                aria-label="Table view"
-                className="data-[state=on]:bg-primary data-[state=on]:text-primary-foreground p-2"
+            <div className="flex items-center gap-0 bg-muted/50 border border-border rounded-lg p-0.5 mr-2">
+              <Button
+                onClick={() => onViewModeChange('table')}
+                variant={viewMode === 'table' ? 'default' : 'ghost'}
+                size="sm"
+                className="h-8 px-3"
               >
-                <TableIcon className="w-4 h-4" />
-              </ToggleGroupItem>
-              <ToggleGroupItem
-                value="grid"
-                aria-label="Grid view"
-                className="data-[state=on]:bg-primary data-[state=on]:text-primary-foreground p-2"
+                <Table2 size={16} className={`${isRTL ? 'ml-1' : 'mr-1'}`} />
+                <span className="hidden sm:inline">{t('view.table')}</span>
+              </Button>
+              <Button
+                onClick={() => onViewModeChange('grid')}
+                variant={viewMode === 'grid' ? 'default' : 'ghost'}
+                size="sm"
+                className="h-8 px-3"
               >
-                <Grid3X3 className="w-4 h-4" />
-              </ToggleGroupItem>
-            </ToggleGroup>
+                <Grid3X3 size={16} className={`${isRTL ? 'ml-1' : 'mr-1'}`} />
+                <span className="hidden sm:inline">{t('view.grid')}</span>
+              </Button>
+            </div>
 
             <span className="mx-2 h-6 w-px bg-border" />
 
@@ -119,8 +117,20 @@ export default function WorkflowHeader({
 
             {onAddNew && (
               <Button onClick={onAddNew} className="font-semibold text-base px-4 py-2 rounded-lg bg-primary hover:bg-primary/90 transition-all shadow-none" variant="default">
-                <span className="hidden sm:inline">+ {t('workflowAutomation.createWorkflow') || 'Create Workflow'}</span>
+                <span className="hidden sm:inline">+ {t('leaveManagement.workflowAutomation.actions.create') || 'Create Workflow'}</span>
                 <span className="sm:hidden text-xl leading-none">+</span>
+              </Button>
+            )}
+
+            {onInitiateWorkflow && (
+              <Button 
+                onClick={onInitiateWorkflow} 
+                className="font-semibold text-base px-4 py-2 rounded-lg bg-green-600 hover:bg-green-700 transition-all shadow-none ml-2" 
+                variant="default"
+              >
+                <Play className="w-4 h-4 mr-2" />
+                <span className="hidden sm:inline">{t('leaveManagement.workflowAutomation.actions.initiate') || 'Initiate Request'}</span>
+                <span className="sm:hidden">Start</span>
               </Button>
             )}
           </div>

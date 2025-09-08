@@ -54,6 +54,17 @@ const PermissionRequestForm: React.FC<Props> = ({ permission, onClose }) => {
     e.preventDefault();
     setError("");
     
+    // Basic validation
+    if (!type) {
+      setError("Please select a permission type");
+      return;
+    }
+    
+    if (!fromDate) {
+      setError("Please select a from date");
+      return;
+    }
+    
     try {
       const permission_type_id = type ? Number(type) : undefined;
       const from_date = fromDate ? fromDate.toISOString().split("T")[0] : "";
@@ -64,9 +75,9 @@ const PermissionRequestForm: React.FC<Props> = ({ permission, onClose }) => {
         permission_type_id,
         from_date,
         to_date: to_date_value,
-        from_time: fromTime,
-        to_time: toTime,
-        remarks,
+        from_time: fromTime || "00:00",
+        to_time: toTime || "23:59",
+        remarks: remarks || "",
       };
 
       if (permission?.id) {
@@ -77,7 +88,8 @@ const PermissionRequestForm: React.FC<Props> = ({ permission, onClose }) => {
       
       onClose(true);
     } catch (err: any) {
-      setError(err?.message || "Failed to submit request");
+      console.error('Form submission error:', err);
+      setError(err?.response?.data?.message || err?.message || "Failed to submit request");
     }
   };
 
@@ -122,36 +134,40 @@ const PermissionRequestForm: React.FC<Props> = ({ permission, onClose }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block mb-1 font-medium">
-              {t('leaveManagement.permissions.columns.from')}
+              {t('leaveManagement.permissions.columns.from')} {t('common.date')}
             </label>
             <DatePicker
               selected={fromDate}
               onSelect={setFromDate}
-              placeholder="Select from date"
+              placeholder={`${t('common.select')} ${t('leaveManagement.permissions.columns.from')} ${t('common.date')}`}
             />
           </div>
           <div>
             <label className="block mb-1 font-medium">
-              {t('leaveManagement.permissions.columns.to')}
+              {t('leaveManagement.permissions.columns.to')} {t('common.date')}
             </label>
             <DatePicker
               selected={toDate}
               onSelect={setToDate}
-              placeholder="Select to date"
+              placeholder={`${t('common.select')} ${t('leaveManagement.permissions.columns.to')} ${t('common.date')}`}
             />
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block mb-1 font-medium">From Time</label>
+            <label className="block mb-1 font-medium">
+              {t('leaveManagement.permissions.columns.from')} {t('leaveManagement.permissions.columns.time')}
+            </label>
             <TimeSelect
               value={fromTime}
               onChange={setFromTime}
             />
           </div>
           <div>
-            <label className="block mb-1 font-medium">To Time</label>
+            <label className="block mb-1 font-medium">
+              {t('leaveManagement.permissions.columns.to')} {t('leaveManagement.permissions.columns.time')}
+            </label>
             <TimeSelect
               value={toTime}
               onChange={setToTime}
@@ -166,7 +182,7 @@ const PermissionRequestForm: React.FC<Props> = ({ permission, onClose }) => {
           <Input
             value={remarks}
             onChange={(e) => setRemarks(e.target.value)}
-            placeholder="Enter remarks"
+            placeholder={`${t('common.enter')} ${t('leaveManagement.permissions.columns.remarks')}`}
             className="w-full"
           />
         </div>
