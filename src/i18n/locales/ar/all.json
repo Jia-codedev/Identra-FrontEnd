@@ -93,6 +93,14 @@
     "activeFilters": "المرشحات النشطة",
     "clearFilters": "مسح المرشحات",
     "clearAll": "مسح الكل",
+    "checkIn": "تسجيل الدخول",
+    "checkOut": "تسجيل الخروج",
+    "in": "دخول",
+    "out": "خروج",
+    "break": "استراحة",
+    "workHours": "ساعات العمل",
+    "overtime": "العمل الإضافي",
+    "device": "الجهاز",
     "org": "المؤسسة",
     "months": {
       "january": "يناير",
@@ -319,6 +327,32 @@
     "createSuccess": "تم الإنشاء بنجاح",
     "createError": "فشل في الإنشاء",
     "selectItemsToDelete": "يرجى اختيار العناصر المراد حذفها"
+  },
+  "attendance": {
+    "checkedIn": "تم تسجيل الدخول بنجاح",
+    "checkedOut": "تم تسجيل الخروج بنجاح",
+    "breakStarted": "بدأت الاستراحة",
+    "breakEnded": "انتهت الاستراحة",
+    "overtimeRecorded": "تم تسجيل العمل الإضافي بنجاح",
+    "leaveRequested": "تم تقديم طلب الإجازة بنجاح",
+    "permissionRequested": "تم تقديم طلب الإذن بنجاح",
+    "attendanceSubmitted": "تم تقديم الحضور للموافقة",
+    "attendanceApproved": "تم الموافقة على الحضور بنجاح",
+    "attendanceRejected": "تم رفض الحضور",
+    "scheduleUpdated": "تم تحديث الجدولة بنجاح",
+    "holidayAdded": "تم إضافة العطلة بنجاح",
+    "workingHoursUpdated": "تم تحديث ساعات العمل بنجاح",
+    "checkIn": "تسجيل الدخول",
+    "checkOut": "تسجيل الخروج",
+    "break": "استراحة",
+    "workHours": "ساعات العمل",
+    "overtime": "العمل الإضافي",
+    "noRecords": "لم يتم العثور على سجلات حضور",
+    "noRecordsDesc": "لا توجد سجلات حضور تطابق المرشحات الحالية.",
+    "addNew": "إضافة بصمة جديدة",
+    "breakStart": "بداية الاستراحة",
+    "breakEnd": "نهاية الاستراحة",
+    "manualEntry": "إدخال يدوي"
   },
   "auth": {
     "login": "تسجيل الدخول",
@@ -549,10 +583,27 @@
       "noData": "لم يتم العثور على مسؤولي الأقسام"
     }
   },
+  "punches": {
+    "title": "البصمات والحضور",
+    "description": "إدارة سجلات حضور الموظفين وبيانات البصمة",
+    "searchPlaceholder": "البحث باسم الموظف أو الرقم...",
+    "myPunches": "بصماتي",
+    "teamPunches": "بصمات الفريق",
+    "myPunchesDescription": "عرض سجلات الحضور الخاصة بك",
+    "teamPunchesDescription": "عرض سجلات حضور أعضاء فريقك"
+  },
   "employee": {
+    "name": "اسم الموظف",
+    "employeeName": "اسم الموظف",
     "addEmployee": "إضافة موظف",
     "editEmployee": "تعديل موظف",
     "employeeId": "رقم الموظف",
+    "errors": {
+      "duplicateEmployeeNumber": "رقم الموظف موجود بالفعل. يرجى استخدام رقم موظف مختلف.",
+      "duplicateEmail": "عنوان البريد الإلكتروني موجود بالفعل. يرجى استخدام بريد إلكتروني مختلف.",
+      "duplicateCardNumber": "رقم البطاقة موجود بالفعل. يرجى استخدام رقم بطاقة مختلف.",
+      "duplicateEntry": "تم العثور على إدخال مكرر. يرجى التحقق من بياناتك والمحاولة مرة أخرى."
+    },
     "firstName": "الاسم الأول",
     "lastName": "اسم العائلة",
     "fullName": "الاسم الكامل",

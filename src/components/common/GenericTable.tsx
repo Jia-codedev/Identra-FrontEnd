@@ -43,6 +43,7 @@ interface GenericTableProps<T> {
   isLoading?: boolean;
   onPageChange: (page: number) => void;
   onPageSizeChange: (size: number) => void;
+  showActions?: boolean;
 }
 
 export function GenericTable<T>({
@@ -63,6 +64,7 @@ export function GenericTable<T>({
   isLoading = false,
   onPageChange,
   onPageSizeChange,
+  showActions = true,
 }: GenericTableProps<T>) {
   const { t } = useTranslations();
   const { isRTL } = useLanguage();
@@ -89,7 +91,9 @@ export function GenericTable<T>({
         <Table>
           <TableHeader>
             <TableRow
-              className={`bg-gradient-to-${isRTL ? "l" : "r"} from-primary/10 to-background/80 backdrop-blur-md`}
+              className={`bg-gradient-to-${
+                isRTL ? "l" : "r"
+              } from-primary/10 to-background/80 backdrop-blur-md`}
             >
               <TableHead className="w-12 text-center">
                 <Checkbox
@@ -108,11 +112,11 @@ export function GenericTable<T>({
                   {column.header}
                 </TableHead>
               ))}
-              { (onEditItem || onDeleteItem || actions) && (
+              {(onEditItem || onDeleteItem || actions) && (
                 <TableHead className="w-32 text-center text-base font-bold text-primary drop-shadow-sm tracking-wide">
                   {t("common.actions")}
                 </TableHead>
-              ) }
+              )}
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -135,7 +139,9 @@ export function GenericTable<T>({
                         <Checkbox
                           checked={selected.includes(itemId)}
                           onCheckedChange={() => onSelectItem(itemId)}
-                          aria-label={`${t("common.select")} ${getItemDisplayName(item, isRTL)}`}
+                          aria-label={`${t(
+                            "common.select"
+                          )} ${getItemDisplayName(item, isRTL)}`}
                         />
                       </TableCell>
                       {columns.map((column) => (
@@ -146,12 +152,13 @@ export function GenericTable<T>({
                           {column.accessor(item, isRTL)}
                         </TableCell>
                       ))}
-                      { (onEditItem || onDeleteItem || actions) && (
+                      {(onEditItem || onDeleteItem || actions) && (
                         <TableCell
-                          className={`text-center flex ${isRTL ? "flex-row-reverse" : "flex-row"
-                            } gap-2 justify-center`}
+                          className={`text-center flex ${
+                            isRTL ? "flex-row-reverse" : "flex-row"
+                          } gap-2 justify-center`}
                         >
-                          {actions ? (
+                          {actions && showActions ? (
                             actions(item)
                           ) : (
                             <>
@@ -191,4 +198,3 @@ export function GenericTable<T>({
     </div>
   );
 }
-

@@ -64,27 +64,28 @@ export const EmployeesTable: React.FC<EmployeesTableProps> = ({
   ];
 
   return (
-    <GenericTable<IEmployee>
-      data={employee}
-      columns={columns}
-      selected={selected}
-      page={page}
-      pageSize={pageSize}
-      allChecked={allChecked}
-      getItemId={(item) => item.employee_id!}
-      getItemDisplayName={(item, isRTL) =>
-        isRTL
-          ? item.firstname_arb + " " + item.lastname_arb
-          : item.firstname_eng + " " + item.lastname_eng
-      }
-      onSelectItem={onSelectEmployee}
-      onSelectAll={onSelectAll}
-      onEditItem={onEditEmployee}
-      onDeleteItem={onDeleteEmployee}
-  onPageChange={onPageChange}
-  onPageSizeChange={onPageSizeChange}
-      noDataMessage={t("employeeMaster.employee.noEmployeesFound")}
-      isLoading={isLoading}
-    />
+  <GenericTable<IEmployee>
+    data={employee}
+    columns={columns}
+    selected={selected}
+    page={page}
+    pageSize={pageSize}
+    allChecked={allChecked}
+    getItemId={(item) => item.employee_id!}
+    getItemDisplayName={(item, isRTL) =>
+      isRTL
+        ? item.firstname_arb + " " + item.lastname_arb
+        : item.firstname_eng + " " + item.lastname_eng
+    }
+    onSelectItem={onSelectEmployee}
+    onSelectAll={onSelectAll}
+    onEditItem={onEditEmployee}
+    onDeleteItem={onDeleteEmployee}
+    onPageChange={onPageChange}
+    onPageSizeChange={onPageSizeChange}
+    noDataMessage={t("employeeMaster.employee.noEmployeesFound")}
+    isLoading={isLoading}
+    showActions={true}
+  />
   );
 };

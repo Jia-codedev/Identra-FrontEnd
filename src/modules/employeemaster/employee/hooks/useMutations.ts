@@ -51,11 +51,26 @@ export function useEmployeeMutations() {
     },
     onError: (error: any) => {
       console.error("Error creating employee:", error);
-      const errorMessage =
-        error?.response?.data?.message ||
-        error?.message ||
-        t('toast.error.creating');
-      toast.error(errorMessage);
+      
+      // Handle specific error types
+      if (error?.status === 409 || error?.response?.status === 409) {
+        const conflictMessage = error?.message || error?.response?.data?.message;
+        if (conflictMessage?.toLowerCase().includes('emp_no') || conflictMessage?.toLowerCase().includes('employee number')) {
+          toast.error(t('employee.errors.duplicateEmployeeNumber') || 'Employee number already exists. Please use a different employee number.');
+        } else if (conflictMessage?.toLowerCase().includes('email')) {
+          toast.error(t('employee.errors.duplicateEmail') || 'Email address already exists. Please use a different email.');
+        } else if (conflictMessage?.toLowerCase().includes('card_number')) {
+          toast.error(t('employee.errors.duplicateCardNumber') || 'Card number already exists. Please use a different card number.');
+        } else {
+          toast.error(conflictMessage || t('employee.errors.duplicateEntry') || 'Duplicate entry found. Please check your data and try again.');
+        }
+      } else {
+        const errorMessage =
+          error?.response?.data?.message ||
+          error?.message ||
+          t('toast.error.creating');
+        toast.error(errorMessage);
+      }
     },
   });
 

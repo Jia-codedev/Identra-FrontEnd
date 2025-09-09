@@ -34,6 +34,18 @@ class EmployeeApi {
     });
   }
 
+  checkEmployeeNumberExists(empNo: string) {
+    return apiClient.get("/employee/check-emp-no", {
+      params: { emp_no: empNo },
+    });
+  }
+
+  checkEmailExists(email: string) {
+    return apiClient.get("/employee/check-email", {
+      params: { email },
+    });
+  }
+
   addEmployee(data: Partial<IEmployee>) {
     return apiClient.post("/employee/add", data).catch((err) => {
       // Attach request payload to error for easier debugging
@@ -44,6 +56,17 @@ class EmployeeApi {
           err?.response?.data || err.message
         );
       } catch {}
+      
+      // Enhance error message for better user experience
+      if (err?.response?.status === 409) {
+        const errorMessage = err?.response?.data?.message || 'Duplicate entry found';
+        const enhancedError = new Error(errorMessage);
+        enhancedError.name = 'ConflictError';
+        (enhancedError as any).status = 409;
+        (enhancedError as any).originalError = err;
+        throw enhancedError;
+      }
+      
       throw err;
     });
   }

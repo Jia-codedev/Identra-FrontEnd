@@ -81,14 +81,9 @@ export default function EmployeePage() {
   };
 
   const handleSaveEmployee = (data: IEmployee) => {
-    if (modalState.mode === "add") {
-      createEmployee(data);
-    } else if (modalState.mode === "edit" && modalState.employee) {
-      updateEmployee({
-        id: modalState.employee.employee_id!,
-        employeeData: data,
-      });
-    }
+    // The modal already handles the mutation internally
+    // This is just a success callback to close the modal and refresh data
+    console.log("Employee saved successfully:", data);
     handleCloseModal();
   };
 

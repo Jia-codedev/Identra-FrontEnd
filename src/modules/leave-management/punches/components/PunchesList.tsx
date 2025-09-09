@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { GenericTable, TableColumn } from "@/components/common/GenericTable";
-import { Clock, MapPin, Smartphone, Edit, Trash2 } from "lucide-react";
+import { Clock, MapPin, Smartphone } from "lucide-react";
 import { useTranslations } from "@/hooks/use-translations";
 import { useLanguage } from "@/providers/language-provider";
 
@@ -21,51 +21,67 @@ const formatTime = (timeString: string) => {
   return date.toLocaleTimeString();
 };
 
-const getStatusColor = (status: string) => {
-  switch (status?.toLowerCase()) {
-    case 'present':
+const getReasonColor = (reason: string) => {
+  switch (reason?.toUpperCase()) {
+    case 'IN':
       return 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400';
-    case 'absent':
-      return 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400';
-    case 'late':
-      return 'bg-orange-100 text-orange-800 dark:bg-orange-900/20 dark:text-orange-400';
-    case 'half day':
+    case 'OUT':
+      return 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400';
+    case 'BREAK_START':
       return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400';
+    case 'BREAK_END':
+      return 'bg-orange-100 text-orange-800 dark:bg-orange-900/20 dark:text-orange-400';
     default:
       return 'bg-muted text-muted-foreground';
   }
 };
 
+const formatReason = (reason: string) => {
+  switch (reason?.toUpperCase()) {
+    case 'IN':
+      return 'Check In';
+    case 'OUT':
+      return 'Check Out';
+    case 'BREAK_START':
+      return 'Break Start';
+    case 'BREAK_END':
+      return 'Break End';
+    default:
+      return reason || 'Unknown';
+  }
+};
+
 type ViewMode = 'table' | 'grid';
 
-interface AttendanceRecord {
-  id: number;
+interface EmployeeEventTransaction {
+  transaction_id: number;
   employee_id: number;
-  employee_no: string;
-  employee_name?: string;
-  Ddate: string;
-  check_in?: string;
-  check_out?: string;
-  break_start?: string;
-  break_end?: string;
-  total_work_hours?: number;
-  overtime_hours?: number;
-  status?: string;
-  location?: string;
-  device_id?: string;
-  created_date?: string;
-  last_updated_date?: string;
+  transaction_time: string;
+  reason: string;
+  remarks?: string | null;
+  device_id?: number | null;
+  user_entry_flag: boolean;
+  created_id: number;
+  created_date: string;
+  last_updated_id: number;
+  last_updated_date: string;
+  geolocation?: string | null;
+  employee_master?: {
+    emp_no: string;
+    firstname_eng: string;
+    lastname_eng: string;
+    firstname_arb: string;
+    lastname_arb: string;
+  };
 }
 
 interface PunchesListProps {
-  punches: AttendanceRecord[];
+  punches: EmployeeEventTransaction[];
   viewMode: ViewMode;
   selected?: number[];
   allChecked?: boolean;
   onSelectItem?: (id: number) => void;
   onSelectAll?: () => void;
-  onEdit?: (punch: AttendanceRecord) => void;
-  onDelete?: (id: number) => void;
   isLoading?: boolean;
 }
 
@@ -76,128 +92,93 @@ export default function PunchesList({
   allChecked = false,
   onSelectItem,
   onSelectAll,
-  onEdit,
-  onDelete,
   isLoading = false,
 }: PunchesListProps) {
   const { t } = useTranslations();
   const { isRTL } = useLanguage();
 
+  // Ensure we have valid data and filter out any invalid entries
+  const validPunches = Array.isArray(punches) ? 
+    punches.filter(punch => punch && (punch.transaction_id || punch.employee_id)) : [];
+
   // Define table columns for GenericTable
-  const columns: TableColumn<AttendanceRecord>[] = [
+  const columns: TableColumn<EmployeeEventTransaction>[] = [
     {
       key: 'employee',
-      header: t('employee.employeeName') || 'Employee',
-      accessor: (punch: AttendanceRecord) => (
-        <div>
-          <div className="font-medium text-foreground">{punch.employee_name || t('common.notAvailable') || 'Unknown'}</div>
-          <div className="text-sm text-muted-foreground">#{punch.employee_no}</div>
-        </div>
-      ),
+      header: t('employee.name') || t('employee.employeeName') || 'Employee',
+      accessor: (punch: EmployeeEventTransaction, isRTL?: boolean) => {
+        const employeeName = punch.employee_master 
+          ? `${punch.employee_master.firstname_eng} ${punch.employee_master.lastname_eng}`.trim()
+          : 'Unknown Employee';
+        const empNo = punch.employee_master?.emp_no || punch.employee_id.toString();
+        
+        return (
+          <div>
+            <div className="font-medium text-foreground">{employeeName}</div>
+            <div className="text-sm text-muted-foreground">#{empNo}</div>
+          </div>
+        );
+      },
     },
     {
       key: 'date',
       header: t('common.date') || 'Date',
-      accessor: (punch: AttendanceRecord) => (
+      accessor: (punch: EmployeeEventTransaction, isRTL?: boolean) => (
         <div className="text-sm">
-          <div className="font-medium text-foreground">{formatDateTime(punch.Ddate)}</div>
+          <div className="font-medium text-foreground">{formatDateTime(punch.transaction_time)}</div>
         </div>
       ),
     },
     {
-      key: 'checkIn',
-      header: t('scheduling.attendance') + ' ' + t('common.in') || 'Check In',
-      accessor: (punch: AttendanceRecord) => (
+      key: 'reason',
+      header: t('common.type') || 'Type',
+      accessor: (punch: EmployeeEventTransaction, isRTL?: boolean) => (
+        <Badge className={getReasonColor(punch.reason)}>
+          {formatReason(punch.reason)}
+        </Badge>
+      ),
+    },
+    {
+      key: 'time',
+      header: t('common.time') || 'Time',
+      accessor: (punch: EmployeeEventTransaction, isRTL?: boolean) => (
         <div className="text-sm text-muted-foreground">
-          {formatTime(punch.check_in || '')}
+          {formatTime(punch.transaction_time)}
         </div>
       ),
     },
     {
-      key: 'checkOut',
-      header: t('scheduling.attendance') + ' ' + t('common.out') || 'Check Out',
-      accessor: (punch: AttendanceRecord) => (
-        <div className="text-sm text-muted-foreground">
-          {formatTime(punch.check_out || '')}
-        </div>
-      ),
-    },
-    {
-      key: 'break',
-      header: t('scheduling.breakTime') || 'Break',
-      accessor: (punch: AttendanceRecord) => (
-        <div className="text-sm text-muted-foreground">
-          {punch.break_start && punch.break_end ? 
-            `${formatTime(punch.break_start)} - ${formatTime(punch.break_end)}` : 
-            t('common.notAvailable') || 'N/A'
-          }
-        </div>
-      ),
-    },
-    {
-      key: 'workHours',
-      header: t('scheduling.workHours') || 'Work Hours',
-      accessor: (punch: AttendanceRecord) => (
-        <div className="text-sm">
-          <div className="font-medium text-foreground">{punch.total_work_hours || 0}h</div>
-          {punch.overtime_hours && punch.overtime_hours > 0 && (
-            <div className="text-xs text-primary">+{punch.overtime_hours}h {t('scheduling.overtime') || 'OT'}</div>
-          )}
+      key: 'device',
+      header: t('common.device') || 'Device',
+      accessor: (punch: EmployeeEventTransaction, isRTL?: boolean) => (
+        <div className="flex items-center text-sm text-muted-foreground">
+          <Smartphone className="w-3 h-3 mr-1" />
+          {punch.device_id || (punch.user_entry_flag ? 'Manual Entry' : 'Unknown')}
         </div>
       ),
     },
     {
       key: 'location',
       header: t('common.location') || 'Location',
-      accessor: (punch: AttendanceRecord) => (
+      accessor: (punch: EmployeeEventTransaction, isRTL?: boolean) => (
         <div className="flex items-center text-sm text-muted-foreground">
           <MapPin className="w-3 h-3 mr-1" />
-          {punch.location || t('common.notAvailable') || 'Unknown'}
+          {punch.geolocation || t('common.notAvailable') || 'Unknown'}
         </div>
       ),
     },
-    {
-      key: 'status',
-      header: t('common.status') || 'Status',
-      accessor: (punch: AttendanceRecord) => (
-        <Badge className={getStatusColor(punch.status || '')}>
-          {punch.status || t('common.notAvailable') || 'Unknown'}
-        </Badge>
-      ),
-    },
-  ];
-
-  // Helper functions for GenericTable
-  const getItemId = (punch: AttendanceRecord) => punch.id;
-  const getItemDisplayName = (punch: AttendanceRecord) => punch.employee_name || `Employee ${punch.employee_no}`;
-
-  // Custom actions component
-  const renderActions = (punch: AttendanceRecord) => (
-    <div className="flex items-center justify-center gap-2">
-      {onEdit && (
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => onEdit(punch)}
-          className="p-1 h-8 w-8"
-          title={t('common.edit') || 'Edit'}
-        >
-          <Edit className="w-4 h-4" />
-        </Button>
-      )}
-      {onDelete && (
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => onDelete(punch.id)}
-          className="p-1 h-8 w-8 text-destructive hover:text-destructive"
-          title={t('common.delete') || 'Delete'}
-        >
-          <Trash2 className="w-4 h-4" />
-        </Button>
-      )}
-    </div>
-  );
+  ];   
+  const getItemId = (punch: EmployeeEventTransaction) => {
+    const id = punch?.transaction_id || punch?.employee_id;
+    return typeof id === 'number' ? id : parseInt(String(id)) || 0;
+  };
+  
+  const getItemDisplayName = (punch: EmployeeEventTransaction, isRTL?: boolean) => {
+    const employeeName = punch.employee_master 
+      ? `${punch.employee_master.firstname_eng} ${punch.employee_master.lastname_eng}`.trim()
+      : `Employee ${punch.employee_id}`;
+    return employeeName;
+  };
 
   if (isLoading) {
     return (
@@ -207,15 +188,15 @@ export default function PunchesList({
     );
   }
 
-  if (punches.length === 0) {
+  if (validPunches.length === 0 && !isLoading) {
     return (
       <div className="text-center py-16">
         <Clock className="mx-auto h-12 w-12 text-muted-foreground" />
         <h3 className="mt-2 text-sm font-medium text-foreground">
-          {t('common.noResults') || 'No punches found'}
+          {t('attendance.noRecords') || t('common.noResults') || 'No punches found'}
         </h3>
         <p className="mt-1 text-sm text-muted-foreground">
-          {t('common.noDataFound') || 'No attendance records match your current filters.'}
+          {t('attendance.noRecordsDesc') || t('common.noDataFound') || 'No attendance records match your current filters.'}
         </p>
       </div>
     );
@@ -224,22 +205,20 @@ export default function PunchesList({
   if (viewMode === 'table') {
     return (
       <GenericTable
-        data={punches}
+        data={validPunches}
         columns={columns}
         selected={selected}
         page={1}
-        pageSize={punches.length}
+        pageSize={validPunches.length}
         allChecked={allChecked}
         getItemId={getItemId}
         getItemDisplayName={getItemDisplayName}
         onSelectItem={onSelectItem || (() => {})}
         onSelectAll={onSelectAll || (() => {})}
-        onEditItem={onEdit}
-        onDeleteItem={onDelete}
-        actions={renderActions}
-        noDataMessage={t('common.noResults') || 'No punches found'}
+        noDataMessage={t('attendance.noRecords') || t('common.noResults') || 'No punches found'}
         isLoading={isLoading}
         onPageChange={() => {}}
+        showActions={false}
         onPageSizeChange={() => {}}
       />
     );
@@ -249,93 +228,68 @@ export default function PunchesList({
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {punches.map((punch) => (
-          <Card key={punch.id} className="hover:shadow-md transition-shadow border-border bg-card">
-            <CardContent className="p-4">
-              <div className="flex items-start justify-between mb-3">
-                <div>
-                  <h3 className="font-medium text-foreground">{punch.employee_name || t('common.notAvailable') || 'Unknown'}</h3>
-                  <p className="text-sm text-muted-foreground">#{punch.employee_no}</p>
-                </div>
-                <div className="flex gap-1">
-                  <Badge className={getStatusColor(punch.status || '')}>
-                    {punch.status || t('common.notAvailable') || 'Unknown'}
-                  </Badge>
-                </div>
-              </div>
-
-              <div className="space-y-2 mb-4">
-                <div className="flex items-center text-sm">
-                  <Clock className="w-4 h-4 mr-2 text-muted-foreground" />
-                  <span className="font-medium text-foreground">{formatDateTime(punch.Ddate)}</span>
-                </div>
-                
-                <div className="grid grid-cols-2 gap-2 text-sm">
+        {validPunches.map((punch) => {
+          const punchId = getItemId(punch);
+          const employeeName = punch.employee_master 
+            ? `${punch.employee_master.firstname_eng} ${punch.employee_master.lastname_eng}`.trim()
+            : 'Unknown Employee';
+          const empNo = punch.employee_master?.emp_no || punch.employee_id.toString();
+          
+          return (
+            <Card key={`event-transaction-${punchId}-${punch.transaction_time}`} className="hover:shadow-md transition-shadow border-border bg-card">
+              <CardContent className="p-4">
+                <div className="flex items-start justify-between mb-3">
                   <div>
-                    <span className="text-muted-foreground">{t('common.in') || 'In'}:</span> <span className="text-foreground">{formatTime(punch.check_in || '')}</span>
+                    <h3 className="font-medium text-foreground">{employeeName}</h3>
+                    <p className="text-sm text-muted-foreground">#{empNo}</p>
                   </div>
-                  <div>
-                    <span className="text-muted-foreground">{t('common.out') || 'Out'}:</span> <span className="text-foreground">{formatTime(punch.check_out || '')}</span>
+                  <div className="flex gap-1">
+                    <Badge className={getReasonColor(punch.reason)}>
+                      {formatReason(punch.reason)}
+                    </Badge>
                   </div>
                 </div>
 
-                {punch.break_start && punch.break_end && (
-                  <div className="text-sm text-muted-foreground">
-                    <span className="font-medium">{t('scheduling.breakTime') || 'Break'}:</span> <span className="text-foreground">{formatTime(punch.break_start)} - {formatTime(punch.break_end)}</span>
+                <div className="space-y-2 mb-4">
+                  <div className="flex items-center text-sm">
+                    <Clock className="w-4 h-4 mr-2 text-muted-foreground" />
+                    <span className="font-medium text-foreground">{formatDateTime(punch.transaction_time)}</span>
                   </div>
-                )}
+                  
+                  <div className="grid grid-cols-1 gap-2 text-sm">
+                    <div>
+                      <span className="text-muted-foreground">{t('common.time') || 'Time'}:</span> 
+                      <span className="text-foreground ml-1">{formatTime(punch.transaction_time)}</span>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground">{t('common.type') || 'Type'}:</span> 
+                      <span className="text-foreground ml-1">{formatReason(punch.reason)}</span>
+                    </div>
+                  </div>
 
-                <div className="flex items-center justify-between text-sm">
-                  <div>
-                    <span className="text-muted-foreground">{t('scheduling.workHours') || 'Work'}:</span> <span className="text-foreground">{punch.total_work_hours || 0}h</span>
+                  {punch.remarks && (
+                    <div className="text-sm text-muted-foreground">
+                      <span className="font-medium">{t('common.remarks') || 'Remarks'}:</span> 
+                      <span className="text-foreground ml-1">{punch.remarks}</span>
+                    </div>
+                  )}
+
+                  <div className="flex items-center text-sm text-muted-foreground">
+                    <Smartphone className="w-4 h-4 mr-2" />
+                    <span>{punch.device_id || (punch.user_entry_flag ? 'Manual Entry' : 'System')}</span>
                   </div>
-                  {punch.overtime_hours && punch.overtime_hours > 0 && (
-                    <div className="text-primary">
-                      <span className="font-medium">{t('scheduling.overtime') || 'OT'}:</span> {punch.overtime_hours}h
+
+                  {punch.geolocation && (
+                    <div className="flex items-center text-sm text-muted-foreground">
+                      <MapPin className="w-4 h-4 mr-2" />
+                      <span>{punch.geolocation}</span>
                     </div>
                   )}
                 </div>
-
-                <div className="flex items-center text-sm text-muted-foreground">
-                  <MapPin className="w-4 h-4 mr-2" />
-                  <span>{punch.location || t('common.notAvailable') || 'Unknown Location'}</span>
-                </div>
-
-                {punch.device_id && (
-                  <div className="flex items-center text-sm text-muted-foreground">
-                    <Smartphone className="w-4 h-4 mr-2" />
-                    <span>{t('common.device') || 'Device'}: {punch.device_id}</span>
-                  </div>
-                )}
-              </div>
-
-              <div className="flex items-center justify-end gap-2 pt-2 border-t border-border">
-                {onEdit && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => onEdit(punch)}
-                    className="p-1 h-8 w-8"
-                    title={t('common.edit') || 'Edit'}
-                  >
-                    <Edit className="w-4 h-4" />
-                  </Button>
-                )}
-                {onDelete && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => onDelete(punch.id)}
-                    className="p-1 h-8 w-8 text-destructive hover:text-destructive"
-                    title={t('common.delete') || 'Delete'}
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+              </CardContent>
+            </Card>
+          );
+        })}
       </div>
     </div>
   );

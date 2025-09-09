@@ -51,28 +51,29 @@ export const EmployeeGroupTable: React.FC<EmployeeGroupTableProps> = ({
   ];
 
   return (
-    <GenericTable
-      data={employeeGroups}
-      columns={columns}
-      selected={selected}
-      page={page}
-      pageSize={pageSize}
-      allChecked={allChecked}
-      getItemId={(item) => item.employee_group_id || 0}
-      getItemDisplayName={(item, isRTL) =>
-        isRTL
-          ? item.group_name_arb || item.group_name_eng || ""
-          : item.group_name_eng || item.group_name_arb || ""
-      }
-      onSelectItem={onSelectEmployeeGroup}
-      onSelectAll={onSelectAll}
-      onEditItem={onEditEmployeeGroup}
-      onDeleteItem={onDeleteEmployeeGroup}
-  onPageChange={onPageChange}
-  onPageSizeChange={onPageSizeChange}
-      noDataMessage={t("employeeMaster.employeeGroups.noEmployeeGroupsFound")}
-      isLoading={isLoading}
-    />
+  <GenericTable
+    data={employeeGroups}
+    columns={columns}
+    selected={selected}
+    page={page}
+    pageSize={pageSize}
+    allChecked={allChecked}
+    getItemId={(item) => item.employee_group_id || 0}
+    getItemDisplayName={(item, isRTL) =>
+      isRTL
+        ? item.group_name_arb || item.group_name_eng || ""
+        : item.group_name_eng || item.group_name_arb || ""
+    }
+    onSelectItem={onSelectEmployeeGroup}
+    onSelectAll={onSelectAll}
+    onEditItem={onEditEmployeeGroup}
+    onDeleteItem={onDeleteEmployeeGroup}
+    onPageChange={onPageChange}
+    onPageSizeChange={onPageSizeChange}
+    noDataMessage={t("employeeMaster.employeeGroups.noEmployeeGroupsFound")}
+    isLoading={isLoading}
+    showActions={true}
+  />
   );
 };
 

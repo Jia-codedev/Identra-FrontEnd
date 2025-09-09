@@ -526,17 +526,35 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
       inactive_date: formData.inactive_date || undefined,
     };
 
+    // Debug logging to identify empty payload issues
+    console.log("Form Data before submission:", formData);
+    console.log("Employee Data to be sent:", employeeData);
+    
+    // Additional validation to prevent empty payloads
+    if (!employeeData.emp_no || employeeData.emp_no.toString().trim() === '') {
+      console.error("Employee number is missing or empty");
+      toast.error("Employee number is required");
+      return;
+    }
+    
+    if (!employeeData.firstname_eng || employeeData.firstname_eng.toString().trim() === '') {
+      console.error("First name is missing or empty");
+      toast.error("First name is required");
+      return;
+    }
+
     try {
       if (mode === "add") {
-        console.log("Creating employee...");
-        await createEmployee({
+        console.log("Creating employee with data:", { ...employeeData, login: formData.login_id });
+        const result = await createEmployee({
           ...employeeData,
           login: formData.login_id,
           password: formData.password,
         } as IEmployee);
+        
+        // Only call onSave after successful creation
         onSave(employeeData as IEmployee);
-
-        onClose();
+        // Don't call onClose here - let the parent handle it via onSave
       } else if (employee?.employee_id) {
         console.log("Updating employee...");
         await updateEmployee({
@@ -544,10 +562,11 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
           employeeData: employeeData as IEmployee,
         });
         onSave(employeeData as IEmployee);
-        onClose();
+        // Don't call onClose here - let the parent handle it via onSave
       }
     } catch (error) {
       console.error("Error saving employee:", error);
+      // Don't close the modal on error so user can fix the issue
     }
   };
 

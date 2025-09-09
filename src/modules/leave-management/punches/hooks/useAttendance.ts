@@ -2,7 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { useState, useCallback } from "react";
-import attendanceApi from "@/services/leaveManagement/attendance";
+import employeeEventTransactionsApi from "@/services/leaveManagement/employeeEventTransactions";
 
 interface UseAttendanceParams {
   initialPage?: number;
@@ -15,27 +15,19 @@ export default function useAttendance(params: UseAttendanceParams = {}) {
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
   const [filters, setFilters] = useState<any>({});
 
-  // Get attendance records with pagination
+  // Get employee event transactions with pagination
   const attendanceQuery = useQuery({
-    queryKey: ["attendance", { page, limit, ...filters }],
-    queryFn: () => attendanceApi.getAllAttendance({ 
+    queryKey: ["employeeEventTransactions", { page, limit, ...filters }],
+    queryFn: () => employeeEventTransactionsApi.getAllEmployeeEventTransactions({ 
       limit, 
-      offset: (page - 1) * limit, 
+      offset: page, 
       ...filters 
     }),
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
-  // Get attendance summary
-  const summaryQuery = useQuery({
-    queryKey: ["attendance-summary", filters],
-    queryFn: () => attendanceApi.getAttendanceSummary(filters),
-    staleTime: 5 * 60 * 1000,
-  });
-
-  const data = attendanceQuery.data?.data?.data || [];
-  const total = attendanceQuery.data?.data?.total || 0;
-  const summary = summaryQuery.data?.data || {};
+  const data = attendanceQuery.data?.data || [];
+  const total = attendanceQuery.data?.total || 0;
 
   const handlePageChange = useCallback((newPage: number) => {
     setPage(newPage);
@@ -63,7 +55,7 @@ export default function useAttendance(params: UseAttendanceParams = {}) {
     if (selectedItems.length === data.length) {
       setSelectedItems([]);
     } else {
-      setSelectedItems(data.map((item: any) => item.id));
+      setSelectedItems(data.map((item: any) => item.transaction_id));
     }
   }, [selectedItems.length, data.length, data]);
 
@@ -73,14 +65,12 @@ export default function useAttendance(params: UseAttendanceParams = {}) {
 
   const refresh = useCallback(() => {
     attendanceQuery.refetch();
-    summaryQuery.refetch();
-  }, [attendanceQuery, summaryQuery]);
+  }, [attendanceQuery]);
 
   return {
     // Data
     data,
     total,
-    summary,
     
     // Pagination
     page,

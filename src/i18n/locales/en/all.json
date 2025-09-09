@@ -92,6 +92,14 @@
     "activeFilters": "Active Filters",
     "clearFilters": "Clear Filters",
     "clearAll": "Clear All",
+    "checkIn": "Check In",
+    "checkOut": "Check Out",
+    "in": "In",
+    "out": "Out",
+    "break": "Break",
+    "workHours": "Work Hours",
+    "overtime": "Overtime",
+    "device": "Device",
     "org": "Org",
     "months": {
       "january": "January",
@@ -536,10 +544,39 @@
       "editSuccess": "Organization type updated successfully"
     }
   },
+  "punches": {
+    "title": "Punches & Attendance",
+    "description": "Manage employee attendance records and punch data",
+    "searchPlaceholder": "Search by employee name or number...",
+    "myPunches": "My Punches",
+    "teamPunches": "Team Punches",
+    "myPunchesDescription": "View your own attendance records",
+    "teamPunchesDescription": "View attendance records of your team members"
+  },
+  "attendance": {
+    "noRecords": "No attendance records found",
+    "noRecordsDesc": "No attendance records match your current filters.",
+    "addNew": "Add New Punch",
+    "checkIn": "Check In",
+    "checkOut": "Check Out",
+    "breakStart": "Break Start",
+    "breakEnd": "Break End",
+    "manualEntry": "Manual Entry",
+    "noTeamMembers": "No team members found",
+    "noTeamMembersDesc": "You don't have any team members assigned to you."
+  },
   "employee": {
+    "name": "Employee Name",
+    "employeeName": "Employee Name",
     "addEmployee": "Add Employee",
     "editEmployee": "Edit Employee",
     "employeeId": "Employee ID",
+    "errors": {
+      "duplicateEmployeeNumber": "Employee number already exists. Please use a different employee number.",
+      "duplicateEmail": "Email address already exists. Please use a different email.",
+      "duplicateCardNumber": "Card number already exists. Please use a different card number.",
+      "duplicateEntry": "Duplicate entry found. Please check your data and try again."
+    },
     "firstName": "First Name",
     "lastName": "Last Name",
     "fullName": "Full Name",
@@ -1189,7 +1226,14 @@
       "attendanceRejected": "Attendance rejected",
       "scheduleUpdated": "Schedule updated successfully",
       "holidayAdded": "Holiday added successfully",
-      "workingHoursUpdated": "Working hours updated successfully"
+      "workingHoursUpdated": "Working hours updated successfully",
+      "checkIn": "Check In",
+      "checkOut": "Check Out",
+      "break": "Break",
+      "workHours": "Work Hours",
+      "overtime": "Overtime",
+      "noRecords": "No attendance records found",
+      "noRecordsDesc": "No attendance records match your current filters."
     },
     "masterData": {
       "regionCreated": "Region created successfully",
