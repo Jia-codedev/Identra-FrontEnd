@@ -15,7 +15,13 @@ interface LeavesHeaderProps {
   onDeleteSelected?: () => void;
 }
 
-export const LeavesHeader: React.FC<LeavesHeaderProps> = ({ search, onSearchChange, onAdd, selectedCount, onDeleteSelected }) => {
+export const LeavesHeader: React.FC<LeavesHeaderProps> = ({ 
+  search, 
+  onSearchChange, 
+  onAdd, 
+  selectedCount, 
+  onDeleteSelected 
+}) => {
   const { t } = useTranslations();
   const { isRTL } = useLanguage();
   const [searchTerm, setSearchTerm] = useState(search);

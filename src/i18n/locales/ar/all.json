@@ -266,52 +266,6 @@
         "noStepRole": "كل خطوة تتطلب دورًا."
       }
     },
-    "workflowAutomation": {
-      "title": "أتمتة سير العمل",
-      "description": "إدارة سير العمل الآلي وعمليات الموافقة",
-      "searchPlaceholder": "البحث في سير العمل...",
-      "createWorkflow": "إنشاء سير عمل",
-      "noWorkflows": "لم يتم العثور على سير عمل",
-      "noWorkflowsDescription": "ابدأ بإنشاء أول سير عمل آلي.",
-      "errorLoading": "خطأ في تحميل سير العمل",
-      "columns": {
-        "workflowName": "اسم سير العمل",
-        "type": "النوع",
-        "status": "الحالة",
-        "triggerCondition": "شرط التشغيل",
-        "assignedUsers": "المستخدمون المخصصون",
-        "executions": "التنفيذات",
-        "lastExecuted": "آخر تنفيذ",
-        "actions": "الإجراءات"
-      },
-      "types": {
-        "APPROVAL": "موافقة",
-        "NOTIFICATION": "إشعار",
-        "ESCALATION": "تصعيد",
-        "AUTOMATION": "أتمتة"
-      },
-      "statuses": {
-        "ACTIVE": "نشط",
-        "INACTIVE": "غير نشط",
-        "DRAFT": "مسودة",
-        "PENDING": "في الانتظار"
-      },
-      "actions": {
-        "activate": "تفعيل",
-        "deactivate": "إلغاء التفعيل",
-        "edit": "تعديل سير العمل",
-        "delete": "حذف سير العمل",
-        "view": "عرض التفاصيل"
-      },
-      "grid": {
-        "runs": "تشغيل",
-        "assignedUsers": "مستخدمون مخصصون",
-        "lastRun": "آخر تشغيل:",
-        "trigger": "المشغل:",
-        "created": "تم الإنشاء:",
-        "never": "أبداً"
-      }
-    },
     "switchToArabic": "التبديل إلى العربية",
     "switchToEnglish": "التبديل إلى الإنجليزية",
     "notAvailable": "غير متوفر",
@@ -815,6 +769,7 @@
     }
   },
   "settings": {
+    "updatePassword": "تحديث كلمة المرور",
     "title": "الإعدادات",
     "general": "عام",
     "appearanceLabel": "المظهر",
@@ -1054,6 +1009,7 @@
       "firstTime": "مرحباً! دعنا نبدأ."
     },
     "auth": {
+      "signInWithAzure": "تسجيل الدخول باستخدام Azure AD",
       "loginSuccess": "تم تسجيل الدخول بنجاح",
       "logoutSuccess": "تم تسجيل الخروج بنجاح",
       "passwordChanged": "تم تغيير كلمة المرور بنجاح",
@@ -1171,9 +1127,12 @@
       "columns": {
         "employee": "الموظف",
         "type": "النوع",
+        "dates": "التواريخ",
+        "duration": "المدة",
         "start": "من",
         "end": "إلى",
         "remarks": "ملاحظات",
+        "reference": "المرجع",
         "status": "الحالة"
       },
       "actions": {
@@ -1220,6 +1179,113 @@
       "approveFailed": "فشل في الموافقة على الإذن",
       "rejectFailed": "فشل في رفض الإذن",
       "rejectRemarks": "يرجى تقديم ملاحظات الرفض (اختياري)"
+    },
+    "permissionManagement": {
+      "title": "إدارة الأذونات",
+      "description": "إدارة طلبات أذونات الموظفين.",
+      "columns": {
+        "type": "نوع الإذن",
+        "employee": "الموظف",
+        "dates": "التواريخ",
+        "status": "الحالة",
+        "remarks": "الملاحظات"
+      },
+      "actions": {
+        "add": "إضافة إذن",
+        "edit": "تعديل الإذن",
+        "delete": "حذف الإذن",
+        "search": "البحث في الأذونات...",
+        "refresh": "تحديث"
+      },
+      "noData": "لم يتم العثور على طلبات أذونات."
+    },
+    "workflowAutomation": {
+      "title": "أنواع سير العمل",
+      "description": "إدارة قوالب أنواع سير العمل وخطوات الموافقة",
+      "searchPlaceholder": "البحث في أنواع سير العمل...",
+      "createWorkflowType": "إنشاء نوع سير عمل",
+      "noWorkflows": "لم يتم العثور على أنواع سير عمل",
+      "noData": "لم يتم العثور على أنواع سير عمل",
+      "noWorkflowsDescription": "ابدأ بإنشاء أول نوع سير عمل.",
+      "errorLoading": "خطأ في تحميل أنواع سير العمل",
+      "form": {
+        "workflowTypeInfo": {
+          "title": "معلومات نوع سير العمل",
+          "code": "رمز نوع سير العمل",
+          "nameEng": "الاسم (إنجليزي)",
+          "nameArb": "الاسم (عربي)",
+          "categoryEng": "الفئة (إنجليزي)",
+          "categoryArb": "الفئة (عربي)",
+          "codePlaceholder": "أدخل رمز نوع سير العمل",
+          "nameEngPlaceholder": "أدخل الاسم بالإنجليزية",
+          "nameArbPlaceholder": "أدخل الاسم بالعربية",
+          "categoryEngPlaceholder": "أدخل الفئة بالإنجليزية",
+          "categoryArbPlaceholder": "أدخل الفئة بالعربية"
+        },
+        "workflowSteps": {
+          "title": "خطوات سير العمل",
+          "stepNameEng": "اسم الخطوة (إنجليزي)",
+          "stepNameArb": "اسم الخطوة (عربي)",
+          "role": "الدور",
+          "isFinalStep": "الخطوة النهائية",
+          "stepOrder": "ترتيب الخطوة",
+          "stepNameEngPlaceholder": "أدخل اسم الخطوة بالإنجليزية",
+          "stepNameArbPlaceholder": "أدخل اسم الخطوة بالعربية",
+          "selectRole": "اختر الدور",
+          "addStep": "إضافة خطوة",
+          "removeStep": "إزالة الخطوة",
+          "maxStepsReached": "تم الوصول إلى الحد الأقصى للخطوات (4)",
+          "step": "الخطوة"
+        }
+      },
+      "messages": {
+        "workflowTypeCreated": "تم إنشاء نوع سير العمل بنجاح",
+        "workflowTypeUpdated": "تم تحديث نوع سير العمل بنجاح",
+        "workflowTypeDeleted": "تم حذف نوع سير العمل بنجاح",
+        "createFailed": "فشل في إنشاء نوع سير العمل"
+      },
+      "columns": {
+        "code": "الكود",
+        "name": "الاسم",
+        "category": "الفئة",
+        "workflowName": "اسم سير العمل",
+        "type": "النوع",
+        "status": "الحالة",
+        "created": "تاريخ الإنشاء",
+        "updated": "تاريخ التحديث",
+        "triggerCondition": "شرط التشغيل",
+        "assignedUsers": "المستخدمون المخصصون",
+        "executions": "التنفيذات",
+        "lastExecuted": "آخر تنفيذ",
+        "actions": "الإجراءات"
+      },
+      "types": {
+        "APPROVAL": "موافقة",
+        "NOTIFICATION": "إشعار",
+        "ESCALATION": "تصعيد",
+        "AUTOMATION": "أتمتة"
+      },
+      "statuses": {
+        "ACTIVE": "نشط",
+        "INACTIVE": "غير نشط",
+        "DRAFT": "مسودة",
+        "PENDING": "في الانتظار"
+      },
+      "actions": {
+        "activate": "تفعيل",
+        "deactivate": "إلغاء التفعيل",
+        "edit": "تعديل سير العمل",
+        "delete": "حذف سير العمل",
+        "view": "عرض التفاصيل"
+      },
+      "grid": {
+        "runs": "تشغيل",
+        "assignedUsers": "مستخدمون مخصصون",
+        "lastRun": "آخر تشغيل:",
+        "trigger": "المشغل:",
+        "created": "تم الإنشاء:",
+        "never": "أبداً"
+      }
     }
   },
   "translator": {
@@ -1290,9 +1356,10 @@
           "payrollLocking": "قفل الرواتب"
         }
       },
-      "devicesInfrastructure": {
+      "devicesAndInfrastructure": {
         "title": "الأجهزة والبنية التحتية",
         "items": {
+          "deviceManagement": "إدارة الأجهزة",
           "biometricTerminals": "محطات البصمة",
           "accessZones": "مناطق الوصول",
           "buildings": "المباني"
@@ -1341,6 +1408,155 @@
           "licenseManagement": "إدارة التراخيص"
         }
       }
+    }
+  },
+  "deviceManagement": {
+    "title": "إدارة الأجهزة",
+    "description": "إدارة جميع أجهزة مؤسستك هنا. يمكنك إضافة أو تعديل أو حذف الأجهزة حسب الحاجة.",
+    "addDevice": "إضافة جهاز",
+    "editDevice": "تعديل الجهاز",
+    "deviceNo": "رقم الجهاز",
+    "deviceName": "اسم الجهاز",
+    "deviceStatus": "الحالة",
+    "active": "نشط",
+    "inactive": "غير نشط",
+    "searchPlaceholder": "البحث عن الأجهزة...",
+    "noDevicesFound": "لم يتم العثور على أجهزة.",
+    "enterDeviceNo": "أدخل رقم الجهاز",
+    "enterDeviceName": "أدخل اسم الجهاز",
+    "selectStatus": "اختر الحالة",
+    "columns": {
+      "deviceNo": "رقم الجهاز",
+      "deviceName": "اسم الجهاز",
+      "status": "الحالة",
+      "createdDate": "تاريخ الإنشاء",
+      "lastUpdated": "آخر تحديث"
+    },
+    "success": {
+      "created": "تم إنشاء الجهاز بنجاح",
+      "updated": "تم تحديث الجهاز بنجاح",
+      "deleted": "تم حذف الجهاز بنجاح"
+    },
+    "error": {
+      "create": "فشل في إنشاء الجهاز",
+      "update": "فشل في تحديث الجهاز",
+      "delete": "فشل في حذف الجهاز",
+      "load": "فشل في تحميل الأجهزة"
+    }
+  },
+  "biometricTerminals": {
+    "title": "إدارة أجهزة البصمة",
+    "description": "إدارة جميع أجهزة البصمة في مؤسستك هنا. يمكنك إضافة أو تعديل أو حذف الأجهزة حسب الحاجة.",
+    "addNew": "إضافة جهاز",
+    "addTerminal": "إضافة جهاز",
+    "editTerminal": "تعديل الجهاز",
+    "terminalNumber": "رقم الجهاز",
+    "terminalName": "اسم الجهاز",
+    "terminalStatus": "الحالة",
+    "searchPlaceholder": "البحث عن الأجهزة...",
+    "noTerminalsFound": "لم يتم العثور على أجهزة البصمة.",
+    "enterTerminalNumber": "أدخل رقم الجهاز",
+    "enterTerminalName": "أدخل اسم الجهاز",
+    "selectStatus": "اختر الحالة",
+    "success": {
+      "created": "تم إنشاء جهاز البصمة بنجاح",
+      "updated": "تم تحديث جهاز البصمة بنجاح",
+      "deleted": "تم حذف جهاز البصمة بنجاح"
+    },
+    "error": {
+      "create": "فشل في إنشاء جهاز البصمة",
+      "update": "فشل في تحديث جهاز البصمة",
+      "delete": "فشل في حذف جهاز البصمة",
+      "load": "فشل في تحميل أجهزة البصمة"
+    }
+  },
+  "accessZones": {
+    "title": "مناطق الوصول",
+    "subtitle": "إدارة مناطق الوصول والتحكم في نقاط الدخول والخروج في مؤسستك.",
+    "addZone": "إضافة منطقة",
+    "editZone": "تعديل المنطقة",
+    "zoneName": "اسم المنطقة",
+    "zoneDescription": "الوصف",
+    "type": "نوع المنطقة",
+    "floor": "مستوى الطابق",
+    "capacity": "السعة",
+    "building": "المبنى",
+    "enterZoneName": "أدخل اسم المنطقة",
+    "enterDescription": "أدخل وصف المنطقة",
+    "enterFloor": "أدخل مستوى الطابق",
+    "enterCapacity": "أدخل حد السعة",
+    "searchPlaceholder": "البحث عن المناطق...",
+    "noZonesFound": "لم يتم العثور على مناطق الوصول.",
+    "selectZoneType": "اختر نوع المنطقة",
+    "types": {
+      "entry": "دخول فقط",
+      "exit": "خروج فقط",
+      "both": "دخول وخروج"
+    },
+    "success": {
+      "created": "تم إنشاء منطقة الوصول بنجاح",
+      "updated": "تم تحديث منطقة الوصول بنجاح",
+      "deleted": "تم حذف منطقة الوصول بنجاح"
+    },
+    "error": {
+      "create": "فشل في إنشاء منطقة الوصول",
+      "update": "فشل في تحديث منطقة الوصول",
+      "delete": "فشل في حذف منطقة الوصول",
+      "load": "فشل في تحميل مناطق الوصول"
+    }
+  },
+  "buildings": {
+    "title": "إدارة المباني",
+    "subtitle": "إدارة مباني المؤسسة والمرافق وتكويناتها.",
+    "addBuilding": "إضافة مبنى",
+    "editBuilding": "تعديل المبنى",
+    "buildingName": "اسم المبنى",
+    "buildingCode": "رمز المبنى",
+    "address": "العنوان",
+    "type": "نوع المبنى",
+    "floors": "الطوابق",
+    "area": "المساحة",
+    "contact": "جهة الاتصال",
+    "city": "المدينة",
+    "country": "البلد",
+    "postalCode": "الرمز البريدي",
+    "contactPerson": "الشخص المسؤول",
+    "contactPhone": "هاتف التواصل",
+    "contactEmail": "بريد التواصل",
+    "contactInformation": "معلومات الاتصال",
+    "locationInformation": "معلومات الموقع",
+    "enterBuildingName": "أدخل اسم المبنى",
+    "enterBuildingCode": "أدخل رمز المبنى",
+    "enterAddress": "أدخل عنوان المبنى",
+    "enterDescription": "أدخل وصف المبنى",
+    "enterFloors": "أدخل عدد الطوابق",
+    "enterArea": "أدخل المساحة الإجمالية (قدم مربع)",
+    "enterContactPerson": "أدخل الشخص المسؤول",
+    "enterContactPhone": "أدخل هاتف التواصل",
+    "enterContactEmail": "أدخل بريد التواصل",
+    "enterCity": "أدخل المدينة",
+    "enterCountry": "أدخل البلد",
+    "enterPostalCode": "أدخل الرمز البريدي",
+    "searchPlaceholder": "البحث عن المباني...",
+    "noBuildingsFound": "لم يتم العثور على مباني.",
+    "selectBuildingType": "اختر نوع المبنى",
+    "types": {
+      "office": "مكتب",
+      "warehouse": "مستودع",
+      "factory": "مصنع",
+      "residential": "سكني",
+      "mixed": "مختلط الاستخدام"
+    },
+    "success": {
+      "created": "تم إنشاء المبنى بنجاح",
+      "updated": "تم تحديث المبنى بنجاح",
+      "deleted": "تم حذف المبنى بنجاح"
+    },
+    "error": {
+      "create": "فشل في إنشاء المبنى",
+      "update": "فشل في تحديث المبنى",
+      "delete": "فشل في حذف المبنى",
+      "load": "فشل في تحميل المباني"
     }
   }
 }

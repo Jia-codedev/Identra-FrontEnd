@@ -3,13 +3,10 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/Input";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { RefreshCw, Download, Filter, Search, Table, Grid3X3 } from "lucide-react";
+import { RefreshCw, Download, Filter, Search } from "lucide-react";
 import { useTranslations } from "@/hooks/use-translations";
 import { useLanguage } from '@/providers/language-provider';
 import useAttendanceMutations from "../hooks/useMutations";
-
-export type ViewMode = 'table' | 'grid';
 
 interface Props {
   selectedCount: number;
@@ -17,8 +14,6 @@ interface Props {
   onFiltersChange: (filters: any) => void;
   search: string;
   onSearchChange: (value: string) => void;
-  viewMode: ViewMode;
-  onViewModeChange: (mode: ViewMode) => void;
 }
 
 const PunchesHeader: React.FC<Props> = ({
@@ -27,8 +22,6 @@ const PunchesHeader: React.FC<Props> = ({
   onFiltersChange,
   search,
   onSearchChange,
-  viewMode,
-  onViewModeChange,
 }) => {
   const { t } = useTranslations();
   const { isRTL } = useLanguage();
@@ -67,16 +60,6 @@ const PunchesHeader: React.FC<Props> = ({
         </div>
 
         <div className="w-full sm:w-auto flex flex-col sm:flex-row gap-2 items-center">
-          {/* View Toggle */}
-          <ToggleGroup type="single" value={viewMode} onValueChange={(value) => value && onViewModeChange(value as ViewMode)}>
-            <ToggleGroupItem value="table" aria-label="Table view" size="sm">
-              <Table className="h-4 w-4" />
-            </ToggleGroupItem>
-            <ToggleGroupItem value="grid" aria-label="Grid view" size="sm">
-              <Grid3X3 className="h-4 w-4" />
-            </ToggleGroupItem>
-          </ToggleGroup>
-
           <div className={`flex items-center gap-0 bg-card/80 border border-border rounded-xl px-2 py-1 ${isRTL ? 'flex-row-reverse' : 'flex-row'}`}>
             <span className={`${isRTL ? 'pr-2 pl-1' : 'pl-2 pr-1'} text-xl text-primary/80`}>
               <Search size={22} />

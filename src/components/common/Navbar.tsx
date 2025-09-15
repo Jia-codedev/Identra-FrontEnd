@@ -61,14 +61,14 @@ const Navbar = () => {
   return (
     <nav className="p-2">
       <div className="w-full bg-background rounded-xl border border-border px-4 py-3 flex flex-col justify-center items-center transition-all backdrop-blur-sm">
-        <div className="flex items-center justify-between w-full">
-          <div className="flex items-center space-x-4">
+        <div className="flex items-center justify-between w-full gap-4">
+          <div className="flex items-center space-x-4 min-w-0 flex-1">
             <NavbarLogo />
             <DesktopNav activeMenu={activeMenu} setActiveMenu={setActiveMenu} />
           </div>
 
           <div
-            className={`flex items-center${isRTL ? " flex-row-reverse" : ""}`}
+            className={`flex items-center flex-shrink-0${isRTL ? " flex-row-reverse" : ""}`}
           >
             <UserProfileSection
               user={{

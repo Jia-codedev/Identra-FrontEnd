@@ -3,16 +3,13 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/Input";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { Search, Plus, FileText, Download, TableIcon, Grid3X3, Settings } from "lucide-react";
+import { Search, Plus, FileText, Download, Settings } from "lucide-react";
 import { useTranslations } from "@/hooks/use-translations";
 import { useLanguage } from "@/providers/language-provider";
 
 interface WorkflowHeaderProps {
   searchTerm: string;
   onSearchChange: (value: string) => void;
-  viewMode: 'table' | 'grid';
-  onViewModeChange: (mode: 'table' | 'grid') => void;
   onAddNew?: () => void;
   onExport?: () => void;
   onImport?: () => void;
@@ -22,8 +19,6 @@ interface WorkflowHeaderProps {
 export default function WorkflowHeader({
   searchTerm,
   onSearchChange,
-  viewMode,
-  onViewModeChange,
   onAddNew,
   onExport,
   onImport,
@@ -45,10 +40,10 @@ export default function WorkflowHeader({
       <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
         <div className="flex-1">
           <h1 className="text-3xl md:text-4xl font-bold text-primary tracking-tight leading-tight mb-1">
-            {t('workflowAutomation.title') || 'Workflow Automation'}
+            {t('leaveManagement.workflowAutomation.title') || 'Workflow Types'}
           </h1>
           <p className="text-base md:text-lg text-muted-foreground font-normal mb-2">
-            {t('workflowAutomation.description') || 'Manage automated workflows and approval processes'}
+            {t('leaveManagement.workflowAutomation.description') || 'Manage workflow type templates and their approval steps'}
           </p>
         </div>
 
@@ -59,38 +54,11 @@ export default function WorkflowHeader({
               <Search size={22} />
             </span>
             <Input
-              placeholder={t('workflowAutomation.searchPlaceholder') || 'Search workflows...'}
+              placeholder={t('leaveManagement.workflowAutomation.searchPlaceholder') || 'Search workflow types...'}
               value={search}
               onChange={(e) => handleSearchChange(e.target.value)}
               className="border-0 bg-transparent rounded-lg focus:ring-0 focus-visible:ring-0 shadow-none text-base px-2"
             />
-            <span className="mx-2 h-6 w-px bg-border" />
-            
-            {/* View Mode Toggle */}
-            <ToggleGroup
-              type="single"
-              value={viewMode}
-              onValueChange={(value) => {
-                if (value) onViewModeChange(value as 'table' | 'grid');
-              }}
-              className="mr-2"
-            >
-              <ToggleGroupItem
-                value="table"
-                aria-label="Table view"
-                className="data-[state=on]:bg-primary data-[state=on]:text-primary-foreground p-2"
-              >
-                <TableIcon className="w-4 h-4" />
-              </ToggleGroupItem>
-              <ToggleGroupItem
-                value="grid"
-                aria-label="Grid view"
-                className="data-[state=on]:bg-primary data-[state=on]:text-primary-foreground p-2"
-              >
-                <Grid3X3 className="w-4 h-4" />
-              </ToggleGroupItem>
-            </ToggleGroup>
-
             <span className="mx-2 h-6 w-px bg-border" />
 
             {/* Action Buttons */}
@@ -119,7 +87,7 @@ export default function WorkflowHeader({
 
             {onAddNew && (
               <Button onClick={onAddNew} className="font-semibold text-base px-4 py-2 rounded-lg bg-primary hover:bg-primary/90 transition-all shadow-none" variant="default">
-                <span className="hidden sm:inline">+ {t('workflowAutomation.createWorkflow') || 'Create Workflow'}</span>
+                <span className="hidden sm:inline">+ {t('leaveManagement.workflowAutomation.createWorkflowType') || 'Create Workflow Type'}</span>
                 <span className="sm:hidden text-xl leading-none">+</span>
               </Button>
             )}

@@ -54,6 +54,27 @@ const PermissionRequestForm: React.FC<Props> = ({ permission, onClose }) => {
     e.preventDefault();
     setError("");
     
+    // Basic validation
+    if (!type) {
+      setError("Please select a permission type");
+      return;
+    }
+    
+    if (!fromDate) {
+      setError("Please select a from date");
+      return;
+    }
+    
+    if (!fromTime) {
+      setError("Please select a from time");
+      return;
+    }
+    
+    if (!toTime) {
+      setError("Please select a to time");
+      return;
+    }
+    
     try {
       const permission_type_id = type ? Number(type) : undefined;
       const from_date = fromDate ? fromDate.toISOString().split("T")[0] : "";
@@ -103,7 +124,7 @@ const PermissionRequestForm: React.FC<Props> = ({ permission, onClose }) => {
         
         <div>
           <label className="block mb-1 font-medium">
-            {t('leaveManagement.permissions.columns.type')}
+            {t('leaveManagement.permissions.columns.type')} <span className="text-red-500">*</span>
           </label>
           <Select value={type} onValueChange={setType} required>
             <SelectTrigger className="w-full">
@@ -122,7 +143,7 @@ const PermissionRequestForm: React.FC<Props> = ({ permission, onClose }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block mb-1 font-medium">
-              {t('leaveManagement.permissions.columns.from')}
+              {t('leaveManagement.permissions.columns.from')} <span className="text-red-500">*</span>
             </label>
             <DatePicker
               selected={fromDate}
@@ -144,14 +165,18 @@ const PermissionRequestForm: React.FC<Props> = ({ permission, onClose }) => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block mb-1 font-medium">From Time</label>
+            <label className="block mb-1 font-medium">
+              From Time <span className="text-red-500">*</span>
+            </label>
             <TimeSelect
               value={fromTime}
               onChange={setFromTime}
             />
           </div>
           <div>
-            <label className="block mb-1 font-medium">To Time</label>
+            <label className="block mb-1 font-medium">
+              To Time <span className="text-red-500">*</span>
+            </label>
             <TimeSelect
               value={toTime}
               onChange={setToTime}

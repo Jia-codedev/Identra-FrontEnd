@@ -171,13 +171,33 @@ export const useNavigation = () => {
       ],
       icon: FiBriefcase,
     },
+    {
+      id: "devices-and-infrastructure",
+      titleKey: "mainMenu.devicesAndInfrastructure.title",
+      items: [
+        {
+          labelKey:
+            "mainMenu.devicesAndInfrastructure.items.biometricTerminals",
+          routeKey: "mainMenu.devicesAndInfrastructure.biometricTerminals",
+        },
+        {
+          labelKey: "mainMenu.devicesAndInfrastructure.items.accessZones",
+          routeKey: "mainMenu.devicesAndInfrastructure.accessZones",
+        },
+        {
+          labelKey: "mainMenu.devicesAndInfrastructure.items.buildings",
+          routeKey: "mainMenu.devicesAndInfrastructure.buildings",
+        },
+      ],
+      icon: FiDatabase,
+    },
   ];
 
   const NAV_LINKS = MENU_DESCRIPTOR.map((g) => ({
     id: g.id,
     label: ((): string => {
       const val = t(g.titleKey);
-      if (val && !val.includes(".")) return val; 
+      if (val && !val.includes(".")) return val;
       const mm = t(`mainMenu.${g.id}.title`);
       if (mm && !mm.includes(".")) return mm;
       return g.id.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
@@ -202,13 +222,11 @@ export const useNavigation = () => {
       label: t("mainMenu.profileIcon.items.myAccount"),
       href: "/profile/my-account",
     },
-    { label: t("common.security"), href: "/user-security-settings" },
-    { label: t("common.language"), href: "/language" },
     {
       label: t("mainMenu.profileIcon.items.themeLayout"),
       href: "/theme-layout",
     },
-    { label: t("mainMenu.supportCentre.items.faqs"), href: "/support/faqs" },
+    { label: t("settings.updatePassword"), href: "/updated-password" },
     { label: t("common.logout"), href: "/", className: "text-red-600" },
   ];
 

@@ -4,20 +4,18 @@ import React, { useState, useEffect } from "react";
 import { useTranslations } from "@/hooks/use-translations";
 import { useLanguage } from "@/providers/language-provider";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Users, User } from "lucide-react";
-import PunchesHeader from "./components/PunchesHeader";
+import { Users, User, Search, RefreshCw } from "lucide-react";
+import { Input } from "@/components/ui/Input";
+import { Button } from "@/components/ui/button";
 import PunchesList from "./components/PunchesList";
 import { CustomPagination } from "@/components/common/dashboard/Pagination";
 import usePunchesTabs, { PunchesTabType } from "./hooks/usePunchesTabs";
 import { EmployeeEventTransaction } from "@/services/leaveManagement/employeeEventTransactions";
 
-type ViewMode = "table" | "grid";
-
 export default function PunchesPage() {
   const { t } = useTranslations();
   const { isRTL } = useLanguage();
   const [searchTerm, setSearchTerm] = useState("");
-  const [viewMode, setViewMode] = useState<ViewMode>("table");
 
   const {
     // Tab state
@@ -104,37 +102,58 @@ export default function PunchesPage() {
                     }
                   </p>
                 </div>
+                
+                {/* Search and Actions */}
+                <div className="flex items-center gap-2">
+                  <div className={`flex items-center gap-0 bg-card/80 border border-border rounded-xl px-2 py-1 ${isRTL ? 'flex-row-reverse' : 'flex-row'}`}>
+                    <span className={`${isRTL ? 'pr-2 pl-1' : 'pl-2 pr-1'} text-xl text-primary/80`}>
+                      <Search size={20} />
+                    </span>
+                    <Input
+                      placeholder={t('punches.searchPlaceholder') || 'Search by employee number...'}
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="border-0 bg-transparent rounded-lg focus:ring-0 focus-visible:ring-0 shadow-none text-base px-2 w-64"
+                    />
+                  </div>
+                  
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={refresh}
+                    className="px-3 py-2"
+                  >
+                    <RefreshCw className="h-4 w-4" />
+                  </Button>
+                </div>
               </div>
               
               {/* Tab Navigation */}
-              <TabsList className="grid w-full max-w-md grid-cols-2">
-                <TabsTrigger value="my-punches" className="flex items-center gap-2">
-                  <User className="w-4 h-4" />
-                  {t('punches.myPunches') || 'My Punches'}
-                </TabsTrigger>
-                <TabsTrigger value="team-punches" className="flex items-center gap-2">
-                  <Users className="w-4 h-4" />
-                  {t('punches.teamPunches') || 'Team Punches'}
-                </TabsTrigger>
-              </TabsList>
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <TabsList className="grid w-full max-w-md grid-cols-2">
+                  <TabsTrigger value="my-punches" className="flex items-center gap-2">
+                    <User className="w-4 h-4" />
+                    {t('punches.myPunches') || 'My Punches'}
+                  </TabsTrigger>
+                  <TabsTrigger value="team-punches" className="flex items-center gap-2">
+                    <Users className="w-4 h-4" />
+                    {t('punches.teamPunches') || 'Team Punches'}
+                  </TabsTrigger>
+                </TabsList>
+                
+                {selectedItems.length > 0 && (
+                  <div className="text-sm text-primary font-medium">
+                    {t('common.selectedCount', { count: selectedItems.length }) || `${selectedItems.length} records selected`}
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Tab Content */}
             <TabsContent value="my-punches" className="mt-0">
-              <PunchesHeader
-                selectedCount={selectedItems.length}
-                onRefresh={refresh}
-                onFiltersChange={handleFiltersChange}
-                search={searchTerm}
-                onSearchChange={setSearchTerm}
-                viewMode={viewMode}
-                onViewModeChange={setViewMode}
-              />
-
-              <div className="px-4">
+              <div className="px-4 py-4">
                 <PunchesList
                   punches={data || []}
-                  viewMode={viewMode}
                   selected={selectedItems}
                   allChecked={isAllSelected}
                   onSelectItem={handleSelectItem}
@@ -158,17 +177,7 @@ export default function PunchesPage() {
             </TabsContent>
 
             <TabsContent value="team-punches" className="mt-0">
-              <PunchesHeader
-                selectedCount={selectedItems.length}
-                onRefresh={refresh}
-                onFiltersChange={handleFiltersChange}
-                search={searchTerm}
-                onSearchChange={setSearchTerm}
-                viewMode={viewMode}
-                onViewModeChange={setViewMode}
-              />
-
-              <div className="px-4">
+              <div className="px-4 py-4">
                 {teamMembers.length === 0 && !isLoading ? (
                   <div className="text-center py-16">
                     <Users className="mx-auto h-12 w-12 text-muted-foreground" />
@@ -183,7 +192,6 @@ export default function PunchesPage() {
                   <>
                     <PunchesList
                       punches={data || []}
-                      viewMode={viewMode}
                       selected={selectedItems}
                       allChecked={isAllSelected}
                       onSelectItem={handleSelectItem}

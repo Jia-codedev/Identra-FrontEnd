@@ -91,7 +91,18 @@ export default function LeavesPage() {
           </Dialog>
 
           <div className="w-full mt-4">
-            <LeavesList leaves={data} loading={isLoading} />
+            <LeavesList 
+              leaves={data} 
+              loading={isLoading} 
+              selected={selected}
+              onSelectItem={selectItem}
+              onSelectAll={selectAll}
+              allChecked={selected.length > 0 && selected.length === data.length}
+              page={page}
+              pageSize={pageSize}
+              onPageChange={setPage}
+              onPageSizeChange={setPageSize}
+            />
           </div>
 
           <div className="mt-4">

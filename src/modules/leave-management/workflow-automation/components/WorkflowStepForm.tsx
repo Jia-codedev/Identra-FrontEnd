@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useTranslations } from '@/hooks/use-translations';
+import { useLanguage } from '@/providers/language-provider';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/Input';
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from '@/components/ui/select';
@@ -16,7 +17,16 @@ interface Props {
 
 const WorkflowStepForm: React.FC<Props> = ({ workflowStep, workflowId, onClose }) => {
   const { t } = useTranslations();
+  const { currentLocale } = useLanguage();
   const [workflows, setWorkflows] = useState<WorkflowType[]>([]);
+
+  // Helper function to get localized workflow name
+  const getLocalizedName = (workflow: WorkflowType) => {
+    if (currentLocale === 'ar') {
+      return workflow.workflow_name_arb || workflow.workflow_name_eng || 'Unnamed';
+    }
+    return workflow.workflow_name_eng || workflow.workflow_name_arb || 'Unnamed';
+  };
   const [selectedWorkflowId, setSelectedWorkflowId] = useState(
     workflowStep?.workflow_id?.toString() || workflowId?.toString() || ""
   );
@@ -88,7 +98,7 @@ const WorkflowStepForm: React.FC<Props> = ({ workflowStep, workflowId, onClose }
           <SelectContent>
             {workflows.map((workflow) => (
               <SelectItem key={workflow.workflow_id} value={workflow.workflow_id.toString()}>
-                {workflow.workflow_code} - {workflow.workflow_name_eng || 'Unnamed'}
+                {workflow.workflow_code} - {getLocalizedName(workflow)}
               </SelectItem>
             ))}
           </SelectContent>

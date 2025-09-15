@@ -14,12 +14,17 @@ interface PermissionHeaderProps {
   onAdd: () => void;
   selectedCount: number;
   onDeleteSelected?: () => void;
-  view: 'grid' | 'table';
-  onViewChange: (view: 'grid' | 'table') => void;
+  onRefresh?: () => void;
 }
 
-
-const PermissionHeader: React.FC<PermissionHeaderProps> = ({ search, onSearchChange, onAdd, selectedCount, onDeleteSelected, view, onViewChange }) => {
+const PermissionHeader: React.FC<PermissionHeaderProps> = ({ 
+  search, 
+  onSearchChange, 
+  onAdd, 
+  selectedCount, 
+  onDeleteSelected,
+  onRefresh
+}) => {
   const { t } = useTranslations();
   const { isRTL } = useLanguage();
   const [searchTerm, setSearchTerm] = useState(search);
@@ -70,25 +75,6 @@ const PermissionHeader: React.FC<PermissionHeaderProps> = ({ search, onSearchCha
               </Button>
             )}
           </div>
-        </div>
-        {/* View toggle button */}
-        <div className="flex items-center gap-2 mt-4 md:mt-0">
-          <Button
-            type="button"
-            variant={view === 'grid' ? 'default' : 'outline'}
-            onClick={() => onViewChange('grid')}
-            className="px-3 py-1"
-          >
-            {t('common.gridView') || 'Grid'}
-          </Button>
-          <Button
-            type="button"
-            variant={view === 'table' ? 'default' : 'outline'}
-            onClick={() => onViewChange('table')}
-            className="px-3 py-1"
-          >
-            {t('common.tableView') || 'Table'}
-          </Button>
         </div>
       </div>
     </div>

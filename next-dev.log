@@ -1,0 +1,42 @@
+
+> identra-fe-new@0.1.0 dev
+> next dev
+
+
+✘ node v22.19.0, and next.js v15.4.4 are not yet supported in the Community edition of Console Ninja.
+We are working hard on it for you https://tinyurl.com/3h9mtwra.
+
+Estimated release dates:
+  - Community users: around 28th October, 2025 (subject to team availability)
+  - PRO users:       priority access is available now
+
+
+✘ node v22.19.0, and next.js v15.4.4 are not yet supported in the Community edition of Console Ninja.
+We are working hard on it for you https://tinyurl.com/3h9mtwra.
+
+Estimated release dates:
+  - Community users: around 28th October, 2025 (subject to team availability)
+  - PRO users:       priority access is available now
+
+   ▲ Next.js 15.4.4
+   - Local:        http://localhost:3000
+   - Network:      http://192.168.1.2:3000
+
+ ✓ Starting...
+ ✓ Ready in 2.3s
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 3.8s (1740 modules)
+⚠️ Environment variable NEXT_PUBLIC_IDENTRA_BE_URI not found, using fallback: http://localhost:8000
+ GET /auth/callback?code=1.ASEAQAwY-PQosEupFEKxROPElODfVClEantKsN8JOCwV0ZwBAAAhAA.AgABBAIAAABVrSpeuWamRam2jAF1XRQEAwDs_wUA9P-67sJu8zmjotjoI7147EASaRWhk0RMNYtmlYcF1J1uBzHwW6DRbIbduPkNjORrkECom61sxhGgPQkmo-eZ25vBVDx593kqMgMjZsoOcSN16pXmTx9IpBhxbiT0l_YmNWjXysDdLENvgPtAu0LBGsxU6BLtml5lr-e0hJn1aDu-2n4EzPM9ORQnYZkw0PcF6JkJ4q_pzK3BuuqeiDhhv3je0xADDIFpr_UVfdXV0xdS9k0dlhb6qAHHf0BKcAWrnQRvu4CKIAUXVWVCAPXKXXT-u2XknzdGg7wm5VKTE4g-LSeuj9AFyAIo85dfU5mcoNocuN8nVTendD-JDFjQcuyp5tqscyq0YuhAAv8bGqOZFB1MSkwf1eJmkBaMaXz8wUlcOs55Z4fkaVQ4R3TQS1K5ObFlrZK_hzCnHA0FmN3ThDJ5s_xzpryEK02eO5hJJon_wmeIWM2HbNjnDDqQ_npyYigENj-0A4GMyhSDCI6ahKbsVglKETV7jx_kSTc6vRRc1Fjb8ZcqeLlIP1HgAkxAtQRLOJULmE61wzp6vvkqeonJZRCLwjXDHEmCfD-6QlM2RV5Gtuz-OvVKvL8BDYPewie6Br0eWJHzjEnnj90DD_y6C5wANC6Ghw_tFrL9WnQsy_df_0rYO131h29f1iVI4hIZvUJ74ubpet03DnHV78yG8x4ckb9BBeChdPbVVm_RyO0t9WS_AjawwJ4IYgC3Ug_tNtuvYqwhNLurO_TYMCTGkfNS-zscXaCnqm8j4PyM-pbBIzenaW1YsG7wG-7nMQaJOrw3447mNHUUUJTKnWI2Vxw&session_state=008ba619-ea87-1658-a2d3-b78b68ec1037 404 in 4191ms
+ ○ Compiling / ...
+ ✓ Compiled / in 2.3s (1953 modules)
+⚠️ Environment variable NEXT_PUBLIC_IDENTRA_BE_URI not found, using fallback: http://localhost:8000
+ GET /auth/callback?code=1.ASEAQAwY-PQosEupFEKxROPElODfVClEantKsN8JOCwV0ZwBAAAhAA.AgABBAIAAABVrSpeuWamRam2jAF1XRQEAwDs_wUA9P-67sJu8zmjotjoI7147EASaRWhk0RMNYtmlYcF1J1uBzHwW6DRbIbduPkNjORrkECom61sxhGgPQkmo-eZ25vBVDx593kqMgMjZsoOcSN16pXmTx9IpBhxbiT0l_YmNWjXysDdLENvgPtAu0LBGsxU6BLtml5lr-e0hJn1aDu-2n4EzPM9ORQnYZkw0PcF6JkJ4q_pzK3BuuqeiDhhv3je0xADDIFpr_UVfdXV0xdS9k0dlhb6qAHHf0BKcAWrnQRvu4CKIAUXVWVCAPXKXXT-u2XknzdGg7wm5VKTE4g-LSeuj9AFyAIo85dfU5mcoNocuN8nVTendD-JDFjQcuyp5tqscyq0YuhAAv8bGqOZFB1MSkwf1eJmkBaMaXz8wUlcOs55Z4fkaVQ4R3TQS1K5ObFlrZK_hzCnHA0FmN3ThDJ5s_xzpryEK02eO5hJJon_wmeIWM2HbNjnDDqQ_npyYigENj-0A4GMyhSDCI6ahKbsVglKETV7jx_kSTc6vRRc1Fjb8ZcqeLlIP1HgAkxAtQRLOJULmE61wzp6vvkqeonJZRCLwjXDHEmCfD-6QlM2RV5Gtuz-OvVKvL8BDYPewie6Br0eWJHzjEnnj90DD_y6C5wANC6Ghw_tFrL9WnQsy_df_0rYO131h29f1iVI4hIZvUJ74ubpet03DnHV78yG8x4ckb9BBeChdPbVVm_RyO0t9WS_AjawwJ4IYgC3Ug_tNtuvYqwhNLurO_TYMCTGkfNS-zscXaCnqm8j4PyM-pbBIzenaW1YsG7wG-7nMQaJOrw3447mNHUUUJTKnWI2Vxw&session_state=008ba619-ea87-1658-a2d3-b78b68ec1037 404 in 291ms
+ GET / 200 in 2626ms
+ GET /auth/callback?code=1.ASEAQAwY-PQosEupFEKxROPElODfVClEantKsN8JOCwV0ZwBAAAhAA.AgABBAIAAABVrSpeuWamRam2jAF1XRQEAwDs_wUA9P-qFdUbDsLK9FB802pasfl5RcxQmtTu4HKgOLHa91DZVx5BgIiqdlx3QPJvQ8Svs7zr-Y6iBsZlmj1jG-2Kr2mQGUuM0ngIPPoT4ZEPk47NliWP_bVacFnQACaSu2yXTroDkwKxsOVBT3IHbjaM2a7LDBseRLwEEMdshuT6GGUx6ikF41jZzVNcgifYKokOOX3gkCidb7fIoHBCRIhc02XCErn6CqOBr9QB6Jqre3asfgPvcQrNVY-PuaRAG53NBSY7YT_nvwhMdZOUj6C_8RjXc8WRJQqtFI3FlAkCpwj1wcU5Thy9M5Ch1uL-wIEQC8UL3jOtUDildQTBA2XSVybMC0IzeEW-JnhoC0UjAmP9VnzxZ6E9fr7QBI1z3NQqiz_cvkO7I_2ogkduLNTgK7YmLxtLiNRvlFGzeMIRGyDK5fQY-3fqLbQmZeAcFunj5FYSJx3rcbuy6tExV6jdm7Qfcuqjp5ic6w-OHe0UpIgQ-3cLDg-_CvpB76SuCu-nsxGRXQ12H50-tExYKCNkJfprVBmPwHJufkTxMLBmh_3WuTdwc-yUpnyMo3wPtVOCjPDLqfX0hzfmzFetT_9KR49uEgc_TdAWY_pSSON_OFzfCIstPkwhg2zb3l_1FzR2o9yB0XcrdD2MGODY2OeBs1K56ajV_XLk4ErAyXtIBjSIlFPbE4QzMRwbatao5xmDt78suTkuBtyo37JeDsOJnShTHi-HItvbNaUBijuI4-KDohroPQvh5_jTOLpld24zfbdREcUeIYaP_ekGVcsVA1yMgpbYmTEVop9RfjHsuUWQiJhXt_A&session_state=008ba619-ea87-1658-a2d3-b78b68ec1037 404 in 93ms
+ GET / 200 in 28ms
+ GET /auth/callback?code=test 404 in 27ms
+ HEAD /auth/callback?code=test 404 in 21ms
+ ✓ Compiled in 615ms (845 modules)
+ GET / 200 in 27ms
+[?25h

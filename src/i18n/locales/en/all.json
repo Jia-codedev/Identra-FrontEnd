@@ -152,7 +152,8 @@
         }
       },
       "permissions": "Permission Management",
-      "punches": "Attendance Logs"
+      "punches": "Attendance Logs",
+      "deviceManagement": "Device Management"
     },
     "leaveManagement": {
       "processAutomation": {
@@ -266,52 +267,6 @@
         "noStepRole": "Each step requires a role."
       }
     },
-    "workflowAutomation": {
-      "title": "Workflow Automation",
-      "description": "Manage automated workflows and approval processes",
-      "searchPlaceholder": "Search workflows...",
-      "createWorkflow": "Create Workflow",
-      "noWorkflows": "No workflows found",
-      "noWorkflowsDescription": "Get started by creating your first workflow automation.",
-      "errorLoading": "Error loading workflows",
-      "columns": {
-        "workflowName": "Workflow Name",
-        "type": "Type",
-        "status": "Status",
-        "triggerCondition": "Trigger Condition",
-        "assignedUsers": "Assigned Users",
-        "executions": "Executions",
-        "lastExecuted": "Last Executed",
-        "actions": "Actions"
-      },
-      "types": {
-        "APPROVAL": "Approval",
-        "NOTIFICATION": "Notification",
-        "ESCALATION": "Escalation",
-        "AUTOMATION": "Automation"
-      },
-      "statuses": {
-        "ACTIVE": "Active",
-        "INACTIVE": "Inactive", 
-        "DRAFT": "Draft",
-        "PENDING": "Pending"
-      },
-      "actions": {
-        "activate": "Activate",
-        "deactivate": "Deactivate",
-        "edit": "Edit Workflow",
-        "delete": "Delete Workflow",
-        "view": "View Details"
-      },
-      "grid": {
-        "runs": "runs",
-        "assignedUsers": "assigned users",
-        "lastRun": "Last run:",
-        "trigger": "Trigger:",
-        "created": "Created:",
-        "never": "Never"
-      }
-    },
     "children": "children",
     "switchToArabic": "Switch to Arabic",
     "switchToEnglish": "Switch to English",
@@ -330,6 +285,7 @@
     "selectItemsToDelete": "Please select items to delete"
   },
   "auth": {
+    "signInWithAzure": "Sign in with Microsoft",
     "login": "Login",
     "enterLogin": "Enter your login Id",
     "logout": "Logout",
@@ -938,6 +894,7 @@
     }
   },
   "settings": {
+    "updatePassword": "Update Password",
     "title": "Settings",
     "general": "General",
     "appearanceLabel": "Appearance",
@@ -1301,9 +1258,12 @@
       "columns": {
         "employee": "Employee",
         "type": "Type",
+        "dates": "Dates",
+        "duration": "Duration",
         "start": "Start",
         "end": "End",
         "remarks": "Remarks",
+        "reference": "Reference",
         "status": "Status"
       },
       "actions": {
@@ -1360,6 +1320,101 @@
       "approveFailed": "Failed to approve permission",
       "rejectFailed": "Failed to reject permission",
       "rejectRemarks": "Please provide rejection remarks (optional)"
+    },
+    "permissionManagement": {
+      "title": "Permission Management",
+      "description": "Manage employee permission requests.",
+      "columns": {
+        "type": "Permission Type",
+        "employee": "Employee",
+        "dates": "Dates",
+        "status": "Status",
+        "remarks": "Remarks"
+      },
+      "actions": {
+        "add": "Add Permission",
+        "edit": "Edit Permission",
+        "delete": "Delete Permission",
+        "search": "Search permissions...",
+        "refresh": "Refresh"
+      },
+      "noData": "No permission requests found."
+    },
+    "workflowAutomation": {
+      "title": "Workflow Types",
+      "description": "Manage workflow type templates and their approval steps",
+      "searchPlaceholder": "Search workflow types...",
+      "createWorkflow": "Create Workflow",
+      "createWorkflowType": "Create Workflow Type",
+      "createWorkflowTypeDescription": "Create a new workflow type template and define its approval steps (max 4 steps)",
+      "noWorkflows": "No workflow types found",
+      "noData": "No workflow types found",
+      "noWorkflowsDescription": "Get started by creating your first workflow type template.",
+      "errorLoading": "Error loading workflow types",
+      "messages": {
+        "created": "Workflow type created successfully",
+        "updated": "Workflow type updated successfully",
+        "deleted": "Workflow type deleted successfully",
+        "createFailed": "Failed to create workflow type"
+      },
+      "form": {
+        "workflowTypeInfo": "Workflow Type Information",
+        "workflowSteps": "Workflow Steps",
+        "code": "Workflow Code",
+        "nameEng": "Workflow Name (English)",
+        "nameArb": "Workflow Name (Arabic)",
+        "categoryEng": "Category (English)",
+        "categoryArb": "Category (Arabic)",
+        "step": "Step",
+        "addStep": "Add Step",
+        "stepNameEng": "Step Name (English)",
+        "stepNameArb": "Step Name (Arabic)",
+        "role": "Approver Role",
+        "finalStep": "Final Step",
+        "createWorkflow": "Create Workflow Type"
+      },
+      "columns": {
+        "code": "Code",
+        "name": "Name",
+        "category": "Category",
+        "workflowName": "Workflow Name",
+        "type": "Type",
+        "status": "Status",
+        "created": "Created",
+        "updated": "Updated",
+        "triggerCondition": "Trigger Condition",
+        "assignedUsers": "Assigned Users",
+        "executions": "Executions",
+        "lastExecuted": "Last Executed",
+        "actions": "Actions"
+      },
+      "types": {
+        "APPROVAL": "Approval",
+        "NOTIFICATION": "Notification",
+        "ESCALATION": "Escalation",
+        "AUTOMATION": "Automation"
+      },
+      "statuses": {
+        "ACTIVE": "Active",
+        "INACTIVE": "Inactive",
+        "DRAFT": "Draft",
+        "PENDING": "Pending"
+      },
+      "actions": {
+        "activate": "Activate",
+        "deactivate": "Deactivate",
+        "edit": "Edit Workflow",
+        "delete": "Delete Workflow",
+        "view": "View Details"
+      },
+      "grid": {
+        "runs": "runs",
+        "assignedUsers": "assigned users",
+        "lastRun": "Last run:",
+        "trigger": "Trigger:",
+        "created": "Created:",
+        "never": "Never"
+      }
     }
   },
   "translator": {
@@ -1430,9 +1485,10 @@
           "payrollLocking": "Payroll Locking"
         }
       },
-      "devicesInfrastructure": {
+      "devicesAndInfrastructure": {
         "title": "Devices & Infrastructure",
         "items": {
+          "deviceManagement": "Device Management",
           "biometricTerminals": "Biometric Terminals",
           "accessZones": "Access Zones",
           "buildings": "Buildings"
@@ -1481,6 +1537,155 @@
           "licenseManagement": "License Management"
         }
       }
+    }
+  },
+  "deviceManagement": {
+    "title": "Device Management",
+    "description": "Manage all your organization devices here. You can add, edit, or delete devices as needed.",
+    "addDevice": "Add Device",
+    "editDevice": "Edit Device",
+    "deviceNo": "Device Number",
+    "deviceName": "Device Name",
+    "deviceStatus": "Status",
+    "active": "Active",
+    "inactive": "Inactive",
+    "searchPlaceholder": "Search devices...",
+    "noDevicesFound": "No devices found.",
+    "enterDeviceNo": "Enter device number",
+    "enterDeviceName": "Enter device name",
+    "selectStatus": "Select status",
+    "columns": {
+      "deviceNo": "Device No",
+      "deviceName": "Device Name",
+      "status": "Status",
+      "createdDate": "Created Date",
+      "lastUpdated": "Last Updated"
+    },
+    "success": {
+      "created": "Device created successfully",
+      "updated": "Device updated successfully",
+      "deleted": "Device deleted successfully"
+    },
+    "error": {
+      "create": "Failed to create device",
+      "update": "Failed to update device",
+      "delete": "Failed to delete device",
+      "load": "Failed to load devices"
+    }
+  },
+  "biometricTerminals": {
+    "title": "Biometric Terminal Management",
+    "description": "Manage all your organization biometric terminals here. You can add, edit, or delete terminals as needed.",
+    "addNew": "Add Terminal",
+    "addTerminal": "Add Terminal",
+    "editTerminal": "Edit Terminal",
+    "terminalNumber": "Terminal Number",
+    "terminalName": "Terminal Name",
+    "terminalStatus": "Status",
+    "searchPlaceholder": "Search terminals...",
+    "noTerminalsFound": "No biometric terminals found.",
+    "enterTerminalNumber": "Enter terminal number",
+    "enterTerminalName": "Enter terminal name",
+    "selectStatus": "Select status",
+    "success": {
+      "created": "Biometric terminal created successfully",
+      "updated": "Biometric terminal updated successfully",
+      "deleted": "Biometric terminal deleted successfully"
+    },
+    "error": {
+      "create": "Failed to create biometric terminal",
+      "update": "Failed to update biometric terminal",
+      "delete": "Failed to delete biometric terminal",
+      "load": "Failed to load biometric terminals"
+    }
+  },
+  "accessZones": {
+    "title": "Access Zones",
+    "subtitle": "Manage access zones and control entry/exit points throughout your organization.",
+    "addZone": "Add Zone",
+    "editZone": "Edit Zone",
+    "zoneName": "Zone Name",
+    "zoneDescription": "Description",
+    "type": "Zone Type",
+    "floor": "Floor Level",
+    "capacity": "Capacity",
+    "building": "Building",
+    "enterZoneName": "Enter zone name",
+    "enterDescription": "Enter zone description",
+    "enterFloor": "Enter floor level",
+    "enterCapacity": "Enter capacity limit",
+    "searchPlaceholder": "Search zones...",
+    "noZonesFound": "No access zones found.",
+    "selectZoneType": "Select zone type",
+    "types": {
+      "entry": "Entry Only",
+      "exit": "Exit Only",
+      "both": "Entry & Exit"
+    },
+    "success": {
+      "created": "Access zone created successfully",
+      "updated": "Access zone updated successfully",
+      "deleted": "Access zone deleted successfully"
+    },
+    "error": {
+      "create": "Failed to create access zone",
+      "update": "Failed to update access zone",
+      "delete": "Failed to delete access zone",
+      "load": "Failed to load access zones"
+    }
+  },
+  "buildings": {
+    "title": "Buildings Management",
+    "subtitle": "Manage organizational buildings, facilities, and their configurations.",
+    "addBuilding": "Add Building",
+    "editBuilding": "Edit Building",
+    "buildingName": "Building Name",
+    "buildingCode": "Building Code",
+    "address": "Address",
+    "type": "Building Type",
+    "floors": "Floors",
+    "area": "Area",
+    "contact": "Contact",
+    "city": "City",
+    "country": "Country",
+    "postalCode": "Postal Code",
+    "contactPerson": "Contact Person",
+    "contactPhone": "Contact Phone",
+    "contactEmail": "Contact Email",
+    "contactInformation": "Contact Information",
+    "locationInformation": "Location Information",
+    "enterBuildingName": "Enter building name",
+    "enterBuildingCode": "Enter building code",
+    "enterAddress": "Enter building address",
+    "enterDescription": "Enter building description",
+    "enterFloors": "Enter number of floors",
+    "enterArea": "Enter total area (sq ft)",
+    "enterContactPerson": "Enter contact person",
+    "enterContactPhone": "Enter contact phone",
+    "enterContactEmail": "Enter contact email",
+    "enterCity": "Enter city",
+    "enterCountry": "Enter country",
+    "enterPostalCode": "Enter postal code",
+    "searchPlaceholder": "Search buildings...",
+    "noBuildingsFound": "No buildings found.",
+    "selectBuildingType": "Select building type",
+    "types": {
+      "office": "Office",
+      "warehouse": "Warehouse",
+      "factory": "Factory",
+      "residential": "Residential",
+      "mixed": "Mixed Use"
+    },
+    "success": {
+      "created": "Building created successfully",
+      "updated": "Building updated successfully",
+      "deleted": "Building deleted successfully"
+    },
+    "error": {
+      "create": "Failed to create building",
+      "update": "Failed to update building",
+      "delete": "Failed to delete building",
+      "load": "Failed to load buildings"
     }
   }
 }

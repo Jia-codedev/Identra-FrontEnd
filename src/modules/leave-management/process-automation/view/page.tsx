@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useTranslations } from "@/hooks/use-translations";
+import { useLanguage } from "@/providers/language-provider";
 import { Input } from "@/components/ui/Input";;
 import { Button } from "@/components/ui/button";
 import { ProcessAutomationHeader } from "../components/ProcessAutomationHeader";
@@ -28,7 +29,16 @@ type WorkflowType = {
 
 export default function ProcessAutomationPage() {
   const { t } = useTranslations();
+  const { currentLocale } = useLanguage();
   const router = useRouter();
+
+  // Helper function to get localized workflow name
+  const getLocalizedName = (workflow: WorkflowType) => {
+    if (currentLocale === 'ar') {
+      return workflow.workflow_name_arb || workflow.workflow_name_eng || '-';
+    }
+    return workflow.workflow_name_eng || workflow.workflow_name_arb || '-';
+  };
 
   const [data, setData] = useState<WorkflowType[]>([]);
   const [selected, setSelected] = useState<number[]>([]);
@@ -75,12 +85,12 @@ export default function ProcessAutomationPage() {
 
   const columns: TableColumn<WorkflowType>[] = [
     { key: "code", header: t("workflow.code") || "Code", accessor: (item) => item.workflow_code || "-", width: "w-40" },
-    { key: "name", header: t("workflow.name") || "Name", accessor: (item) => item.workflow_name_eng || item.workflow_name_arb || "-" },
+    { key: "name", header: t("workflow.name") || "Name", accessor: (item) => getLocalizedName(item) },
     { key: "steps", header: t("workflow.steps") || "Steps", accessor: (item) => item._count?.workflow_type_steps || 0 }, // Add step count column
   ];
 
   const getItemId = (item: WorkflowType) => item.workflow_id;
-  const getItemDisplayName = (item: WorkflowType) => item.workflow_name_eng || item.workflow_code || String(item.workflow_id);
+  const getItemDisplayName = (item: WorkflowType) => getLocalizedName(item) || item.workflow_code || String(item.workflow_id);
 
   const selectItem = (id: number) => {
     setSelected((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));

@@ -11,6 +11,9 @@ import { useLanguage } from "@/providers/language-provider";
 import authService from "@/services/authService";
 import { useRouter } from "next/navigation";
 import { CookieDebugger } from "@/utils/cookieDebugger";
+import { Button } from "@/components/ui/button";
+import { BiLogoMicrosoft } from "react-icons/bi";
+import apiClient from "@/configs/api/Axios";
 function AuthComponent() {
   const { t } = useTranslations();
   const { isRTL } = useLanguage();
@@ -29,11 +32,8 @@ function AuthComponent() {
 
   const onSubmit = async (data: LoginForm) => {
     try {
-      // Debug cookie functionality before login
-      console.log('Login attempt - debugging cookies...');
       CookieDebugger.logEnvironment();
       CookieDebugger.testCookies();
-      
       const response = await authService.login({
         login: data.login,
         password: data.password,
@@ -45,13 +45,13 @@ function AuthComponent() {
       } else {
         setError(null);
         setSubmitted(true);
-        
+
         // Debug cookies after successful login
         setTimeout(() => {
-          console.log('After login - debugging cookies...');
+          console.log("After login - debugging cookies...");
           CookieDebugger.debugCurrentCookies();
         }, 500);
-        
+
         setTimeout(() => {
           router.push("/dashboard");
         }, 2000);
@@ -67,9 +67,11 @@ function AuthComponent() {
       setSubmitted(false);
     }
   };
-
+  const onAdLogin = async () => {
+    const res = await authService.adlogin();
+  };
   return (
-    <div className="min-h-screen  w-full flex items-center justify-center relative overflow-hidden">
+    <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-background opacity-50">
         <div className="h-full w-full bg-gradient-to-br from-transparent via-background to-background z-20 absolute" />
         <Image
@@ -86,7 +88,7 @@ function AuthComponent() {
         initial={{ y: 40, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ type: "spring", stiffness: 120, damping: 16 }}
-        className="w-full max-w-md bg-card/80 border border-border shadow-2xl rounded-2xl px-8 py-10 flex flex-col items-center backdrop-blur-lg"
+        className="w-full max-w-md bg-card border border-border shadow-2xl rounded-2xl px-8 py-10 flex flex-col items-center backdrop-blur-lg"
       >
         {/* Logo */}
         <motion.div
@@ -321,7 +323,17 @@ function AuthComponent() {
             )}
           </AnimatePresence>
         </div>
-
+        <div className="pt-6 w-full">
+          <div className="h-1 w-full border-b border-muted-foreground relative">
+            <p className="absolute -top-2 left-1/2 -translate-x-1/2 bg-card px-2 text-sm text-muted-foreground">
+              or
+            </p>
+          </div>
+          <Button className="w-full mt-6 bg-primary hover:bg-primary/90 text-white flex items-center justify-center">
+            <BiLogoMicrosoft className="w-6 h-6 mr-2" />
+            <span>{t("auth.signInWithAzure")}</span>
+          </Button>
+        </div>
         <p className="mt-8 text-sm text-muted-foreground text-center">
           {t("auth.dontHaveAccount")}{" "}
           <a href="#" className="text-primary font-medium hover:underline">

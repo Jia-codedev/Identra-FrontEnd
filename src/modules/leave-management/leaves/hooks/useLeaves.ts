@@ -20,7 +20,7 @@ export const useLeaves = () => {
 
   const { data, isLoading, refetch } = useQuery({
     queryKey: ["leaves", params],
-    queryFn: () => employeeLeavesApi.list(params).then(res => res.data),
+    queryFn: () => employeeLeavesApi.myleavesRequests(params).then(res => res.data),
   });
 
   const leaves = useMemo(() => {
@@ -28,10 +28,15 @@ export const useLeaves = () => {
     return items.map(it => ({
       id: it.employee_leave_id,
       employee_name: it.employee_name || `${it.firstname_eng || ''} ${it.lastname_eng || ''}`.trim(),
-      leave_type: it.leave_type_name || it.leave_type || String(it.leave_type_id || ''),
+      leave_type: it.leave_types?.leave_type_eng || it.leave_type_name || it.leave_type || String(it.leave_type_id || ''),
       start_date: it.from_date,
       end_date: it.to_date,
       status: it.leave_status,
+      employee_remarks: it.employee_remarks,
+      number_of_leaves: it.number_of_leaves,
+      leave_unique_ref_no: it.leave_unique_ref_no,
+      leave_doc_filename_path: it.leave_doc_filename_path,
+      created_date: it.created_date,
       raw: it,
     }));
   }, [data]);

@@ -1,6 +1,3 @@
-// Derive route paths from translation keys (e.g. 'navigation.selfStatistics' or
-// 'mainMenu.workforceAnalytics.items.myInsights').
-// Uses a small prefix map for known groups and falls back to kebab-casing.
 
 function camelToKebab(s: string) {
   return s
@@ -16,7 +13,7 @@ const GROUP_PREFIXES: { prefix: string; keys: string[] }[] = [
   { prefix: '/roster-management', keys: ['reasons', 'holidays', 'ramadanDates', 'scheduleTypes', 'monthlyRoaster', 'weeklySchedule', 'holidayCalendar', 'monthlyRoster', 'weeklyRoster', 'ramadanHours'] },
   { prefix: '/leave-management', keys: ['workFlow', 'leaves', 'permissions', 'punches', 'leaveManagement', 'permissionManagement', 'attendanceLogs', 'workflowAutomation'] },
   { prefix: '/workforce', keys: ['approvals', 'reports'] },
-  { prefix: '/devices', keys: ['biometricTerminals', 'accessZones', 'buildings'] },
+  { prefix: '/device-and-infra', keys: ['biometricTerminals', 'buildingManagement'] },
   { prefix: '/security', keys: ['rolesManagement', 'accessPermissions', 'sessionMonitor', 'activitySummary'] },
   { prefix: '/app-settings', keys: ['appSettings', 'appConfiguration', 'alertPreferences', 'auditTrail'] },
   { prefix: '/alerts', keys: ['emailAlerts', 'smsAlerts', 'bulletins'] },
@@ -46,10 +43,10 @@ const OVERRIDES: Record<string, string> = {
   teamGrouping: 'team-grouping',
   attendanceLogs: 'attendance-logs',
   workflowAutomation: 'workflow-automation',
-  // some keys use different casing/spelling
   workFlow: 'workflow-automation',
   leaveManagement: 'leave-management',
   permissionManagement: 'permission-management',
+  deviceManagement: 'device-and-infra',
   biometricTerminals: 'biometric-terminals',
   accessZones: 'access-zones',
   appConfiguration: 'configuration',
@@ -61,7 +58,6 @@ export function getRouteFromKey(key: string): string {
   if (!key) return '/';
   const parts = key.split('.');
 
-  // support keys like 'navigation.name' or 'mainMenu.group.items.itemKey'
   let name = parts[parts.length - 1];
   let prefix = '/';
 
@@ -71,7 +67,6 @@ export function getRouteFromKey(key: string): string {
 
   if (parts[0] === 'mainMenu' && parts.length >= 2) {
     const groupName = parts[1];
-    // map groupName to prefix if available
     const mapping: Record<string, string> = {
       workforceAnalytics: '/workforce-analytics',
       enterpriseSettings: '/master-data',
@@ -79,7 +74,8 @@ export function getRouteFromKey(key: string): string {
       employeeManagement: '/employee-management',
       rosterManagement: '/roster-management',
       selfServices: '/leave-management',
-      devicesInfrastructure: '/devices',
+      devicesAndInfrastructure: '/device-and-infra',
+      devicesInfrastructure: '/device-and-infra',
       userSecuritySettings: '/security',
       applicationSettings: '/app-settings',
       alertCentre: '/alerts',

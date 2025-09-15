@@ -42,6 +42,9 @@ export const MENU_KEY_TO_PATH: KeyMap = {
   // Workforce
   "navigation.approvals": "/workforce/request-authorizations",
   "navigation.reports": "/workforce/analytics-reports",
+
+  // Devices & Infrastructure
+  "navigation.deviceManagement": "/device-and-infra/biometric-terminals",
 };
 
 export function getPathByKey(key: string): string {
@@ -137,9 +140,9 @@ const menus: MainMenu[] = [
     id: 'devices-infrastructure',
     label: 'Devices & Infrastructure',
     items: [
-      { id: 'biometric-terminals', label: 'Biometric Terminals', path: '/devices/biometric-terminals' },
-      { id: 'access-zones', label: 'Access Zones', path: '/devices/access-zones' },
-      { id: 'buildings', label: 'Buildings', path: '/devices/buildings' },
+      { id: 'biometric-terminals', label: 'Biometric Terminals', path: '/device-and-infra/biometric-terminals' },
+      { id: 'access-zones', label: 'Access Zones', path: '/device-and-infra/access-zones' },
+      { id: 'buildings', label: 'Buildings', path: '/device-and-infra/buildings' },
     ],
   },
 

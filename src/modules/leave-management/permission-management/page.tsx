@@ -2,12 +2,8 @@
 
 import React, { useState } from 'react'
 import { useTranslations } from '@/hooks/use-translations'
-import { GenericTable, TableColumn } from '@/components/common/GenericTable'
-import { CustomPagination } from '@/components/common/dashboard/Pagination'
-import { useRouter } from 'next/navigation'
 
 import usePermissions from './hooks/usePermissions'
-import employeeShortPermissionsApi from '@/services/leaveManagement/employeeShortPermissions'
 import PermissionHeader from './components/PermissionHeader'
 import PermissionList from './components/PermissionList'
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
@@ -20,7 +16,6 @@ const PermissionManagementPage: React.FC = () => {
   const { t } = useTranslations();
   const [showDialog, setShowDialog] = useState(false);
   const [search, setSearch] = useState("");
-  const [view, setView] = useState<'grid' | 'table'>('grid');
   const {
     data,
     isLoading,
@@ -47,38 +42,27 @@ const PermissionManagementPage: React.FC = () => {
 
   const handleSearchChange = (value: string) => setSearch(value);
 
-  // Table columns definition
-  const columns: TableColumn<any>[] = [
-    {
-      key: 'permission_type',
-      header: t('leaveManagement.permissions.columns.type') || 'Type',
-      accessor: (item) => item.permission_type_eng || item.permission_type_code,
-    },
-    {
-      key: 'from_date',
-      header: t('leaveManagement.permissions.columns.from') || 'From',
-      accessor: (item) => `${item.from_date} ${item.from_time}`,
-    },
-    {
-      key: 'to_date',
-      header: t('leaveManagement.permissions.columns.to') || 'To',
-      accessor: (item) => `${item.to_date} ${item.to_time}`,
-    },
-    {
-      key: 'remarks',
-      header: t('leaveManagement.permissions.columns.remarks') || 'Remarks',
-      accessor: (item) => item.remarks,
-    },
-    {
-      key: 'status',
-      header: t('leaveManagement.permissions.columns.status') || 'Status',
-      accessor: (item) => {
-        if (item.approve_reject_flag === 1) return t('common.approved') || 'Approved';
-        if (item.approve_reject_flag === 2) return t('common.rejected') || 'Rejected';
-        return t('common.pending') || 'Pending';
-      },
-    },
-  ];
+  const handleEdit = (permission: PermissionItem) => {
+    // TODO: Implement edit functionality
+    console.log('Edit permission:', permission);
+  };
+
+  const handleDeleteSelected = () => {
+    // TODO: Implement delete functionality
+    console.log('Delete selected permissions:', selected);
+    clearSelection();
+  };
+
+  const allChecked = selected.length > 0 && selected.length === items.length;
+
+  // Convert numeric IDs to strings for the PermissionList component
+  const stringSelected = selected.map(id => id.toString());
+  const handleSelectItem = (id: string) => {
+    const numericId = parseInt(id, 10);
+    if (!isNaN(numericId)) {
+      selectItem(numericId);
+    }
+  };
 
   return (
     <div className="w-full h-full flex flex-col items-center justify-start">
@@ -89,8 +73,8 @@ const PermissionManagementPage: React.FC = () => {
             onSearchChange={handleSearchChange}
             onAdd={handleAdd}
             selectedCount={selected.length}
-            view={view}
-            onViewChange={setView}
+            onDeleteSelected={handleDeleteSelected}
+            onRefresh={refetch}
           />
 
           <Dialog open={showDialog} onOpenChange={setShowDialog}>
@@ -100,31 +84,23 @@ const PermissionManagementPage: React.FC = () => {
             </DialogContent>
           </Dialog>
 
-          <div className="w-full overflow-x-auto mt-4">
-            {view === 'grid' ? (
-              <PermissionList permissions={items} loading={isLoading} />
-            ) : (
-              <GenericTable
-                data={items}
-                columns={columns}
-                selected={selected}
-                page={page}
-                pageSize={pageSize}
-                allChecked={false}
-                getItemId={(item: any) => item.single_permissions_id}
-                getItemDisplayName={(item: any) => item.permission_type_eng || item.permission_type_code}
-                onSelectItem={selectItem}
-                onSelectAll={selectAll}
-                noDataMessage={t('leaveManagement.permissions.noData') || 'No data'}
-                isLoading={isLoading}
-                onPageChange={setPage}
-                onPageSizeChange={setPageSize}
-              />
-            )}
-          </div>
-
-          <div className="mt-4">
-            <CustomPagination currentPage={page} totalPages={pageCount} onPageChange={setPage} pageSize={pageSize} pageSizeOptions={[5,10,20,50]} onPageSizeChange={setPageSize} />
+          <div className="w-full mt-4">
+            <PermissionList
+              permissions={items}
+              loading={isLoading}
+              selected={stringSelected}
+              onSelectItem={handleSelectItem}
+              onSelectAll={selectAll}
+              allChecked={allChecked}
+              onRefresh={refetch}
+              onEdit={handleEdit}
+              currentPage={page}
+              totalPages={pageCount}
+              onPageChange={setPage}
+              pageSize={pageSize}
+              onPageSizeChange={setPageSize}
+              total={total}
+            />
           </div>
         </div>
       </div>

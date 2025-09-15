@@ -1,4 +1,4 @@
-import apiClient from '@/configs/api/Axios';
+import apiClient from "@/configs/api/Axios";
 
 export type ListLeavesRequest = {
   limit?: number;
@@ -36,22 +36,27 @@ export type GetPendingLeavesRequest = {
 
 class EmployeeLeavesApi {
   getLeaveTypes() {
-    return apiClient.get('/leaveType/');
+    return apiClient.get("/leaveType/");
   }
 
   getApprovers() {
-    return apiClient.get('/employeeLeave/approvers');
+    return apiClient.get("/employeeLeave/approvers");
   }
   list(req: ListLeavesRequest = {}): Promise<ListLeavesResponse> {
-    return apiClient.get('/employeeLeave/all', { params: req });
+    return apiClient.get("/employeeLeave/all", { params: req });
   }
 
-  getEmployeeLeaves(employeeId: number, req: GetEmployeeLeavesRequest = {}): Promise<ListLeavesResponse> {
+  getEmployeeLeaves(
+    employeeId: number,
+    req: GetEmployeeLeavesRequest = {}
+  ): Promise<ListLeavesResponse> {
     return apiClient.get(`/employeeLeave/get/${employeeId}`, { params: req });
   }
 
-  getPendingLeaves(req: GetPendingLeavesRequest = {}): Promise<ListLeavesResponse> {
-    return apiClient.get('/employeeLeave/pending', { params: req });
+  getPendingLeaves(
+    req: GetPendingLeavesRequest = {}
+  ): Promise<ListLeavesResponse> {
+    return apiClient.get("/employeeLeave/pending", { params: req });
   }
 
   getById(id: number) {
@@ -61,7 +66,7 @@ class EmployeeLeavesApi {
   approve(id: number, approverId?: number) {
     return apiClient.put(`/employeeLeave/approve/${id}`, {
       approve_reject_flag: 1,
-      leave_status: 'APPROVED',
+      leave_status: "APPROVED",
       ...(approverId ? { approver_id: approverId } : {}),
     });
   }
@@ -69,16 +74,16 @@ class EmployeeLeavesApi {
   reject(id: number, approverId?: number, remarks?: string) {
     return apiClient.put(`/employeeLeave/approve/${id}`, {
       approve_reject_flag: 2,
-      leave_status: 'REJECTED',
+      leave_status: "REJECTED",
       ...(approverId ? { approver_id: approverId } : {}),
       ...(remarks ? { approver_remarks: remarks } : {}),
     });
   }
 
   add(data: any) {
-    return apiClient.post('/employeeLeave/add', data, {
+    return apiClient.post("/employeeLeave/add", data, {
       headers: {
-        'Content-Type': 'multipart/form-data',
+        "Content-Type": "multipart/form-data",
       },
     });
   }
@@ -92,7 +97,10 @@ class EmployeeLeavesApi {
   }
 
   deleteMany(ids: number[]) {
-    return apiClient.delete('/employee-leaves/delete', { data: { ids } });
+    return apiClient.delete("/employee-leaves/delete", { data: { ids } });
+  }
+  myleavesRequests(req: ListLeavesRequest = {}): Promise<ListLeavesResponse> {
+    return apiClient.get("/employeeLeave/myleavesRequests", { params: req });
   }
 }
 

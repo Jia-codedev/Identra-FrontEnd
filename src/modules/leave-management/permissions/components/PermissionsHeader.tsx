@@ -1,14 +1,11 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { Search, Table, Grid3X3, Filter, RefreshCw } from 'lucide-react';
+import { Search, RefreshCw } from 'lucide-react';
 import { Input } from "@/components/ui/Input";
 import { Button } from '@/components/ui/button';
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useTranslations } from '@/hooks/use-translations';
 import { useLanguage } from '@/providers/language-provider';
-
-export type ViewMode = 'table' | 'grid';
 
 interface PermissionsHeaderProps {
   search: string;
@@ -16,19 +13,15 @@ interface PermissionsHeaderProps {
   onAdd: () => void;
   selectedCount: number;
   onDeleteSelected?: () => void;
-  viewMode: ViewMode;
-  onViewModeChange: (mode: ViewMode) => void;
   onRefresh: () => void;
 }
 
-export const PermissionsHeader: React.FC<PermissionsHeaderProps> = ({ 
+export const PermissionsHeader: React.FC<PermissionsHeaderProps> = ({
   search, 
   onSearchChange, 
   onAdd, 
   selectedCount, 
   onDeleteSelected,
-  viewMode,
-  onViewModeChange,
   onRefresh
 }) => {
   const { t } = useTranslations();
@@ -60,16 +53,6 @@ export const PermissionsHeader: React.FC<PermissionsHeaderProps> = ({
         </div>
 
         <div className="w-full sm:w-auto flex flex-col sm:flex-row gap-2 items-center">
-          {/* View Toggle */}
-          <ToggleGroup type="single" value={viewMode} onValueChange={(value) => value && onViewModeChange(value as ViewMode)}>
-            <ToggleGroupItem value="table" aria-label="Table view" size="sm">
-              <Table className="h-4 w-4" />
-            </ToggleGroupItem>
-            <ToggleGroupItem value="grid" aria-label="Grid view" size="sm">
-              <Grid3X3 className="h-4 w-4" />
-            </ToggleGroupItem>
-          </ToggleGroup>
-
           <div className={`flex items-center gap-0 bg-card/80 border border-border rounded-xl px-2 py-1 ${isRTL ? 'flex-row-reverse' : 'flex-row'}`}>
             <span className={`${isRTL ? 'pr-2 pl-1' : 'pl-2 pr-1'} text-xl text-primary/80`}>
               <Search size={22} />
@@ -81,9 +64,7 @@ export const PermissionsHeader: React.FC<PermissionsHeaderProps> = ({
               placeholder={t('leaveManagement.permissions.actions.search')}
               className="border-0 bg-transparent outline-none focus:outline-none focus:border-0 focus:ring-0 shadow-none"
             />
-            <span className="mx-2 h-6 w-px bg-border" />
-            
-            {/* Refresh Button */}
+            <span className="mx-2 h-6 w-px bg-border" />            {/* Refresh Button */}
             <Button 
               onClick={onRefresh} 
               variant="ghost" 

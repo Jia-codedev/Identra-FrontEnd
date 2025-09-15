@@ -477,6 +477,7 @@
     "rejected": "Rejected"
   },
   "settings": {
+    "UpdatePassword": "Update Password",
     "title": "Settings",
     "general": "General",
     "appearance": "Appearance",

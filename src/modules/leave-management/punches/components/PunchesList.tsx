@@ -77,7 +77,6 @@ interface EmployeeEventTransaction {
 
 interface PunchesListProps {
   punches: EmployeeEventTransaction[];
-  viewMode: ViewMode;
   selected?: number[];
   allChecked?: boolean;
   onSelectItem?: (id: number) => void;
@@ -87,7 +86,6 @@ interface PunchesListProps {
 
 export default function PunchesList({
   punches,
-  viewMode,
   selected = [],
   allChecked = false,
   onSelectItem,
@@ -202,8 +200,8 @@ export default function PunchesList({
     );
   }
 
-  if (viewMode === 'table') {
-    return (
+  // Always use table view
+  return (
       <GenericTable
         data={validPunches}
         columns={columns}
@@ -222,75 +220,4 @@ export default function PunchesList({
         onPageSizeChange={() => {}}
       />
     );
-  }
-
-  // Grid view
-  return (
-    <div className="space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {validPunches.map((punch) => {
-          const punchId = getItemId(punch);
-          const employeeName = punch.employee_master 
-            ? `${punch.employee_master.firstname_eng} ${punch.employee_master.lastname_eng}`.trim()
-            : 'Unknown Employee';
-          const empNo = punch.employee_master?.emp_no || punch.employee_id.toString();
-          
-          return (
-            <Card key={`event-transaction-${punchId}-${punch.transaction_time}`} className="hover:shadow-md transition-shadow border-border bg-card">
-              <CardContent className="p-4">
-                <div className="flex items-start justify-between mb-3">
-                  <div>
-                    <h3 className="font-medium text-foreground">{employeeName}</h3>
-                    <p className="text-sm text-muted-foreground">#{empNo}</p>
-                  </div>
-                  <div className="flex gap-1">
-                    <Badge className={getReasonColor(punch.reason)}>
-                      {formatReason(punch.reason)}
-                    </Badge>
-                  </div>
-                </div>
-
-                <div className="space-y-2 mb-4">
-                  <div className="flex items-center text-sm">
-                    <Clock className="w-4 h-4 mr-2 text-muted-foreground" />
-                    <span className="font-medium text-foreground">{formatDateTime(punch.transaction_time)}</span>
-                  </div>
-                  
-                  <div className="grid grid-cols-1 gap-2 text-sm">
-                    <div>
-                      <span className="text-muted-foreground">{t('common.time') || 'Time'}:</span> 
-                      <span className="text-foreground ml-1">{formatTime(punch.transaction_time)}</span>
-                    </div>
-                    <div>
-                      <span className="text-muted-foreground">{t('common.type') || 'Type'}:</span> 
-                      <span className="text-foreground ml-1">{formatReason(punch.reason)}</span>
-                    </div>
-                  </div>
-
-                  {punch.remarks && (
-                    <div className="text-sm text-muted-foreground">
-                      <span className="font-medium">{t('common.remarks') || 'Remarks'}:</span> 
-                      <span className="text-foreground ml-1">{punch.remarks}</span>
-                    </div>
-                  )}
-
-                  <div className="flex items-center text-sm text-muted-foreground">
-                    <Smartphone className="w-4 h-4 mr-2" />
-                    <span>{punch.device_id || (punch.user_entry_flag ? 'Manual Entry' : 'System')}</span>
-                  </div>
-
-                  {punch.geolocation && (
-                    <div className="flex items-center text-sm text-muted-foreground">
-                      <MapPin className="w-4 h-4 mr-2" />
-                      <span>{punch.geolocation}</span>
-                    </div>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
-    </div>
-  );
 }
