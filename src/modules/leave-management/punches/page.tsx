@@ -70,7 +70,7 @@ export default function PunchesPage() {
     return (
       <div className="w-full h-full flex flex-col items-center justify-start">
         <div className="w-full relative">
-          <div className="rounded-2xl border py-4 border-border bg-background/90 p-4">
+          <div className="py-4 border-border bg-background/90 p-4">
             <div className="text-center py-16">
               <h3 className="text-lg font-medium text-destructive">
                 {t('attendance.errorLoading') || t('common.errorLoading') || 'Error loading event transactions'}
@@ -86,21 +86,14 @@ export default function PunchesPage() {
   return (
     <div className="w-full h-full flex flex-col items-center justify-start">
       <div className="w-full relative">
-        <div className="rounded-2xl border py-4 border-border bg-background/90">
+        <div className="py-4 border-border bg-background/90">
           <Tabs value={activeTab} onValueChange={(value) => handleTabChange(value as PunchesTabType)} className="w-full">
-            {/* Header with Tabs */}
-            <div className="px-4 py-4 border-b border-border">
+            <div className="px-4 py-4 ">
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
                 <div className="flex-1">
                   <h1 className="text-3xl md:text-4xl font-bold text-primary tracking-tight leading-tight mb-1">
                     {t('punches.title') || 'Punches & Attendance'}
                   </h1>
-                  <p className="text-base md:text-lg text-muted-foreground font-normal">
-                    {activeTab === 'my-punches' 
-                      ? (t('punches.myPunchesDescription') || 'View your own attendance records')
-                      : (t('punches.teamPunchesDescription') || 'View attendance records of your team members')
-                    }
-                  </p>
                 </div>
                 
                 {/* Search and Actions */}
@@ -151,7 +144,7 @@ export default function PunchesPage() {
 
             {/* Tab Content */}
             <TabsContent value="my-punches" className="mt-0">
-              <div className="px-4 py-4">
+              <div className="px-4 py-4 w-full">
                 <PunchesList
                   punches={data || []}
                   selected={selectedItems}
@@ -162,7 +155,7 @@ export default function PunchesPage() {
                 />
 
                 {!isLoading && data.length > 0 && (
-                  <div className="flex justify-center py-4">
+                  <div className="flex justify-center py-4 w-full">
                     <CustomPagination
                       currentPage={page}
                       totalPages={totalPages}
@@ -177,7 +170,7 @@ export default function PunchesPage() {
             </TabsContent>
 
             <TabsContent value="team-punches" className="mt-0">
-              <div className="px-4 py-4">
+              <div className="px-4 py-4 w-full">
                 {teamMembers.length === 0 && !isLoading ? (
                   <div className="text-center py-16">
                     <Users className="mx-auto h-12 w-12 text-muted-foreground" />
@@ -200,7 +193,7 @@ export default function PunchesPage() {
                     />
 
                     {!isLoading && data.length > 0 && (
-                      <div className="flex justify-center py-4">
+                      <div className="flex justify-center py-4 w-full">
                         <CustomPagination
                           currentPage={page}
                           totalPages={totalPages}

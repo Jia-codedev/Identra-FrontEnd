@@ -134,7 +134,7 @@ export default function WeeklyRosterPage() {
   }
 
   return (
-    <div className="p-6 space-y-6 border rounded-2xl">
+    <div className="p-6 space-y-6">
       <WeeklyRosterHeader
         search={search}
         onSearchChange={setSearch}

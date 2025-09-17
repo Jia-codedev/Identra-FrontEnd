@@ -1352,8 +1352,7 @@
           "leaveManagement": "إدارة الإجازات",
           "permissionManagement": "إدارة الأذونات",
           "attendanceLogs": "سجلات الحضور",
-          "workflowAutomation": "أتمتة سير العمل",
-          "payrollLocking": "قفل الرواتب"
+          "workflowAutomation": "أتمتة سير العمل"
         }
       },
       "devicesAndInfrastructure": {

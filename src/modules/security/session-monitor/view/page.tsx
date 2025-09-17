@@ -433,7 +433,7 @@ export default function SessionMonitorPage() {
                   placeholder="Search users, emails, or locations..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 p-2 border rounded-md"
+                  className="w-full pl-10 p-2-md"
                 />
               </div>
             </div>

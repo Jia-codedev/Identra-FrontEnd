@@ -10,11 +10,18 @@ import {
   FiCalendar,
   FiBriefcase,
   FiClock,
+  FiCpu,
+  FiShield,
+  FiSettings,
+  FiAlertCircle,
+  FiHelpCircle,
+  FiBarChart2,
+  FiLayers,
+  FiMapPin,
 } from "react-icons/fi";
 
 export const useNavigation = () => {
   const { t } = useTranslations();
-  // Descriptor maps main-menu groups -> their navigation keys and icons
   const MENU_DESCRIPTOR = [
     {
       id: "workforce-analytics",
@@ -41,7 +48,7 @@ export const useNavigation = () => {
           routeKey: "mainMenu.workforceAnalytics.geoTracking",
         },
       ],
-      icon: FiHome,
+      icon: FiBarChart2,
     },
     {
       id: "enterprise-settings",
@@ -64,7 +71,7 @@ export const useNavigation = () => {
           routeKey: "mainMenu.enterpriseSettings.citizenshipInfo",
         },
       ],
-      icon: FiDatabase,
+      icon: FiLayers,
     },
     {
       id: "organization",
@@ -83,7 +90,7 @@ export const useNavigation = () => {
           routeKey: "mainMenu.organization.items.divisions",
         },
       ],
-      icon: FiMap,
+      icon: FiMapPin,
     },
     {
       id: "employee-management",
@@ -155,22 +162,16 @@ export const useNavigation = () => {
           labelKey: "mainMenu.selfServices.items.workflowAutomation",
           routeKey: "navigation.workFlow",
         },
-        {
-          labelKey: "mainMenu.selfServices.items.payrollLocking",
-          routeKey: "navigation.payrollLocking",
-        },
+        // {
+        //   labelKey: "mainMenu.selfServices.items.payrollLocking",
+        //   routeKey: "navigation.payrollLocking",
+        // },
       ],
       icon: FiClock,
     },
-    {
-      id: "workforce",
-      titleKey: "common.workforce",
-      items: [
-        { labelKey: "navigation.approvals", routeKey: "navigation.approvals" },
-        { labelKey: "navigation.reports", routeKey: "navigation.reports" },
-      ],
-      icon: FiBriefcase,
-    },
+  ];
+
+  const SIDEBAR_MENUS = [
     {
       id: "devices-and-infrastructure",
       titleKey: "mainMenu.devicesAndInfrastructure.title",
@@ -189,11 +190,133 @@ export const useNavigation = () => {
           routeKey: "mainMenu.devicesAndInfrastructure.buildings",
         },
       ],
-      icon: FiDatabase,
+      icon: FiCpu,
+    },
+    {
+      id: "user-security-settings",
+      titleKey: "mainMenu.userSecuritySettings.title",
+      items: [
+        {
+          labelKey: "mainMenu.userSecuritySettings.items.rolesManagement",
+          routeKey: "mainMenu.userSecuritySettings.rolesManagement",
+        },
+        {
+          labelKey: "mainMenu.userSecuritySettings.items.accessPermissions",
+          routeKey: "mainMenu.userSecuritySettings.accessPermissions",
+        },
+        {
+          labelKey: "mainMenu.userSecuritySettings.items.sessionMonitor",
+          routeKey: "mainMenu.userSecuritySettings.sessionMonitor",
+        },
+        {
+          labelKey: "mainMenu.userSecuritySettings.items.activitySummary",
+          routeKey: "mainMenu.userSecuritySettings.activitySummary",
+        },
+      ],
+      icon: FiShield,
+    },
+    {
+      id: "application-settings",
+      titleKey: "mainMenu.applicationSettings.title",
+      items: [
+        {
+          labelKey: "mainMenu.applicationSettings.items.appSettings",
+          routeKey: "mainMenu.applicationSettings.appSettings",
+        },
+        {
+          labelKey: "mainMenu.applicationSettings.items.appConfiguration",
+          routeKey: "mainMenu.applicationSettings.appConfiguration",
+        },
+        {
+          labelKey: "mainMenu.applicationSettings.items.alertPreferences",
+          routeKey: "mainMenu.applicationSettings.alertPreferences",
+        },
+        {
+          labelKey: "mainMenu.applicationSettings.items.auditTrail",
+          routeKey: "mainMenu.applicationSettings.auditTrail",
+        },
+      ],
+      icon: FiSettings,
+    },
+    {
+      id: "alert-centre",
+      titleKey: "mainMenu.alertCentre.title",
+      items: [
+        {
+          labelKey: "mainMenu.alertCentre.items.emailAlerts",
+          routeKey: "mainMenu.alertCentre.emailAlerts",
+        },
+        {
+          labelKey: "mainMenu.alertCentre.items.smsAlerts",
+          routeKey: "mainMenu.alertCentre.smsAlerts",
+        },
+        {
+          labelKey: "mainMenu.alertCentre.items.bulletins",
+          routeKey: "mainMenu.alertCentre.bulletins",
+        },
+      ],
+      icon: FiAlertCircle,
+    },
+    {
+      id: "workforce",
+      titleKey: "common.workforce",
+      items: [
+        { labelKey: "navigation.approvals", routeKey: "navigation.approvals" },
+        { labelKey: "navigation.reports", routeKey: "navigation.reports" },
+      ],
+      icon: FiBriefcase,
+    },
+  ];
+
+  const SIDEBAR_FOOTER = [
+    {
+      id: "support-centre",
+      titleKey: "mainMenu.supportCentre.title",
+      items: [
+        {
+          labelKey: "mainMenu.supportCentre.items.faqs",
+          routeKey: "mainMenu.supportCentre.faqs",
+        },
+        {
+          labelKey: "mainMenu.supportCentre.items.userManual",
+          routeKey: "mainMenu.supportCentre.userManual",
+        },
+        {
+          labelKey: "mainMenu.supportCentre.items.licenseManagement",
+          routeKey: "mainMenu.supportCentre.licenseManagement",
+        },
+      ],
+      icon: FiHelpCircle,
     },
   ];
 
   const NAV_LINKS = MENU_DESCRIPTOR.map((g) => ({
+    id: g.id,
+    label: ((): string => {
+      const val = t(g.titleKey);
+      if (val && !val.includes(".")) return val;
+      const mm = t(`mainMenu.${g.id}.title`);
+      if (mm && !mm.includes(".")) return mm;
+      return g.id.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+    })(),
+    icon: g.icon,
+    href:
+      g.id === "workforce-analytics"
+        ? getRouteFromKey("mainMenu.workforceAnalytics.myInsights")
+        : undefined,
+    secondary: g.items
+      .map((it) => {
+        const label = t(it.labelKey);
+        const finalLabel =
+          label && !label.includes(".")
+            ? label
+            : t(it.labelKey.replace(/^mainMenu\./, ""));
+        const keyForRoute = it.routeKey ?? it.labelKey;
+        return { label: finalLabel, href: getRouteFromKey(keyForRoute) };
+      })
+      .filter((s) => !!s.label),
+  }));
+  const SIDEBAR_LINKS = SIDEBAR_MENUS.map((g) => ({
     id: g.id,
     label: ((): string => {
       const val = t(g.titleKey);
@@ -210,7 +333,29 @@ export const useNavigation = () => {
           label && !label.includes(".")
             ? label
             : t(it.labelKey.replace(/^mainMenu\./, ""));
-        // prefer an explicit routeKey when available to avoid collisions
+        const keyForRoute = it.routeKey ?? it.labelKey;
+        return { label: finalLabel, href: getRouteFromKey(keyForRoute) };
+      })
+      .filter((s) => !!s.label),
+  }));
+
+  const FOOTER_LINKS = SIDEBAR_FOOTER.map((g) => ({
+    id: g.id,
+    label: ((): string => {
+      const val = t(g.titleKey);
+      if (val && !val.includes(".")) return val;
+      const mm = t(`mainMenu.${g.id}.title`);
+      if (mm && !mm.includes(".")) return mm;
+      return g.id.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+    })(),
+    icon: g.icon,
+    secondary: g.items
+      .map((it) => {
+        const label = t(it.labelKey);
+        const finalLabel =
+          label && !label.includes(".")
+            ? label
+            : t(it.labelKey.replace(/^mainMenu\./, ""));
         const keyForRoute = it.routeKey ?? it.labelKey;
         return { label: finalLabel, href: getRouteFromKey(keyForRoute) };
       })
@@ -230,22 +375,10 @@ export const useNavigation = () => {
     { label: t("common.logout"), href: "/", className: "text-red-600" },
   ];
 
-  // const SETTINGS_LINKS = [
-  //   { label: t("settings.applicationSettings"), href: "/settings/app-settings" },
-  //   {
-  //     label: t("settings.notificationSettings"),
-  //     href: "/settings/alert-preferences",
-  //   },
-  //   { label: t("navigation.organizations"), href: "/settings/business-entity" },
-  //   { label: t("settings.viewEmployeeLogs"), href: "/logs/employee-audit-trail" },
-  //   { label: t("settings.viewLogs"), href: "/logs/system-logs" },
-  //   { label: t("settings.announcement"), href: "/bulletins" },
-  //   { label: t("settings.license"), href: "/license-management" },
-  // ];
-
   return {
     NAV_LINKS,
     PROFILE_LINKS,
-    // SETTINGS_LINKS,
+    SIDEBAR_LINKS,
+    FOOTER_LINKS,
   };
 };

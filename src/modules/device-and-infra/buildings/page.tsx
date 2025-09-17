@@ -95,7 +95,7 @@ export default function BuildingsPage() {
   };
 
   return (
-    <div className="flex border rounded-2xl flex-col gap-6 p-6">
+    <div className="flex flex-col gap-6 p-6">
       <BuildingsHeader
         search={search}
         statusFilter={statusFilter}

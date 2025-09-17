@@ -34,20 +34,13 @@ export const LeavesHeader: React.FC<LeavesHeaderProps> = ({
   };
 
   return (
-    <div className="sticky top-0 z-10 bg-background/80 rounded-t-3xl px-4 py-8 border-b border-border">
+    <div className="sticky top-0 z-10 bg-background/80 rounded-t-3xl px-4 py-8 ">
       <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
         <div className="flex-1">
           <h1 className="text-3xl md:text-4xl font-bold text-primary tracking-tight leading-tight mb-1">
             {t('leaveManagement.leaves.title') || t('leaveManagement.leaves')}
           </h1>
-          <p className="text-base md:text-lg text-muted-foreground font-normal mb-2">
-            {t('leaveManagement.leaves.description')}
-          </p>
-          {selectedCount > 0 && (
-            <p className="text-sm text-primary font-medium">{t('common.selectedCount', { count: selectedCount })}</p>
-          )}
         </div>
-
         <div className="w-full sm:w-auto flex flex-col sm:flex-row gap-2 items-center">
           <div className={`flex items-center gap-0 bg-card/80 border border-border rounded-xl px-2 py-1 ${isRTL ? 'flex-row-reverse' : 'flex-row'}`}>
             <span className={`${isRTL ? 'pr-2 pl-1' : 'pl-2 pr-1'} text-xl text-primary/80`}>

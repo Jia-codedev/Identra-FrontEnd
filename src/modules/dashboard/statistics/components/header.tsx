@@ -16,11 +16,12 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import Link from "next/link";
+import { getRouteFromKey } from "@/utils/routeFromKey";
 function DashboardHeader() {
   const [statistics, setStatistics] = useState<"self" | "team">("self");
   const [statisticsDropdownOpen, setStatisticsDropdownOpen] = useState(false);
   return (
-    <Card className="bg-gradient-to-tr from-background shadow-none via-background/10 to-primary/5 rounded-2xl flex flex-col md:flex-row md:justify-between md:items-center p-6 ">
+    <Card className="bg-gradient-to-tr from-background shadow-none via-background/10 to-primary/5 rounded flex flex-col md:flex-row md:justify-between md:items-center p-6 ">
       <div className="flex flex-col md:flex-row md:items-center md:gap-6 w-full">
         {/* Dropdown and Breadcrumbs Row */}
         <div className="flex flex-col items-start gap-2 w-full">
@@ -38,7 +39,7 @@ function DashboardHeader() {
             </DropdownMenuTrigger>
             <DropdownMenuContent
               align="start"
-              className="w-48 bg-white border rounded-md p-2 mt-2 shadow-lg"
+              className="w-48 bg-white-md p-2 mt-2 shadow-lg"
             >
               <div
                 className="p-2 cursor-pointer hover:bg-primary/10 rounded hover:text-primary text-base"
@@ -72,7 +73,7 @@ function DashboardHeader() {
               </BreadcrumbSeparator>
               <BreadcrumbItem>
                 <BreadcrumbLink asChild>
-                  <Link href="/dashboard">
+                  <Link href={getRouteFromKey("mainMenu.workforceAnalytics.myInsights")}>
                     {statistics === "self"
                       ? "My Insights"
                       : "Team Insights"}

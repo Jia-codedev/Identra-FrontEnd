@@ -7,7 +7,7 @@ function camelToKebab(s: string) {
 }
 
 const GROUP_PREFIXES: { prefix: string; keys: string[] }[] = [
-  { prefix: '/workforce-analytics', keys: ['selfStatistics', 'teamStatistics', 'activityMonitor', 'teamEfficiency', 'geoTracking', 'myInsights', 'teamInsights'] },
+  { prefix: '/', keys: ['selfStatistics', 'teamStatistics', 'activityMonitor', 'teamEfficiency', 'geoTracking', 'myInsights', 'teamInsights'] },
   { prefix: '/master-data', keys: ['regions', 'grades', 'designations', 'nationalities', 'organizations', 'organizationTypes', 'organizationStructure', 'departmentAdmins', 'siteManagements', 'jobLevels', 'jobTitles', 'citizenshipInfo'] },
   { prefix: '/employee-management', keys: ['employees', 'employeeTypes', 'employeeGroups', 'employeeDirectory', 'contractTypes', 'teamGrouping'] },
   { prefix: '/roster-management', keys: ['reasons', 'holidays', 'ramadanDates', 'scheduleTypes', 'monthlyRoaster', 'weeklySchedule', 'holidayCalendar', 'monthlyRoster', 'weeklyRoster', 'ramadanHours'] },
@@ -29,6 +29,8 @@ const OVERRIDES: Record<string, string> = {
   activityMonitor: 'activity-log',
   teamEfficiency: 'productivity-metrics',
   geoTracking: 'location-intelligence',
+  myInsights: 'dashboard',
+  teamInsights: 'dashboard/teamInsights',
   organizations: 'business-entity',
   organizationTypes: 'business-entity-type',
   organizationStructure: 'hierarchy-management',
@@ -68,7 +70,7 @@ export function getRouteFromKey(key: string): string {
   if (parts[0] === 'mainMenu' && parts.length >= 2) {
     const groupName = parts[1];
     const mapping: Record<string, string> = {
-      workforceAnalytics: '/workforce-analytics',
+      workforceAnalytics: '/',
       enterpriseSettings: '/master-data',
       organization: '/organization',
       employeeManagement: '/employee-management',

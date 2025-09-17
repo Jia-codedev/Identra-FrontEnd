@@ -131,7 +131,7 @@ export default function ScheduleTypesPage() {
   return (
     <div className="w-full h-full flex flex-col items-center justify-start">
       <div className="w-full relative">
-        <div className="rounded-2xl border py-4 border-border bg-background/90">
+        <div className="py-4 border-border bg-background/90">
           <SchedulesHeader
             search={search}
             onSearchChange={setSearch}

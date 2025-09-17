@@ -401,7 +401,7 @@ export default function MonthlyRosterPage() {
         }
         // No schedule assigned: show a button to assign
         return (
-          <div className="w-full h-8 flex items-center justify-center rounded border border-dashed border-muted/30 bg-muted/10">
+          <div className="w-full h-8 flex items-center justify-center border-dashed border-muted/30 bg-muted/10">
             <button
               className="text-[12px] px-2 py-0.5 rounded bg-transparent text-primary"
               onClick={() =>
@@ -437,7 +437,7 @@ export default function MonthlyRosterPage() {
   };
 
   return (
-    <div className="p-6 space-y-4 border rounded-2xl">
+    <div className="p-6 space-y-4">
       <MonthlyRosterHeader
         filters={filters}
         onFiltersChange={onFiltersChange}

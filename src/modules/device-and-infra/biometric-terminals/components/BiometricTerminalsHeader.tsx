@@ -31,7 +31,7 @@ export default function BiometricTerminalsHeader({
   const { isRTL } = useLanguage();
 
   return (
-    <div className="sticky top-0 z-10 bg-background/80 rounded-t-3xl px-4 py-8 border-b border-border">
+    <div className="sticky top-0 z-10 bg-background/80 rounded-t-3xl px-4 py-8 ">
       <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
         <div className="flex-1">
           <h1 className="text-3xl md:text-4xl font-bold text-primary tracking-tight leading-tight mb-1">
@@ -81,7 +81,7 @@ export default function BiometricTerminalsHeader({
             onClick={onAddNew}
             className="w-full sm:w-auto bg-primary text-primary-foreground hover:bg-primary/90"
           >
-            {t('biometricTerminals.addNew')}
+            {t('common.add')}
           </Button>
         </div>
       </div>

@@ -143,7 +143,7 @@ const LeaveRequestForm: React.FC<Props> = ({ open, onSuccess, onCancel }) => {
               type="file"
               accept=".pdf,.jpg,.jpeg,.png"
               onChange={(e) => setFile(e.target.files?.[0] || null)}
-              className="block w-full border rounded p-2"
+              className="block w-full p-2"
             />
           </div>
           {/* Approver field removed as approval is handled by backend */}

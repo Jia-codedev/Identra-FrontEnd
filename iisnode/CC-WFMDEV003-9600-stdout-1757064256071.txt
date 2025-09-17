@@ -1,2 +1,0 @@
-> Ready on port \\.\pipe\44e3f2e8-2090-40e0-b1de-fe881ff1b634
-✅ Environment variable NEXT_PUBLIC_IDENTRA_BE_URI loaded successfully: http://192.168.2.112:8000

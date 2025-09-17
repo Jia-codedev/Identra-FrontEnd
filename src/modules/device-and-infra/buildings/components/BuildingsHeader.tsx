@@ -93,7 +93,7 @@ export default function BuildingsHeader({
             className="flex items-center gap-2"
           >
             <Plus className="h-4 w-4" />
-            {t("buildings.addBuilding")}
+            {t("common.add")}
           </Button>
         </div>
       </div>

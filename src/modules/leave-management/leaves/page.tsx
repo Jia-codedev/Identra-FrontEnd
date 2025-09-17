@@ -74,7 +74,7 @@ export default function LeavesPage() {
   return (
     <div className="w-full h-full flex flex-col items-center justify-start">
       <div className="w-full relative">
-        <div className="rounded-2xl border py-4 border-border bg-background/90 p-4">
+        <div className="py-4 border-border bg-background/90 p-4">
           <LeavesHeader
             search={search}
             onSearchChange={handleSearchChange}

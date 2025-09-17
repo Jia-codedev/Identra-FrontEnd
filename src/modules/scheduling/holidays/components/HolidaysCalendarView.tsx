@@ -80,7 +80,7 @@ const HolidaysCalendarView: React.FC<HolidaysCalendarViewProps> = ({ holidays })
           const inMonth = isSameMonth(day, current);
           const isToday = isSameDay(day, new Date());
           return (
-            <div key={key} className={`relative border rounded-lg overflow-hidden ${inMonth ? 'bg-card' : 'bg-muted/10'} ${isToday ? 'ring-2 ring-primary' : ''}`}>
+            <div key={key} className={`relative-lg overflow-hidden ${inMonth ? 'bg-card' : 'bg-muted/10'} ${isToday ? 'ring-2 ring-primary' : ''}`}>
               <div className="p-3 flex flex-col h-full">
                 <div className="flex items-start justify-between">
                   <div className={`text-sm font-semibold ${inMonth ? 'text-card-foreground' : 'text-muted-foreground'}`}>{format(day, 'd')}</div>

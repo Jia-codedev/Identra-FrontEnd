@@ -103,14 +103,25 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({
                           ? "bg-primary/10 text-primary"
                           : "text-muted-foreground hover:bg-muted"
                       )}
-                      onClick={() =>
-                        setExpandedMenu(isExpanded ? null : menu.label)
-                      }
+                      onClick={() => {
+                        if (menu.href) {
+                          setMobileOpen(false);
+                          return;
+                        }
+                        setExpandedMenu(isExpanded ? null : menu.label);
+                      }}
                     >
-                      <span className="flex items-center">
-                        <Icon className="text-lg mr-2" />
-                        {menu.label}
-                      </span>
+                      {menu.href ? (
+                        <Link href={menu.href} className="flex items-center">
+                          <Icon className="text-lg mr-2" />
+                          {menu.label}
+                        </Link>
+                      ) : (
+                        <span className="flex items-center">
+                          <Icon className="text-lg mr-2" />
+                          {menu.label}
+                        </span>
+                      )}
                       <span className="ml-auto text-xs">
                         {menu.secondary && menu.secondary.length > 0 ? (
                           isExpanded ? (
@@ -198,30 +209,12 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({
                 );
               })}
             </div>
-
-            {/* Settings Links
-            <div className="flex flex-col pt-2 border-t border-border space-y-1">
-              {SETTINGS_LINKS.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="px-2 py-1 text-xs rounded hover:bg-muted"
-                  onClick={() => setMobileOpen(false)}
-                >
-                  {item.label}
-                </Link>
-              ))}
-            </div> */}
-
-            {/* Language Switcher */}
             <div className="flex flex-col pt-2 border-t border-border">
               <LanguageSwitcher variant="mobile" />
             </div>
           </motion.div>
         </motion.div>
       )}
-
-      {/* Logout Confirmation Dialog */}
       <LogoutConfirmation
         isOpen={showLogoutDialog}
         onClose={() => setShowLogoutDialog(false)}

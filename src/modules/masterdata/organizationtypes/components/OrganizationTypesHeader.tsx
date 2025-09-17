@@ -26,20 +26,12 @@ export const OrganizationTypesHeader: React.FC<OrganizationTypesHeaderProps> = (
   const { isRTL } = useLanguage();
 
   return (
-    <div className="sticky top-0 z-10 bg-background/80 rounded-t-3xl px-4 py-8 border-b border-border">
+    <div className="sticky top-0 z-10 bg-background/80 rounded-t-3xl px-2 py-8 ">
       <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
         <div className="flex-1">
           <h1 className="text-3xl md:text-4xl font-bold text-primary tracking-tight leading-tight mb-1">
             {t('masterData.organizationTypes.title')}
           </h1>
-          <p className="text-base md:text-lg text-muted-foreground font-normal mb-2">
-            {t('masterData.organizationTypes.description')}
-          </p>
-          {selectedCount > 0 && (
-            <p className="text-sm text-primary font-medium">
-              {t('common.selectedCount', { count: selectedCount })}
-            </p>
-          )}
         </div>
         <div className="w-full sm:w-auto flex flex-col sm:flex-row gap-2 items-center">
           <div className={`flex items-center gap-0 bg-card/80 border border-border rounded-xl px-2 py-1 ${isRTL ? 'flex-row-reverse' : 'flex-row'}`}>
@@ -68,7 +60,7 @@ export const OrganizationTypesHeader: React.FC<OrganizationTypesHeaderProps> = (
                 className="font-semibold text-base px-4 py-2 rounded-lg bg-primary hover:bg-primary/90 transition-all shadow-none"
                 variant="default"
               >
-                <span className="hidden sm:inline">+ {t('masterData.organizationTypes.addOrganizationType')}</span>
+                <span className="hidden sm:inline">+ {t('common.add')}</span>
                 <span className="sm:hidden text-xl leading-none">+</span>
               </Button>
             )}

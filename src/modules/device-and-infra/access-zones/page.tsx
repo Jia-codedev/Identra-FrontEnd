@@ -77,7 +77,7 @@ export default function AccessZonesPage() {
   };
 
   return (
-    <div className="flex border rounded-2xl flex-col gap-6 p-6">
+    <div className="flex flex-col gap-6 p-6">
       <AccessZonesHeader
         search={search}
         statusFilter={statusFilter}

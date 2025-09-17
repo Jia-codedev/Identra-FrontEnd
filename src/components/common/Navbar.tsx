@@ -4,16 +4,13 @@ import { usePathname } from "next/navigation";
 import { useTranslations } from "@/hooks/use-translations";
 import { useNavigation } from "@/hooks/use-navigation";
 import {
-  NavbarLogo,
   DesktopNav,
   UserProfileSection,
-  MobileMenuToggle,
   SecondaryNav,
-  MobileDrawer,
 } from "./navbar/index";
 import { useUserStore } from "@/store/userStore";
-import { useManualUserRefresh } from "@/hooks/use-user-refresh";
 import { useLanguage } from "@/providers/language-provider";
+import { useUserNavBar } from "@/store/userNavBar";
 
 const Navbar = () => {
   const { user } = useUserStore();
@@ -21,13 +18,16 @@ const Navbar = () => {
   const pathname = usePathname();
   const { t } = useTranslations();
   const { NAV_LINKS } = useNavigation();
-  const { manualRefresh, isRefreshing } = useManualUserRefresh();
-
   const [activeMenu, setActiveMenu] = useState<string>("");
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [expandedMenu, setExpandedMenu] = useState<string | null>(null);
-
   React.useEffect(() => {
+    const storeActiveId = useUserNavBar.getState().activeMenuId;
+    if (storeActiveId) {
+      const storeMenu = NAV_LINKS.find((m) => m.id === storeActiveId);
+      if (storeMenu) {
+        setActiveMenu(storeMenu.label);
+        return;
+      }
+    }
     const currentLink = NAV_LINKS.find((link) =>
       link.secondary?.some((item) => pathname.startsWith(item.href))
     );
@@ -59,48 +59,28 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="p-2">
-      <div className="w-full bg-background rounded-xl border border-border px-4 py-3 flex flex-col justify-center items-center transition-all backdrop-blur-sm">
-        <div className="flex items-center justify-between w-full gap-4">
-          <div className="flex items-center space-x-4 min-w-0 flex-1">
-            <NavbarLogo />
-            <DesktopNav activeMenu={activeMenu} setActiveMenu={setActiveMenu} />
-          </div>
-
-          <div
-            className={`flex items-center flex-shrink-0${isRTL ? " flex-row-reverse" : ""}`}
-          >
-            <UserProfileSection
-              user={{
-                email: user?.email || "",
-                name: getUserDisplayName(),
-                role: user?.role || "user",
-                initials: getUserInitials(),
-              }}
-            />
-            <MobileMenuToggle
-              mobileOpen={mobileOpen}
-              setMobileOpen={setMobileOpen}
-            />
-          </div>
+    <div className="bg-sidebar sticky z-20 top-0 border-b flex gap-2 pt-3 flex-col justify-center items-center transition-all backdrop-blur-sm ">
+      <div className="flex items-center justify-between w-full gap-4 px-2">
+        <div className="flex items-center gap-2 min-w-0 flex-1">
+          <DesktopNav />
         </div>
-
-        <SecondaryNav activeMenuObj={activeMenuObj} />
+        <div
+          className={`flex items-center flex-shrink-0${
+            isRTL ? " flex-row-reverse" : ""
+          }`}
+        >
+          <UserProfileSection
+            user={{
+              email: user?.email || "",
+              name: getUserDisplayName(),
+              role: user?.role || "user",
+              initials: getUserInitials(),
+            }}
+          />
+        </div>
       </div>
-
-      <MobileDrawer
-        mobileOpen={mobileOpen}
-        setMobileOpen={setMobileOpen}
-        expandedMenu={expandedMenu}
-        setExpandedMenu={setExpandedMenu}
-        user={{
-          email: user?.email || "",
-          name: getUserDisplayName(),
-          initials: getUserInitials(),
-          role: user?.role || "user",
-        }}
-      />
-    </nav>
+      <SecondaryNav activeMenuObj={activeMenuObj} />
+    </div>
   );
 };
 

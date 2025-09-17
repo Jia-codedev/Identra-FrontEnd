@@ -6,7 +6,6 @@ function Dashboard() {
   // You can determine user role from your auth context/store
   // For demo purposes, we'll use "manager" to show both views
   const userRole = "manager"; // This should come from your auth context
-  return <div className=""></div>;
   return <EnhancedDashboard userRole={userRole as any} defaultTab="employee" />;
 }
 

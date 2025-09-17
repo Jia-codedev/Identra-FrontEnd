@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { useTranslations } from "@/hooks/use-translations";
 import { useLanguage } from "@/providers/language-provider";
 import Loader from "./loader";
+import { ScrollArea } from "../ui/scroll-area";
 
 export interface TableColumn<T> {
   key: string;
@@ -71,8 +72,8 @@ export function GenericTable<T>({
 
   if (data.length === 0) {
     return (
-      <div className="overflow-x-auto rounded-b-3xl px-4">
-        <div className="backdrop-blur-xl mt-4 bg-card/70 border border-border rounded-2xl overflow-hidden">
+      <div className="overflow-x-auto rounded-md px-4">
+        <div className="backdrop-blur-xl mt-4 bg-card/70 border border-border rounded-lg overflow-hidden">
           {isLoading ? (
             <Loader />
           ) : (
@@ -86,8 +87,8 @@ export function GenericTable<T>({
   }
 
   return (
-    <div className="overflow-x-auto w-full grid grid-cols-1 rounded-b-3xl px-4">
-      <div className="backdrop-blur-xl mt-4 bg-card/70 border border-border rounded-2xl overflow-hidden">
+    <div className="overflow-x-auto w-full grid grid-cols-1 border rounded-md overflow-hidden">
+      <div className="backdrop-blur-xl bg-card/70 rounded-md">
         <Table>
           <TableHeader>
             <TableRow
@@ -119,7 +120,7 @@ export function GenericTable<T>({
               )}
             </TableRow>
           </TableHeader>
-          <TableBody>
+          <TableBody className="oberflow-y-auto max-h-[60vh]">
             <AnimatePresence>
               {data
                 .filter((item) => item && getItemId(item) !== undefined)
@@ -130,8 +131,8 @@ export function GenericTable<T>({
                       key={itemId}
                       className={
                         ((page - 1) * pageSize + idx) % 2 === 0
-                          ? "bg-card/60 hover:bg-primary/10 transition-all border-b border-border"
-                          : "bg-card/40 hover:bg-primary/10 transition-all border-b border-border"
+                          ? "bg-card/60 hover:bg-primary/10 transition-all "
+                          : "bg-card/40 hover:bg-primary/10 transition-all "
                       }
                       style={{ backdropFilter: "blur(8px)" }}
                     >

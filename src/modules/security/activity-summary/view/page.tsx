@@ -407,7 +407,7 @@ export default function ActivitySummaryPage() {
                   placeholder="Search activities, users, or resources..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 p-2 border rounded-md"
+                  className="w-full pl-10 p-2-md"
                 />
               </div>
             </div>

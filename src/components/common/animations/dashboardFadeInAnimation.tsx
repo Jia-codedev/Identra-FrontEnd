@@ -26,7 +26,7 @@ function DashboardFadeInAnimation({
                     duration: 0.5,
                     type: "tween",
                 }}
-                className="w-full h-[80%] flex-1 strink-0 "
+                className="w-full h-[80%] flex-1 shrink-0"
             >
                 {children}
             </motion.div>

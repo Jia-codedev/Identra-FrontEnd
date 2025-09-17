@@ -65,7 +65,7 @@ export const HolidaysHeader: React.FC<HolidaysHeaderProps> = ({
   }));
 
   return (
-    <div className="sticky top-0 z-10 bg-background rounded-t-3xl px-2 sm:px-4 py-4 sm:py-8 border-b border-border">
+    <div className="sticky top-0 z-10 bg-background rounded-t-3xl px-2 sm:px-4 py-4 sm:py-8 ">
       <div className="flex flex-col gap-4 sm:gap-6">
         {/* Title and Description */}
         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4 sm:gap-6">
@@ -73,14 +73,6 @@ export const HolidaysHeader: React.FC<HolidaysHeaderProps> = ({
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-primary tracking-tight leading-tight mb-1">
               {t('scheduling.holidays.title')}
             </h1>
-            <p className="text-sm sm:text-base lg:text-lg text-muted-foreground font-normal mb-2">
-              {t('scheduling.holidays.description')}
-            </p>
-            {selectedCount > 0 && (
-              <p className="text-xs sm:text-sm text-primary font-medium">
-                {t('common.selectedCount', { count: selectedCount })}
-              </p>
-            )}
           </div>
           
           {/* Action Buttons */}
@@ -121,16 +113,16 @@ export const HolidaysHeader: React.FC<HolidaysHeaderProps> = ({
             )}
             <Button onClick={onAddHoliday} className="gap-2 text-xs sm:text-sm h-8 sm:h-9">
               <Calendar size={14} className="sm:size-4" />
-              <span className="hidden sm:inline">{t('scheduling.holidays.addHoliday')}</span>
+              <span className="hidden sm:inline">{t('common.add')}</span>
               <span className="sm:hidden">{t('common.add')}</span>
             </Button>
           </div>
         </div>
 
         {/* Search and Filters */}
-        <div className="flex flex-col gap-4">
+        <div className="flex gap-4 w-full">
           {/* Search */}
-          <div className={`flex items-center gap-0 bg-card/80 border border-border rounded-xl px-2 py-1 ${isRTL ? 'flex-row-reverse' : 'flex-row'}`}>
+          <div className={`flex flex-2 items-center gap-0 bg-card/80 border border-border rounded-xl px-2 py-1 ${isRTL ? 'flex-row-reverse' : 'flex-row'}`}>
             <span className={`${isRTL ? 'pr-2 pl-1' : 'pl-2 pr-1'} text-lg sm:text-xl text-primary/80`}>
               <Search size={18} className="sm:size-[22px]" />
             </span>

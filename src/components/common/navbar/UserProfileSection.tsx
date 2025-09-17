@@ -105,9 +105,9 @@ export const UserProfileSection: React.FC<UserProfileSectionProps> = ({
           </div>
           <DropdownMenuSeparator />
           <div className="p-2">
-            {PROFILE_LINKS.map((link) => (
+            {PROFILE_LINKS.map((link, idx) => (
               <DropdownMenuItem
-                key={link.href}
+                key={link.href || link.label || `profile-${idx}`}
                 className={`flex items-center gap-2 px-4 py-2 text-sm hover:bg-muted transition-colors ${
                   link.className || ""
                 }`}

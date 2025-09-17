@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 import { useLanguage } from "@/providers/language-provider";
 import authService from "@/services/authService";
 import { useRouter } from "next/navigation";
+import { getRouteFromKey } from "@/utils/routeFromKey";
 import { CookieDebugger } from "@/utils/cookieDebugger";
 import { Button } from "@/components/ui/button";
 import { BiLogoMicrosoft } from "react-icons/bi";
@@ -53,7 +54,7 @@ function AuthComponent() {
         }, 500);
 
         setTimeout(() => {
-          router.push("/dashboard");
+          router.push(getRouteFromKey("mainMenu.workforceAnalytics.myInsights"));
         }, 2000);
         reset();
       }
@@ -88,7 +89,7 @@ function AuthComponent() {
         initial={{ y: 40, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ type: "spring", stiffness: 120, damping: 16 }}
-        className="w-full max-w-md bg-card border border-border shadow-2xl rounded-2xl px-8 py-10 flex flex-col items-center backdrop-blur-lg"
+        className="w-full max-w-md bg-card border border-border shadow-2xl rounded px-8 py-10 flex flex-col items-center backdrop-blur-lg"
       >
         {/* Logo */}
         <motion.div

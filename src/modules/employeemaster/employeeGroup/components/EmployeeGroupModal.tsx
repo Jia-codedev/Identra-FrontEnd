@@ -438,7 +438,7 @@ export const EmployeeGroupModal: React.FC<EmployeeGroupModalProps> = ({
                       debouncedSearch(e.target.value);
                     }}
                     onKeyDown={handleKeyDown}
-                    className="w-full border rounded-md p-2 bg-background pr-8"
+                    className="w-full-md p-2 bg-background pr-8"
                     autoComplete="off"
                   />
                   {selectedEmployee && (
@@ -453,7 +453,7 @@ export const EmployeeGroupModal: React.FC<EmployeeGroupModalProps> = ({
 
                   {/* Loading indicator */}
                   {isSearching && (
-                    <div className="absolute z-50 w-full mt-1 bg-white border rounded-md shadow-lg">
+                    <div className="absolute z-50 w-full mt-1 bg-white-md shadow-lg">
                       <div className="p-3 text-gray-500 text-sm flex items-center gap-2">
                         <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-900"></div>
                         Searching...
@@ -463,7 +463,7 @@ export const EmployeeGroupModal: React.FC<EmployeeGroupModalProps> = ({
 
                   {/* Show dropdown only when there are search results and not searching */}
                   {!isSearching && Array.isArray(searchResults) && searchResults.length > 0 && (
-                    <div className="absolute z-50 w-full mt-1 bg-white border rounded-md shadow-lg max-h-72 overflow-hidden">
+                    <div className="absolute z-50 w-full mt-1 bg-white-md shadow-lg max-h-72 overflow-hidden">
                       {/* Results counter header */}
                       <div className="px-3 py-2 bg-gray-50 border-b text-xs text-gray-600 font-medium">
                         <div className="flex justify-between items-center">

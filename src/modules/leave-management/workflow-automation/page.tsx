@@ -73,7 +73,7 @@ export default function WorkflowAutomationPage() {
     return (
       <div className="w-full h-full flex flex-col items-center justify-start">
         <div className="w-full relative">
-          <div className="rounded-2xl border py-4 border-border bg-background/90 p-4">
+          <div className="py-4 border-border bg-background/90 p-4">
             <div className="text-center py-16">
               <h3 className="text-lg font-medium text-destructive">
                 {t('leaveManagement.workflowAutomation.errorLoading') || t('common.errorLoading') || 'Error loading workflows'}
@@ -89,7 +89,7 @@ export default function WorkflowAutomationPage() {
   return (
     <div className="w-full h-full flex flex-col items-center justify-start">
       <div className="w-full relative">
-        <div className="rounded-2xl border py-4 border-border bg-background/90 p-4">
+        <div className="py-4 border-border bg-background/90 p-4">
           <WorkflowHeader
             searchTerm={searchTerm}
             onSearchChange={setSearchTerm}

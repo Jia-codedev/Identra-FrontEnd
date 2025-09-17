@@ -87,7 +87,7 @@ const OrganizationStructurePage: React.FC = () => {
     // const statistics = getStatistics(); // Commented out as it's not used
 
     return (
-        <div className={`p-2 space-y-6 border rounded-lg ${isRTL ? 'text-right' : 'text-left'}`} dir={isRTL ? 'rtl' : 'ltr'}>
+        <div className={`p-2 space-y-6-lg ${isRTL ? 'text-right' : 'text-left'}`} dir={isRTL ? 'rtl' : 'ltr'}>
             {/* Header */}
             <div className={`flex items-center justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
                 <div className="space-y-1 p-2 px-4">
@@ -141,7 +141,7 @@ const OrganizationStructurePage: React.FC = () => {
             {/* Style Preview */}
             {/* No style preview — chart is always horizontal */}
 
-            <div className="border rounded-2xl p-1">
+            <div className="border rounded p-1">
                 {/* Main Content */}
                 {isLoading ? (
                     <div className="">

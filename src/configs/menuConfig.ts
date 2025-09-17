@@ -132,7 +132,7 @@ const menus: MainMenu[] = [
       { id: 'permission-management', label: 'Permission Management', path: '/self-service/permission-management' },
       { id: 'attendance-logs', label: 'Attendance Logs', path: '/self-service/attendance-logs' },
       { id: 'workflow-automation', label: 'Workflow Automation', path: '/self-service/workflow-automation' },
-      { id: 'payroll-locking', label: 'Payroll Locking', path: '/self-service/payroll-locking' },
+      // { id: 'payroll-locking', label: 'Payroll Locking', path: '/self-service/payroll-locking' },
     ],
   },
 

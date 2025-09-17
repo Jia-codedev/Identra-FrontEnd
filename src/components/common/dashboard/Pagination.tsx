@@ -64,9 +64,10 @@ export const CustomPagination: React.FC<PaginationProps> = ({
   const pageNumbers = getPageNumbers();
 
   return (
-    <div className="mt-10 px-4 flex flex-col md:flex-row justify-center items-center gap-4">
-      <Pagination>
-        <PaginationContent>
+    <div className="mt-2 px-4 flex flex-col md:flex-row justify-between items-center gap-4 dark:bg-card py-4 rounded-md border w-full">
+      <div className="flex-1 flex justify-start">
+        <Pagination>
+          <PaginationContent>
           <PaginationItem>
             <PaginationPrevious
               onClick={() => handlePageChange(currentPage - 1)}
@@ -103,8 +104,10 @@ export const CustomPagination: React.FC<PaginationProps> = ({
               }
             />
           </PaginationItem>
-        </PaginationContent>
-      </Pagination>
+          </PaginationContent>
+        </Pagination>
+      </div>
+
       <div className="flex items-center gap-2">
         <label htmlFor="pagination-limit" className="text-sm text-muted-foreground">
           {t("common.limit")}

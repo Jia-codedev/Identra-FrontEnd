@@ -301,7 +301,7 @@ const RamadanDateModal: React.FC<RamadanDateModalProps> = ({
               />
             </div>
 
-            <DialogFooter className="gap-2 sm:gap-0">
+            <DialogFooter className="gap-2  flex">
               <Button
                 type="button"
                 variant="outline"

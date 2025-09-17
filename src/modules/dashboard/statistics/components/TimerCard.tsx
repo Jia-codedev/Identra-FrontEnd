@@ -27,7 +27,7 @@ function TimerCard() {
   }, []);
 
   return (
-    <Card className="shadow-xl relative rounded-2xl bg-gradient-to-bl from-primary/50 to-primary/60 text-white px-6 py-7 flex flex-col items-center overflow-hidden">
+    <Card className="shadow-xl relative rounded bg-gradient-to-bl from-primary/50 to-primary/60 text-white px-6 py-7 flex flex-col items-center overflow-hidden">
       {/* Background image layer */}
       <div className="absolute inset-0 z-0">
         <Image

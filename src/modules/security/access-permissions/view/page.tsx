@@ -226,7 +226,7 @@ export default function AccessPermissionsPage() {
           <Label htmlFor="name">Permission Name</Label>
           <input
             id="name"
-            className="w-full p-2 border rounded-md mt-1"
+            className="w-full p-2-md mt-1"
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             placeholder="Enter permission name"
@@ -238,7 +238,7 @@ export default function AccessPermissionsPage() {
           <Label htmlFor="description">Description</Label>
           <input
             id="description"
-            className="w-full p-2 border rounded-md mt-1"
+            className="w-full p-2-md mt-1"
             value={formData.description}
             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
             placeholder="Enter description"
@@ -506,7 +506,7 @@ export default function AccessPermissionsPage() {
                   placeholder="Search permissions..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 p-2 border rounded-md"
+                  className="w-full pl-10 p-2-md"
                 />
               </div>
             </div>

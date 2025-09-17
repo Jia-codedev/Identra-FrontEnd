@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Nunito_Sans } from "next/font/google";
+import { Roboto } from "next/font/google";
 import "./globals.css";
 import "./rtl.css";
 import { ThemeProvider } from "@/providers/theme-provider";
@@ -14,9 +14,9 @@ export const metadata: Metadata = {
   title: "Chronexa",
   description: "Chronexa - Your Chronological Experience",
 };
-const nunitoSans = Nunito_Sans({
+const roboto = Roboto({
   subsets: ["latin"],
-  weight: ["200", "300", "400", "500", "600", "700", "800", "900", "1000"],
+  weight: ["200", "300", "400", "500", "600", "700", "800", "900"],
 });
 
 export default function RootLayout({
@@ -29,7 +29,7 @@ export default function RootLayout({
       <head>
         <link rel="shortcut icon" href="/logo.svg" type="image/x-icon" />
       </head>
-      <body className={`${nunitoSans.className} antialiased`}>
+      <body className={`${roboto.className} antialiased`}>
         <LanguageProvider>
           <ThemeProvider
             attribute="class"

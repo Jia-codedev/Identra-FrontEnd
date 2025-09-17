@@ -255,7 +255,7 @@ export default function AppearancePage() {
                 <Badge className="w-full justify-center py-2">
                   {t('appearance.sampleBadge')}
                 </Badge>
-                <div className="p-3 border rounded-lg">
+                <div className="p-3-lg">
                   <div className="w-full h-2 bg-primary rounded-full" />
                   <p className="text-sm text-muted-foreground mt-2">
                     {t('appearance.sampleProgress')}

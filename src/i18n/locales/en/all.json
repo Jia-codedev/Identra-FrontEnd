@@ -1481,8 +1481,7 @@
           "leaveManagement": "Leave Management",
           "permissionManagement": "Permission Management",
           "attendanceLogs": "Attendance Logs",
-          "workflowAutomation": "Workflow Automation",
-          "payrollLocking": "Payroll Locking"
+          "workflowAutomation": "Workflow Automation"
         }
       },
       "devicesAndInfrastructure": {

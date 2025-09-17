@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Calendar, Filter, CalendarDays, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from "@/components/ui/Input";;
+import { Input } from "@/components/ui/Input";
 import { Calendar as CalendarComponent } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useTranslations } from '@/hooks/use-translations';
@@ -79,7 +79,7 @@ export const WeeklyRosterHeader: React.FC<WeeklyRosterHeaderProps> = ({
   );
 
   return (
-    <div className="sticky top-0 z-10 bg-background/80 rounded-t-3xl px-2 sm:px-4 py-4 sm:py-8 border-b border-border">
+    <div className="sticky top-0 z-10 bg-background/80 rounded-t-3xl px-2 sm:px-4 py-4 sm:py-8 ">
       <div className="flex flex-col gap-4 sm:gap-6">
         {/* Title and Description */}
         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4 sm:gap-6">
@@ -87,9 +87,6 @@ export const WeeklyRosterHeader: React.FC<WeeklyRosterHeaderProps> = ({
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-primary tracking-tight leading-tight mb-1">
               {t('scheduling.weeklyRoster.title')}
             </h1>
-            <p className="text-sm sm:text-base lg:text-lg text-muted-foreground font-normal mb-2">
-              {t('scheduling.weeklyRoster.subtitle')}
-            </p>
             {selectedCount > 0 && (
               <p className="text-xs sm:text-sm text-primary font-medium">
                 {t('common.selectedCount', { count: selectedCount })}
@@ -97,32 +94,10 @@ export const WeeklyRosterHeader: React.FC<WeeklyRosterHeaderProps> = ({
             )}
           </div>
           
-          {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-2">
-            {selectedCount > 0 && onDeleteSelected && (
-              <Button
-                variant="destructive"
-                size="sm"
-                onClick={onDeleteSelected}
-                className="text-xs sm:text-sm h-8 sm:h-9"
-              >
-                {t('common.deleteSelected')}
-              </Button>
-            )}
-            <Button onClick={onAddRoster} className="gap-2 text-xs sm:text-sm h-8 sm:h-9">
-              <CalendarDays size={14} className="sm:size-4" />
-              <span className="hidden sm:inline">{t('scheduling.weeklyRoster.addRoster')}</span>
-              <span className="sm:hidden">{t('common.add')}</span>
-            </Button>
-          </div>
-        </div>
-
-        {/* Search and Filters */}
-        <div className="flex flex-col gap-4">
-          {/* Search */}
-          <div className={`flex items-center gap-0 bg-card/80 border border-border rounded-xl px-2 py-1 ${isRTL ? 'flex-row-reverse' : 'flex-row'}`}>
+          {/* Search + Action Buttons (Ramadan-style) */}
+          <div className={`flex items-center gap-2 bg-card/80 border border-border rounded-xl px-2 py-1 ${isRTL ? 'flex-row-reverse' : 'flex-row'}`}>
             <span className={`${isRTL ? 'pr-2 pl-1' : 'pl-2 pr-1'} text-lg sm:text-xl text-primary/80`}>
-              <Search size={18} className="sm:size-[22px]" />
+              <Search size={18} />
             </span>
             <Input
               placeholder={t('scheduling.weeklyRoster.searchPlaceholder')}
@@ -130,7 +105,30 @@ export const WeeklyRosterHeader: React.FC<WeeklyRosterHeaderProps> = ({
               onChange={(e) => onSearchChange(e.target.value)}
               className="border-0 bg-transparent shadow-none focus-visible:ring-0 text-sm sm:text-base placeholder:text-muted-foreground/70"
             />
+
+            <div className="flex flex-col sm:flex-row gap-2">
+              {selectedCount > 0 && onDeleteSelected && (
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={onDeleteSelected}
+                  className="text-xs sm:text-sm h-8 sm:h-9"
+                >
+                  {t('common.deleteSelected')}
+                </Button>
+              )}
+              <Button onClick={onAddRoster} className="gap-2 text-xs sm:text-sm h-8 sm:h-9">
+                <CalendarDays size={14} className="sm:size-4" />
+                <span className="hidden sm:inline">{t('scheduling.weeklyRoster.addRoster')}</span>
+                <span className="sm:hidden">{t('common.add')}</span>
+              </Button>
+            </div>
           </div>
+        </div>
+
+        {/* Search and Filters */}
+        <div className="flex flex-col gap-4">
+          {/* Search (moved to top row) */}
 
           {/* Filters */}
           {onFiltersChange && (

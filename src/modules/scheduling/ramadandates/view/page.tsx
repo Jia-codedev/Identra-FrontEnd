@@ -106,7 +106,7 @@ const RamadanDatesPage: React.FC = () => {
   }
 
   return (
-    <div className="px-4 py-6 space-y-6 border rounded-lg">
+    <div className="px-4 py-6 space-y-6-lg">
       <RamadanDatesHeader
         search={search}
         onSearchChange={setSearch}
