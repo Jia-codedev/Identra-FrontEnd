@@ -59,7 +59,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className="bg-sidebar sticky z-20 top-0 border-b flex gap-2 pt-3 flex-col justify-center items-center transition-all backdrop-blur-sm ">
+    <div className="bg-sidebar sticky z-20 top-0 border-b flex gap-2 pt-2 flex-col justify-center items-center transition-all backdrop-blur-sm ">
       <div className="flex items-center justify-between w-full gap-4 px-2">
         <div className="flex items-center gap-2 min-w-0 flex-1">
           <DesktopNav />

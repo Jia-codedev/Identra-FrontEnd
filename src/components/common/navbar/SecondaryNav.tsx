@@ -34,7 +34,7 @@ export const SecondaryNav: React.FC<SecondaryNavProps> = ({
   }
 
   return (
-    <div className="w-full bg-sidebar-primary h-fit pt-1 pb-0.5 px-6 flex items-baseline space-x-2">
+    <div className="w-full bg-sidebar border-t h-fit pt-1 pb-0.5 px-6 flex items-baseline space-x-2">
       {secondaryLinks.map((item: any, idx: number) => {
         const isActive = pathname === item.href;
         const key = item.href || item.label || `sub-link-${idx}`;
