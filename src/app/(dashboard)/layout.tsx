@@ -18,7 +18,7 @@ export default function DashboardLayout({
         <SidebarInset>
           <Navbar />
           <DashboardFadeInAnimation>
-            <ScrollArea className="w-full h-[90vh] py-2">
+            <ScrollArea className="flex-1 w-full h-[90vh] py-2">
               <div className="p-2">{children}</div>
             </ScrollArea>
           </DashboardFadeInAnimation>

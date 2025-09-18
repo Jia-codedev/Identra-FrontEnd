@@ -112,12 +112,11 @@ export const SiteModal: React.FC<SiteModalProps> = ({
       site_name: formData.site_name || undefined,
       country_code: formData.country_code || undefined,
       geolocation: formData.geolocation || undefined,
-      // convert radius string to number if it's numeric, otherwise null
       radius:
         formData.radius === undefined || formData.radius === ""
-          ? null
+          ? 0
           : Number.isNaN(Number(formData.radius))
-          ? null
+          ? 0
           : Number(formData.radius),
     } as ISite;
 
@@ -128,7 +127,6 @@ export const SiteModal: React.FC<SiteModalProps> = ({
     field: keyof SiteFormFields,
     value: string | number
   ) => {
-    // keep radius as string to avoid number input spinner
     if (field === "radius") {
       setFormData((prev) => ({ ...prev, [field]: String(value) }));
       return;
@@ -249,20 +247,7 @@ export const SiteModal: React.FC<SiteModalProps> = ({
                   className="mt-1"
                 />
               </div>
-              <div>
-                <Label htmlFor="site_name" className="text-sm font-medium">
-                  {t("masterData.sites.site") || "Site"}
-                </Label>
-                <Input
-                  id="site_name"
-                  value={formData.site_name}
-                  onChange={(e) =>
-                    handleInputChange("site_name", e.target.value)
-                  }
-                  placeholder={t("masterData.sites.enterSite") || ""}
-                  className="mt-1"
-                />
-              </div>
+
               <div>
                 <Label htmlFor="country_code" className="text-sm font-medium">
                   {t("masterData.sites.countryCode") || "Country Code"}

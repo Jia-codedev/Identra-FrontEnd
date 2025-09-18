@@ -3,11 +3,7 @@ import React, { useState } from "react";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "@/hooks/use-translations";
 import { useNavigation } from "@/hooks/use-navigation";
-import {
-  DesktopNav,
-  UserProfileSection,
-  SecondaryNav,
-} from "./navbar/index";
+import { DesktopNav, UserProfileSection, SecondaryNav } from "./navbar/index";
 import { useUserStore } from "@/store/userStore";
 import { useLanguage } from "@/providers/language-provider";
 import { useUserNavBar } from "@/store/userNavBar";
@@ -59,13 +55,11 @@ const Navbar = () => {
   };
 
   return (
-    <div className="bg-sidebar sticky z-20 top-0 border-b flex gap-2 pt-2 flex-col justify-center items-center transition-all backdrop-blur-sm ">
-      <div className="flex items-center justify-between w-full gap-4 px-2">
-        <div className="flex items-center gap-2 min-w-0 flex-1">
-          <DesktopNav />
-        </div>
+    <div className="w-full z-20 top-0 border-b flex gap-2 pt-2 flex-col justify-center items-center backdrop-blur-sm ">
+      <div className="grid grid-cols-9 w-full gap-4 px-2 items-center group">
+        <DesktopNav />
         <div
-          className={`flex items-center flex-shrink-0${
+          className={`flex col-start-8 items-center justify-end col-span-2${
             isRTL ? " flex-row-reverse" : ""
           }`}
         >

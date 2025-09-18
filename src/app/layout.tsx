@@ -49,7 +49,7 @@ export default function RootLayout({
                   >
                     <main className="bg-background">
                       {children}
-                      <Toaster />
+                      <Toaster position="top-right"/>
                     </main>
                   </SocketProvider>
                 </UserRefreshProvider>
