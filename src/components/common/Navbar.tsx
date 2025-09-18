@@ -55,13 +55,13 @@ const Navbar = () => {
   };
 
   return (
-    <div className="w-full z-20 top-0 border-b flex gap-2 pt-2 flex-col justify-center items-center backdrop-blur-sm ">
-      <div className="grid grid-cols-9 w-full gap-4 px-2 items-center group">
-        <DesktopNav />
+    <header className="w-full z-20 top-0 border-b bg-sidebar backdrop-blur-sm">
+      <div className="w-full max-w-[1920px] mx-auto px-4 py-2 grid grid-cols-12 items-center gap-2 group">
+        <div className="col-span-10 max-xl:col-span-9 min-w-0 overflow-hidden">
+          <DesktopNav />
+        </div>
         <div
-          className={`flex col-start-8 items-center justify-end col-span-2${
-            isRTL ? " flex-row-reverse" : ""
-          }`}
+          className={`col-span-2 max-xl:col-span-3 bg-sidebar flex items-center justify-end  ${isRTL ? " flex-row-reverse" : ""}`}
         >
           <UserProfileSection
             user={{
@@ -73,8 +73,10 @@ const Navbar = () => {
           />
         </div>
       </div>
-      <SecondaryNav activeMenuObj={activeMenuObj} />
-    </div>
+      <div className="w-full max-w-[1920px] mx-auto px-4">
+        <SecondaryNav activeMenuObj={activeMenuObj} />
+      </div>
+    </header>
   );
 };
 

@@ -17,8 +17,8 @@ export const DesktopNav: React.FC = () => {
   };
 
   return (
-    <ScrollArea className="col-span-7 overflow-auto" type="hover">
-      <div className="flex items-center space-x-1 ">
+    <ScrollArea className="w-full overflow-x-auto" type="hover">
+      <div className="flex items-center gap-1 min-w-fit">
         {NAV_LINKS.map((menu, menuIndex) => {
           const Icon = menu.icon;
           const isActive = activeMenuId === menu.id;
