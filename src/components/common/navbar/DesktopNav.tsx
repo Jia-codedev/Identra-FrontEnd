@@ -17,7 +17,7 @@ export const DesktopNav: React.FC = () => {
   };
 
   return (
-    <div className="hidden xl:flex items-center relative flex-1 max-w-full overflow-hidden group">
+    <div className="xl:flex items-center relative flex-1 max-w-full overflow-hidden group">
       <ScrollArea className="w-full max-w-full" type="hover">
         <div className="flex items-center space-x-1 min-w-fit">
           {NAV_LINKS.map((menu, menuIndex) => {
@@ -32,9 +32,7 @@ export const DesktopNav: React.FC = () => {
                 <motion.button
                   className={cn(
                     "flex text-nowrap group/button w-auto items-center rounded-2xl justify-center px-4 py-2 font-semibold transition-colors duration-200 cursor-pointer text-xs",
-                    isActive
-                      ? "bg-primary/80 text-white"
-                      : "hover:bg-muted"
+                    isActive ? "bg-primary/80 text-white" : "hover:bg-muted"
                   )}
                   onClick={() => {
                     if (menu.href) {
