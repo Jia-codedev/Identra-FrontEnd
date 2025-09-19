@@ -14,7 +14,7 @@ class EmployeeApi {
       params: {
         offset,
         limit,
-        ...(search && { name: search }), // The backend expects 'name' parameter for search
+        ...(search && { search }), // The backend expects 'search' parameter for name search
         ...(manager_flag !== null && { manager_flag: manager_flag.toString() }),
       },
     });

@@ -3,17 +3,17 @@ import apiClient from "@/configs/api/Axios";
 
 class OrganizationTypesApi {
   getOrganizationTypes(
-    { offset = 0, limit = 10, name = "" } = {} as {
+    { offset = 0, limit = 10, search = "" } = {} as {
       offset?: number;
       limit?: number;
-      name?: string;
+      search?: string;
     }
   ) {
     return apiClient.get("/organizationtype/all", {
       params: {
         offset,
         limit,
-        name,
+        ...(search && { search }),
       },
     });
   }

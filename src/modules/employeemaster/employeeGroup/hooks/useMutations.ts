@@ -130,6 +130,11 @@ export function useEmployeeGroupMutations() {
   // Delete Single Employee Group
   const deleteEmployeeGroupMutation = useMutation({
     mutationFn: async (id: number) => {
+      if (typeof id !== "number" || isNaN(id)) {
+        const err = new Error("Invalid id provided to deleteEmployeeGroup");
+        console.error(err);
+        throw err;
+      }
       const data = await employeeGroupApi.deleteEmployeeGroup(id);
       return data;
     },
@@ -137,9 +142,25 @@ export function useEmployeeGroupMutations() {
       toast.success(t('toast.success.deleted'));
       queryClient.invalidateQueries({ queryKey: ["employeeGroups"] });
     },
-    onError: (error) => {
-      toast.error(t('toast.error.deleting'));
-      console.error("Error deleting employee group:", error);
+    onError: (error: any) => {
+      const status = error?.response?.status;
+      const url = error?.config?.url;
+      const reqData = error?.config?.data;
+      const resData = error?.response?.data;
+      console.error("Error deleting employee group:", {
+        status,
+        url,
+        reqData,
+        resData,
+        error,
+      });
+      // Surface server-provided message when available
+      const serverMessage = resData?.message || resData?.error || null;
+      if (serverMessage) {
+        toast.error(serverMessage);
+      } else {
+        toast.error(t('toast.error.deleting'));
+      }
     },
   });
 
@@ -153,9 +174,24 @@ export function useEmployeeGroupMutations() {
       toast.success(t('toast.success.deletedMultiple'));
       queryClient.invalidateQueries({ queryKey: ["employeeGroups"] });
     },
-    onError: (error) => {
-      toast.error(t('toast.error.deletingMultiple'));
-      console.error("Error deleting selected employee groups:", error);
+    onError: (error: any) => {
+      const status = error?.response?.status;
+      const url = error?.config?.url;
+      const reqData = error?.config?.data;
+      const resData = error?.response?.data;
+      console.error("Error deleting selected employee groups:", {
+        status,
+        url,
+        reqData,
+        resData,
+        error,
+      });
+      const serverMessage = resData?.message || resData?.error || null;
+      if (serverMessage) {
+        toast.error(serverMessage);
+      } else {
+        toast.error(t('toast.error.deletingMultiple'));
+      }
     },
   });
   

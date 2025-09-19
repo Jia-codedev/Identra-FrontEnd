@@ -58,7 +58,7 @@ class SecurityRolesApi {
     }
   ) {
     return apiClient.get("/secRole/all", {
-      params: { offset, limit, ...(search && { role_name: search }) },
+      params: { offset, limit, ...(search && { search }) },
     });
   }
 

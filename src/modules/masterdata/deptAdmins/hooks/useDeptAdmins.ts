@@ -32,7 +32,7 @@ export const useDeptAdmins = () => {
     queryKey: ['deptAdmins', state.search, state.pageSize],
     queryFn: ({ pageParam = 1 }) =>
       deptAdminsApi
-        .getDeptAdmins({ offset: pageParam, limit: state.pageSize })
+        .getDeptAdmins({ offset: pageParam, limit: state.pageSize, search: state.search })
         .then((res) => res.data),
     getNextPageParam: (lastPage, allPages) => {
       if (lastPage && Array.isArray(lastPage.data) && lastPage.data.length === state.pageSize) return allPages.length + 1;

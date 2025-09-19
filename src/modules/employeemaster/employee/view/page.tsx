@@ -38,6 +38,8 @@ export default function EmployeePage() {
     selectEmployee,
     selectAll,
     isLoading,
+    setIsManager,
+    isManager,
   } = useEmployees();
 
   const [modalState, setModalState] = useState<{
@@ -115,6 +117,8 @@ export default function EmployeePage() {
           <EmployeesHeader
             search={search}
             onSearchChange={setSearch}
+            onIsManagerChange={setIsManager}
+            isManager={isManager}
             onAddEmployee={handleAddEmployeeType}
             selectedCount={selected.length}
             onDeleteSelected={handleDeleteSelected}

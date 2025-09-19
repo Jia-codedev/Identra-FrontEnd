@@ -27,7 +27,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/Input"
+import { Input } from "@/components/ui/Input";
 import { Textarea } from "@/components/ui/Textarea";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -36,7 +36,11 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-import { IRamadanDate, CreateRamadanDateRequest, UpdateRamadanDateRequest } from "../types";
+import {
+  IRamadanDate,
+  CreateRamadanDateRequest,
+  UpdateRamadanDateRequest,
+} from "../types";
 
 interface RamadanDateModalProps {
   isOpen: boolean;
@@ -58,20 +62,30 @@ const RamadanDateModal: React.FC<RamadanDateModalProps> = ({
   const [fromDateOpen, setFromDateOpen] = useState(false);
   const [toDateOpen, setToDateOpen] = useState(false);
 
-  const formSchema = useMemo(() => z.object({
-    ramadan_name_eng: isRTL ? z.string().optional() : z.string().min(1, "English name is required"),
-    ramadan_name_arb: isRTL ? z.string().min(1, "Arabic name is required") : z.string().optional(),
-    from_date: z.date({
-      message: "From date is required",
-    }),
-    to_date: z.date({
-      message: "To date is required",
-    }),
-    remarks: z.string().optional(),
-  }).refine((data) => data.to_date >= data.from_date, {
-    message: "To date must be after or equal to from date",
-    path: ["to_date"],
-  }), [isRTL]);
+  const formSchema = useMemo(
+    () =>
+      z
+        .object({
+          ramadan_name_eng: isRTL
+            ? z.string().optional()
+            : z.string().min(1, "English name is required"),
+          ramadan_name_arb: isRTL
+            ? z.string().min(1, "Arabic name is required")
+            : z.string().optional(),
+          from_date: z.date({
+            message: "From date is required",
+          }),
+          to_date: z.date({
+            message: "To date is required",
+          }),
+          remarks: z.string().optional(),
+        })
+        .refine((data) => data.to_date >= data.from_date, {
+          message: "To date must be after or equal to from date",
+          path: ["to_date"],
+        }),
+    [isRTL]
+  );
 
   type RamadanFormData = z.infer<typeof formSchema>;
 
@@ -108,11 +122,13 @@ const RamadanDateModal: React.FC<RamadanDateModalProps> = ({
 
   const handleSubmit = (data: RamadanFormData) => {
     // Handle the language-specific name submission like the holiday modal
-    const submittedName = isRTL ? (data.ramadan_name_arb || '') : (data.ramadan_name_eng || '');
-    
+    const submittedName = isRTL
+      ? data.ramadan_name_arb || ""
+      : data.ramadan_name_eng || "";
+
     const formattedData = {
-      ramadan_name_eng: isRTL ? submittedName : (data.ramadan_name_eng || ''),
-      ramadan_name_arb: isRTL ? (data.ramadan_name_arb || '') : submittedName,
+      ramadan_name_eng: isRTL ? submittedName : data.ramadan_name_eng || "",
+      ramadan_name_arb: isRTL ? data.ramadan_name_arb || "" : submittedName,
       from_date: format(data.from_date, "yyyy-MM-dd"),
       to_date: format(data.to_date, "yyyy-MM-dd"),
       remarks: data.remarks,
@@ -131,21 +147,17 @@ const RamadanDateModal: React.FC<RamadanDateModalProps> = ({
       <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
-            {ramadanDate 
-              ? t("scheduling.ramadanDates.editRamadanDate")
-              : t("scheduling.ramadanDates.addRamadanDate")
-            }
-          </DialogTitle>
-          <DialogDescription>
             {ramadanDate
-              ? t("scheduling.ramadanDates.editDescription")
-              : t("scheduling.ramadanDates.addDescription")
-            }
-          </DialogDescription>
+              ? t("scheduling.ramadanDates.editRamadanDate")
+              : t("scheduling.ramadanDates.addRamadanDate")}
+          </DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="space-y-4"
+          >
             <div className="grid grid-cols-1 gap-4">
               {/* Name Field - Language Specific */}
               {isRTL ? (
@@ -154,10 +166,14 @@ const RamadanDateModal: React.FC<RamadanDateModalProps> = ({
                   name="ramadan_name_arb"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{t("scheduling.ramadanDates.fields.nameArb")}</FormLabel>
+                      <FormLabel>
+                        {t("scheduling.ramadanDates.fields.nameArb")}
+                      </FormLabel>
                       <FormControl>
                         <Input
-                          placeholder={t("scheduling.ramadanDates.placeholders.nameArb")}
+                          placeholder={t(
+                            "scheduling.ramadanDates.placeholders.nameArb"
+                          )}
                           {...field}
                           dir="rtl"
                         />
@@ -172,10 +188,14 @@ const RamadanDateModal: React.FC<RamadanDateModalProps> = ({
                   name="ramadan_name_eng"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{t("scheduling.ramadanDates.fields.nameEng")}</FormLabel>
+                      <FormLabel>
+                        {t("scheduling.ramadanDates.fields.nameEng")}
+                      </FormLabel>
                       <FormControl>
                         <Input
-                          placeholder={t("scheduling.ramadanDates.placeholders.nameEng")}
+                          placeholder={t(
+                            "scheduling.ramadanDates.placeholders.nameEng"
+                          )}
                           {...field}
                         />
                       </FormControl>
@@ -193,8 +213,13 @@ const RamadanDateModal: React.FC<RamadanDateModalProps> = ({
                   name="from_date"
                   render={({ field }) => (
                     <FormItem className="flex flex-col">
-                      <FormLabel>{t("scheduling.ramadanDates.fields.fromDate")}</FormLabel>
-                      <Popover open={fromDateOpen} onOpenChange={setFromDateOpen}>
+                      <FormLabel>
+                        {t("scheduling.ramadanDates.fields.fromDate")}
+                      </FormLabel>
+                      <Popover
+                        open={fromDateOpen}
+                        onOpenChange={setFromDateOpen}
+                      >
                         <PopoverTrigger asChild>
                           <FormControl>
                             <Button
@@ -207,7 +232,11 @@ const RamadanDateModal: React.FC<RamadanDateModalProps> = ({
                               {field.value ? (
                                 format(field.value, "PPP")
                               ) : (
-                                <span>{t("scheduling.ramadanDates.placeholders.selectDate")}</span>
+                                <span>
+                                  {t(
+                                    "scheduling.ramadanDates.placeholders.selectDate"
+                                  )}
+                                </span>
                               )}
                               <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                             </Button>
@@ -221,9 +250,7 @@ const RamadanDateModal: React.FC<RamadanDateModalProps> = ({
                               field.onChange(date);
                               setFromDateOpen(false);
                             }}
-                            disabled={(date) =>
-                              date < new Date("1900-01-01")
-                            }
+                            disabled={(date) => date < new Date("1900-01-01")}
                             initialFocus
                           />
                         </PopoverContent>
@@ -239,7 +266,9 @@ const RamadanDateModal: React.FC<RamadanDateModalProps> = ({
                   name="to_date"
                   render={({ field }) => (
                     <FormItem className="flex flex-col">
-                      <FormLabel>{t("scheduling.ramadanDates.fields.toDate")}</FormLabel>
+                      <FormLabel>
+                        {t("scheduling.ramadanDates.fields.toDate")}
+                      </FormLabel>
                       <Popover open={toDateOpen} onOpenChange={setToDateOpen}>
                         <PopoverTrigger asChild>
                           <FormControl>
@@ -253,7 +282,11 @@ const RamadanDateModal: React.FC<RamadanDateModalProps> = ({
                               {field.value ? (
                                 format(field.value, "PPP")
                               ) : (
-                                <span>{t("scheduling.ramadanDates.placeholders.selectDate")}</span>
+                                <span>
+                                  {t(
+                                    "scheduling.ramadanDates.placeholders.selectDate"
+                                  )}
+                                </span>
                               )}
                               <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                             </Button>
@@ -267,9 +300,7 @@ const RamadanDateModal: React.FC<RamadanDateModalProps> = ({
                               field.onChange(date);
                               setToDateOpen(false);
                             }}
-                            disabled={(date) =>
-                              date < new Date("1900-01-01")
-                            }
+                            disabled={(date) => date < new Date("1900-01-01")}
                             initialFocus
                           />
                         </PopoverContent>
@@ -286,10 +317,14 @@ const RamadanDateModal: React.FC<RamadanDateModalProps> = ({
                 name="remarks"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t("scheduling.ramadanDates.fields.remarks")}</FormLabel>
+                    <FormLabel>
+                      {t("scheduling.ramadanDates.fields.remarks")}
+                    </FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder={t("scheduling.ramadanDates.placeholders.remarks")}
+                        placeholder={t(
+                          "scheduling.ramadanDates.placeholders.remarks"
+                        )}
                         className="resize-none"
                         rows={3}
                         {...field}
@@ -311,12 +346,11 @@ const RamadanDateModal: React.FC<RamadanDateModalProps> = ({
                 {t("common.cancel")}
               </Button>
               <Button type="submit" disabled={isLoading}>
-                {isLoading 
+                {isLoading
                   ? t("common.saving")
-                  : ramadanDate 
-                    ? t("common.update")
-                    : t("common.create")
-                }
+                  : ramadanDate
+                  ? t("common.update")
+                  : t("common.create")}
               </Button>
             </DialogFooter>
           </form>

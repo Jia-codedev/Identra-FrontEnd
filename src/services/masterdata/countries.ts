@@ -14,7 +14,7 @@ interface ICountry {
 
 class CountriesApi {
   getCountries(
-    { offset = 0, limit = 10, name = "", code = "" } = {} as {
+    { offset = 0, limit = 10, search="" } = {} as {
       offset?: number;
       limit?: number;
       name?: string;

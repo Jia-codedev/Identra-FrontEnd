@@ -112,6 +112,12 @@ export default function SitesPage() {
       deleteSites(selected);
     }
     setDeleteDialog({ open: false, type: null });
+    // Clear selection so the header returns to the normal (Add) state
+    try {
+      selectAll(false);
+    } catch (e) {
+      // swallow if selectAll not available for some reason
+    }
   };
 
   const handleCancelDelete = () => {

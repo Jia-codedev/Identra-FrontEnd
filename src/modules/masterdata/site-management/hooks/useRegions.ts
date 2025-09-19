@@ -26,7 +26,7 @@ export const useRegions = () => {
           .getSites({
             offset: pageParam - 1, // Ensure zero-based offset for proper pagination
             limit: state.pageSize,
-            name: state.search,
+            search: state.search,
           })
           .then((response) => response.data),
       getNextPageParam: (lastPage, allPages) => {

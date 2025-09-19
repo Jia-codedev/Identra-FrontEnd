@@ -21,12 +21,14 @@ export const useEmployees = () => {
   });
   const { data, isLoading, refetch, fetchNextPage, hasNextPage } =
     useInfiniteQuery({
-      queryKey: ["employees", state.search, state.pageSize],
+      queryKey: ["employees", state.search, state.pageSize, state.isManager],
       queryFn: ({ pageParam = 1 }) =>
         employeeApi
           .getEmployees({
             offset: pageParam,
             limit: state.pageSize,
+            search: state.search,
+            manager_flag: state.isManager,
           })
           .then((response) => response.data),
       getNextPageParam: (lastPage, allPages) => {
@@ -71,6 +73,14 @@ export const useEmployees = () => {
       debouncedRefetch();
     },
     [debouncedRefetch]
+  );
+
+  const setIsManager = useCallback(
+    (isManager: boolean | null) => {
+      setState((prev) => ({ ...prev, isManager, page: 1 }));
+      refetch();
+    },
+    [refetch]
   );
 
   const setPageSize = useCallback(
@@ -138,5 +148,7 @@ export const useEmployees = () => {
     selectEmployee,
     selectAll,
     clearSelection,
+    setIsManager,
+    isManager: state.isManager,
   };
 };

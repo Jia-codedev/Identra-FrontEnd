@@ -3,19 +3,19 @@ import apiClient from "@/configs/api/Axios";
 
 class EmployeeGroupApi {
   getEmployeeGroups(
-    { offset = 0, limit = 10, name = "", code = "" } = {} as {
+    { offset = 0, limit = 10, search = "", code } = {} as {
       offset?: number;
       limit?: number;
-      name?: string;
-      code?: string;
+      search?: string;
+      code?: string | number;
     }
   ) {
     return apiClient.get("/employeeGroup/all", {
       params: {
         offset,
         limit,
-        name,
-        code,
+        ...(search && { search }),
+        ...(typeof code !== 'undefined' && { code }),
       },
     });
   }
@@ -45,7 +45,7 @@ class EmployeeGroupApi {
   }
 
   deleteEmployeeGroups(ids: number[]) {
-    return apiClient.delete("/employeeGroup/delete", { data: { ids } });
+    return apiClient.post("/employeeGroup/delete", { ids });
   }
 }
 

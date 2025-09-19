@@ -137,20 +137,9 @@ const RamadanDatesHeader: React.FC<RamadanDatesHeaderProps> = ({
             </div>
           </div>
         </div>
-
-        {/* Search and Filters */}
         <div className="flex flex-col gap-4">
-          {/* Filters */}
           <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
-            {/* Filter Label */}
-            <div className="flex items-center gap-2 px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-muted-foreground bg-muted/50 rounded-lg border">
-              <Filter size={14} className="sm:size-4" />
-              <span className="hidden sm:inline">{t("common.filters")}:</span>
-              <span className="sm:hidden">{t("common.filters")}</span>
-            </div>
-
             <div className="flex flex-wrap gap-2">
-              {/* Year Filter */}
               <div className="flex items-center gap-1">
                 <Calendar
                   size={14}

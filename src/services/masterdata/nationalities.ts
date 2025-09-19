@@ -3,19 +3,13 @@ import apiClient from "@/configs/api/Axios";
 
 class NationalitiesApi {
   getNationalities(
-    { offset = 0, limit = 10, name = "", code = "" } = {} as {
-      offset?: number;
-      limit?: number;
-      name?: string;
-      code?: string;
-    }
+    { offset = 0, limit = 10, search = "" }: { offset?: number; limit?: number; search?: string } = {}
   ) {
     return apiClient.get("/citizenship/all", {
       params: {
         offset,
         limit,
-        name,
-        code,
+        search,
       },
     });
   }

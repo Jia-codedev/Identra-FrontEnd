@@ -142,6 +142,7 @@ class GroupSchedulesApi {
     end_date?: string; // ISO
     search?: string;
   }) {
+    // Ensure only 'search' is used for filtering, remove any legacy code/name params
     const response = await apiClient.get(`${this.baseUrl}/all`, { params });
     // return the full API payload so callers can access pagination metadata
     return response.data as IGroupSchedulesResponse;

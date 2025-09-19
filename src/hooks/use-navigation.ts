@@ -22,6 +22,7 @@ import {
 
 export const useNavigation = () => {
   const { t } = useTranslations();
+  // Main navigation menu descriptor
   const MENU_DESCRIPTOR = [
     {
       id: "workforce-analytics",
@@ -86,8 +87,8 @@ export const useNavigation = () => {
           routeKey: "mainMenu.organization.items.orgChart",
         },
         {
-          labelKey: "mainMenu.organization.items.divisions",
-          routeKey: "mainMenu.organization.items.divisions",
+          labelKey: "mainMenu.organization.items.organizations",
+          routeKey: "mainMenu.organization.items.organizations",
         },
       ],
       icon: FiMapPin,
@@ -162,10 +163,6 @@ export const useNavigation = () => {
           labelKey: "mainMenu.selfServices.items.workflowAutomation",
           routeKey: "navigation.workFlow",
         },
-        // {
-        //   labelKey: "mainMenu.selfServices.items.payrollLocking",
-        //   routeKey: "navigation.payrollLocking",
-        // },
       ],
       icon: FiClock,
     },
@@ -268,6 +265,7 @@ export const useNavigation = () => {
     },
   ];
 
+  // Sidebar footer descriptor
   const SIDEBAR_FOOTER = [
     {
       id: "support-centre",
@@ -290,15 +288,24 @@ export const useNavigation = () => {
     },
   ];
 
+  // Helper to get a readable label from translation or fallback
+  const getLabel = (titleKey: string, fallback: string) => {
+    const val = t(titleKey);
+    if (val && !val.includes(".")) return val;
+    const mm = t(`mainMenu.${fallback}.title`);
+    if (mm && !mm.includes(".")) return mm;
+    return fallback.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+  };
+
+  const getItemLabel = (labelKey: string) => {
+    const label = t(labelKey);
+    if (label && !label.includes(".")) return label;
+    return t(labelKey.replace(/^mainMenu\./, ""));
+  };
+
   const NAV_LINKS = MENU_DESCRIPTOR.map((g) => ({
     id: g.id,
-    label: ((): string => {
-      const val = t(g.titleKey);
-      if (val && !val.includes(".")) return val;
-      const mm = t(`mainMenu.${g.id}.title`);
-      if (mm && !mm.includes(".")) return mm;
-      return g.id.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
-    })(),
+    label: getLabel(g.titleKey, g.id),
     icon: g.icon,
     href:
       g.id === "workforce-analytics"
@@ -306,11 +313,7 @@ export const useNavigation = () => {
         : undefined,
     secondary: g.items
       .map((it) => {
-        const label = t(it.labelKey);
-        const finalLabel =
-          label && !label.includes(".")
-            ? label
-            : t(it.labelKey.replace(/^mainMenu\./, ""));
+        const finalLabel = getItemLabel(it.labelKey);
         const keyForRoute = it.routeKey ?? it.labelKey;
         return { label: finalLabel, href: getRouteFromKey(keyForRoute) };
       })
@@ -318,21 +321,11 @@ export const useNavigation = () => {
   }));
   const SIDEBAR_LINKS = SIDEBAR_MENUS.map((g) => ({
     id: g.id,
-    label: ((): string => {
-      const val = t(g.titleKey);
-      if (val && !val.includes(".")) return val;
-      const mm = t(`mainMenu.${g.id}.title`);
-      if (mm && !mm.includes(".")) return mm;
-      return g.id.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
-    })(),
+    label: getLabel(g.titleKey, g.id),
     icon: g.icon,
     secondary: g.items
       .map((it) => {
-        const label = t(it.labelKey);
-        const finalLabel =
-          label && !label.includes(".")
-            ? label
-            : t(it.labelKey.replace(/^mainMenu\./, ""));
+        const finalLabel = getItemLabel(it.labelKey);
         const keyForRoute = it.routeKey ?? it.labelKey;
         return { label: finalLabel, href: getRouteFromKey(keyForRoute) };
       })
@@ -341,21 +334,11 @@ export const useNavigation = () => {
 
   const FOOTER_LINKS = SIDEBAR_FOOTER.map((g) => ({
     id: g.id,
-    label: ((): string => {
-      const val = t(g.titleKey);
-      if (val && !val.includes(".")) return val;
-      const mm = t(`mainMenu.${g.id}.title`);
-      if (mm && !mm.includes(".")) return mm;
-      return g.id.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
-    })(),
+    label: getLabel(g.titleKey, g.id),
     icon: g.icon,
     secondary: g.items
       .map((it) => {
-        const label = t(it.labelKey);
-        const finalLabel =
-          label && !label.includes(".")
-            ? label
-            : t(it.labelKey.replace(/^mainMenu\./, ""));
+        const finalLabel = getItemLabel(it.labelKey);
         const keyForRoute = it.routeKey ?? it.labelKey;
         return { label: finalLabel, href: getRouteFromKey(keyForRoute) };
       })

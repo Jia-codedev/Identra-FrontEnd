@@ -2,8 +2,9 @@
 
 import React from 'react';
 import { Search } from 'lucide-react';
-import { Input } from "@/components/ui/Input";;
+import { Input } from "@/components/ui/Input";
 import { Button } from '@/components/ui/button';
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 import { useTranslations } from '@/hooks/use-translations';
 import { useLanguage } from '@/providers/language-provider';
 
@@ -13,6 +14,8 @@ interface EmployeesHeaderProps {
   onAddEmployee: () => void;
   selectedCount: number;
   onDeleteSelected?: () => void;
+  onIsManagerChange?: (isManager: boolean | null) => void;
+  isManager?: boolean | null;
 }
 
 export const EmployeesHeader: React.FC<EmployeesHeaderProps> = ({
@@ -21,6 +24,8 @@ export const EmployeesHeader: React.FC<EmployeesHeaderProps> = ({
   onAddEmployee,
   selectedCount,
   onDeleteSelected,
+  onIsManagerChange,
+  isManager,
 }) => {
   const { t } = useTranslations();
   const { isRTL } = useLanguage();
@@ -44,6 +49,25 @@ export const EmployeesHeader: React.FC<EmployeesHeaderProps> = ({
               onChange={(e) => onSearchChange(e.target.value)}
               className="border-0 bg-transparent rounded-lg focus:ring-0 focus-visible:ring-0 shadow-none text-base px-2"
             />
+            {/* Manager filter */}
+            {onIsManagerChange && (
+              <div className="ml-2">
+                <Select value={isManager === null ? 'all' : isManager ? 'manager' : 'nonmanager'} onValueChange={(v) => {
+                  if (v === 'all') onIsManagerChange(null);
+                  else if (v === 'manager') onIsManagerChange(true);
+                  else onIsManagerChange(false);
+                }}>
+                  <SelectTrigger size="sm" className="w-36">
+                    <SelectValue placeholder={t('employeeMaster.employee.filterManager') || t('common.all')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">{t('common.all')}</SelectItem>
+                    <SelectItem value="manager">{t('employeeMaster.employee.manager')}</SelectItem>
+                    <SelectItem value="nonmanager">{t('employeeMaster.employee.nonManager') ?? 'Non-manager'}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
             <span className="mx-2 h-6 w-px bg-border" />
             {selectedCount > 0 && onDeleteSelected ? (
               <Button

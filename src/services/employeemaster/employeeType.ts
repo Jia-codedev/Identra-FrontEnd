@@ -3,10 +3,10 @@ import apiClient from "@/configs/api/Axios";
 
 class EmployeeTypeApi {
   getEmployeeTypes(
-    { offset = 0, limit = 10, name = "", code = "" } = {} as {
+    { offset = 0, limit = 10, search = "", code } = {} as {
       offset?: number;
       limit?: number;
-      name?: string;
+      search?: string;
       code?: string;
     }
   ) {
@@ -14,8 +14,8 @@ class EmployeeTypeApi {
       params: {
         offset,
         limit,
-        name,
-        code,
+        ...(search && { search }),
+        ...(typeof code !== 'undefined' && { code }),
       },
     });
   }

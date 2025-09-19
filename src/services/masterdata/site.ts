@@ -3,19 +3,17 @@ import apiClient from "@/configs/api/Axios";
 
 class SitesApi {
   getSites(
-    { offset = 0, limit = 10, name = "", code = "" } = {} as {
+    { offset = 0, limit = 10, search = "" } = {} as {
       offset?: number;
       limit?: number;
-      name?: string;
-      code?: string;
+      search?: string;
     }
   ) {
     return apiClient.get("/location/all", {
       params: {
         offset,
         limit,
-        name,
-        code,
+        search,
       },
     });
   }

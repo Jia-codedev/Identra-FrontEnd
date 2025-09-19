@@ -61,7 +61,9 @@ const Navbar = () => {
           <DesktopNav />
         </div>
         <div
-          className={`col-span-2 max-xl:col-span-3 bg-sidebar flex items-center justify-end  ${isRTL ? " flex-row-reverse" : ""}`}
+          className={`col-span-2 max-xl:col-span-3 bg-sidebar flex items-center justify-end  ${
+            isRTL ? " flex-row-reverse" : ""
+          }`}
         >
           <UserProfileSection
             user={{

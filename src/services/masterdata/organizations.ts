@@ -3,17 +3,17 @@ import apiClient from "@/configs/api/Axios";
 
 class OrganizationsApi {
   getOrganizations(
-    { offset = 0, limit = 10, name = "" } = {} as {
+    { offset = 0, limit = 10, search = "" } = {} as {
       offset?: number;
       limit?: number;
-      name?: string;
+      search?: string;
     }
   ) {
     return apiClient.get("/organization/all", {
       params: {
         offset,
         limit,
-        name,
+        ...(search && { search }),
       },
     });
   }
@@ -44,7 +44,7 @@ class OrganizationsApi {
   getOrganizationsForDropdown(params?: {
     offset?: number;
     limit?: number;
-    name?: string;
+    search?: string;
   }) {
     return apiClient.get("/organization/", { params });
   }

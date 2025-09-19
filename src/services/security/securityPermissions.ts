@@ -69,7 +69,7 @@ class SecurityPermissionsApi {
       params: { 
         offset, 
         limit, 
-        ...(search && { priv_name: search }),
+        ...(search && { search }),
         ...(module_name && { module_name })
       },
     });

@@ -33,7 +33,7 @@ export const useGrades = () => {
         .getGrades({
           offset: pageParam,
           limit: state.pageSize,
-          name: state.search,
+          search: state.search,
         })
         .then((response) => response.data),
     getNextPageParam: (lastPage, allPages) => {

@@ -1,28 +1,83 @@
 
-function camelToKebab(s: string) {
-  return s
-    .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
-    .replace(/[_\s]+/g, '-')
+// Converts camelCase or PascalCase to kebab-case
+function camelToKebab(str: string): string {
+  return str
+    .replace(/([a-z0-9])([A-Z])/g, "$1-$2")
+    .replace(/[_\s]+/g, "-")
     .toLowerCase();
 }
 
-const GROUP_PREFIXES: { prefix: string; keys: string[] }[] = [
-  { prefix: '/', keys: ['selfStatistics', 'teamStatistics', 'activityMonitor', 'teamEfficiency', 'geoTracking', 'myInsights', 'teamInsights'] },
-  { prefix: '/master-data', keys: ['regions', 'grades', 'designations', 'nationalities', 'organizations', 'organizationTypes', 'organizationStructure', 'departmentAdmins', 'siteManagements', 'jobLevels', 'jobTitles', 'citizenshipInfo'] },
-  { prefix: '/employee-management', keys: ['employees', 'employeeTypes', 'employeeGroups', 'employeeDirectory', 'contractTypes', 'teamGrouping'] },
-  { prefix: '/roster-management', keys: ['reasons', 'holidays', 'ramadanDates', 'scheduleTypes', 'monthlyRoaster', 'weeklySchedule', 'holidayCalendar', 'monthlyRoster', 'weeklyRoster', 'ramadanHours'] },
-  { prefix: '/leave-management', keys: ['workFlow', 'leaves', 'permissions', 'punches', 'leaveManagement', 'permissionManagement', 'attendanceLogs', 'workflowAutomation'] },
-  { prefix: '/workforce', keys: ['approvals', 'reports'] },
-  { prefix: '/device-and-infra', keys: ['biometricTerminals', 'buildingManagement'] },
-  { prefix: '/security', keys: ['rolesManagement', 'accessPermissions', 'sessionMonitor', 'activitySummary'] },
-  { prefix: '/app-settings', keys: ['appSettings', 'appConfiguration', 'alertPreferences', 'auditTrail'] },
-  { prefix: '/alerts', keys: ['emailAlerts', 'smsAlerts', 'bulletins'] },
-  { prefix: '/profile', keys: ['myAccount', 'themeLayout', 'updatePassword', 'signOut'] },
-  { prefix: '/support', keys: ['faqs', 'userManual', 'licenseManagement'] },
-];
+
+// Maps route keys to their URL prefixes
+const GROUP_PREFIXES: Record<string, string> = {
+  // Main
+  selfStatistics: '/',
+  teamStatistics: '/',
+  activityMonitor: '/',
+  teamEfficiency: '/',
+  geoTracking: '/',
+  myInsights: '/',
+  teamInsights: '/',
+  siteManagements: '/master-data',
+  jobLevels: '/master-data',
+  jobTitles: '/master-data',
+  citizenshipInfo: '/master-data',
+  departmentAdmins: '/master-data',
+  organizationTypes: '/organization',
+  organization: '/organization',
+  orgChart: '/organization',
+  employees: '/employee-management',
+  employeeTypes: '/employee-management',
+  employeeGroups: '/employee-management',
+  employeeDirectory: '/employee-management',
+  contractTypes: '/employee-management',
+  teamGrouping: '/employee-management',
+  reasons: '/roster-management',
+  holidays: '/roster-management',
+  ramadanDates: '/roster-management',
+  scheduleTypes: '/roster-management',
+  monthlyRoaster: '/roster-management',
+  weeklySchedule: '/roster-management',
+  holidayCalendar: '/roster-management',
+  monthlyRoster: '/roster-management',
+  weeklyRoster: '/roster-management',
+  ramadanHours: '/roster-management',
+  // Leave Management
+  workFlow: '/leave-management',
+  leaves: '/leave-management',
+  permissions: '/leave-management',
+  punches: '/leave-management',
+  leaveManagement: '/leave-management',
+  permissionManagement: '/leave-management',
+  attendanceLogs: '/leave-management',
+  workflowAutomation: '/leave-management',
+  approvals: '/workforce',
+  reports: '/workforce',
+  biometricTerminals: '/device-and-infra',
+  buildingManagement: '/device-and-infra',
+  rolesManagement: '/security',
+  accessPermissions: '/security',
+  sessionMonitor: '/security',
+  activitySummary: '/security',
+  appSettings: '/app-settings',
+  appConfiguration: '/app-settings',
+  alertPreferences: '/app-settings',
+  auditTrail: '/app-settings',
+  emailAlerts: '/alerts',
+  smsAlerts: '/alerts',
+  bulletins: '/alerts',
+  myAccount: '/profile',
+  themeLayout: '/profile',
+  updatePassword: '/profile',
+  signOut: '/profile',
+  faqs: '/support',
+  userManual: '/support',
+  licenseManagement: '/support',
+};
+
 
 const OVERRIDES: Record<string, string> = {
-  monthlyRoaster: 'monthly-roster', // typo in key -> desired route
+  monthlyRoaster: 'monthly-roster',
   monthlyRoster: 'monthly-roster',
   ramadanDates: 'ramadan-hours-setup',
   ramadanHours: 'ramadan-hours-setup',
@@ -31,7 +86,6 @@ const OVERRIDES: Record<string, string> = {
   geoTracking: 'location-intelligence',
   myInsights: 'dashboard',
   teamInsights: 'dashboard/teamInsights',
-  organizations: 'business-entity',
   organizationTypes: 'business-entity-type',
   organizationStructure: 'hierarchy-management',
   organizationType: 'organization-type',
@@ -59,17 +113,14 @@ const OVERRIDES: Record<string, string> = {
 export function getRouteFromKey(key: string): string {
   if (!key) return '/';
   const parts = key.split('.');
-
   let name = parts[parts.length - 1];
-  let prefix = '/';
-
   if (parts[0] === 'navigation' && parts.length >= 2) {
     name = parts[1];
   }
-
+  let prefix = '/';
   if (parts[0] === 'mainMenu' && parts.length >= 2) {
     const groupName = parts[1];
-    const mapping: Record<string, string> = {
+    const groupPrefixMap: Record<string, string> = {
       workforceAnalytics: '/',
       enterpriseSettings: '/master-data',
       organization: '/organization',
@@ -84,20 +135,14 @@ export function getRouteFromKey(key: string): string {
       profileIcon: '/profile',
       supportCentre: '/support',
     };
-
-    prefix = mapping[groupName] ?? '/';
+    prefix = groupPrefixMap[groupName] ?? '/';
   }
 
-  // prefer group prefixes defined by keys
-  for (const g of GROUP_PREFIXES) {
-    if (g.keys.includes(name)) {
-      prefix = g.prefix;
-      break;
-    }
+  if (GROUP_PREFIXES[name]) {
+    prefix = GROUP_PREFIXES[name];
   }
 
   const slug = OVERRIDES[name] ?? camelToKebab(name);
-  // ensure no double slash; if slug is empty return prefix
   const path = slug ? `${prefix}/${slug}`.replace('//', '/') : `${prefix}`;
   return path;
 }
