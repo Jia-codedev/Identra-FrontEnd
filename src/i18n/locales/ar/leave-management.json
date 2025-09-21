@@ -81,7 +81,10 @@
     "createWorkflowType": "إنشاء نوع سير عمل",
     "createWorkflowTypeDescription": "إنشاء قالب نوع سير عمل جديد وتحديد خطوات الموافقة (حد أقصى 4 خطوات)",
     "columns": {
-      "code": "الرمز"
+      "code": "الرمز",
+      "name": "الاسم",
+      "category": "الفئة",
+      "status": "الحالة"
     },
     "actions": {
       "edit": "تعديل سير العمل",

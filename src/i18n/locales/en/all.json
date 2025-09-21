@@ -897,7 +897,10 @@
       "createWorkflowType": "Create Workflow Type",
       "createWorkflowTypeDescription": "Create a new workflow type template and define its approval steps (max 4 steps)",
       "columns": {
-        "code": "Code"
+        "code": "Code",
+        "name": "Name",
+        "category": "Category",
+        "status": "Status"
       },
       "actions": {
         "edit": "Edit workflow",
