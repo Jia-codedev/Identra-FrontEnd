@@ -16,7 +16,7 @@ export const EmployeeBasicInfoStep: React.FC<EmployeeStepProps> = ({
       {/* Employee Identification */}
       <div className="bg-muted/30 rounded-lg p-4 space-y-4">
         <h4 className="text-sm font-semibold text-foreground mb-3">
-          Employee Identification
+          {t("employeeMaster.employee.employeeIdentification")}
         </h4>
         <div className="grid grid-cols-2 gap-4">
           <div>
@@ -52,75 +52,83 @@ export const EmployeeBasicInfoStep: React.FC<EmployeeStepProps> = ({
       {/* Employee Names */}
       <div className="bg-muted/30 rounded-lg p-4 space-y-4">
         <h4 className="text-sm font-semibold text-foreground mb-3">
-          Employee Names
+          {t("employeeMaster.employee.employeeNames")}
         </h4>
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <Label htmlFor="firstname_eng" className="text-sm font-medium">
-              {t("employeeMaster.employee.firstNameEng")} *
-            </Label>
-            <Input
-              id="firstname_eng"
-              value={formData.firstname_eng}
-              onChange={(e) => onInputChange("firstname_eng", e.target.value)}
-              placeholder={t("employeeMaster.employee.enterFirstNameEng")}
-              className={`mt-1 ${errors.firstname_eng ? "border-red-500" : ""}`}
-            />
-            {errors.firstname_eng && (
-              <p className="text-red-500 text-xs mt-1">{errors.firstname_eng}</p>
-            )}
+        {isRTL ? (
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="firstname_arb" className="text-sm font-medium">
+                {t("employeeMaster.employee.firstNameArb")} *
+              </Label>
+              <Input
+                id="firstname_arb"
+                value={formData.firstname_arb}
+                onChange={(e) => onInputChange("firstname_arb", e.target.value)}
+                placeholder={t("employeeMaster.employee.enterFirstNameArb")}
+                className={`mt-1 ${errors.firstname_arb ? "border-red-500" : ""}`}
+                dir="rtl"
+              />
+              {errors.firstname_arb && (
+                <p className="text-red-500 text-xs mt-1">{errors.firstname_arb}</p>
+              )}
+            </div>
+            <div>
+              <Label htmlFor="lastname_arb" className="text-sm font-medium">
+                {t("employeeMaster.employee.lastNameArb")} *
+              </Label>
+              <Input
+                id="lastname_arb"
+                value={formData.lastname_arb}
+                onChange={(e) => onInputChange("lastname_arb", e.target.value)}
+                placeholder={t("employeeMaster.employee.enterLastNameArb")}
+                className={`mt-1 ${errors.lastname_arb ? "border-red-500" : ""}`}
+                dir="rtl"
+              />
+              {errors.lastname_arb && (
+                <p className="text-red-500 text-xs mt-1">{errors.lastname_arb}</p>
+              )}
+            </div>
           </div>
-          <div>
-            <Label htmlFor="lastname_eng" className="text-sm font-medium">
-              {t("employeeMaster.employee.lastNameEng")} *
-            </Label>
-            <Input
-              id="lastname_eng"
-              value={formData.lastname_eng}
-              onChange={(e) => onInputChange("lastname_eng", e.target.value)}
-              placeholder={t("employeeMaster.employee.enterLastNameEng")}
-              className={`mt-1 ${errors.lastname_eng ? "border-red-500" : ""}`}
-            />
-            {errors.lastname_eng && (
-              <p className="text-red-500 text-xs mt-1">{errors.lastname_eng}</p>
-            )}
+        ) : (
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="firstname_eng" className="text-sm font-medium">
+                {t("employeeMaster.employee.firstNameEng")} *
+              </Label>
+              <Input
+                id="firstname_eng"
+                value={formData.firstname_eng}
+                onChange={(e) => onInputChange("firstname_eng", e.target.value)}
+                placeholder={t("employeeMaster.employee.enterFirstNameEng")}
+                className={`mt-1 ${errors.firstname_eng ? "border-red-500" : ""}`}
+              />
+              {errors.firstname_eng && (
+                <p className="text-red-500 text-xs mt-1">{errors.firstname_eng}</p>
+              )}
+            </div>
+            <div>
+              <Label htmlFor="lastname_eng" className="text-sm font-medium">
+                {t("employeeMaster.employee.lastNameEng")} *
+              </Label>
+              <Input
+                id="lastname_eng"
+                value={formData.lastname_eng}
+                onChange={(e) => onInputChange("lastname_eng", e.target.value)}
+                placeholder={t("employeeMaster.employee.enterLastNameEng")}
+                className={`mt-1 ${errors.lastname_eng ? "border-red-500" : ""}`}
+              />
+              {errors.lastname_eng && (
+                <p className="text-red-500 text-xs mt-1">{errors.lastname_eng}</p>
+              )}
+            </div>
           </div>
-        </div>
-
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <Label htmlFor="firstname_arb" className="text-sm font-medium">
-              {t("employeeMaster.employee.firstNameArb")}
-            </Label>
-            <Input
-              id="firstname_arb"
-              value={formData.firstname_arb}
-              onChange={(e) => onInputChange("firstname_arb", e.target.value)}
-              placeholder={t("employeeMaster.employee.enterFirstNameArb")}
-              className="mt-1"
-              dir={isRTL ? "rtl" : "ltr"}
-            />
-          </div>
-          <div>
-            <Label htmlFor="lastname_arb" className="text-sm font-medium">
-              {t("employeeMaster.employee.lastNameArb")}
-            </Label>
-            <Input
-              id="lastname_arb"
-              value={formData.lastname_arb}
-              onChange={(e) => onInputChange("lastname_arb", e.target.value)}
-              placeholder={t("employeeMaster.employee.enterLastNameArb")}
-              className="mt-1"
-              dir={isRTL ? "rtl" : "ltr"}
-            />
-          </div>
-        </div>
+        )}
       </div>
 
       {/* Additional Information */}
       <div className="bg-muted/30 rounded-lg p-4 space-y-4">
         <h4 className="text-sm font-semibold text-foreground mb-3">
-          Additional Information
+          {t("employeeMaster.employee.additionalInformation")}
         </h4>
         <div className="grid grid-cols-2 gap-4">
           <div>

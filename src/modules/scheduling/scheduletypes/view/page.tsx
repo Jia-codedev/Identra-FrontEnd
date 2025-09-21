@@ -181,7 +181,7 @@ export default function ScheduleTypesPage() {
         <DialogContent className="p-0">
           <DialogHeader className="p-2">
             <DialogTitle className="mb-1 p-2">
-              {t("common.confirm") + " " + t("common.delete")}
+              {t("common.confirmDelete")}
             </DialogTitle>
             <div className="bg-black/5 p-4 rounded-lg dark:bg-white/5">
               <DialogDescription>

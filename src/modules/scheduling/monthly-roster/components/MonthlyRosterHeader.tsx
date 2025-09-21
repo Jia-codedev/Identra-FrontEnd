@@ -1,15 +1,12 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from 'react';
-import { Calendar, Filter, Users, Building2 } from 'lucide-react';
+import { Calendar, Users, Building2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from "@/components/ui/Input";;
+import { Input } from "@/components/ui/Input";
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
 import { useTranslations } from '@/hooks/use-translations';
 import { useLanguage } from '@/providers/language-provider';
-import { cn } from '@/lib/utils';
-import { Calendar as CalendarComponent } from '@/components/ui/calendar';
-import { format } from 'date-fns';
 import employeeGroupApi from '@/services/employeemaster/employeeGroup';
 import organizationsApi from '@/services/masterdata/organizations';
 import { MonthlyRosterFilters } from '../types';
@@ -47,7 +44,7 @@ export const MonthlyRosterHeader: React.FC<MonthlyRosterHeaderProps> = ({ filter
     const loadOrgs = async () => {
       try {
         setOrgLoading(true);
-        const res = await organizationsApi.getOrganizationsForDropdown({ name: orgSearch });
+        const res = await organizationsApi.getOrganizationsForDropdown({ search: orgSearch });
         setOrgs(res?.data?.data || []);
       } finally {
         setOrgLoading(false);
@@ -166,13 +163,13 @@ export const MonthlyRosterHeader: React.FC<MonthlyRosterHeaderProps> = ({ filter
       <div className="flex flex-col gap-4">
         <div className="flex items-end justify-between">
           <div>
-            <h1 className="text-2xl font-bold">Monthly Roster</h1>
-            <p className="text-muted-foreground">Assign schedules per day for the month</p>
+            <h1 className="text-2xl font-bold">{t('monthlyRoster.title') || 'Monthly Roster'}</h1>
+            <p className="text-muted-foreground">{t('monthlyRoster.description') || 'Assign schedules per day for the month'}</p>
           </div>
           <div className="flex gap-2">
             <Button onClick={onAddRoster} className="gap-2">
               <Calendar className="h-4 w-4" />
-              Add Monthly Roster
+              {t('monthlyRoster.addRoster')}
             </Button>
             {onAddSampleData && (
               <Button onClick={onAddSampleData} variant="outline" className="gap-2">
@@ -180,8 +177,8 @@ export const MonthlyRosterHeader: React.FC<MonthlyRosterHeaderProps> = ({ filter
                 Add Sample Data
               </Button>
             )}
-            <Button variant="outline" onClick={handleImportClick}>Import</Button>
-            <Button variant="outline" onClick={handleExportClick}>Export</Button>
+              <Button variant="outline" onClick={handleImportClick}>{t('monthlyRoster.import')}</Button>
+            <Button variant="outline" onClick={handleExportClick}>{t('monthlyRoster.export')}</Button>
           </div>
         </div>
 
@@ -192,23 +189,23 @@ export const MonthlyRosterHeader: React.FC<MonthlyRosterHeaderProps> = ({ filter
               <Button variant="outline" className="w-[220px] justify-between">
                 <div className="flex items-center gap-2">
                   <Building2 className="h-4 w-4" />
-                  {selectedOrg ? (isRTL ? selectedOrg.organization_name_arb : selectedOrg.organization_name_eng) : 'Select Organization'}
+                  {selectedOrg ? (isRTL ? selectedOrg.organization_name_arb : selectedOrg.organization_name_eng) : t('common.select') + ' ' + t('common.organization')}
                 </div>
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-[280px] p-0">
-              <div className="p-2">
-                <Input placeholder="Search" value={orgSearch} onChange={(e) => setOrgSearch(e.target.value)} className="h-8" />
+                <div className="p-2">
+                <Input placeholder={t('common.search')} value={orgSearch} onChange={(e) => setOrgSearch(e.target.value)} className="h-8" />
               </div>
               <div className="max-h-[240px] overflow-auto">
                 {orgLoading ? (
                   <div className="p-2 text-sm text-center text-muted-foreground">Loading...</div>
                 ) : (
                   <>
-                    <Button variant="ghost" className="w-full justify-start h-8 text-xs" onClick={() => onFiltersChange({ organization_id: undefined })}>All</Button>
+                    <Button variant="ghost" className="w-full justify-start h-8 text-xs" onClick={() => onFiltersChange({ organization_id: undefined })}>{t('common.all')}</Button>
                     {orgs.map(org => (
                       <Button key={org.organization_id} variant="ghost" className="w-full justify-start h-8 text-xs" onClick={() => onFiltersChange({ organization_id: org.organization_id })}>
-                        {isRTL ? org.organization_name_arb : org.organization_name_eng}
+            {isRTL ? org.organization_name_arb : org.organization_name_eng}
                       </Button>
                     ))}
                   </>
@@ -223,23 +220,23 @@ export const MonthlyRosterHeader: React.FC<MonthlyRosterHeaderProps> = ({ filter
               <Button variant="outline" className="w-[220px] justify-between">
                 <div className="flex items-center gap-2">
                   <Users className="h-4 w-4" />
-                  {selectedEg ? (isRTL ? selectedEg.group_name_arb : selectedEg.group_name_eng) : 'Select Employee Group'}
+                  {selectedEg ? (isRTL ? selectedEg.group_name_arb : selectedEg.group_name_eng) : t('common.select') + ' ' + t('navigation.employeeGroups')}
                 </div>
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-[280px] p-0">
-              <div className="p-2">
-                <Input placeholder="Search" value={egSearch} onChange={(e) => setEgSearch(e.target.value)} className="h-8" />
+                <div className="p-2">
+                <Input placeholder={t('common.search')} value={egSearch} onChange={(e) => setEgSearch(e.target.value)} className="h-8" />
               </div>
               <div className="max-h-[240px] overflow-auto">
                 {egLoading ? (
                   <div className="p-2 text-sm text-center text-muted-foreground">Loading...</div>
                 ) : (
                   <>
-                    <Button variant="ghost" className="w-full justify-start h-8 text-xs" onClick={() => onFiltersChange({ employee_group_id: undefined })}>All</Button>
+                    <Button variant="ghost" className="w-full justify-start h-8 text-xs" onClick={() => onFiltersChange({ employee_group_id: undefined })}>{t('common.all')}</Button>
                     {egs.map(g => (
                       <Button key={g.employee_group_id} variant="ghost" className="w-full justify-start h-8 text-xs" onClick={() => onFiltersChange({ employee_group_id: g.employee_group_id })}>
-                        {isRTL ? g.group_name_arb : g.group_name_eng}
+            {isRTL ? g.group_name_arb : g.group_name_eng}
                       </Button>
                     ))}
                   </>
@@ -254,7 +251,7 @@ export const MonthlyRosterHeader: React.FC<MonthlyRosterHeaderProps> = ({ filter
               <Button variant="outline" className="w-[160px] justify-between">
                 <div className="flex items-center gap-2">
                   <Calendar className="h-4 w-4" />
-                  {months.find(m => m.value === filters.month)?.label || 'Month'}
+                  {months.find(m => m.value === filters.month)?.label || t('common.month')}
                 </div>
               </Button>
             </PopoverTrigger>
@@ -287,7 +284,7 @@ export const MonthlyRosterHeader: React.FC<MonthlyRosterHeaderProps> = ({ filter
           </Popover>
 
           {/* Clear */}
-          <Button variant="ghost" onClick={() => onFiltersChange({ organization_id: undefined, employee_group_id: undefined, month: undefined, year: undefined })}>Clear Filters</Button>
+          <Button variant="ghost" onClick={() => onFiltersChange({ organization_id: undefined, employee_group_id: undefined, month: undefined, year: undefined })}>{t('monthlyRoster.clearFilters') || t('common.clearFilters')}</Button>
         </div>
       </div>
     </div>

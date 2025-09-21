@@ -177,13 +177,13 @@ export default function EmployeeGroupsPage() {
         <DialogContent className="p-0">
           <DialogHeader className="p-2">
             <DialogTitle className="mb-1 p-2">
-              {t("common.confirm") + " " + t("common.delete")}
+              {t("common.confirmDelete")}
             </DialogTitle>
             <div className="bg-black/5 p-4 rounded-lg dark:bg-white/5">
               <DialogDescription>
                 {deleteDialog.type === "single"
                   ? t("messages.confirm.delete")
-                  : t("messages.confirm.delete", { count: selected.length })}
+                  : t("messages.confirm.deleteMultiple", { count: selected.length })}
               </DialogDescription>
               <div className="flex justify-end space-x-2 mt-4">
                 <Button variant="outline" onClick={handleCancelDelete}>

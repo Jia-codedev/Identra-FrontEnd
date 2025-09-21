@@ -14,23 +14,21 @@ const Navbar = () => {
   const pathname = usePathname();
   const { t } = useTranslations();
   const { NAV_LINKS } = useNavigation();
-  const [activeMenu, setActiveMenu] = useState<string>("");
+  const [activeMenuId, setActiveMenuId] = useState<string>("");
+  const storeActiveId = useUserNavBar((s) => s.activeMenuId);
+
   React.useEffect(() => {
-    const storeActiveId = useUserNavBar.getState().activeMenuId;
     if (storeActiveId) {
-      const storeMenu = NAV_LINKS.find((m) => m.id === storeActiveId);
-      if (storeMenu) {
-        setActiveMenu(storeMenu.label);
-        return;
-      }
+      setActiveMenuId(storeActiveId);
+      return;
     }
     const currentLink = NAV_LINKS.find((link) =>
       link.secondary?.some((item) => pathname.startsWith(item.href))
     );
-    setActiveMenu(currentLink ? currentLink.label : t("common.dashboard"));
-  }, [pathname, t]);
+    setActiveMenuId(currentLink ? currentLink.id : NAV_LINKS[0]?.id ?? "");
+  }, [pathname, t, storeActiveId, NAV_LINKS]);
 
-  const activeMenuObj = NAV_LINKS.find((menu) => menu.label === activeMenu);
+  const activeMenuObj = NAV_LINKS.find((menu) => menu.id === activeMenuId);
 
   const getUserDisplayName = () => {
     if (typeof user?.employeename === "object" && user.employeename) {

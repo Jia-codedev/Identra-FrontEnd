@@ -1,0 +1,13 @@
+{
+  "welcome": "Hello! I'm CHRONEXA_BOT, your time attendance assistant. How can I help you today?",
+  "online": "Online",
+  "showActions": "Show Available Actions",
+  "availableActions": "Here are the actions I can help you with:",
+  "typePlaceholder": "Type your message...",
+  "actions": {
+    "viewSummary": "View Summary"
+  },
+  "responses": {
+    "processing": "I'm processing your request. This feature will be available soon."
+  }
+}

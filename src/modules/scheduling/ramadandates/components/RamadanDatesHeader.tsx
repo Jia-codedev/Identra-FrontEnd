@@ -130,8 +130,7 @@ const RamadanDatesHeader: React.FC<RamadanDatesHeaderProps> = ({
                 onClick={onAddNew}
                 className="gap-2 text-xs sm:text-sm h-8 sm:h-9"
               >
-                <CalendarDays size={14} className="sm:size-4" />
-                <span className="hidden sm:inline">{t("common.add")}</span>
+                +<span className="hidden sm:inline">{t("common.add")}</span>
                 <span className="sm:hidden">{t("common.add")}</span>
               </Button>
             </div>

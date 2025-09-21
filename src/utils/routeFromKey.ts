@@ -45,6 +45,8 @@ const GROUP_PREFIXES: Record<string, string> = {
   // Leave Management
   workFlow: '/leave-management',
   leaves: '/leave-management',
+  leaveTypes: '/leave-management',
+  permissionTypes: '/leave-management',
   permissions: '/leave-management',
   punches: '/leave-management',
   leaveManagement: '/leave-management',
@@ -101,6 +103,8 @@ const OVERRIDES: Record<string, string> = {
   workflowAutomation: 'workflow-automation',
   workFlow: 'workflow-automation',
   leaveManagement: 'leave-management',
+  leaveTypes: 'leave-type',
+  permissionTypes: 'permission-type',
   permissionManagement: 'permission-management',
   deviceManagement: 'device-and-infra',
   biometricTerminals: 'biometric-terminals',

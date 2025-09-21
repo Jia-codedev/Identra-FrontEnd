@@ -1,4 +1,5 @@
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
+import { toast } from 'sonner';
 import employeeMonthlyRosterApi, { FilterMonthlyRosterRequest, MonthlyRoster } from '@/services/scheduling/employeeMonthlyRoster';
 
 export const useMonthlyRoster = (
@@ -16,6 +17,7 @@ export const useMonthlyRoster = (
         return data as MonthlyRoster[];
       } catch (err) {
         console.error('Monthly roster fetch error:', err);
+        try { toast.error('Failed to load monthly roster'); } catch {}
         // Return empty array on error so UI stays stable
         return [] as MonthlyRoster[];
       }

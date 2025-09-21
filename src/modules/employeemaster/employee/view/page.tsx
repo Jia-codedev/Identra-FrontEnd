@@ -12,12 +12,12 @@ import { Button } from "@/components/ui/button";
 import { CustomPagination } from "@/components/common/dashboard/Pagination";
 import {
   EmployeesTable,
-  EmployeeModal,
   EmployeesHeader,
   useEmployees,
   useEmployeeMutations,
   IEmployee,
 } from "../index";
+import { EmployeeModal } from "../components/EmployeeModal";
 
 export default function EmployeePage() {
   const { t } = useTranslations();
@@ -152,10 +152,10 @@ export default function EmployeePage() {
 
       <EmployeeModal
         isOpen={modalState.isOpen}
+        mode={modalState.mode}
+        employee={modalState.employee}
         onClose={handleCloseModal}
         onSave={handleSaveEmployee}
-        employee={modalState.employee}
-        mode={modalState.mode}
       />
       <Dialog
         open={deleteDialog.open}
@@ -164,13 +164,15 @@ export default function EmployeePage() {
         <DialogContent className="p-0">
           <DialogHeader className="p-2">
             <DialogTitle className="mb-1 p-2">
-              {t("common.confirm") + " " + t("common.delete")}
+              {t("common.confirmDelete")}
             </DialogTitle>
             <div className="bg-black/5 p-4 rounded-lg dark:bg-white/5">
               <DialogDescription>
                 {deleteDialog.type === "single"
                   ? t("messages.confirm.delete")
-                  : t("messages.confirm.delete", { count: selected.length })}
+                  : t("messages.confirm.deleteMultiple", {
+                      count: selected.length,
+                    })}
               </DialogDescription>
               <div className="flex justify-end space-x-2 mt-4">
                 <Button variant="outline" onClick={handleCancelDelete}>

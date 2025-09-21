@@ -40,21 +40,29 @@ export default function WorkflowHeader({
       <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
         <div className="flex-1">
           <h1 className="text-3xl md:text-4xl font-bold text-primary tracking-tight leading-tight mb-1">
-            {t('leaveManagement.workflowAutomation.title') || 'Workflow Types'}
+            {t("leaveManagement.workflowAutomation.title") || "Workflow Types"}
           </h1>
-          <p className="text-base md:text-lg text-muted-foreground font-normal mb-2">
-            {t('leaveManagement.workflowAutomation.description') || 'Manage workflow type templates and their approval steps'}
-          </p>
         </div>
 
         <div className="w-full sm:w-auto flex flex-col sm:flex-row gap-2 items-center">
           {/* Search and Actions Container */}
-          <div className={`flex items-center gap-0 bg-card/80 border border-border rounded-xl px-2 py-1 ${isRTL ? 'flex-row-reverse' : 'flex-row'}`}>
-            <span className={`${isRTL ? 'pr-2 pl-1' : 'pl-2 pr-1'} text-xl text-primary/80`}>
+          <div
+            className={`flex items-center gap-0 bg-card/80 border border-border rounded-xl px-2 py-1 ${
+              isRTL ? "flex-row-reverse" : "flex-row"
+            }`}
+          >
+            <span
+              className={`${
+                isRTL ? "pr-2 pl-1" : "pl-2 pr-1"
+              } text-xl text-primary/80`}
+            >
               <Search size={22} />
             </span>
             <Input
-              placeholder={t('leaveManagement.workflowAutomation.searchPlaceholder') || 'Search workflow types...'}
+              placeholder={
+                t("leaveManagement.workflowAutomation.searchPlaceholder") ||
+                "Search workflow types..."
+              }
               value={search}
               onChange={(e) => handleSearchChange(e.target.value)}
               className="border-0 bg-transparent rounded-lg focus:ring-0 focus-visible:ring-0 shadow-none text-base px-2"
@@ -64,21 +72,36 @@ export default function WorkflowHeader({
             {/* Action Buttons */}
             <div className="flex items-center gap-1">
               {onSettings && (
-                <Button variant="ghost" size="sm" onClick={onSettings} className="p-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={onSettings}
+                  className="p-2"
+                >
                   <Settings className="w-4 h-4" />
-                  <span className="sr-only">{t('common.settings')}</span>
+                  <span className="sr-only">{t("common.settings")}</span>
                 </Button>
               )}
               {onImport && (
-                <Button variant="ghost" size="sm" onClick={onImport} className="p-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={onImport}
+                  className="p-2"
+                >
                   <FileText className="w-4 h-4" />
-                  <span className="sr-only">{t('common.import')}</span>
+                  <span className="sr-only">{t("common.import")}</span>
                 </Button>
               )}
               {onExport && (
-                <Button variant="ghost" size="sm" onClick={onExport} className="p-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={onExport}
+                  className="p-2"
+                >
                   <Download className="w-4 h-4" />
-                  <span className="sr-only">{t('common.export')}</span>
+                  <span className="sr-only">{t("common.export")}</span>
                 </Button>
               )}
             </div>
@@ -86,8 +109,16 @@ export default function WorkflowHeader({
             <span className="mx-2 h-6 w-px bg-border" />
 
             {onAddNew && (
-              <Button onClick={onAddNew} className="font-semibold text-base px-4 py-2 rounded-lg bg-primary hover:bg-primary/90 transition-all shadow-none" variant="default">
-                <span className="hidden sm:inline">+ {t('leaveManagement.workflowAutomation.createWorkflowType') || 'Create Workflow Type'}</span>
+              <Button
+                onClick={onAddNew}
+                className="font-semibold text-base px-4 py-2 rounded-lg bg-primary hover:bg-primary/90 transition-all shadow-none"
+                variant="default"
+              >
+                <span className="hidden sm:inline">
+                  +{" "}
+                  {t("leaveManagement.workflowAutomation.createWorkflowType") ||
+                    "Create Workflow Type"}
+                </span>
                 <span className="sm:hidden text-xl leading-none">+</span>
               </Button>
             )}

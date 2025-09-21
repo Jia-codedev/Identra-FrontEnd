@@ -30,7 +30,7 @@ export const GradesHeader: React.FC<GradesHeaderProps> = ({
       <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
         <div className="flex-1">
           <h1 className="text-3xl md:text-4xl font-bold text-primary tracking-tight leading-tight mb-1">
-            {t('masterData.grades.title')}
+            {t('masterData.grade.title')}
           </h1>
         </div>
         <div className="w-full sm:w-auto flex flex-col sm:flex-row gap-2 items-center">
@@ -39,7 +39,7 @@ export const GradesHeader: React.FC<GradesHeaderProps> = ({
               <Search size={22} />
             </span>
             <Input
-              placeholder={t('masterData.grades.searchPlaceholder')}
+              placeholder={t('masterData.grade.searchPlaceholder')}
               value={search}
               onChange={(e) => onSearchChange(e.target.value)}
               className="border-0 bg-transparent rounded-lg focus:ring-0 focus-visible:ring-0 shadow-none text-base px-2"

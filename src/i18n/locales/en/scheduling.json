@@ -1,0 +1,22 @@
+{
+  "title": "Scheduling Management",
+  "calendar": "Calendar",
+  "schedule": "Schedule",
+  "shift": "Shift",
+  "roster": "Roster",
+  "holiday": "Holiday",
+  "leave": "Leave",
+  "overtime": "Overtime",
+  "attendance": "Attendance",
+  "timeTracking": "Time Tracking",
+  "workHours": "Work Hours",
+  "breakTime": "Break Time",
+  "lunchTime": "Lunch Time",
+  "startTime": "Start Time",
+  "endTime": "End Time",
+  "duration": "Duration",
+  "reason": "Reason",
+  "approved": "Approved",
+  "pending": "Pending",
+  "rejected": "Rejected"
+}

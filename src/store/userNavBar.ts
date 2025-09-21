@@ -4,6 +4,7 @@ import { persist, createJSONStorage } from "zustand/middleware";
 type SecondaryLink = {
   label: string;
   href: string;
+  labelKey?: string;
 };
 
 type UserNavBarState = {

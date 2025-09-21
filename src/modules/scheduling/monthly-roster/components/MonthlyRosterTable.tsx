@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from 'react';
+import { useTranslations } from '@/hooks/use-translations';
 import { MonthlyRosterRow } from '../types';
 import { Card } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -21,6 +22,7 @@ const getDaysInMonth = (year: number, month: number) => new Date(year, month, 0)
 
 export const MonthlyRosterTable: React.FC<MonthlyRosterTableProps> = ({ data, isLoading, onEdit, onFinalize, onDelete }) => {
   const { isRTL } = useLanguage();
+  const { t } = useTranslations();
   const [scheduleMap, setScheduleMap] = useState<Record<number, { code: string; color?: string }>>({});
 
   const sample = data?.[0];
@@ -76,10 +78,10 @@ export const MonthlyRosterTable: React.FC<MonthlyRosterTableProps> = ({ data, is
   if (!data || data.length === 0) {
     return (
       <div className="text-center text-muted-foreground py-6">
-        <p>No monthly roster data found</p>
-        <p className="text-xs mt-2">Make sure to select Organization, Month, and Year filters</p>
-        {data && <p className="text-xs mt-1">Data array length: {data.length}</p>}
-      </div>
+          <p>{t('monthlyRoster.table.noData') || 'No monthly roster data found'}</p>
+    <p className="text-xs mt-2">{t('monthlyRoster.table.selectOrgMonthYear') || 'Make sure to select Organization, Month, and Year filters'}</p>
+          {data && <p className="text-xs mt-1">{t('monthlyRoster.table.dataLength', { count: data.length }) || `Data array length: ${data.length}`}</p>}
+        </div>
     );
   }
 
@@ -89,9 +91,9 @@ export const MonthlyRosterTable: React.FC<MonthlyRosterTableProps> = ({ data, is
         <table className="w-full text-sm">
           <thead className="sticky top-0 bg-muted/40">
             <tr>
-              <th className="px-3 py-2 text-left">Emp No</th>
-              <th className="px-3 py-2 text-left">Name</th>
-              <th className="px-3 py-2 text-left">Actions</th>
+              <th className="px-3 py-2 text-left">{t('monthlyRoster.table.empNo') || 'Emp No'}</th>
+              <th className="px-3 py-2 text-left">{t('common.name') || 'Name'}</th>
+              <th className="px-3 py-2 text-left">{t('common.actions') || 'Actions'}</th>
               {dayKeys.map((key, idx) => (
                 <th key={key} className="px-2 py-2 text-center min-w-10">
                   {idx + 1}
@@ -106,9 +108,9 @@ export const MonthlyRosterTable: React.FC<MonthlyRosterTableProps> = ({ data, is
                 <td className="px-3 py-2 whitespace-nowrap">{isRTL ? row.employee_name_arb || row.employee_name : row.employee_name || row.employee_name_arb}</td>
                 <td className="px-3 py-2 whitespace-nowrap">
                   <div className="flex gap-1">
-                    {onEdit && <Button size="sm" variant="outline" onClick={() => onEdit(row)}>Edit</Button>}
-                    {onFinalize && <Button size="sm" variant="secondary" onClick={() => onFinalize(row)} disabled={!!row.finalize_flag}>Finalize</Button>}
-                    {onDelete && <Button size="sm" variant="destructive" onClick={() => onDelete(row)}>Delete</Button>}
+                    {onEdit && <Button size="sm" variant="outline" onClick={() => onEdit(row)}>{t('common.edit') || 'Edit'}</Button>}
+                    {onFinalize && <Button size="sm" variant="secondary" onClick={() => onFinalize(row)} disabled={!!row.finalize_flag}>{t('monthlyRoster.table.finalize') || 'Finalize'}</Button>}
+                    {onDelete && <Button size="sm" variant="destructive" onClick={() => onDelete(row)}>{t('common.delete') || 'Delete'}</Button>}
                   </div>
                 </td>
                 {dayKeys.map(key => {

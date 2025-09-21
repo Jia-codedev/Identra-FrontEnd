@@ -12,7 +12,7 @@ function buildLocale(allMessages: Messages) {
   const all = (allMessages || {}) as Record<string, unknown>;
   const common = (all.common as Record<string, unknown>) || {};
   const settings = (all.settings as Record<string, unknown>) || {};
-  const employee = (all.employee as Record<string, unknown>) || {};
+  const employeeMaster = (all.employeeMaster as Record<string, unknown>) || {};
   const mainMenuWrapper = (all.mainMenu as Record<string, unknown>) || {};
   const mainMenu = (mainMenuWrapper as any).mainMenu || {};
 
@@ -33,7 +33,7 @@ function buildLocale(allMessages: Messages) {
     messages: (common as any).messages,
     pagination: (common as any).pagination,
     appearance: (settings as any).appearance,
-    employeeMaster: (employee as any).employeeMaster || {},
+    employeeMaster: employeeMaster,
   } as Record<string, unknown>;
 }
 

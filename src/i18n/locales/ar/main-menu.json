@@ -1,0 +1,68 @@
+{
+  "mainMenu": {
+    "workforceAnalytics": {
+      "title": "تحليلات القوى العاملة",
+      "items": {
+        "myInsights": "إحصائياتي",
+        "teamInsights": "إحصائيات الفريق",
+        "activityLog": "سجل النشاط",
+        "productivityMetrics": "مقاييس الإنتاجية",
+        "geoAnalytics": "التحليلات الجغرافية"
+      }
+    },
+    "enterpriseSettings": {
+      "title": "إعدادات المؤسسة",
+      "items": {
+        "siteManagements": "إدارة المواقع",
+        "jobLevels": "مستويات الوظائف",
+        "jobTitles": "المسميات الوظيفية",
+        "citizenshipInfo": "معلومات الجنسية"
+      }
+    },
+    "organization": {
+      "title": "المنظمة",
+      "items": {
+        "organizationType": "نوع المنظمة",
+        "orgChart": "الهيكل التنظيمي",
+        "organizations": "المنظمات"
+      }
+    },
+    "employeeManagement": {
+      "title": "إدارة الموظفين",
+      "items": {
+        "employeeDirectory": "دليل الموظفين",
+        "contractTypes": "أنواع العقود",
+        "teamGrouping": "تجميع الفريق"
+      }
+    },
+    "rosterManagement": {
+      "title": "إدارة الجداول",
+      "items": {
+        "reasons": "الأسباب",
+        "holidayCalendar": "تقويم الإجازات",
+        "ramadanHours": "ساعات رمضان",
+        "shiftPatterns": "أنماط الورديات",
+        "monthlyRoster": "الجدول الشهري",
+        "weeklyRoster": "الجدول الأسبوعي"
+      }
+    },
+    "theme": {
+      "title": "السمة",
+      "items": {
+        "darkMode": "الوضع الداكن",
+        "lightMode": "الوضع الفاتح"
+      }
+    },
+    "selfServices": {
+      "title": "الخدمات الذاتية",
+      "items": {
+        "leaveManagement": "إدارة الإجازات",
+        "leaveTypes": "أنواع الإجازات",
+        "permissionTypes": "أنواع الأذونات",
+        "permissionManagement": "إدارة الأذونات",
+        "attendanceLogs": "سجلات الحضور",
+        "workflowAutomation": "أتمتة سير العمل"
+      }
+    }
+  }
+}

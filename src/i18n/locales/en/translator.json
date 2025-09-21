@@ -1,0 +1,10 @@
+{
+  "translate": "Translate",
+  "source": "Source",
+  "target": "Target",
+  "detect": "Detect language",
+  "language": "Language",
+  "translateButton": "Translate",
+  "copy": "Copy",
+  "clear": "Clear"
+}

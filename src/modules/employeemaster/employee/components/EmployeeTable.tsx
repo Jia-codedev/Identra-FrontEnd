@@ -61,6 +61,11 @@ export const EmployeesTable: React.FC<EmployeesTableProps> = ({
           <BanIcon size={16} className="text-destructive" />
         ),
     },
+    {
+      key: "actions",
+      header: t("common.actions"),
+      accessor: () => null, // Actions handled by GenericTable
+    },
   ];
 
   return (

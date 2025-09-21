@@ -35,28 +35,28 @@ export const SitesTable: React.FC<SitesTableProps> = ({
   const columns: TableColumn<ISite>[] = [
     {
       key: "code",
-      header: t("masterData.site.siteCode"),
+      header: t("masterData.sites.siteCode"),
       accessor: (item) => item.location_code || "",
     },
     {
       key: "name",
-      header: t("masterData.site.siteName"),
+      header: t("masterData.sites.siteName"),
       accessor: (item, isRTL) =>
         isRTL ? item.location_arb || "" : item.location_eng || "",
     },
     {
       key: "city",
-      header: t("masterData.site.city") || "City",
+      header: t("masterData.sites.city") || "City",
       accessor: (item) => item.city || "",
     },
     {
       key: "country_code",
-      header: t("masterData.site.countryCode") || "Country",
+      header: t("masterData.sites.countryCode") || "Country",
       accessor: (item) => item.country_code || "",
     },
     {
       key: "geolocation",
-      header: t("masterData.site.geolocation") || "Geolocation",
+      header: t("masterData.sites.geolocation") || "Geolocation",
       accessor: (item) => {
         if (item.geolocation === null || item.geolocation === undefined)
           return "";
@@ -70,7 +70,7 @@ export const SitesTable: React.FC<SitesTableProps> = ({
     },
     {
       key: "radius",
-      header: t("masterData.site.radius") || "Radius",
+      header: t("masterData.sites.radius") || "Radius",
       accessor: (item) =>
         item.radius === null || item.radius === undefined
           ? ""
@@ -102,7 +102,7 @@ export const SitesTable: React.FC<SitesTableProps> = ({
         if (newPageSize > 0) {
         }
       }}
-      noDataMessage={t("masterData.site.noSitesFound")}
+      noDataMessage={t("masterData.sites.noSitesFound")}
       isLoading={isLoading}
     />
   );

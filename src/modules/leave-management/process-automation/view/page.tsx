@@ -172,10 +172,10 @@ export default function ProcessAutomationPage() {
       <Dialog open={deleteDialog.open} onOpenChange={(open) => !open && setDeleteDialog({ open: false, type: null })}>
         <DialogContent className="p-0">
           <DialogHeader className="p-2">
-            <DialogTitle className="mb-1 p-2">{t("common.confirm") + " " + t("common.delete")}</DialogTitle>
+            <DialogTitle className="mb-1 p-2">{t("common.confirmDelete")}</DialogTitle>
             <div className="bg-black/5 p-4 rounded-lg dark:bg-white/5">
               <DialogDescription>
-                {deleteDialog.type === "single" ? t("messages.confirm.delete") : t("messages.confirm.delete", { count: selected.length })}
+                {deleteDialog.type === "single" ? t("messages.confirm.delete") : t("messages.confirm.deleteMultiple", { count: selected.length })}
               </DialogDescription>
               <div className="flex justify-end space-x-2 mt-4">
                 <Button variant="outline" onClick={() => setDeleteDialog({ open: false, type: null })}>{t("common.cancel")}</Button>

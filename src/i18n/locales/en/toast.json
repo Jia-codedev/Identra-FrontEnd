@@ -1,0 +1,10 @@
+{
+  "success": {
+    "general": "Operation completed successfully",
+    "saved": "Data saved successfully"
+  },
+  "error": {
+    "general": "An error occurred. Please try again.",
+    "passwordExpired": "Password has expired."
+  }
+}

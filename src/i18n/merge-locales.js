@@ -11,6 +11,7 @@ const fileToNamespace = new Map([
   ['dashboard.json', 'dashboard'],
   ['master-data.json', 'masterData'],
   ['employee.json', 'employee'],
+  ['employee-master.json', 'employeeMaster'],
   ['scheduling.json', 'scheduling'],
   ['settings.json', 'settings'],
   ['validation.json', 'validation'],

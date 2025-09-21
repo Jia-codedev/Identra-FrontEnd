@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useUserNavBar } from "@/store/userNavBar";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "@/hooks/use-translations";
 
 interface SecondaryNavProps {
   activeMenuObj: any;
@@ -22,6 +23,7 @@ const subLinkVariant = {
 export const SecondaryNav: React.FC<SecondaryNavProps> = ({
   activeMenuObj,
 }) => {
+  const { t } = useTranslations();
   const pathname = usePathname();
   const storeSecondary = useUserNavBar((s) => s.secondaryLinks);
 
@@ -38,10 +40,26 @@ export const SecondaryNav: React.FC<SecondaryNavProps> = ({
       {secondaryLinks.map((item: any, idx: number) => {
         const isActive = pathname === item.href;
         const key = item.href || item.label || `sub-link-${idx}`;
+        // Prefer translating via labelKey. If stored item lacks labelKey (older persisted data),
+        // try to find a matching item from the active menu to obtain its labelKey.
+        let displayLabel: string = item.label;
+        if (item.labelKey) {
+          displayLabel = t(item.labelKey);
+        } else if (
+          activeMenuObj?.secondary &&
+          activeMenuObj.secondary.length > 0
+        ) {
+          const found = activeMenuObj.secondary.find(
+            (s: any) => s.href === item.href || s.label === item.label
+          );
+          if (found?.labelKey) displayLabel = t(found.labelKey);
+        }
+
         return (
           <motion.div key={key} variants={subLinkVariant}>
             <Link
               href={item.href}
+              aria-current={isActive ? "page" : undefined}
               className={cn(
                 "p-1 font-medium text-xs transition-all text-nowrap hover:text-primary block relative",
                 isActive
@@ -49,7 +67,7 @@ export const SecondaryNav: React.FC<SecondaryNavProps> = ({
                   : "text-muted-foreground"
               )}
             >
-              {item.label}
+              {displayLabel}
               {isActive && (
                 <span className="absolute left-0 right-0 -bottom-0.5 h-0.5 bg-primary rounded-full" />
               )}

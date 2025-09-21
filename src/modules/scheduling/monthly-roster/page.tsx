@@ -27,8 +27,10 @@ import schedulesApi from "@/services/scheduling/schedules";
 import { Moon, Clock, Star } from "lucide-react";
 import { CustomPagination } from "@/components/common/dashboard/Pagination";
 import { useUserId } from "@/store/userStore";
+import { useTranslations } from '@/hooks/use-translations';
 
 export default function MonthlyRosterPage() {
+  const { t } = useTranslations();
   const [allSchedules, setAllSchedules] = useState<any[]>([]);
   const [assigning, setAssigning] = useState(false);
   // Fetch all schedules for dropdown
@@ -217,7 +219,7 @@ export default function MonthlyRosterPage() {
 
       let resp: any;
       // If month/year provided, prefer filter endpoint (handles overlap logic)
-      if (filters.month && filters.year) {
+  if (filters.month && filters.year) {
         const params = {
           ...baseParams,
           month: filters.month,
@@ -225,7 +227,7 @@ export default function MonthlyRosterPage() {
         };
         console.log("Fetching monthly roster (filter) with params:", params);
         resp = await employeeMonthlyRosterApi.filter({ ...params });
-      } else {
+  } else {
         // No month/year: fetch all via GET /all with query params (server should support filters on /all)
         console.log("Fetching monthly roster (all) with params:", baseParams);
         resp = await employeeMonthlyRosterApi.getAll(baseParams);
@@ -246,7 +248,7 @@ export default function MonthlyRosterPage() {
         console.warn("Unexpected monthly roster response shape:", payload);
       }
 
-      if (items) {
+  if (items) {
         setData(items);
         setTotal(
           typeof totalCount === "number" ? totalCount : items.length || 0
@@ -288,22 +290,22 @@ export default function MonthlyRosterPage() {
   const handleFinalize = async (row: any) => {
     try {
       await finalizeMutation.mutateAsync(row.schedule_roster_id);
-      toast.success("Finalized");
+      toast.success(t('monthlyRoster.table.finalized') || 'Finalized');
       setPage(1); // reload first page
       await fetchData();
     } catch (e) {
-      toast.error("Failed to finalize");
+      toast.error(t('monthlyRoster.table.finalizeFailed') || 'Failed to finalize');
     }
   };
 
   const handleDelete = async (row: any) => {
     try {
       await deleteMutation.mutateAsync(row.schedule_roster_id);
-      toast.success("Deleted");
+      toast.success(t('messages.success.deleted') || 'Deleted');
       setPage(1);
       await fetchData();
     } catch (e) {
-      toast.error("Failed to delete");
+      toast.error(t('messages.error.delete') || 'Failed to delete');
     }
   };
 
@@ -477,7 +479,7 @@ export default function MonthlyRosterPage() {
           const row = data.find((r) => r.schedule_roster_id === rowId);
           if (row) handleDelete(row);
         }}
-        noDataMessage="No monthly roster data found"
+  noDataMessage={t('monthlyRoster.table.noData') || 'No monthly roster data found'}
         isLoading={isLoading}
         onPageChange={setPage}
         onPageSizeChange={setPageSize}
@@ -492,7 +494,7 @@ export default function MonthlyRosterPage() {
       >
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Assign Schedule</DialogTitle>
+            <DialogTitle>{t('monthlyRoster.assign.title') || 'Assign Schedule'}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <Select
@@ -501,7 +503,7 @@ export default function MonthlyRosterPage() {
               value={assignSelection}
             >
               <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select schedule" />
+                <SelectValue placeholder={t('monthlyRoster.assign.selectSchedule') || 'Select schedule'} />
               </SelectTrigger>
               <SelectContent>
                 {allSchedules.map((sch) => (
@@ -529,7 +531,7 @@ export default function MonthlyRosterPage() {
                 ))}
               </SelectContent>
             </Select>
-            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2">
               <Button
                 variant="outline"
                 onClick={() => {
@@ -538,7 +540,7 @@ export default function MonthlyRosterPage() {
                 }}
                 disabled={assigning}
               >
-                Cancel
+                {t('common.cancel')}
               </Button>
               <Button
                 onClick={() => {
@@ -548,7 +550,7 @@ export default function MonthlyRosterPage() {
                 }}
                 disabled={assigning || !assignSelection}
               >
-                {assigning ? "Assigning..." : "Assign"}
+                {assigning ? t('monthlyRoster.assign.assigning') || 'Assigning...' : t('monthlyRoster.assign.assign') || 'Assign'}
               </Button>
             </div>
           </div>

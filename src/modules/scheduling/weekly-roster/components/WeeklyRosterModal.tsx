@@ -251,12 +251,6 @@ export function WeeklyRosterModal({
       : t("scheduling.weeklyRoster.editRoster");
   };
 
-  const getModalDescription = () => {
-    return mode === "create"
-      ? t("scheduling.weeklyRoster.addDescription")
-      : t("scheduling.weeklyRoster.editDescription");
-  };
-
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
@@ -265,9 +259,6 @@ export function WeeklyRosterModal({
             <CalendarDays className="h-5 w-5" />
             {getModalTitle()}
           </DialogTitle>
-          <DialogDescription className="text-sm sm:text-base">
-            {getModalDescription()}
-          </DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
@@ -276,7 +267,6 @@ export function WeeklyRosterModal({
             className="space-y-6"
           >
             <div className="grid gap-6">
-              {/* Employee Group Selection */}
               <FormField
                 control={form.control}
                 name="employee_group_id"

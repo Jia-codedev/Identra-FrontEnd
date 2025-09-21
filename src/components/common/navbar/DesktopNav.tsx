@@ -18,7 +18,7 @@ export const DesktopNav: React.FC = () => {
 
   return (
     <ScrollArea className="w-full overflow-x-auto" type="hover">
-      <div className="flex items-center gap-1 min-w-fit">
+      <div className="flex flex-row items-center gap-1 min-w-fit">
         {NAV_LINKS.map((menu, menuIndex) => {
           const Icon = menu.icon;
           const isActive = activeMenuId === menu.id;

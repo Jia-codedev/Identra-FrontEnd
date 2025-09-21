@@ -152,6 +152,14 @@ export const useNavigation = () => {
           routeKey: "navigation.leaves",
         },
         {
+          labelKey: "mainMenu.selfServices.items.leaveTypes",
+          routeKey: "navigation.leaveTypes",
+        },
+        {
+          labelKey: "mainMenu.selfServices.items.permissionTypes",
+          routeKey: "navigation.permissionTypes",
+        },
+        {
           labelKey: "mainMenu.selfServices.items.permissionManagement",
           routeKey: "navigation.permissions",
         },
@@ -311,11 +319,11 @@ export const useNavigation = () => {
       g.id === "workforce-analytics"
         ? getRouteFromKey("mainMenu.workforceAnalytics.myInsights")
         : undefined,
-    secondary: g.items
+      secondary: g.items
       .map((it) => {
         const finalLabel = getItemLabel(it.labelKey);
         const keyForRoute = it.routeKey ?? it.labelKey;
-        return { label: finalLabel, href: getRouteFromKey(keyForRoute) };
+        return { label: finalLabel, labelKey: it.labelKey, href: getRouteFromKey(keyForRoute) };
       })
       .filter((s) => !!s.label),
   }));
@@ -327,7 +335,7 @@ export const useNavigation = () => {
       .map((it) => {
         const finalLabel = getItemLabel(it.labelKey);
         const keyForRoute = it.routeKey ?? it.labelKey;
-        return { label: finalLabel, href: getRouteFromKey(keyForRoute) };
+        return { label: finalLabel, labelKey: it.labelKey, href: getRouteFromKey(keyForRoute) };
       })
       .filter((s) => !!s.label),
   }));
@@ -340,7 +348,7 @@ export const useNavigation = () => {
       .map((it) => {
         const finalLabel = getItemLabel(it.labelKey);
         const keyForRoute = it.routeKey ?? it.labelKey;
-        return { label: finalLabel, href: getRouteFromKey(keyForRoute) };
+        return { label: finalLabel, labelKey: it.labelKey, href: getRouteFromKey(keyForRoute) };
       })
       .filter((s) => !!s.label),
   }));

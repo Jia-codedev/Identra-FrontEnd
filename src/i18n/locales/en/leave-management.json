@@ -1,0 +1,8 @@
+{
+  "title": "Leave Management",
+  "description": "Manage employee leave requests and approvals.",
+  "leaves": {
+    "title": "Leave Management",
+    "noData": "No leaves found"
+  }
+}

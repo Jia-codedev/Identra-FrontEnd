@@ -152,13 +152,12 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
       title: t("employeeMaster.employee.steps.settings"),
       description: t("employeeMaster.employee.steps.settingsDesc"),
     },
-    // Only show login credentials step when adding new employee, not when editing
     ...(mode === "add"
       ? [
           {
             id: "login",
-            title: "Login Credentials",
-            description: "Set up login ID and password for system access",
+            title: t("employeeMaster.employee.loginCredentials"),
+            description: t("employeeMaster.employee.loginCredentialsDesc"),
           },
         ]
       : []),
@@ -403,11 +402,20 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
         if (!formData.emp_no.trim()) {
           stepErrors.emp_no = t("validation.required");
         }
-        if (!formData.firstname_eng.trim()) {
-          stepErrors.firstname_eng = t("validation.required");
-        }
-        if (!formData.lastname_eng.trim()) {
-          stepErrors.lastname_eng = t("validation.required");
+        if (isRTL) {
+          if (!formData.firstname_arb.trim()) {
+            stepErrors.firstname_arb = t("validation.required");
+          }
+          if (!formData.lastname_arb.trim()) {
+            stepErrors.lastname_arb = t("validation.required");
+          }
+        } else {
+          if (!formData.firstname_eng.trim()) {
+            stepErrors.firstname_eng = t("validation.required");
+          }
+          if (!formData.lastname_eng.trim()) {
+            stepErrors.lastname_eng = t("validation.required");
+          }
         }
         break;
 
@@ -529,15 +537,18 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
     // Debug logging to identify empty payload issues
     console.log("Form Data before submission:", formData);
     console.log("Employee Data to be sent:", employeeData);
-    
+
     // Additional validation to prevent empty payloads
-    if (!employeeData.emp_no || employeeData.emp_no.toString().trim() === '') {
+    if (!employeeData.emp_no || employeeData.emp_no.toString().trim() === "") {
       console.error("Employee number is missing or empty");
       toast.error("Employee number is required");
       return;
     }
-    
-    if (!employeeData.firstname_eng || employeeData.firstname_eng.toString().trim() === '') {
+
+    if (
+      !employeeData.firstname_eng ||
+      employeeData.firstname_eng.toString().trim() === ""
+    ) {
       console.error("First name is missing or empty");
       toast.error("First name is required");
       return;
@@ -545,13 +556,16 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
 
     try {
       if (mode === "add") {
-        console.log("Creating employee with data:", { ...employeeData, login: formData.login_id });
+        console.log("Creating employee with data:", {
+          ...employeeData,
+          login: formData.login_id,
+        });
         const result = await createEmployee({
           ...employeeData,
           login: formData.login_id,
           password: formData.password,
         } as IEmployee);
-        
+
         // Only call onSave after successful creation
         onSave(employeeData as IEmployee);
         // Don't call onClose here - let the parent handle it via onSave
@@ -646,11 +660,6 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
                     ? t("employeeMaster.employee.addEmployee")
                     : t("employeeMaster.employee.editEmployee")}
                 </h2>
-                <p className="text-sm text-muted-foreground">
-                  {mode === "add"
-                    ? "Create a new employee profile with detailed information"
-                    : "Update employee information and settings"}
-                </p>
               </div>
             </div>
             <Button
@@ -734,7 +743,11 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
                     }
                     className="min-w-20"
                   >
-                    <ChevronLeft className="h-4 w-4 mr-2" />
+                    {isRTL ? (
+                      <ChevronRight className="h-4 w-4 ml-2" />
+                    ) : (
+                      <ChevronLeft className="h-4 w-4 mr-2" />
+                    )}
                     {t("common.previous")}
                   </Button>
                 )}
@@ -750,7 +763,11 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
                     className="min-w-20"
                   >
                     {t("common.next")}
-                    <ChevronRight className="h-4 w-4 ml-2" />
+                    {isRTL ? (
+                      <ChevronLeft className="h-4 w-4 mr-2" />
+                    ) : (
+                      <ChevronRight className="h-4 w-4 ml-2" />
+                    )}
                   </Button>
                 ) : (
                   <Button

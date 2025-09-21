@@ -15,7 +15,7 @@ import { LogoIcon } from "../svg/icons";
 import { useLanguage } from "@/providers/language-provider";
 import Link from "next/link";
 import { getRouteFromKey } from "@/utils/routeFromKey";
-import { usePathname } from 'next/navigation';
+import { usePathname } from "next/navigation";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -33,7 +33,9 @@ function AppSidebar({ ...props }) {
   const { isRTL } = useLanguage();
   const pathname = usePathname();
   return (
-    <Sidebar collapsible="icon" side={isRTL ? "right" : "left"} {...props}>
+    <Sidebar
+    className="border-r-white/10 bg-primary text-white"
+    collapsible="icon" side={isRTL ? "right" : "left"} {...props}>
       <SidebarHeader className="">
         <Link
           href={getRouteFromKey("mainMenu.workforceAnalytics.myInsights")}
@@ -47,12 +49,18 @@ function AppSidebar({ ...props }) {
           {SIDEBAR_LINKS.map((link, idx) => {
             const Icon = link.icon;
             const key = link.id || link.label || `sidebar-${idx}`;
-            const isActive = !!(link.secondary || []).find(s => s.href && pathname?.startsWith(s.href));
+            const isActive = !!(link.secondary || []).find(
+              (s) => s.href && pathname?.startsWith(s.href)
+            );
             return (
               <SidebarMenuButton
                 key={key}
                 tooltip={link.label}
-                className={isActive ? 'bg-primary/50 text-accent hover:bg-primary/60 hover:text-accent' : "bg-transparent hover:bg-muted"}
+                className={
+                  isActive
+                    ? "bg-white hover:bg-white text-primary hover:text-accent "
+                    : "bg-white/10 hover:bg-white/20 text-white"
+                }
                 onClick={() => {
                   useUserNavBar
                     .getState()
@@ -70,12 +78,17 @@ function AppSidebar({ ...props }) {
           {FOOTER_LINKS.map((link, idx) => {
             const Icon = link.icon;
             const key = link.id || link.label || `sidebar-footer-${idx}`;
-            const isActive = !!(link.secondary || []).find(s => s.href && pathname?.startsWith(s.href));
+            const isActive = !!(link.secondary || []).find(
+              (s) => s.href && pathname?.startsWith(s.href)
+            );
             return (
               <DropdownMenu key={key}>
                 <DropdownMenuTrigger asChild>
-                  <SidebarMenuButton tooltip={link.label} className={isActive ? 'bg-primary text-white' : undefined}>
-                    <Icon className="text-lg mr-2" />
+                  <SidebarMenuButton
+                    tooltip={link.label}
+                    className={"text-white bg-white/10 hover:bg-white/20"}
+                  >
+                    <Icon className="text-lg mr-2 text-white" />
                   </SidebarMenuButton>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56" align="start">

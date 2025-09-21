@@ -39,12 +39,12 @@ export const GradesTable: React.FC<GradesTableProps> = ({
   const columns: TableColumn<IGrade>[] = [
     {
       key: "name",
-      header: t("masterData.grades.gradeName"),
+      header: t("masterData.grade.gradeName"),
       accessor: (item, isRTL) => isRTL ? item.grade_arb : item.grade_eng,
     },
     {
       key: "code",
-      header: t("masterData.grades.gradeCode"),
+      header: t("masterData.grade.gradeCode"),
       accessor: (item) => item.grade_code,
     },
   ];
@@ -65,7 +65,7 @@ export const GradesTable: React.FC<GradesTableProps> = ({
       onDeleteItem={onDeleteGrade}
   onPageChange={onPageChange}
   onPageSizeChange={onPageSizeChange}
-      noDataMessage={t("masterData.grades.noGradesFound")}
+      noDataMessage={t("masterData.grade.noGradesFound")}
       isLoading={isLoading}
     />
   );

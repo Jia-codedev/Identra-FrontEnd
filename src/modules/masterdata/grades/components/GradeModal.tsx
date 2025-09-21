@@ -82,8 +82,8 @@ export const GradeModal: React.FC<GradeModalProps> = ({
           <div className="flex items-center justify-between mb-6 px-2">
             <h2 className="text-xl font-semibold text-foreground">
               {mode === 'add'
-                ? t('masterData.grades.addGrade')
-                : t('masterData.grades.editGrade')
+                ? t('masterData.grade.addGrade')
+                : t('masterData.grade.editGrade')
               }
             </h2>
             <Button
@@ -100,13 +100,13 @@ export const GradeModal: React.FC<GradeModalProps> = ({
 
             <div>
               <Label htmlFor="location_code" className="text-sm font-medium">
-                {t('masterData.grades.gradeCode')} *
+                {t('masterData.grade.gradeCode')} *
               </Label>
               <Input
                 id="grade_code"
                 value={formData.grade_code}
                 onChange={(e) => handleInputChange('grade_code', e.target.value.toUpperCase())}
-                placeholder={t('masterData.grades.enterGradeCode')}
+                placeholder={t('masterData.grade.enterGradeCode')}
                 required
                 className="mt-1"
               />
@@ -115,26 +115,26 @@ export const GradeModal: React.FC<GradeModalProps> = ({
               isRTL ? (
                 <div>
                   <Label htmlFor="location_arb" className="text-sm font-medium">
-                    {t('masterData.grades.enterGradeName')}
+                    {t('masterData.grade.enterGradeName')}
                   </Label>
                   <Input
                     id="grade_arb"
                     value={formData.grade_arb}
                     onChange={(e) => handleInputChange('grade_arb', e.target.value)}
-                    placeholder={t('masterData.grades.enterGradeNameArabic')}
+                    placeholder={t('masterData.grade.enterGradeNameArabic')}
                     className="mt-1"
                   />
                 </div>
               ) : (
                 <div>
                   <Label htmlFor="location_eng" className="text-sm font-medium">
-                    {t('masterData.grades.enterGradeName')} *
+                    {t('masterData.grade.enterGradeName')} *
                   </Label>
                   <Input
                     id="grade_eng"
                     value={formData.grade_eng}
                     onChange={(e) => handleInputChange('grade_eng', e.target.value)}
-                    placeholder={t('masterData.grades.enterGradeName')}
+                    placeholder={t('masterData.grade.enterGradeName')}
                     required
                     className="mt-1"
                   />

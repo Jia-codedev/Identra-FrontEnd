@@ -10,6 +10,7 @@ import { Checkbox } from '@/components/ui/Checkbox';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { CalendarIcon } from 'lucide-react';
+import { useTranslations } from '@/hooks/use-translations';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { CreateMonthlyRosterRequest } from '@/services/scheduling/employeeMonthlyRoster';
@@ -29,6 +30,7 @@ export const MonthlyRosterAddModal: React.FC<MonthlyRosterAddModalProps> = ({
   isLoading = false,
   initialData = null,
 }) => {
+  const { t } = useTranslations();
   const [formData, setFormData] = useState<Partial<CreateMonthlyRosterRequest>>({
     employee_id: undefined,
     from_date: '',
@@ -90,11 +92,11 @@ export const MonthlyRosterAddModal: React.FC<MonthlyRosterAddModalProps> = ({
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>{initialData ? 'Edit Monthly Roster' : 'Add Monthly Roster'}</DialogTitle>
+          <DialogTitle>{initialData ? t('monthlyRoster.modal.edit') : t('monthlyRoster.modal.add')}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="employee_id">Employee</Label>
+            <Label htmlFor="employee_id">{t('common.name')}</Label>
             <EmployeeCombobox
               value={formData.employee_id ?? null}
               onChange={(v) => setFormData(prev => ({ ...prev, employee_id: v ?? undefined }))}
@@ -103,7 +105,7 @@ export const MonthlyRosterAddModal: React.FC<MonthlyRosterAddModalProps> = ({
           </div>
 
           <div className="space-y-2">
-            <Label>From Date</Label>
+            <Label>{t('common.fromDate')}</Label>
             <Popover>
               <PopoverTrigger asChild>
                 <Button
@@ -114,7 +116,7 @@ export const MonthlyRosterAddModal: React.FC<MonthlyRosterAddModalProps> = ({
                   )}
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
-                  {fromDate ? format(fromDate, "PPP") : "Pick a date"}
+                  {fromDate ? format(fromDate, "PPP") : t('common.pickDate')}
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0">
@@ -129,7 +131,7 @@ export const MonthlyRosterAddModal: React.FC<MonthlyRosterAddModalProps> = ({
           </div>
 
           <div className="space-y-2">
-            <Label>To Date</Label>
+            <Label>{t('common.toDate')}</Label>
             <Popover>
               <PopoverTrigger asChild>
                 <Button
@@ -140,7 +142,7 @@ export const MonthlyRosterAddModal: React.FC<MonthlyRosterAddModalProps> = ({
                   )}
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
-                  {toDate ? format(toDate, "PPP") : "Pick a date"}
+                  {toDate ? format(toDate, "PPP") : t('common.pickDate')}
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0">
@@ -156,7 +158,7 @@ export const MonthlyRosterAddModal: React.FC<MonthlyRosterAddModalProps> = ({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="version_no">Version Number</Label>
+            <Label htmlFor="version_no">{t('monthlyRoster.modal.versionNumber') || 'Version Number'}</Label>
             <Input
               id="version_no"
               type="number"
@@ -167,7 +169,7 @@ export const MonthlyRosterAddModal: React.FC<MonthlyRosterAddModalProps> = ({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="manager_id">Manager (Optional)</Label>
+            <Label htmlFor="manager_id">{t('monthlyRoster.modal.manager') || 'Manager (Optional)'}</Label>
             <EmployeeCombobox
               value={formData.manager_id ?? null}
               onChange={(v) => setFormData(prev => ({ ...prev, manager_id: v ?? undefined }))}
@@ -182,15 +184,21 @@ export const MonthlyRosterAddModal: React.FC<MonthlyRosterAddModalProps> = ({
                 setFormData(prev => ({ ...prev, finalize_flag: Boolean(v) }));
               }}
             />
-            <Label className="m-0">Finalize roster</Label>
+            <Label className="m-0">{t('monthlyRoster.modal.finalize') || 'Finalize roster'}</Label>
           </div>
 
           <div className="flex justify-end space-x-2">
             <Button type="button" variant="outline" onClick={handleClose}>
-              Cancel
+              {t('common.cancel')}
             </Button>
             <Button type="submit" disabled={isLoading || !formData.employee_id || !fromDate || !toDate}>
-              {isLoading ? (initialData ? 'Updating...' : 'Creating...') : (initialData ? 'Update Roster' : 'Create Roster')}
+              {isLoading
+                ? initialData
+                  ? t('common.saving')
+                  : t('common.saving')
+                : initialData
+                ? t('monthlyRoster.modal.update')
+                : t('monthlyRoster.modal.create')}
             </Button>
           </div>
         </form>

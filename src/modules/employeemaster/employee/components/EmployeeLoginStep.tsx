@@ -5,12 +5,14 @@ import { Button } from "@/components/ui/button";
 import { Eye, EyeOff, RefreshCw, Copy, Check } from "lucide-react";
 import { EmployeeStepProps } from "./types";
 import { toast } from "sonner";
+import { useTranslations } from "@/hooks/use-translations";
 
 export const EmployeeLoginStep: React.FC<EmployeeStepProps> = ({
   formData,
   errors,
   onInputChange,
 }) => {
+  const { t } = useTranslations();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -41,7 +43,7 @@ export const EmployeeLoginStep: React.FC<EmployeeStepProps> = ({
     
     onInputChange("password", password);
     onInputChange("confirm_password", password);
-    toast.success("Password generated successfully!");
+    toast.success(t("employeeMaster.employee.passwordGenerated"));
   }, [onInputChange]);
 
   const copyPassword = useCallback(async () => {
@@ -49,11 +51,11 @@ export const EmployeeLoginStep: React.FC<EmployeeStepProps> = ({
       try {
         await navigator.clipboard.writeText(formData.password);
         setCopied(true);
-        toast.success("Password copied to clipboard!");
+        toast.success(t("employeeMaster.employee.passwordCopied"));
         setTimeout(() => setCopied(false), 2000);
       } catch (error) {
         console.error("Failed to copy password:", error);
-        toast.error("Failed to copy password");
+        toast.error(t("employeeMaster.employee.passwordCopyFailed"));
       }
     }
   }, [formData.password]);
@@ -64,9 +66,9 @@ export const EmployeeLoginStep: React.FC<EmployeeStepProps> = ({
       const randomSuffix = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
       const loginId = `${baseId}${randomSuffix}`;
       onInputChange("login_id", loginId);
-      toast.success("Login ID generated successfully!");
+      toast.success(t("employeeMaster.employee.loginIdGenerated"));
     } else {
-      toast.error("Please fill in first name and last name first");
+      toast.error(t("employeeMaster.employee.fillNamesFirst"));
     }
   }, [formData.firstname_eng, formData.lastname_eng, onInputChange]);
 
@@ -75,24 +77,24 @@ export const EmployeeLoginStep: React.FC<EmployeeStepProps> = ({
       <div className="bg-muted/30 rounded-lg p-4 space-y-4">
         <div className="flex items-center justify-between">
           <h4 className="text-sm font-semibold text-foreground mb-3">
-            Login Credentials
+            {t("employeeMaster.employee.loginCredentials")}
           </h4>
           <div className="text-xs text-muted-foreground">
-            * Required for system access
+            {t("employeeMaster.employee.loginRequiredNote")}
           </div>
         </div>
         
         <div className="grid grid-cols-1 gap-4">
           <div>
-            <Label htmlFor="login_id" className="text-sm font-medium">
-              Login ID *
+              <Label htmlFor="login_id" className="text-sm font-medium">
+              {t("employeeMaster.employee.loginIdLabel")}
             </Label>
             <div className="flex gap-2 mt-1">
               <Input
                 id="login_id"
                 value={formData.login_id}
                 onChange={(e) => onInputChange("login_id", e.target.value)}
-                placeholder="Enter login ID or generate from name"
+                placeholder={t("employeeMaster.employee.loginIdPlaceholder")}
                 className={`${errors.login_id ? "border-red-500" : ""}`}
               />
               <Button
@@ -104,14 +106,14 @@ export const EmployeeLoginStep: React.FC<EmployeeStepProps> = ({
                 className="whitespace-nowrap"
               >
                 <RefreshCw className="h-4 w-4 mr-1" />
-                Generate
+                {t("employeeMaster.employee.generate")}
               </Button>
             </div>
             {errors.login_id && (
               <p className="text-red-500 text-xs mt-1">{errors.login_id}</p>
             )}
             <p className="text-xs text-muted-foreground mt-1">
-              This will be used to login to the system
+              {t("employeeMaster.employee.loginIdHelp")}
             </p>
           </div>
         </div>
@@ -119,13 +121,13 @@ export const EmployeeLoginStep: React.FC<EmployeeStepProps> = ({
 
       <div className="bg-muted/30 rounded-lg p-4 space-y-4">
         <h4 className="text-sm font-semibold text-foreground mb-3">
-          Password Settings
+          {t("employeeMaster.employee.passwordSettings")}
         </h4>
         
         <div className="grid grid-cols-1 gap-4">
           <div>
-            <Label htmlFor="password" className="text-sm font-medium">
-              Password *
+              <Label htmlFor="password" className="text-sm font-medium">
+              {t("auth.password")} *
             </Label>
             <div className="flex gap-2 mt-1">
               <div className="relative flex-1">
@@ -134,7 +136,7 @@ export const EmployeeLoginStep: React.FC<EmployeeStepProps> = ({
                   type={showPassword ? "text" : "password"}
                   value={formData.password}
                   onChange={(e) => onInputChange("password", e.target.value)}
-                  placeholder="Enter password or generate one"
+                  placeholder={t("employeeMaster.employee.passwordPlaceholder")}
                   className={`pr-10 ${errors.password ? "border-red-500" : ""}`}
                 />
                 <Button
@@ -155,7 +157,7 @@ export const EmployeeLoginStep: React.FC<EmployeeStepProps> = ({
                 className="whitespace-nowrap"
               >
                 <RefreshCw className="h-4 w-4 mr-1" />
-                Generate
+                {t("employeeMaster.employee.generate")}
               </Button>
               {formData.password && (
                 <Button
@@ -177,19 +179,19 @@ export const EmployeeLoginStep: React.FC<EmployeeStepProps> = ({
               <p className="text-red-500 text-xs mt-1">{errors.password}</p>
             )}
             <div className="text-xs text-muted-foreground mt-1 space-y-1">
-              <p>Password requirements:</p>
+              <p>{t("employeeMaster.employee.passwordRequirementsTitle")}</p>
               <ul className="list-disc list-inside space-y-0.5 ml-2">
-                <li>At least 8 characters long</li>
-                <li>Contains uppercase and lowercase letters</li>
-                <li>Contains at least one number</li>
-                <li>Contains at least one special character (!@#$%^&*)</li>
+                <li>{t("employeeMaster.employee.passwordReq.length")}</li>
+                <li>{t("employeeMaster.employee.passwordReq.upperLower")}</li>
+                <li>{t("employeeMaster.employee.passwordReq.number")}</li>
+                <li>{t("employeeMaster.employee.passwordReq.specialChar")}</li>
               </ul>
             </div>
           </div>
 
           <div>
             <Label htmlFor="confirm_password" className="text-sm font-medium">
-              Confirm Password *
+              {t("auth.confirmPassword")} *
             </Label>
             <div className="relative mt-1">
               <Input
@@ -197,7 +199,7 @@ export const EmployeeLoginStep: React.FC<EmployeeStepProps> = ({
                 type={showConfirmPassword ? "text" : "password"}
                 value={formData.confirm_password}
                 onChange={(e) => onInputChange("confirm_password", e.target.value)}
-                placeholder="Re-enter password to confirm"
+                placeholder={t("employeeMaster.employee.confirmPasswordPlaceholder")}
                 className={`pr-10 ${errors.confirm_password ? "border-red-500" : ""}`}
               />
               <Button
@@ -225,11 +227,9 @@ export const EmployeeLoginStep: React.FC<EmployeeStepProps> = ({
             </svg>
           </div>
           <div className="text-sm text-blue-800">
-            <p className="font-medium mb-1">Security Note</p>
+            <p className="font-medium mb-1">{t("employeeMaster.employee.securityNoteTitle")}</p>
             <p>
-              The generated password will be securely stored in the system. 
-              Make sure to share the login credentials with the employee through a secure channel.
-              The employee should change the password upon first login.
+              {t("employeeMaster.employee.securityNoteParagraph")}
             </p>
           </div>
         </div>
