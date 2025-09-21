@@ -74,18 +74,6 @@ export default function BiometricTerminalsList({
       ),
       width: "15%",
     },
-    {
-      key: "created_date",
-      header: t("common.createdDate"),
-      accessor: (item) => formatDate(item.created_date),
-      width: "20%",
-    },
-    {
-      key: "last_updated_date",
-      header: t("common.lastUpdated"),
-      accessor: (item) => formatDate(item.last_updated_date),
-      width: "20%",
-    },
   ];
 
   return (

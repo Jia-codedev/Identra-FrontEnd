@@ -5,9 +5,30 @@
   "description": "Configure and manage access zones for your organization.",
   "searchPlaceholder": "Search zones...",
   "type": "Zone Type",
+  "selectZoneType": "Select zone type",
   "types": {
     "entry": "Entry",
     "exit": "Exit",
     "both": "Both"
+  },
+  "zoneName": "Zone Name",
+  "enterZoneName": "Enter zone name",
+  "enterDescription": "Enter description",
+  "floor": "Floor Level",
+  "enterFloor": "Enter floor level",
+  "capacity": "Capacity Limit",
+  "enterCapacity": "Enter capacity limit",
+  "building": "Building",
+  "status": "Status",
+  "noZonesFound": "No zones found",
+  "success": {
+    "created": "Access zone created successfully",
+    "updated": "Access zone updated successfully",
+    "deleted": "Access zone deleted successfully"
+  },
+  "error": {
+    "create": "Failed to create access zone",
+    "update": "Failed to update access zone",
+    "delete": "Failed to delete access zone"
   }
 }

@@ -46,6 +46,7 @@
     "toggleNavigation": "Toggle navigation",
     "closeMenu": "Close menu",
     "status": "Status",
+    "selectStatus": "Select Status",
     "date": "Date",
     "time": "Time",
     "name": "Name",
@@ -1250,18 +1251,41 @@
     "description": "Configure and manage access zones for your organization.",
     "searchPlaceholder": "Search zones...",
     "type": "Zone Type",
+    "selectZoneType": "Select zone type",
     "types": {
       "entry": "Entry",
       "exit": "Exit",
       "both": "Both"
+    },
+    "zoneName": "Zone Name",
+    "enterZoneName": "Enter zone name",
+    "enterDescription": "Enter description",
+    "floor": "Floor Level",
+    "enterFloor": "Enter floor level",
+    "capacity": "Capacity Limit",
+    "enterCapacity": "Enter capacity limit",
+    "building": "Building",
+    "status": "Status",
+    "noZonesFound": "No zones found",
+    "success": {
+      "created": "Access zone created successfully",
+      "updated": "Access zone updated successfully",
+      "deleted": "Access zone deleted successfully"
+    },
+    "error": {
+      "create": "Failed to create access zone",
+      "update": "Failed to update access zone",
+      "delete": "Failed to delete access zone"
     }
   },
   "buildings": {
     "title": "Buildings Management",
     "subtitle": "Manage organizational buildings, facilities, and their configurations.",
     "addBuilding": "Add Building",
+    "editBuilding": "Edit Building",
     "searchPlaceholder": "Search buildings...",
     "type": "Building Type",
+    "selectBuildingType": "Select building type",
     "types": {
       "office": "Office",
       "warehouse": "Warehouse",
@@ -1269,6 +1293,43 @@
       "residential": "Residential",
       "mixed": "Mixed Use"
     },
-    "city": "City"
+    "buildingName": "Building Name",
+    "enterBuildingName": "Enter building name",
+    "buildingCode": "Building Code",
+    "enterBuildingCode": "Enter building code",
+    "address": "Address",
+    "enterAddress": "Enter address",
+    "description": "Description",
+    "enterDescription": "Enter description",
+    "floors": "Floors",
+    "enterFloors": "Enter number of floors",
+    "area": "Total Area (sq ft)",
+    "enterArea": "Enter total area",
+    "contact": "Contact",
+    "contactInformation": "Contact Information",
+    "contactPerson": "Contact Person",
+    "enterContactPerson": "Enter contact person name",
+    "contactPhone": "Contact Phone",
+    "enterContactPhone": "Enter contact phone number",
+    "contactEmail": "Contact Email",
+    "enterContactEmail": "Enter contact email address",
+    "locationInformation": "Location Information",
+    "city": "City",
+    "enterCity": "Enter city",
+    "country": "Country",
+    "enterCountry": "Enter country",
+    "postalCode": "Postal Code",
+    "enterPostalCode": "Enter postal code",
+    "noBuildingsFound": "No buildings found",
+    "success": {
+      "created": "Building created successfully",
+      "updated": "Building updated successfully",
+      "deleted": "Building deleted successfully"
+    },
+    "error": {
+      "create": "Failed to create building",
+      "update": "Failed to update building",
+      "delete": "Failed to delete building"
+    }
   }
 }

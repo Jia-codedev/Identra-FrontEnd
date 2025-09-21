@@ -2,8 +2,10 @@
   "title": "Buildings Management",
   "subtitle": "Manage organizational buildings, facilities, and their configurations.",
   "addBuilding": "Add Building",
+  "editBuilding": "Edit Building",
   "searchPlaceholder": "Search buildings...",
   "type": "Building Type",
+  "selectBuildingType": "Select building type",
   "types": {
     "office": "Office",
     "warehouse": "Warehouse",
@@ -11,5 +13,42 @@
     "residential": "Residential",
     "mixed": "Mixed Use"
   },
-  "city": "City"
+  "buildingName": "Building Name",
+  "enterBuildingName": "Enter building name",
+  "buildingCode": "Building Code",
+  "enterBuildingCode": "Enter building code",
+  "address": "Address",
+  "enterAddress": "Enter address",
+  "description": "Description",
+  "enterDescription": "Enter description",
+  "floors": "Floors",
+  "enterFloors": "Enter number of floors",
+  "area": "Total Area (sq ft)",
+  "enterArea": "Enter total area",
+  "contact": "Contact",
+  "contactInformation": "Contact Information",
+  "contactPerson": "Contact Person",
+  "enterContactPerson": "Enter contact person name",
+  "contactPhone": "Contact Phone",
+  "enterContactPhone": "Enter contact phone number",
+  "contactEmail": "Contact Email",
+  "enterContactEmail": "Enter contact email address",
+  "locationInformation": "Location Information",
+  "city": "City",
+  "enterCity": "Enter city",
+  "country": "Country",
+  "enterCountry": "Enter country",
+  "postalCode": "Postal Code",
+  "enterPostalCode": "Enter postal code",
+  "noBuildingsFound": "No buildings found",
+  "success": {
+    "created": "Building created successfully",
+    "updated": "Building updated successfully",
+    "deleted": "Building deleted successfully"
+  },
+  "error": {
+    "create": "Failed to create building",
+    "update": "Failed to update building",
+    "delete": "Failed to delete building"
+  }
 }

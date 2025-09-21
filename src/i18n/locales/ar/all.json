@@ -46,6 +46,7 @@
     "toggleNavigation": "تبديل التنقل",
     "closeMenu": "إغلاق القائمة",
     "status": "الحالة",
+    "selectStatus": "اختر الحالة",
     "date": "التاريخ",
     "time": "الوقت",
     "name": "الاسم",
@@ -1174,18 +1175,41 @@
     "description": "تكوين وإدارة مناطق الوصول لمؤسستك.",
     "searchPlaceholder": "البحث في المناطق...",
     "type": "نوع المنطقة",
+    "selectZoneType": "اختر نوع المنطقة",
     "types": {
       "entry": "دخول",
       "exit": "خروج",
       "both": "كلاهما"
+    },
+    "zoneName": "اسم المنطقة",
+    "enterZoneName": "أدخل اسم المنطقة",
+    "enterDescription": "أدخل الوصف",
+    "floor": "مستوى الطابق",
+    "enterFloor": "أدخل مستوى الطابق",
+    "capacity": "حد السعة",
+    "enterCapacity": "أدخل حد السعة",
+    "building": "المبنى",
+    "status": "الحالة",
+    "noZonesFound": "لم يتم العثور على مناطق",
+    "success": {
+      "created": "تم إنشاء منطقة الوصول بنجاح",
+      "updated": "تم تحديث منطقة الوصول بنجاح",
+      "deleted": "تم حذف منطقة الوصول بنجاح"
+    },
+    "error": {
+      "create": "فشل في إنشاء منطقة الوصول",
+      "update": "فشل في تحديث منطقة الوصول",
+      "delete": "فشل في حذف منطقة الوصول"
     }
   },
   "buildings": {
     "title": "إدارة المباني",
     "subtitle": "إدارة مباني المؤسسة والمرافق وتكويناتها.",
     "addBuilding": "إضافة مبنى",
+    "editBuilding": "تعديل المبنى",
     "searchPlaceholder": "البحث في المباني...",
     "type": "نوع المبنى",
+    "selectBuildingType": "اختر نوع المبنى",
     "types": {
       "office": "مكتب",
       "warehouse": "مستودع",
@@ -1193,6 +1217,43 @@
       "residential": "سكني",
       "mixed": "استخدام مختلط"
     },
-    "city": "المدينة"
+    "buildingName": "اسم المبنى",
+    "enterBuildingName": "أدخل اسم المبنى",
+    "buildingCode": "رمز المبنى",
+    "enterBuildingCode": "أدخل رمز المبنى",
+    "address": "العنوان",
+    "enterAddress": "أدخل العنوان",
+    "description": "الوصف",
+    "enterDescription": "أدخل الوصف",
+    "floors": "الطوابق",
+    "enterFloors": "أدخل عدد الطوابق",
+    "area": "المساحة الإجمالية (قدم مربع)",
+    "enterArea": "أدخل المساحة الإجمالية",
+    "contact": "الاتصال",
+    "contactInformation": "معلومات الاتصال",
+    "contactPerson": "الشخص المسؤول",
+    "enterContactPerson": "أدخل اسم الشخص المسؤول",
+    "contactPhone": "هاتف الاتصال",
+    "enterContactPhone": "أدخل رقم هاتف الاتصال",
+    "contactEmail": "البريد الإلكتروني",
+    "enterContactEmail": "أدخل البريد الإلكتروني",
+    "locationInformation": "معلومات الموقع",
+    "city": "المدينة",
+    "enterCity": "أدخل المدينة",
+    "country": "البلد",
+    "enterCountry": "أدخل البلد",
+    "postalCode": "الرمز البريدي",
+    "enterPostalCode": "أدخل الرمز البريدي",
+    "noBuildingsFound": "لم يتم العثور على مباني",
+    "success": {
+      "created": "تم إنشاء المبنى بنجاح",
+      "updated": "تم تحديث المبنى بنجاح",
+      "deleted": "تم حذف المبنى بنجاح"
+    },
+    "error": {
+      "create": "فشل في إنشاء المبنى",
+      "update": "فشل في تحديث المبنى",
+      "delete": "فشل في حذف المبنى"
+    }
   }
 }
