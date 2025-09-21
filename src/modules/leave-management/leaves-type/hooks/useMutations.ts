@@ -3,19 +3,21 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import leaveTypeApi from "@/services/leaveManagement/leaveType";
 import { toast } from "sonner";
+import { useTranslations } from "@/hooks/use-translations";
 
 export const useLeaveTypeMutations = () => {
   const queryClient = useQueryClient();
+  const { t } = useTranslations();
 
   // Create mutation
   const createMutation = useMutation({
     mutationFn: (data: any) => leaveTypeApi.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["leaveTypes"] });
-      toast.success("Leave type created successfully");
+      toast.success(t("leaveManagement.leaveTypes.messages.created") || "Leave type created successfully");
     },
     onError: (error: any) => {
-      const message = error?.response?.data?.message || "Failed to create leave type";
+      const message = error?.response?.data?.message || (t("leaveManagement.leaveTypes.messages.createError") || "Failed to create leave type");
       toast.error(message);
     },
   });
@@ -26,10 +28,10 @@ export const useLeaveTypeMutations = () => {
       leaveTypeApi.update(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["leaveTypes"] });
-      toast.success("Leave type updated successfully");
+      toast.success(t("leaveManagement.leaveTypes.messages.updated") || "Leave type updated successfully");
     },
     onError: (error: any) => {
-      const message = error?.response?.data?.message || "Failed to update leave type";
+      const message = error?.response?.data?.message || (t("leaveManagement.leaveTypes.messages.updateError") || "Failed to update leave type");
       toast.error(message);
     },
   });
@@ -39,10 +41,10 @@ export const useLeaveTypeMutations = () => {
     mutationFn: (id: number) => leaveTypeApi.remove(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["leaveTypes"] });
-      toast.success("Leave type deleted successfully");
+      toast.success(t("leaveManagement.leaveTypes.messages.deleted") || "Leave type deleted successfully");
     },
     onError: (error: any) => {
-      const message = error?.response?.data?.message || "Failed to delete leave type";
+      const message = error?.response?.data?.message || (t("leaveManagement.leaveTypes.messages.deleteError") || "Failed to delete leave type");
       toast.error(message);
     },
   });
@@ -52,10 +54,10 @@ export const useLeaveTypeMutations = () => {
     mutationFn: (ids: number[]) => leaveTypeApi.removeMany(ids),
     onSuccess: (_, ids) => {
       queryClient.invalidateQueries({ queryKey: ["leaveTypes"] });
-      toast.success(`${ids.length} leave type(s) deleted successfully`);
+      toast.success(t("leaveManagement.leaveTypes.messages.bulkDeleted", { count: ids.length }) || `${ids.length} leave type(s) deleted successfully`);
     },
     onError: (error: any) => {
-      const message = error?.response?.data?.message || "Failed to delete leave types";
+      const message = error?.response?.data?.message || (t("leaveManagement.leaveTypes.messages.bulkDeleteError") || "Failed to delete leave types");
       toast.error(message);
     },
   });

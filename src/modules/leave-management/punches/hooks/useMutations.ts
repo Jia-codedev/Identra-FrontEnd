@@ -2,10 +2,12 @@
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { useTranslations } from "@/hooks/use-translations";
 import attendanceApi from "@/services/leaveManagement/attendance";
 
 export default function useAttendanceMutations() {
   const queryClient = useQueryClient();
+  const { t } = useTranslations();
 
   const invalidateQueries = () => {
     queryClient.invalidateQueries({ queryKey: ["attendance"] });
@@ -17,10 +19,12 @@ export default function useAttendanceMutations() {
     mutationFn: attendanceApi.createAttendance,
     onSuccess: () => {
       invalidateQueries();
-      toast.success("Attendance record created successfully");
+      toast.success(t("leave-management.attendance.messages.created"));
     },
     onError: (error: any) => {
-      toast.error(error?.message || "Failed to create attendance record");
+      toast.error(
+        error?.message || t("leave-management.attendance.messages.createError")
+      );
     },
   });
 
@@ -30,10 +34,12 @@ export default function useAttendanceMutations() {
       attendanceApi.updateAttendance(id, data),
     onSuccess: () => {
       invalidateQueries();
-      toast.success("Attendance record updated successfully");
+      toast.success(t("leave-management.attendance.messages.updated"));
     },
     onError: (error: any) => {
-      toast.error(error?.message || "Failed to update attendance record");
+      toast.error(
+        error?.message || t("leave-management.attendance.messages.updateError")
+      );
     },
   });
 
@@ -42,10 +48,12 @@ export default function useAttendanceMutations() {
     mutationFn: attendanceApi.deleteAttendance,
     onSuccess: () => {
       invalidateQueries();
-      toast.success("Attendance record deleted successfully");
+      toast.success(t("leave-management.attendance.messages.deleted"));
     },
     onError: (error: any) => {
-      toast.error(error?.message || "Failed to delete attendance record");
+      toast.error(
+        error?.message || t("leave-management.attendance.messages.deleteError")
+      );
     },
   });
 
@@ -54,10 +62,13 @@ export default function useAttendanceMutations() {
     mutationFn: attendanceApi.bulkUpdateAttendance,
     onSuccess: () => {
       invalidateQueries();
-      toast.success("Attendance records updated successfully");
+      toast.success(t("leave-management.attendance.messages.bulkUpdated"));
     },
     onError: (error: any) => {
-      toast.error(error?.message || "Failed to update attendance records");
+      toast.error(
+        error?.message ||
+          t("leave-management.attendance.messages.bulkUpdateError")
+      );
     },
   });
 
@@ -67,17 +78,22 @@ export default function useAttendanceMutations() {
     onSuccess: (response) => {
       // Create download link for exported file
       const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement('a');
+      const link = document.createElement("a");
       link.href = url;
-      link.setAttribute('download', `attendance-export-${new Date().toISOString().split('T')[0]}.csv`);
+      link.setAttribute(
+        "download",
+        `attendance-export-${new Date().toISOString().split("T")[0]}.csv`
+      );
       document.body.appendChild(link);
       link.click();
       link.remove();
       window.URL.revokeObjectURL(url);
-      toast.success("Attendance data exported successfully");
+      toast.success(t("leave-management.attendance.messages.exported"));
     },
     onError: (error: any) => {
-      toast.error(error?.message || "Failed to export attendance data");
+      toast.error(
+        error?.message || t("leave-management.attendance.messages.exportError")
+      );
     },
   });
 

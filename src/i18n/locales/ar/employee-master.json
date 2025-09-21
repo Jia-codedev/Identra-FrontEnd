@@ -2,12 +2,38 @@
   "employeeTypes": {
     "title": "أنواع العقود",
     "description": "إدارة جميع أنواع العقود في مؤسستك هنا. يمكنك إضافة أو تعديل أو حذف أنواع العقود حسب الحاجة.",
-    "addEmployeeType": "إضافة نوع عقد"
+    "addEmployeeType": "إضافة نوع عقد",
+    "editEmployeeType": "تعديل نوع عقد",
+    "employeeTypeCode": "رمز نوع العقد",
+    "enterEmployeeTypeCode": "أدخل رمز نوع العقد",
+    "employeeTypeName": "اسم نوع العقد",
+    "enterEmployeeTypeName": "أدخل اسم نوع العقد",
+    "employeeTypeNameArabic": "اسم نوع العقد (بالعربية)",
+    "enterEmployeeTypeNameArabic": "أدخل اسم نوع العقد بالعربية",
+    "searchPlaceholder": "البحث عن أنواع العقود...",
+    "noEmployeeTypesFound": "لم يتم العثور على أنواع عقود."
   },
   "employeeGroups": {
     "title": "تجميع الفرق",
     "description": "إدارة جميع مجموعات الفرق في مؤسستك هنا.",
-    "addEmployeeGroup": "إضافة مجموعة فريق"
+    "addEmployeeGroup": "إضافة مجموعة فريق",
+    "editEmployeeGroup": "تعديل مجموعة فريق",
+    "employeeGroupCode": "رمز مجموعة الفريق",
+    "enterEmployeeGroupCode": "أدخل رمز مجموعة الفريق",
+    "employeeGroupName": "اسم مجموعة الفريق",
+    "enterEmployeeGroupName": "أدخل اسم مجموعة الفريق",
+    "employeeGroupNameArabic": "اسم مجموعة الفريق (بالعربية)",
+    "enterEmployeeGroupNameArabic": "أدخل اسم مجموعة الفريق بالعربية",
+    "searchPlaceholder": "البحث عن مجموعات الفرق...",
+    "noEmployeeGroupsFound": "لم يتم العثور على مجموعات فرق.",
+    "schedule": "الجدول",
+    "reportingGroup": "مجموعة التقارير",
+    "fromDate": "من تاريخ",
+    "toDate": "إلى تاريخ",
+    "selectFromDate": "اختر من تاريخ",
+    "selectToDate": "اختر إلى تاريخ",
+    "reportingPerson": "الشخص المسؤول عن التقارير",
+    "searchReportingPerson": "البحث عن الشخص المسؤول عن التقارير"
   },
   "employee": {
     "title": "إدارة الموظفين",

@@ -21,6 +21,7 @@ const fileToNamespace = new Map([
   ['leave-management.json', 'leaveManagement'],
   ['translator.json', 'translator'],
   ['main-menu.json', 'mainMenu'],
+  ['pagination.json', 'pagination'],
 ]);
 
 function readJsonSafe(filePath) {

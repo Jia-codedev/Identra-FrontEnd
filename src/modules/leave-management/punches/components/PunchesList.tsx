@@ -36,18 +36,18 @@ const getReasonColor = (reason: string) => {
   }
 };
 
-const formatReason = (reason: string) => {
+const formatReason = (reason: string, t: any) => {
   switch (reason?.toUpperCase()) {
     case 'IN':
-      return 'Check In';
+      return t('leave-management.punches.checkIn') || 'Check In';
     case 'OUT':
-      return 'Check Out';
+      return t('leave-management.punches.checkOut') || 'Check Out';
     case 'BREAK_START':
-      return 'Break Start';
+      return t('leave-management.punches.breakStart') || 'Break Start';
     case 'BREAK_END':
-      return 'Break End';
+      return t('leave-management.punches.breakEnd') || 'Break End';
     default:
-      return reason || 'Unknown';
+      return reason || t('leave-management.common.notAvailable') || 'Unknown';
   }
 };
 
@@ -103,7 +103,7 @@ export default function PunchesList({
   const columns: TableColumn<EmployeeEventTransaction>[] = [
     {
       key: 'employee',
-      header: t('employee.name') || t('employee.employeeName') || 'Employee',
+      header: t('leave-management.employee.name') || 'Employee',
       accessor: (punch: EmployeeEventTransaction, isRTL?: boolean) => {
         const employeeName = punch.employee_master 
           ? `${punch.employee_master.firstname_eng} ${punch.employee_master.lastname_eng}`.trim()
@@ -120,7 +120,7 @@ export default function PunchesList({
     },
     {
       key: 'date',
-      header: t('common.date') || 'Date',
+      header: t('leave-management.common.date') || 'Date',
       accessor: (punch: EmployeeEventTransaction, isRTL?: boolean) => (
         <div className="text-sm">
           <div className="font-medium text-foreground">{formatDateTime(punch.transaction_time)}</div>
@@ -129,16 +129,16 @@ export default function PunchesList({
     },
     {
       key: 'reason',
-      header: t('common.type') || 'Type',
+      header: t('leave-management.common.type') || 'Type',
       accessor: (punch: EmployeeEventTransaction, isRTL?: boolean) => (
         <Badge className={getReasonColor(punch.reason)}>
-          {formatReason(punch.reason)}
+          {formatReason(punch.reason, t)}
         </Badge>
       ),
     },
     {
       key: 'time',
-      header: t('common.time') || 'Time',
+      header: t('leave-management.common.time') || 'Time',
       accessor: (punch: EmployeeEventTransaction, isRTL?: boolean) => (
         <div className="text-sm text-muted-foreground">
           {formatTime(punch.transaction_time)}
@@ -147,21 +147,21 @@ export default function PunchesList({
     },
     {
       key: 'device',
-      header: t('common.device') || 'Device',
+      header: t('leave-management.common.device') || 'Device',
       accessor: (punch: EmployeeEventTransaction, isRTL?: boolean) => (
         <div className="flex items-center text-sm text-muted-foreground">
           <Smartphone className="w-3 h-3 mr-1" />
-          {punch.device_id || (punch.user_entry_flag ? 'Manual Entry' : 'Unknown')}
+          {punch.device_id || (punch.user_entry_flag ? t('leave-management.punches.manualEntry') || 'Manual Entry' : t('leave-management.common.notAvailable') || 'Unknown')}
         </div>
       ),
     },
     {
       key: 'location',
-      header: t('common.location') || 'Location',
+      header: t('leave-management.common.location') || 'Location',
       accessor: (punch: EmployeeEventTransaction, isRTL?: boolean) => (
         <div className="flex items-center text-sm text-muted-foreground">
           <MapPin className="w-3 h-3 mr-1" />
-          {punch.geolocation || t('common.notAvailable') || 'Unknown'}
+          {punch.geolocation || t('leave-management.common.notAvailable') || 'Unknown'}
         </div>
       ),
     },
@@ -191,10 +191,10 @@ export default function PunchesList({
       <div className="text-center py-16">
         <Clock className="mx-auto h-12 w-12 text-muted-foreground" />
         <h3 className="mt-2 text-sm font-medium text-foreground">
-          {t('attendance.noRecords') || t('common.noResults') || 'No punches found'}
+          {t('leave-management.punches.noRecords') || 'No punches found'}
         </h3>
         <p className="mt-1 text-sm text-muted-foreground">
-          {t('attendance.noRecordsDesc') || t('common.noDataFound') || 'No attendance records match your current filters.'}
+          {t('leave-management.punches.noRecordsDesc') || 'No attendance records match your current filters.'}
         </p>
       </div>
     );

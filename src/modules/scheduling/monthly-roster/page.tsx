@@ -225,14 +225,10 @@ export default function MonthlyRosterPage() {
           month: filters.month,
           year: filters.year,
         };
-        console.log("Fetching monthly roster (filter) with params:", params);
         resp = await employeeMonthlyRosterApi.filter({ ...params });
   } else {
-        // No month/year: fetch all via GET /all with query params (server should support filters on /all)
-        console.log("Fetching monthly roster (all) with params:", baseParams);
         resp = await employeeMonthlyRosterApi.getAll(baseParams);
       }
-      // Be tolerant to different response shapes (some middleware may resolve with response, others with data)
       const payload = resp?.data ?? resp;
       let items: any[] | undefined;
       let totalCount: number | undefined;
@@ -254,14 +250,12 @@ export default function MonthlyRosterPage() {
           typeof totalCount === "number" ? totalCount : items.length || 0
         );
       } else {
-        // Do not clear data if response is unexpected; log and keep existing rows
         console.warn(
           "Monthly roster: no items found in response, keeping existing data"
         );
       }
     } catch (e) {
       console.error("Failed to fetch monthly roster:", e);
-      // Keep existing data to avoid flicker on intermittent errors
     } finally {
       setIsLoading(false);
     }
@@ -269,10 +263,8 @@ export default function MonthlyRosterPage() {
 
   useEffect(() => {
     fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters, page, pageSize]);
 
-  // Initialize assignSelection when an editCell is opened
   useEffect(() => {
     if (!editCell) {
       setAssignSelection(undefined);
@@ -290,11 +282,11 @@ export default function MonthlyRosterPage() {
   const handleFinalize = async (row: any) => {
     try {
       await finalizeMutation.mutateAsync(row.schedule_roster_id);
-      toast.success(t('monthlyRoster.table.finalized') || 'Finalized');
+      toast.success(t('scheduling.monthlyRoster.table.finalized') || 'Finalized');
       setPage(1); // reload first page
       await fetchData();
     } catch (e) {
-      toast.error(t('monthlyRoster.table.finalizeFailed') || 'Failed to finalize');
+      toast.error(t('scheduling.monthlyRoster.table.finalizeFailed') || 'Failed to finalize');
     }
   };
 
@@ -344,7 +336,6 @@ export default function MonthlyRosterPage() {
       header: "Finalized",
       accessor: (row: any) => (row.finalize_flag ? "Yes" : "No"),
     },
-    // Add D1-D31 columns dynamically
     ...Array.from({ length: 31 }, (_, i) => ({
       key: `D${i + 1}`,
       header: `${i + 1}`,
@@ -448,14 +439,6 @@ export default function MonthlyRosterPage() {
         }}
         selectedIds={selected}
       />
-
-      {!filters.organization_id && (
-        <div className="text-sm text-muted-foreground">
-          Organization not selected — listing will include all organizations for
-          the selected month/year.
-        </div>
-      )}
-
       <GenericTable
         data={data}
         columns={columns}
@@ -479,7 +462,7 @@ export default function MonthlyRosterPage() {
           const row = data.find((r) => r.schedule_roster_id === rowId);
           if (row) handleDelete(row);
         }}
-  noDataMessage={t('monthlyRoster.table.noData') || 'No monthly roster data found'}
+  noDataMessage={t('scheduling.monthlyRoster.table.noData') || 'No monthly roster data found'}
         isLoading={isLoading}
         onPageChange={setPage}
         onPageSizeChange={setPageSize}
@@ -494,7 +477,7 @@ export default function MonthlyRosterPage() {
       >
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{t('monthlyRoster.assign.title') || 'Assign Schedule'}</DialogTitle>
+            <DialogTitle>{t('scheduling.monthlyRoster.assign.title') || 'Assign Schedule'}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <Select
@@ -503,7 +486,7 @@ export default function MonthlyRosterPage() {
               value={assignSelection}
             >
               <SelectTrigger className="w-full">
-                <SelectValue placeholder={t('monthlyRoster.assign.selectSchedule') || 'Select schedule'} />
+                <SelectValue placeholder={t('scheduling.monthlyRoster.assign.selectSchedule') || 'Select schedule'} />
               </SelectTrigger>
               <SelectContent>
                 {allSchedules.map((sch) => (
@@ -550,7 +533,7 @@ export default function MonthlyRosterPage() {
                 }}
                 disabled={assigning || !assignSelection}
               >
-                {assigning ? t('monthlyRoster.assign.assigning') || 'Assigning...' : t('monthlyRoster.assign.assign') || 'Assign'}
+                {assigning ? t('scheduling.monthlyRoster.assign.assigning') || 'Assigning...' : t('scheduling.monthlyRoster.assign.assign') || 'Assign'}
               </Button>
             </div>
           </div>

@@ -34,8 +34,11 @@ function AppSidebar({ ...props }) {
   const pathname = usePathname();
   return (
     <Sidebar
-    className="border-r-white/10 bg-primary text-white"
-    collapsible="icon" side={isRTL ? "right" : "left"} {...props}>
+      className="border-r-white/10 bg-primary text-white"
+      collapsible="icon"
+      side={isRTL ? "right" : "left"}
+      {...props}
+    >
       <SidebarHeader className="">
         <Link
           href={getRouteFromKey("mainMenu.workforceAnalytics.myInsights")}

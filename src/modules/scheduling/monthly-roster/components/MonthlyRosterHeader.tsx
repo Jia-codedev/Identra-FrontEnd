@@ -163,13 +163,12 @@ export const MonthlyRosterHeader: React.FC<MonthlyRosterHeaderProps> = ({ filter
       <div className="flex flex-col gap-4">
         <div className="flex items-end justify-between">
           <div>
-            <h1 className="text-2xl font-bold">{t('monthlyRoster.title') || 'Monthly Roster'}</h1>
-            <p className="text-muted-foreground">{t('monthlyRoster.description') || 'Assign schedules per day for the month'}</p>
+            <h1 className="text-2xl font-bold">{t('scheduling.monthlyRoster.title') || 'Monthly Roster'}</h1>
           </div>
           <div className="flex gap-2">
             <Button onClick={onAddRoster} className="gap-2">
               <Calendar className="h-4 w-4" />
-              {t('monthlyRoster.addRoster')}
+              {t('scheduling.monthlyRoster.addRoster')}
             </Button>
             {onAddSampleData && (
               <Button onClick={onAddSampleData} variant="outline" className="gap-2">
@@ -177,8 +176,8 @@ export const MonthlyRosterHeader: React.FC<MonthlyRosterHeaderProps> = ({ filter
                 Add Sample Data
               </Button>
             )}
-              <Button variant="outline" onClick={handleImportClick}>{t('monthlyRoster.import')}</Button>
-            <Button variant="outline" onClick={handleExportClick}>{t('monthlyRoster.export')}</Button>
+              <Button variant="outline" onClick={handleImportClick}>{t('scheduling.monthlyRoster.import')}</Button>
+            <Button variant="outline" onClick={handleExportClick}>{t('scheduling.monthlyRoster.export')}</Button>
           </div>
         </div>
 
@@ -284,7 +283,7 @@ export const MonthlyRosterHeader: React.FC<MonthlyRosterHeaderProps> = ({ filter
           </Popover>
 
           {/* Clear */}
-          <Button variant="ghost" onClick={() => onFiltersChange({ organization_id: undefined, employee_group_id: undefined, month: undefined, year: undefined })}>{t('monthlyRoster.clearFilters') || t('common.clearFilters')}</Button>
+          <Button variant="ghost" onClick={() => onFiltersChange({ organization_id: undefined, employee_group_id: undefined, month: undefined, year: undefined })}>{t('scheduling.monthlyRoster.clearFilters') || t('common.clearFilters')}</Button>
         </div>
       </div>
     </div>

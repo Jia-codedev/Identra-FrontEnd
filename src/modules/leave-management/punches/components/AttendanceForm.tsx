@@ -60,7 +60,7 @@ const AttendanceForm: React.FC<Props> = ({ attendance, onClose }) => {
       
       onClose(true);
     } catch (err: any) {
-      setError(err?.message || "Failed to submit attendance record");
+      setError(err?.message || t('leave-management.attendance.form.submitError') || "Failed to submit attendance record");
     } finally {
       setLoading(false);
     }
@@ -76,7 +76,7 @@ const AttendanceForm: React.FC<Props> = ({ attendance, onClose }) => {
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label className="block mb-1 font-medium">Employee ID</label>
+          <label className="block mb-1 font-medium">{t('leave-management.attendance.form.employeeId') || 'Employee ID'}</label>
           <Input
             type="number"
             value={employeeId}
@@ -86,7 +86,7 @@ const AttendanceForm: React.FC<Props> = ({ attendance, onClose }) => {
           />
         </div>
         <div>
-          <label className="block mb-1 font-medium">Employee Number</label>
+          <label className="block mb-1 font-medium">{t('leave-management.attendance.form.employeeNumber') || 'Employee Number'}</label>
           <Input
             value={employeeNo}
             onChange={(e) => setEmployeeNo(e.target.value)}
@@ -97,24 +97,24 @@ const AttendanceForm: React.FC<Props> = ({ attendance, onClose }) => {
       </div>
 
       <div>
-        <label className="block mb-1 font-medium">Date</label>
+        <label className="block mb-1 font-medium">{t('leave-management.attendance.form.date') || 'Date'}</label>
         <DatePicker
           selected={date}
           onSelect={setDate}
-          placeholder="Select date"
+          placeholder={t('leave-management.attendance.form.selectDate') || 'Select date'}
         />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label className="block mb-1 font-medium">Check In Time</label>
+          <label className="block mb-1 font-medium">{t('leave-management.attendance.form.checkInTime') || 'Check In Time'}</label>
           <TimeSelect
             value={checkIn}
             onChange={setCheckIn}
           />
         </div>
         <div>
-          <label className="block mb-1 font-medium">Check Out Time</label>
+          <label className="block mb-1 font-medium">{t('leave-management.attendance.form.checkOutTime') || 'Check Out Time'}</label>
           <TimeSelect
             value={checkOut}
             onChange={setCheckOut}
@@ -124,14 +124,14 @@ const AttendanceForm: React.FC<Props> = ({ attendance, onClose }) => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label className="block mb-1 font-medium">Break Start</label>
+          <label className="block mb-1 font-medium">{t('leave-management.attendance.form.breakStart') || 'Break Start'}</label>
           <TimeSelect
             value={breakStart}
             onChange={setBreakStart}
           />
         </div>
         <div>
-          <label className="block mb-1 font-medium">Break End</label>
+          <label className="block mb-1 font-medium">{t('leave-management.attendance.form.breakEnd') || 'Break End'}</label>
           <TimeSelect
             value={breakEnd}
             onChange={setBreakEnd}
@@ -141,25 +141,25 @@ const AttendanceForm: React.FC<Props> = ({ attendance, onClose }) => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label className="block mb-1 font-medium">Status</label>
+          <label className="block mb-1 font-medium">{t('leave-management.attendance.form.status') || 'Status'}</label>
           <Select value={status} onValueChange={setStatus}>
             <SelectTrigger className="w-full">
-              <SelectValue placeholder="Select status" />
+              <SelectValue placeholder={t('leave-management.attendance.form.selectStatus') || 'Select status'} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="present">Present</SelectItem>
-              <SelectItem value="absent">Absent</SelectItem>
-              <SelectItem value="late">Late</SelectItem>
-              <SelectItem value="partial">Partial Day</SelectItem>
+              <SelectItem value="present">{t('leave-management.punches.present') || 'Present'}</SelectItem>
+              <SelectItem value="absent">{t('leave-management.punches.absent') || 'Absent'}</SelectItem>
+              <SelectItem value="late">{t('leave-management.punches.late') || 'Late'}</SelectItem>
+              <SelectItem value="partial">{t('leave-management.punches.halfDay') || 'Partial Day'}</SelectItem>
             </SelectContent>
           </Select>
         </div>
         <div>
-          <label className="block mb-1 font-medium">Location</label>
+          <label className="block mb-1 font-medium">{t('leave-management.attendance.form.location') || 'Location'}</label>
           <Input
             value={location}
             onChange={(e) => setLocation(e.target.value)}
-            placeholder="Enter location"
+            placeholder={t('leave-management.attendance.form.enterLocation') || 'Enter location'}
           />
         </div>
       </div>
@@ -171,10 +171,10 @@ const AttendanceForm: React.FC<Props> = ({ attendance, onClose }) => {
           onClick={() => onClose()}
           disabled={loading}
         >
-          Cancel
+          {t('leave-management.attendance.form.cancel') || 'Cancel'}
         </Button>
         <Button type="submit" disabled={loading}>
-          {loading ? 'Submitting...' : attendance?.id ? 'Update' : 'Save'}
+          {loading ? t('leave-management.attendance.form.submitting') || 'Submitting...' : attendance?.id ? t('leave-management.attendance.form.update') || 'Update' : t('leave-management.attendance.form.save') || 'Save'}
         </Button>
       </div>
     </form>

@@ -92,7 +92,7 @@ export const MonthlyRosterAddModal: React.FC<MonthlyRosterAddModalProps> = ({
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>{initialData ? t('monthlyRoster.modal.edit') : t('monthlyRoster.modal.add')}</DialogTitle>
+          <DialogTitle>{initialData ? t('scheduling.monthlyRoster.modal.edit') : t('scheduling.monthlyRoster.modal.add')}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
@@ -158,7 +158,7 @@ export const MonthlyRosterAddModal: React.FC<MonthlyRosterAddModalProps> = ({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="version_no">{t('monthlyRoster.modal.versionNumber') || 'Version Number'}</Label>
+            <Label htmlFor="version_no">{t('scheduling.monthlyRoster.modal.versionNumber') || 'Version Number'}</Label>
             <Input
               id="version_no"
               type="number"
@@ -169,7 +169,7 @@ export const MonthlyRosterAddModal: React.FC<MonthlyRosterAddModalProps> = ({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="manager_id">{t('monthlyRoster.modal.manager') || 'Manager (Optional)'}</Label>
+            <Label htmlFor="manager_id">{t('scheduling.monthlyRoster.modal.manager') || 'Manager (Optional)'}</Label>
             <EmployeeCombobox
               value={formData.manager_id ?? null}
               onChange={(v) => setFormData(prev => ({ ...prev, manager_id: v ?? undefined }))}
@@ -184,7 +184,7 @@ export const MonthlyRosterAddModal: React.FC<MonthlyRosterAddModalProps> = ({
                 setFormData(prev => ({ ...prev, finalize_flag: Boolean(v) }));
               }}
             />
-            <Label className="m-0">{t('monthlyRoster.modal.finalize') || 'Finalize roster'}</Label>
+            <Label className="m-0">{t('scheduling.monthlyRoster.modal.finalize') || 'Finalize roster'}</Label>
           </div>
 
           <div className="flex justify-end space-x-2">
@@ -197,8 +197,8 @@ export const MonthlyRosterAddModal: React.FC<MonthlyRosterAddModalProps> = ({
                   ? t('common.saving')
                   : t('common.saving')
                 : initialData
-                ? t('monthlyRoster.modal.update')
-                : t('monthlyRoster.modal.create')}
+                ? t('scheduling.monthlyRoster.modal.update')
+                : t('scheduling.monthlyRoster.modal.create')}
             </Button>
           </div>
         </form>

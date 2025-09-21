@@ -24,17 +24,17 @@ const AttendanceActions: React.FC<Props> = ({ attendance, onEdit, onRefresh }) =
   const [loading, setLoading] = useState(false);
 
   const handleDelete = async () => {
-    if (!confirm('Are you sure you want to delete this attendance record?')) {
+    if (!confirm(t('leave-management.attendance.messages.confirmDelete') || 'Are you sure you want to delete this attendance record?')) {
       return;
     }
     
     setLoading(true);
     try {
       await attendanceApi.deleteAttendance(attendance.id);
-      toast.success('Attendance record deleted successfully');
+      toast.success(t('leave-management.attendance.messages.deleted'));
       onRefresh();
     } catch (error: any) {
-      toast.error(error?.message || 'Failed to delete attendance record');
+      toast.error(error?.message || t('leave-management.attendance.messages.deleteError'));
     } finally {
       setLoading(false);
     }
@@ -52,7 +52,7 @@ const AttendanceActions: React.FC<Props> = ({ attendance, onEdit, onRefresh }) =
       // In a real app, you'd want to show this in a modal or separate view
       alert(`Attendance Summary:\n${JSON.stringify(summary.data, null, 2)}`);
     } catch (error: any) {
-      toast.error(error?.message || 'Failed to get attendance summary');
+      toast.error(error?.message || t('leave-management.attendance.messages.summaryError') || 'Failed to get attendance summary');
     }
   };
 
@@ -66,15 +66,15 @@ const AttendanceActions: React.FC<Props> = ({ attendance, onEdit, onRefresh }) =
       <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={onEdit}>
           <Edit className="h-4 w-4 mr-2" />
-          Edit
+          {t('leave-management.common.edit') || 'Edit'}
         </DropdownMenuItem>
         <DropdownMenuItem onClick={handleViewSummary}>
           <FileText className="h-4 w-4 mr-2" />
-          View Summary
+          {t('leave-management.common.viewSummary') || 'View Summary'}
         </DropdownMenuItem>
         <DropdownMenuItem onClick={handleDelete} className="text-red-600">
           <Trash2 className="h-4 w-4 mr-2" />
-          Delete
+          {t('leave-management.common.delete') || 'Delete'}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

@@ -3,9 +3,11 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import employeeShortPermissionsApi from "@/services/leaveManagement/employeeShortPermissions";
 import { toast } from "sonner";
+import { useTranslations } from "@/hooks/use-translations";
 
 export const usePermissionMutations = () => {
   const queryClient = useQueryClient();
+  const { t } = useTranslations();
 
   const approve = useMutation({
     mutationFn: async ({ id, data }: { id: number; data?: any }) => {
@@ -17,10 +19,10 @@ export const usePermissionMutations = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["permissions"] });
-      toast.success("Permission approved successfully");
+      toast.success(t("leaveManagement.permissions.messages.approved") || "Permission approved successfully");
     },
     onError: (error: any) => {
-      toast.error(error?.message || "Failed to approve permission");
+      toast.error(error?.message || (t("leaveManagement.permissions.messages.approveError") || "Failed to approve permission"));
     },
   });
 
@@ -34,10 +36,10 @@ export const usePermissionMutations = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["permissions"] });
-      toast.success("Permission rejected successfully");
+      toast.success(t("leaveManagement.permissions.messages.rejected") || "Permission rejected successfully");
     },
     onError: (error: any) => {
-      toast.error(error?.message || "Failed to reject permission");
+      toast.error(error?.message || (t("leaveManagement.permissions.messages.rejectError") || "Failed to reject permission"));
     },
   });
 
@@ -47,10 +49,10 @@ export const usePermissionMutations = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["permissions"] });
-      toast.success("Permission deleted successfully");
+      toast.success(t("leaveManagement.permissions.messages.deleted") || "Permission deleted successfully");
     },
     onError: (error: any) => {
-      toast.error(error?.message || "Failed to delete permission");
+      toast.error(error?.message || (t("leaveManagement.permissions.messages.deleteError") || "Failed to delete permission"));
     },
   });
 
@@ -60,10 +62,10 @@ export const usePermissionMutations = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["permissions"] });
-      toast.success("Permission created successfully");
+      toast.success(t("leaveManagement.permissions.messages.created") || "Permission created successfully");
     },
     onError: (error: any) => {
-      toast.error(error?.message || "Failed to create permission");
+      toast.error(error?.message || (t("leaveManagement.permissions.messages.createError") || "Failed to create permission"));
     },
   });
 
@@ -73,10 +75,10 @@ export const usePermissionMutations = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["permissions"] });
-      toast.success("Permission updated successfully");
+      toast.success(t("leaveManagement.permissions.messages.updated") || "Permission updated successfully");
     },
     onError: (error: any) => {
-      toast.error(error?.message || "Failed to update permission");
+      toast.error(error?.message || (t("leaveManagement.permissions.messages.updateError") || "Failed to update permission"));
     },
   });
 

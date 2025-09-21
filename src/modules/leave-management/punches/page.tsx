@@ -92,7 +92,7 @@ export default function PunchesPage() {
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
                 <div className="flex-1">
                   <h1 className="text-3xl md:text-4xl font-bold text-primary tracking-tight leading-tight mb-1">
-                    {t('punches.title') || 'Punches & Attendance'}
+                    {t('leaveManagement.punches.title') || 'Punches & Attendance'}
                   </h1>
                 </div>
                 
@@ -103,7 +103,7 @@ export default function PunchesPage() {
                       <Search size={20} />
                     </span>
                     <Input
-                      placeholder={t('punches.searchPlaceholder') || 'Search by employee number...'}
+                      placeholder={t('leaveManagement.punches.searchPlaceholder') || 'Search by employee number...'}
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                       className="border-0 bg-transparent rounded-lg focus:ring-0 focus-visible:ring-0 shadow-none text-base px-2 w-64"
@@ -126,17 +126,17 @@ export default function PunchesPage() {
                 <TabsList className="grid w-full max-w-md grid-cols-2">
                   <TabsTrigger value="my-punches" className="flex items-center gap-2">
                     <User className="w-4 h-4" />
-                    {t('punches.myPunches') || 'My Punches'}
+                    {t('leaveManagement.punches.myPunches') || 'My Punches'}
                   </TabsTrigger>
                   <TabsTrigger value="team-punches" className="flex items-center gap-2">
                     <Users className="w-4 h-4" />
-                    {t('punches.teamPunches') || 'Team Punches'}
+                    {t('leaveManagement.punches.teamPunches') || 'Team Punches'}
                   </TabsTrigger>
                 </TabsList>
                 
                 {selectedItems.length > 0 && (
                   <div className="text-sm text-primary font-medium">
-                    {t('common.selectedCount', { count: selectedItems.length }) || `${selectedItems.length} records selected`}
+                    {t('leaveManagement.common.selectedCount', { count: selectedItems.length }) || `${selectedItems.length} records selected`}
                   </div>
                 )}
               </div>

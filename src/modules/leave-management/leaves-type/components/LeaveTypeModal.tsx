@@ -239,7 +239,7 @@ const LeaveTypeModal: React.FC<Props> = ({
       setError(
         err?.response?.data?.message ||
           err?.message ||
-          "Failed to save leave type"
+          (t("leaveManagement.leaveTypes.messages.saveError") || "Failed to save leave type")
       );
     } finally {
       setLoading(false);
@@ -264,7 +264,7 @@ const LeaveTypeModal: React.FC<Props> = ({
               <div className="space-y-4 sm:space-y-6">
                 <div className="border-b pb-2 mb-2">
                   <h3 className="text-base md:text-lg font-semibold text-primary">
-                    Basic Information
+                    {t("leaveManagement.leaveTypes.modal.basicInformation") || "Basic Information"}
                   </h3>
                 </div>
 
@@ -325,7 +325,7 @@ const LeaveTypeModal: React.FC<Props> = ({
                         <SelectValue
                           placeholder={
                             workflowLoading
-                              ? "Loading..."
+                              ? t("common.loading") || "Loading..."
                               : t("common.select") || "Select"
                           }
                         />
@@ -333,10 +333,10 @@ const LeaveTypeModal: React.FC<Props> = ({
                       <SelectContent>
                         <SelectItem value="none">None</SelectItem>
                         {workflowLoading && (
-                          <SelectItem value="-1">Loading...</SelectItem>
+                          <SelectItem value="-1">{t("common.loading") || "Loading..."}</SelectItem>
                         )}
                         {!workflowLoading && workflowTypes.length === 0 && (
-                          <SelectItem value="-1">No workflows</SelectItem>
+                          <SelectItem value="-1">{t("leaveManagement.leaveTypes.modal.noWorkflows") || "No workflows"}</SelectItem>
                         )}
                         {workflowTypes.map((wf) => (
                           <SelectItem
@@ -397,7 +397,7 @@ const LeaveTypeModal: React.FC<Props> = ({
               <div className="space-y-4">
                 <div className="border-b pb-2 mb-2">
                   <h3 className="text-base md:text-lg font-semibold text-primary">
-                    Leave Configuration
+                    {t("leaveManagement.leaveTypes.modal.leaveConfiguration") || "Leave Configuration"}
                   </h3>
                 </div>
 
@@ -531,12 +531,12 @@ const LeaveTypeModal: React.FC<Props> = ({
                       }
                     >
                       <SelectTrigger className="h-9 sm:h-10">
-                        <SelectValue placeholder="Select gender restriction" />
+                        <SelectValue placeholder={t("leaveManagement.leaveTypes.genderOptions.selectRestriction") || "Select gender restriction"} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="ALL">All</SelectItem>
-                        <SelectItem value="M">Male</SelectItem>
-                        <SelectItem value="F">Female</SelectItem>
+                        <SelectItem value="ALL">{t("leaveManagement.leaveTypes.genderOptions.all") || "All"}</SelectItem>
+                        <SelectItem value="M">{t("leaveManagement.leaveTypes.genderOptions.male") || "Male"}</SelectItem>
+                        <SelectItem value="F">{t("leaveManagement.leaveTypes.genderOptions.female") || "Female"}</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -547,7 +547,7 @@ const LeaveTypeModal: React.FC<Props> = ({
               <div className="space-y-4">
                 <div className="border-b pb-2 mb-2">
                   <h3 className="text-base md:text-lg font-semibold text-primary">
-                    Approval & Processing
+                    {t("leaveManagement.leaveTypes.modal.approvalProcessing") || "Approval & Processing"}
                   </h3>
                 </div>
 
@@ -627,7 +627,7 @@ const LeaveTypeModal: React.FC<Props> = ({
               <div className="space-y-4">
                 <div className="border-b pb-2 mb-2">
                   <h3 className="text-base md:text-lg font-semibold text-primary">
-                    Special Flags
+                    {t("leaveManagement.leaveTypes.modal.specialFlags") || "Special Flags"}
                   </h3>
                 </div>
 
@@ -734,7 +734,7 @@ const LeaveTypeModal: React.FC<Props> = ({
                   {t("common.cancel") || "Cancel"}
                 </Button>
                 <Button type="submit" disabled={loading} className="flex-1 h-9 sm:h-10 text-sm">
-                  {loading ? "Saving..." : t("common.save") || "Save"}
+                  {loading ? (t("common.saving") || "Saving...") : t("common.save") || "Save"}
                 </Button>
               </div>
             </form>

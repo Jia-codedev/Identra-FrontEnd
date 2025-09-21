@@ -206,7 +206,7 @@ const PermissionRequestForm: React.FC<Props> = ({ permission, onClose }) => {
             {t('common.cancel')}
           </Button>
           <Button type="submit" disabled={isLoading}>
-            {isLoading ? 'Submitting...' : permission?.id ? t('common.update') : t('common.save')}
+            {isLoading ? (t('common.saving') || 'Submitting...') : permission?.id ? t('common.update') : t('common.save')}
           </Button>
         </div>
       </form>

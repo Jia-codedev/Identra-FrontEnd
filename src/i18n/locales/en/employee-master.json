@@ -2,12 +2,38 @@
   "employeeTypes": {
     "title": "Contract Types",
     "description": "Manage all your organization contract types here. You can add, edit, or delete contract types as needed.",
-    "addEmployeeType": "Add Contract Type"
+    "addEmployeeType": "Add Contract Type",
+    "editEmployeeType": "Edit Contract Type",
+    "employeeTypeCode": "Contract Type Code",
+    "enterEmployeeTypeCode": "Enter Contract Type Code",
+    "employeeTypeName": "Contract Type Name",
+    "enterEmployeeTypeName": "Enter Contract Type Name",
+    "employeeTypeNameArabic": "Contract Type Name (Arabic)",
+    "enterEmployeeTypeNameArabic": "Enter Contract Type Name in Arabic",
+    "searchPlaceholder": "Search contract types...",
+    "noEmployeeTypesFound": "No contract types found."
   },
   "employeeGroups": {
     "title": "Team grouping",
     "description": "Manage all your organization team groups here.",
-    "addEmployeeGroup": "Add Team Group"
+    "addEmployeeGroup": "Add Team Group",
+    "editEmployeeGroup": "Edit Team Group",
+    "employeeGroupCode": "Team Group Code",
+    "enterEmployeeGroupCode": "Enter Team Group Code",
+    "employeeGroupName": "Team Group Name",
+    "enterEmployeeGroupName": "Enter Team Group Name",
+    "employeeGroupNameArabic": "Team Group Name (Arabic)",
+    "enterEmployeeGroupNameArabic": "Enter Team Group Name in Arabic",
+    "searchPlaceholder": "Search team groups...",
+    "noEmployeeGroupsFound": "No team groups found.",
+    "schedule": "Schedule",
+    "reportingGroup": "Reporting Group",
+    "fromDate": "From Date",
+    "toDate": "To Date",
+    "selectFromDate": "Select From Date",
+    "selectToDate": "Select To Date",
+    "reportingPerson": "Reporting Person",
+    "searchReportingPerson": "Search Reporting Person"
   },
   "employee": {
     "title": "Employee Management",

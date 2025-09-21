@@ -3,12 +3,10 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslations } from '@/hooks/use-translations';
 import { MonthlyRosterRow } from '../types';
-import { Card } from '@/components/ui/card';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Skeleton } from '@/components/ui/skeleton';
 import { useLanguage } from '@/providers/language-provider';
 import { Button } from '@/components/ui/button';
 import schedulesApi from '@/services/scheduling/schedules';
+import { GenericTable, TableColumn } from '@/components/common/GenericTable';
 
 interface MonthlyRosterTableProps {
   data: MonthlyRosterRow[];
@@ -20,7 +18,13 @@ interface MonthlyRosterTableProps {
 
 const getDaysInMonth = (year: number, month: number) => new Date(year, month, 0).getDate();
 
-export const MonthlyRosterTable: React.FC<MonthlyRosterTableProps> = ({ data, isLoading, onEdit, onFinalize, onDelete }) => {
+export const MonthlyRosterTable: React.FC<MonthlyRosterTableProps> = ({
+  data,
+  isLoading,
+  onEdit,
+  onFinalize,
+  onDelete
+}) => {
   const { isRTL } = useLanguage();
   const { t } = useTranslations();
   const [scheduleMap, setScheduleMap] = useState<Record<number, { code: string; color?: string }>>({});
@@ -34,7 +38,6 @@ export const MonthlyRosterTable: React.FC<MonthlyRosterTableProps> = ({ data, is
   const dayKeys = useMemo(() => Array.from({ length: days }, (_, i) => `D${i + 1}` as const), [days]);
 
   useEffect(() => {
-    // Collect unique schedule IDs from visible data
     const ids = new Set<number>();
     for (const row of data || []) {
       for (const key of dayKeys) {
@@ -42,7 +45,7 @@ export const MonthlyRosterTable: React.FC<MonthlyRosterTableProps> = ({ data, is
         if (typeof val === 'number' && !scheduleMap[val]) ids.add(val);
       }
     }
-    const toFetch = Array.from(ids).slice(0, 200); // guard excessive calls
+    const toFetch = Array.from(ids).slice(0, 200); 
     if (toFetch.length === 0) return;
 
     let mounted = true;
@@ -66,73 +69,75 @@ export const MonthlyRosterTable: React.FC<MonthlyRosterTableProps> = ({ data, is
     return () => { mounted = false; };
   }, [data, dayKeys]);
 
-  if (isLoading) {
-    return (
-      <div className="space-y-2">
-        <Skeleton className="h-10 w-full" />
-        <Skeleton className="h-32 w-full" />
-      </div>
-    );
-  }
+  const columns: TableColumn<MonthlyRosterRow>[] = useMemo(() => {
+    const baseColumns: TableColumn<MonthlyRosterRow>[] = [
+      {
+        key: "emp_no",
+        header: t('scheduling.monthlyRoster.table.empNo') || 'Emp No',
+        accessor: (row) => row.emp_no || "-",
+      },
+      {
+        key: "employee_name",
+        header: t('common.name') || 'Name',
+        accessor: (row) => isRTL ? row.employee_name_arb || row.employee_name : row.employee_name || row.employee_name_arb,
+      },
+    ];
 
-  if (!data || data.length === 0) {
-    return (
-      <div className="text-center text-muted-foreground py-6">
-          <p>{t('monthlyRoster.table.noData') || 'No monthly roster data found'}</p>
-    <p className="text-xs mt-2">{t('monthlyRoster.table.selectOrgMonthYear') || 'Make sure to select Organization, Month, and Year filters'}</p>
-          {data && <p className="text-xs mt-1">{t('monthlyRoster.table.dataLength', { count: data.length }) || `Data array length: ${data.length}`}</p>}
-        </div>
-    );
-  }
+    // Add day columns
+    const dayColumns: TableColumn<MonthlyRosterRow>[] = dayKeys.map((key, idx) => ({
+      key,
+      header: `${idx + 1}`,
+      accessor: (row) => {
+        const scheduleId = (row as any)[key] as number | null | undefined;
+        const code = scheduleId ? scheduleMap[scheduleId]?.code : '';
+        const color = scheduleId ? scheduleMap[scheduleId]?.color : undefined;
+        return scheduleId ? (
+          <span className="inline-flex items-center gap-1">
+            {color && <span className="inline-block w-2 h-2 rounded-full" style={{ backgroundColor: color }} />}
+            <span>{code || scheduleId}</span>
+          </span>
+        ) : '';
+      },
+      width: "min-w-10",
+      className: "text-center",
+    }));
+
+    return [...baseColumns, ...dayColumns];
+  }, [dayKeys, scheduleMap, isRTL, t]);
+
+  const actions = (row: MonthlyRosterRow) => (
+    <div className="flex gap-1">
+      {onEdit && <Button size="sm" variant="outline" onClick={() => onEdit(row)}>{t('common.edit') || 'Edit'}</Button>}
+      {onFinalize && <Button size="sm" variant="secondary" onClick={() => onFinalize(row)} disabled={!!row.finalize_flag}>{t('scheduling.monthlyRoster.table.finalize') || 'Finalize'}</Button>}
+      {onDelete && <Button size="sm" variant="destructive" onClick={() => onDelete(row)}>{t('common.delete') || 'Delete'}</Button>}
+    </div>
+  );
+
+  const noDataMessage = t('scheduling.monthlyRoster.table.noData') || 'No monthly roster data found';
 
   return (
-    <Card className="overflow-hidden">
-      <ScrollArea className="w-full h-[520px]">
-        <table className="w-full text-sm">
-          <thead className="sticky top-0 bg-muted/40">
-            <tr>
-              <th className="px-3 py-2 text-left">{t('monthlyRoster.table.empNo') || 'Emp No'}</th>
-              <th className="px-3 py-2 text-left">{t('common.name') || 'Name'}</th>
-              <th className="px-3 py-2 text-left">{t('common.actions') || 'Actions'}</th>
-              {dayKeys.map((key, idx) => (
-                <th key={key} className="px-2 py-2 text-center min-w-10">
-                  {idx + 1}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {data.map(row => (
-              <tr key={row.schedule_roster_id} className="border-t">
-                <td className="px-3 py-2 whitespace-nowrap">{row.emp_no || '-'}</td>
-                <td className="px-3 py-2 whitespace-nowrap">{isRTL ? row.employee_name_arb || row.employee_name : row.employee_name || row.employee_name_arb}</td>
-                <td className="px-3 py-2 whitespace-nowrap">
-                  <div className="flex gap-1">
-                    {onEdit && <Button size="sm" variant="outline" onClick={() => onEdit(row)}>{t('common.edit') || 'Edit'}</Button>}
-                    {onFinalize && <Button size="sm" variant="secondary" onClick={() => onFinalize(row)} disabled={!!row.finalize_flag}>{t('monthlyRoster.table.finalize') || 'Finalize'}</Button>}
-                    {onDelete && <Button size="sm" variant="destructive" onClick={() => onDelete(row)}>{t('common.delete') || 'Delete'}</Button>}
-                  </div>
-                </td>
-                {dayKeys.map(key => {
-                  const scheduleId = (row as any)[key] as number | null | undefined;
-                  const code = scheduleId ? scheduleMap[scheduleId]?.code : '';
-                  const color = scheduleId ? scheduleMap[scheduleId]?.color : undefined;
-                  return (
-                    <td key={key} className="px-2 py-1 text-center">
-                      {scheduleId ? (
-                        <span className="inline-flex items-center gap-1">
-                          {color && <span className="inline-block w-2 h-2 rounded-full" style={{ backgroundColor: color }} />}
-                          <span>{code || scheduleId}</span>
-                        </span>
-                      ) : ''}
-                    </td>
-                  );
-                })}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </ScrollArea>
-    </Card>
+    <GenericTable
+      data={data}
+      columns={columns}
+      selected={[]} // No selection needed for this table
+      page={1}
+      pageSize={data.length}
+      allChecked={false}
+      getItemId={(item) => item.schedule_roster_id}
+      getItemDisplayName={(item) => item.employee_name || item.employee_name_arb || 'Unknown'}
+      onSelectItem={() => {}} // No selection
+      onSelectAll={() => {}} // No selection
+      onEditItem={onEdit}
+      onDeleteItem={(id) => {
+        const row = data.find(r => r.schedule_roster_id === id);
+        if (row && onDelete) onDelete(row);
+      }}
+      actions={actions}
+      noDataMessage={noDataMessage}
+      isLoading={isLoading}
+      onPageChange={() => {}} // No pagination
+      onPageSizeChange={() => {}} // No pagination
+      showActions={true}
+    />
   );
 };
