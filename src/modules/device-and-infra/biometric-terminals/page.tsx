@@ -82,9 +82,7 @@ export default function BiometricTerminalManagementPage() {
   };
 
   const confirmBulkDelete = async () => {
-    for (const id of selected) {
-      await mutations.deleteBiometricTerminal.mutateAsync(id);
-    }
+    await mutations.deleteManyBiometricTerminals.mutateAsync(selected);
     setShowBulkDeleteConfirm(false);
     clearSelection();
     refetch();

@@ -59,12 +59,11 @@ class BiometricTerminalsApi {
     const queryParams = new URLSearchParams();
     
     if (params.limit) queryParams.set("limit", params.limit.toString());
-    if (params.offset !== undefined) queryParams.set("offset", params.offset.toString());
+    if (params.offset !== undefined) queryParams.set("offset", (Number(params.offset) + 1).toString());
     if (params.device_no) queryParams.set("device_no", params.device_no);
     if (params.device_name) queryParams.set("device_name", params.device_name);
     if (params.device_status !== undefined) queryParams.set("device_status", params.device_status.toString());
-    if (params.delete_flag !== undefined) queryParams.set("delete_flag", params.delete_flag.toString());
-
+    // if (params.delete_flag !== undefined) queryParams.set("delete_flag", params.delete_flag.toString());
     const response = await apiClient.get(`${this.baseUrl}/all?${queryParams.toString()}`);
     return response.data;
   }
@@ -86,6 +85,11 @@ class BiometricTerminalsApi {
 
   async delete(id: number): Promise<{ message: string }> {
     const response = await apiClient.delete(`${this.baseUrl}/delete/${id}`);
+    return response.data;
+  }
+
+  async deleteMany(ids: number[]): Promise<{ message: string; count: number; data: { deleted_count: number; requested_count: number } }> {
+    const response = await apiClient.delete(`${this.baseUrl}/delete`, { data: { ids } });
     return response.data;
   }
 }

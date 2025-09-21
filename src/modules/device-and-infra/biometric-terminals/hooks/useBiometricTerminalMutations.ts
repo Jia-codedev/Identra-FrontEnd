@@ -46,10 +46,23 @@ export const useBiometricTerminalMutations = () => {
     },
   });
 
+  const deleteManyBiometricTerminals = useMutation({
+    mutationFn: (ids: number[]) => biometricTerminalsApi.deleteMany(ids),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["biometric-terminals"] });
+      toast.success(t("biometricTerminals.success.bulkDeleted", { count: data.count }));
+    },
+    onError: (error: any) => {
+      const message = error?.response?.data?.message || t("biometricTerminals.error.bulkDelete");
+      toast.error(message);
+    },
+  });
+
   return {
     createBiometricTerminal,
     updateBiometricTerminal,
     deleteBiometricTerminal,
+    deleteManyBiometricTerminals,
   };
 };
 
