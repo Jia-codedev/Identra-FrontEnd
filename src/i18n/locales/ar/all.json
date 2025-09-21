@@ -873,7 +873,12 @@
       "notAvailable": "غير معروف",
       "errorLoading": "خطأ في تحميل البيانات",
       "edit": "تعديل",
-      "viewSummary": "عرض الملخص"
+      "viewSummary": "عرض الملخص",
+      "date": "التاريخ",
+      "type": "النوع",
+      "time": "الوقت",
+      "device": "الجهاز",
+      "location": "الموقع"
     },
     "messages": {
       "confirm": {

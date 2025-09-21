@@ -257,7 +257,12 @@
     "notAvailable": "Unknown",
     "errorLoading": "Error loading data",
     "edit": "Edit",
-    "viewSummary": "View Summary"
+    "viewSummary": "View Summary",
+    "date": "Date",
+    "type": "Type",
+    "time": "Time",
+    "device": "Device",
+    "location": "Location"
   },
   "messages": {
     "confirm": {

@@ -47,14 +47,14 @@ const PunchesHeader: React.FC<Props> = ({
       <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
         <div className="flex-1">
           <h1 className="text-3xl md:text-4xl font-bold text-primary tracking-tight leading-tight mb-1">
-            {t('leave-management.punches.title') || 'Punches & Attendance'}
+            {t('leaveManagement.punches.title') || 'Punches & Attendance'}
           </h1>
           <p className="text-base md:text-lg text-muted-foreground font-normal mb-2">
-            {t('leave-management.punches.description') || 'Manage employee attendance records and punch data'}
+            {t('leaveManagement.punches.description') || 'Manage employee attendance records and punch data'}
           </p>
           {selectedCount > 0 && (
             <p className="text-sm text-primary font-medium">
-              {t('leave-management.common.selectedCount', { count: selectedCount }) || `${selectedCount} records selected`}
+              {t('leaveManagement.common.selectedCount', { count: selectedCount }) || `${selectedCount} records selected`}
             </p>
           )}
         </div>
@@ -65,7 +65,7 @@ const PunchesHeader: React.FC<Props> = ({
               <Search size={22} />
             </span>
             <Input
-              placeholder={t('leave-management.punches.searchPlaceholder') || 'Search by employee number...'}
+              placeholder={t('leaveManagement.punches.searchPlaceholder') || 'Search by employee number...'}
               value={searchTerm}
               onChange={(e) => handleSearch(e.target.value)}
               className="border-0 bg-transparent rounded-lg focus:ring-0 focus-visible:ring-0 shadow-none text-base px-2"
@@ -77,7 +77,7 @@ const PunchesHeader: React.FC<Props> = ({
               size="sm"
               onClick={() => setShowFilters(!showFilters)}
               className="px-2 py-1 rounded-lg"
-              title={t('leave-management.common.filters') || 'Filters'}
+              title={t('leaveManagement.common.filters') || 'Filters'}
             >
               <Filter className="h-4 w-4" />
             </Button>
@@ -88,7 +88,7 @@ const PunchesHeader: React.FC<Props> = ({
               onClick={handleExport}
               disabled={mutations.exportData.isPending}
               className="px-2 py-1 rounded-lg"
-              title={t('leave-management.common.export') || 'Export'}
+              title={t('leaveManagement.common.export') || 'Export'}
             >
               <Download className="h-4 w-4" />
             </Button>
@@ -98,7 +98,7 @@ const PunchesHeader: React.FC<Props> = ({
               size="sm"
               onClick={onRefresh}
               className="px-2 py-1 rounded-lg"
-              title={t('leave-management.common.refresh') || 'Refresh'}
+              title={t('leaveManagement.common.refresh') || 'Refresh'}
             >
               <RefreshCw className="h-4 w-4" />
             </Button>
@@ -111,7 +111,7 @@ const PunchesHeader: React.FC<Props> = ({
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <label className="block text-sm font-medium mb-2 text-foreground">
-                {t('leave-management.punches.fromDate') || 'From Date'}
+                {t('leaveManagement.punches.fromDate') || 'From Date'}
               </label>
               <Input
                 type="date"
@@ -121,7 +121,7 @@ const PunchesHeader: React.FC<Props> = ({
             </div>
             <div>
               <label className="block text-sm font-medium mb-2 text-foreground">
-                {t('leave-management.punches.toDate') || 'To Date'}
+                {t('leaveManagement.punches.toDate') || 'To Date'}
               </label>
               <Input
                 type="date"
@@ -131,13 +131,13 @@ const PunchesHeader: React.FC<Props> = ({
             </div>
             <div>
               <label className="block text-sm font-medium mb-2 text-foreground">
-                {t('leave-management.punches.status') || 'Status'}
+                {t('leaveManagement.punches.status') || 'Status'}
               </label>
               <select
                 className="w-full p-2 border border-border rounded-md bg-background text-foreground"
                 onChange={(e) => onFiltersChange({ status: e.target.value })}
               >
-                <option value="">{t('leave-management.punches.allStatus') || 'All Status'}</option>
+                <option value="">{t('leaveManagement.punches.allStatus') || 'All Status'}</option>
                 <option value="Present">{t('leave-management.punches.present') || 'Present'}</option>
                 <option value="Absent">{t('leave-management.punches.absent') || 'Absent'}</option>
                 <option value="Late">{t('leave-management.punches.late') || 'Late'}</option>
