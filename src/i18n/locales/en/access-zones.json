@@ -1,5 +1,13 @@
 {
   "title": "Access Zones",
   "subtitle": "Manage access zones and control entry/exit points throughout your organization.",
-  "addZone": "Add Zone"
+  "addZone": "Add Zone",
+  "description": "Configure and manage access zones for your organization.",
+  "searchPlaceholder": "Search zones...",
+  "type": "Zone Type",
+  "types": {
+    "entry": "Entry",
+    "exit": "Exit",
+    "both": "Both"
+  }
 }

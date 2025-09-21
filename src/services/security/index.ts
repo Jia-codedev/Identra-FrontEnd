@@ -3,6 +3,8 @@ export { default as securityRolesApi } from './securityRoles';
 export { default as securityPermissionsApi } from './securityPermissions';
 export { default as securitySessionsApi } from './securitySessions';
 export { default as securityAuditApi } from './securityAudit';
+export { default as securityPrivilegeGroupsApi } from './securityPrivilegeGroups';
+export { default as securitySubModulesApi } from './securitySubModules';
 
 // Types
 export type {
@@ -34,3 +36,13 @@ export type {
   ActivitySummary,
   UserActivityReport
 } from './securityAudit';
+
+export type {
+  SecPrivilegeGroup,
+  CreateSecPrivilegeGroupRequest
+} from './securityPrivilegeGroups';
+
+export type {
+  SecSubModule,
+  CreateSecSubModuleRequest
+} from './securitySubModules';

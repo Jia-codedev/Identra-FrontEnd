@@ -64,6 +64,8 @@
   "create": "إنشاء",
   "createdBy": "تم الإنشاء بواسطة",
   "updatedBy": "تم التحديث بواسطة",
+  "createdDate": "تاريخ الإنشاء",
+  "lastUpdated": "آخر تحديث",
   "limit": "الحد",
   "active": "نشط",
   "inactive": "غير نشط",

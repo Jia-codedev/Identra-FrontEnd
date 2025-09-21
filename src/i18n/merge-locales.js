@@ -22,6 +22,9 @@ const fileToNamespace = new Map([
   ['translator.json', 'translator'],
   ['main-menu.json', 'mainMenu'],
   ['pagination.json', 'pagination'],
+  ['biometric-terminals.json', 'biometricTerminals'],
+  ['access-zones.json', 'accessZones'],
+  ['buildings.json', 'buildings'],
 ]);
 
 function readJsonSafe(filePath) {

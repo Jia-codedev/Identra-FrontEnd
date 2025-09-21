@@ -65,6 +65,8 @@
     "create": "إنشاء",
     "createdBy": "تم الإنشاء بواسطة",
     "updatedBy": "تم التحديث بواسطة",
+    "createdDate": "تاريخ الإنشاء",
+    "lastUpdated": "آخر تحديث",
     "limit": "الحد",
     "active": "نشط",
     "inactive": "غير نشط",
@@ -1138,5 +1140,47 @@
     "total": "الإجمالي",
     "next": "التالي",
     "previous": "السابق"
+  },
+  "biometricTerminals": {
+    "title": "إدارة أجهزة البصمة",
+    "description": "إدارة جميع أجهزة البصمة في مؤسستك هنا.",
+    "addNew": "إضافة جهاز",
+    "searchPlaceholder": "البحث في الأجهزة...",
+    "enterTerminalNumber": "أدخل رقم الجهاز",
+    "enterTerminalName": "أدخل اسم الجهاز",
+    "editTerminal": "تحرير الجهاز",
+    "addTerminal": "إضافة جهاز",
+    "terminalNumber": "رقم الجهاز",
+    "terminalName": "اسم الجهاز",
+    "status": "الحالة",
+    "noTerminalsFound": "لم يتم العثور على أجهزة"
+  },
+  "accessZones": {
+    "title": "مناطق الوصول",
+    "subtitle": "إدارة مناطق الوصول والتحكم في نقاط الدخول والخروج في مؤسستك.",
+    "addZone": "إضافة منطقة",
+    "description": "تكوين وإدارة مناطق الوصول لمؤسستك.",
+    "searchPlaceholder": "البحث في المناطق...",
+    "type": "نوع المنطقة",
+    "types": {
+      "entry": "دخول",
+      "exit": "خروج",
+      "both": "كلاهما"
+    }
+  },
+  "buildings": {
+    "title": "إدارة المباني",
+    "subtitle": "إدارة مباني المؤسسة والمرافق وتكويناتها.",
+    "addBuilding": "إضافة مبنى",
+    "searchPlaceholder": "البحث في المباني...",
+    "type": "نوع المبنى",
+    "types": {
+      "office": "مكتب",
+      "warehouse": "مستودع",
+      "factory": "مصنع",
+      "residential": "سكني",
+      "mixed": "استخدام مختلط"
+    },
+    "city": "المدينة"
   }
 }

@@ -1,5 +1,14 @@
 {
   "title": "Biometric Terminal Management",
   "description": "Manage all your organization biometric terminals here.",
-  "addNew": "Add Terminal"
+  "addNew": "Add Terminal",
+  "searchPlaceholder": "Search terminals...",
+  "enterTerminalNumber": "Enter terminal number",
+  "enterTerminalName": "Enter terminal name",
+  "editTerminal": "Edit Terminal",
+  "addTerminal": "Add Terminal",
+  "terminalNumber": "Terminal Number",
+  "terminalName": "Terminal Name",
+  "status": "Status",
+  "noTerminalsFound": "No terminals found"
 }

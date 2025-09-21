@@ -65,6 +65,8 @@
     "create": "Create",
     "createdBy": "Created By",
     "updatedBy": "Updated By",
+    "createdDate": "Created Date",
+    "lastUpdated": "Last Updated",
     "limit": "Limit",
     "active": "Active",
     "inactive": "Inactive",
@@ -1214,5 +1216,47 @@
     "total": "Total",
     "next": "Next",
     "previous": "Previous"
+  },
+  "biometricTerminals": {
+    "title": "Biometric Terminal Management",
+    "description": "Manage all your organization biometric terminals here.",
+    "addNew": "Add Terminal",
+    "searchPlaceholder": "Search terminals...",
+    "enterTerminalNumber": "Enter terminal number",
+    "enterTerminalName": "Enter terminal name",
+    "editTerminal": "Edit Terminal",
+    "addTerminal": "Add Terminal",
+    "terminalNumber": "Terminal Number",
+    "terminalName": "Terminal Name",
+    "status": "Status",
+    "noTerminalsFound": "No terminals found"
+  },
+  "accessZones": {
+    "title": "Access Zones",
+    "subtitle": "Manage access zones and control entry/exit points throughout your organization.",
+    "addZone": "Add Zone",
+    "description": "Configure and manage access zones for your organization.",
+    "searchPlaceholder": "Search zones...",
+    "type": "Zone Type",
+    "types": {
+      "entry": "Entry",
+      "exit": "Exit",
+      "both": "Both"
+    }
+  },
+  "buildings": {
+    "title": "Buildings Management",
+    "subtitle": "Manage organizational buildings, facilities, and their configurations.",
+    "addBuilding": "Add Building",
+    "searchPlaceholder": "Search buildings...",
+    "type": "Building Type",
+    "types": {
+      "office": "Office",
+      "warehouse": "Warehouse",
+      "factory": "Factory",
+      "residential": "Residential",
+      "mixed": "Mixed Use"
+    },
+    "city": "City"
   }
 }

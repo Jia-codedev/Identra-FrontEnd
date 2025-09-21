@@ -1,5 +1,15 @@
 {
   "title": "إدارة المباني",
   "subtitle": "إدارة مباني المؤسسة والمرافق وتكويناتها.",
-  "addBuilding": "إضافة مبنى"
+  "addBuilding": "إضافة مبنى",
+  "searchPlaceholder": "البحث في المباني...",
+  "type": "نوع المبنى",
+  "types": {
+    "office": "مكتب",
+    "warehouse": "مستودع",
+    "factory": "مصنع",
+    "residential": "سكني",
+    "mixed": "استخدام مختلط"
+  },
+  "city": "المدينة"
 }

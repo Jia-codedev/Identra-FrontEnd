@@ -1,5 +1,15 @@
 {
   "title": "Buildings Management",
   "subtitle": "Manage organizational buildings, facilities, and their configurations.",
-  "addBuilding": "Add Building"
+  "addBuilding": "Add Building",
+  "searchPlaceholder": "Search buildings...",
+  "type": "Building Type",
+  "types": {
+    "office": "Office",
+    "warehouse": "Warehouse",
+    "factory": "Factory",
+    "residential": "Residential",
+    "mixed": "Mixed Use"
+  },
+  "city": "City"
 }

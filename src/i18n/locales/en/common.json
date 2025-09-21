@@ -64,6 +64,8 @@
   "create": "Create",
   "createdBy": "Created By",
   "updatedBy": "Updated By",
+  "createdDate": "Created Date",
+  "lastUpdated": "Last Updated",
   "limit": "Limit",
   "active": "Active",
   "inactive": "Inactive",

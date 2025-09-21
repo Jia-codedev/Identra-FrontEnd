@@ -1,5 +1,14 @@
 {
   "title": "إدارة أجهزة البصمة",
   "description": "إدارة جميع أجهزة البصمة في مؤسستك هنا.",
-  "addNew": "إضافة جهاز"
+  "addNew": "إضافة جهاز",
+  "searchPlaceholder": "البحث في الأجهزة...",
+  "enterTerminalNumber": "أدخل رقم الجهاز",
+  "enterTerminalName": "أدخل اسم الجهاز",
+  "editTerminal": "تحرير الجهاز",
+  "addTerminal": "إضافة جهاز",
+  "terminalNumber": "رقم الجهاز",
+  "terminalName": "اسم الجهاز",
+  "status": "الحالة",
+  "noTerminalsFound": "لم يتم العثور على أجهزة"
 }
