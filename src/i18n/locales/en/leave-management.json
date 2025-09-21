@@ -273,7 +273,7 @@
       "deleteMultiple": "Are you sure you want to delete {count} items?"
     }
   },
-  "permission":{
+  "permission": {
     "title": "Permission Request",
     "description": "Submit and manage your permission requests",
     "form": {

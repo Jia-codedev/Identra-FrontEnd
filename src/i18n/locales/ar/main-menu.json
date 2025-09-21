@@ -63,6 +63,54 @@
         "attendanceLogs": "سجلات الحضور",
         "workflowAutomation": "أتمتة سير العمل"
       }
+    },
+    "devicesAndInfrastructure": {
+      "title": "الأجهزة والبنية التحتية",
+      "items": {
+        "biometricTerminals": "المحطات البيومترية",
+        "accessZones": "مناطق الوصول",
+        "buildings": "المباني"
+      }
+    },
+    "userSecuritySettings": {
+      "title": "إعدادات أمان المستخدم",
+      "items": {
+        "rolesManagement": "إدارة الأدوار",
+        "accessPermissions": "صلاحيات الوصول",
+        "sessionMonitor": "مراقبة الجلسة",
+        "activitySummary": "ملخص النشاط"
+      }
+    },
+    "applicationSettings": {
+      "title": "إعدادات التطبيق",
+      "items": {
+        "appSettings": "إعدادات التطبيق",
+        "appConfiguration": "تكوين التطبيق",
+        "alertPreferences": "تفضيلات التنبيهات",
+        "auditTrail": "مسار التدقيق"
+      }
+    },
+    "alertCentre": {
+      "title": "مركز التنبيهات",
+      "items": {
+        "emailAlerts": "تنبيهات البريد الإلكتروني",
+        "smsAlerts": "تنبيهات الرسائل النصية",
+        "bulletins": "النشرات"
+      }
+    },
+    "supportCentre": {
+      "title": "مركز الدعم",
+      "items": {
+        "faqs": "الأسئلة الشائعة",
+        "userManual": "دليل المستخدم",
+        "licenseManagement": "إدارة التراخيص"
+      }
+    },
+    "profileIcon": {
+      "items": {
+        "myAccount": "حسابي",
+        "themeLayout": "السمة والتخطيط"
+      }
     }
   }
 }

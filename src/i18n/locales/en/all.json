@@ -1155,6 +1155,54 @@
           "attendanceLogs": "Attendance Logs",
           "workflowAutomation": "Workflow Automation"
         }
+      },
+      "devicesAndInfrastructure": {
+        "title": "Devices and Infrastructure",
+        "items": {
+          "biometricTerminals": "Biometric Terminals",
+          "accessZones": "Access Zones",
+          "buildings": "Buildings"
+        }
+      },
+      "userSecuritySettings": {
+        "title": "User Security Settings",
+        "items": {
+          "rolesManagement": "Roles Management",
+          "accessPermissions": "Access Permissions",
+          "sessionMonitor": "Session Monitor",
+          "activitySummary": "Activity Summary"
+        }
+      },
+      "applicationSettings": {
+        "title": "Application Settings",
+        "items": {
+          "appSettings": "App Settings",
+          "appConfiguration": "App Configuration",
+          "alertPreferences": "Alert Preferences",
+          "auditTrail": "Audit Trail"
+        }
+      },
+      "alertCentre": {
+        "title": "Alert Centre",
+        "items": {
+          "emailAlerts": "Email Alerts",
+          "smsAlerts": "SMS Alerts",
+          "bulletins": "Bulletins"
+        }
+      },
+      "supportCentre": {
+        "title": "Support Centre",
+        "items": {
+          "faqs": "FAQs",
+          "userManual": "User Manual",
+          "licenseManagement": "License Management"
+        }
+      },
+      "profileIcon": {
+        "items": {
+          "myAccount": "My Account",
+          "themeLayout": "Theme & Layout"
+        }
       }
     }
   },
