@@ -86,7 +86,6 @@ export const SiteModal: React.FC<SiteModalProps> = ({
       .getCountriesWithoutPagination()
       .then((res) => {
         if (!mounted) return;
-        // API might wrap data in response.data
         const data = res?.data?.data || res?.data || [];
         setCountries(Array.isArray(data) ? data : []);
       })
@@ -101,7 +100,6 @@ export const SiteModal: React.FC<SiteModalProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const payload: ISite = {
-      // include id when editing so callers can use it if needed
       ...(site && site.location_id
         ? { location_id: site.location_id }
         : {}),

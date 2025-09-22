@@ -2,7 +2,6 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { securitySessionsApi, type SecUser, type CreateSecUserRequest, type UpdateUserPasswordRequest, type SecUserSession, type SessionFilters } from "@/services/security";
 import { toast } from "sonner";
 
-// Users Hooks
 export function useUsers(params: {
   offset?: number;
   limit?: number;
@@ -129,7 +128,6 @@ export function useDeleteUser() {
   });
 }
 
-// Sessions Hooks
 export function useSessions(filters: SessionFilters = {}) {
   return useQuery({
     queryKey: ["security", "sessions", filters],
@@ -248,7 +246,6 @@ export function useDeleteSession() {
   });
 }
 
-// Session Statistics
 export function useSessionStats() {
   return useQuery({
     queryKey: ["security", "sessions", "stats"],

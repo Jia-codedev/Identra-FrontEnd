@@ -22,7 +22,6 @@ export interface CreateEmployeeGroupMemberRequest {
 }
 
 class EmployeeGroupMembersApi {
-  // Employee Group Members Management
   getEmployeeGroupMembers(
     { offset = 1, limit = 10, search = "" } = {} as {
       offset?: number;

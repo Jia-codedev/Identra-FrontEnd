@@ -55,7 +55,6 @@ const BadgeGroupCard: React.FC<BadgeGroupCardProps> = ({
             transition={{ duration: 0.2 }}
         >
             <Card className={cn("p-4 sm:p-5 bg-card/80 backdrop-blur-sm border-border/50 hover:shadow-xl hover:shadow-primary/10 transition-all duration-500 relative overflow-hidden group", className)}>
-                {/* Enhanced Background decoration */}
                 <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-muted/30 to-transparent rounded-full -translate-y-8 translate-x-8 group-hover:scale-150 transition-transform duration-500" />
                 <div className="absolute bottom-0 left-0 w-12 h-12 bg-gradient-to-tr from-primary/10 to-transparent rounded-full translate-y-6 -translate-x-6 group-hover:scale-125 transition-transform duration-500" />
 
@@ -71,7 +70,6 @@ const BadgeGroupCard: React.FC<BadgeGroupCardProps> = ({
                     animate="visible"
                 >
                     {badges.filter(badge => badge.text && badge.text.trim() !== '').map((badge, index) => {
-                        // Create a bulletproof unique key using multiple identifiers
                         const sanitizedText = (badge.text || '').replace(/\s+/g, '-').toLowerCase().replace(/[^a-z0-9-]/g, '');
                         const uniqueKey = `badge-${Date.now()}-${index}-${sanitizedText || 'empty'}-${badge.count || 0}-${badge.variant || 'default'}-${Math.random().toString(36).substr(2, 9)}`;
                         

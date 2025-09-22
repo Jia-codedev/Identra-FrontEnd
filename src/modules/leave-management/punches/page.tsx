@@ -18,29 +18,23 @@ export default function PunchesPage() {
   const [searchTerm, setSearchTerm] = useState("");
 
   const {
-    // Tab state
     activeTab,
     handleTabChange,
-    
-    // Data
+
     data,
     total,
     teamMembers,
     
-    // Pagination
     page,
     limit,
     
-    // Selection
     selectedItems,
     
-    // Loading states
     isLoading,
     isFetching,
     isError,
     error,
     
-    // Actions
     handlePageChange,
     handleLimitChange,
     handleFiltersChange,
@@ -49,11 +43,9 @@ export default function PunchesPage() {
     clearSelection,
     refresh,
     
-    // Computed values
     hasSelection,
     isAllSelected,
     
-    // User info
     currentUserId,
   } = usePunchesTabs({
     initialPage: 1,

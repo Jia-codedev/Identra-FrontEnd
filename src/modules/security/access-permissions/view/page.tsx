@@ -128,7 +128,6 @@ export default function AccessPermissionsPage() {
   const [selectedTableRows, setSelectedTableRows] = useState<number[]>([]);
   const [allChecked, setAllChecked] = useState(false);
 
-  // Filter permissions based on search and filters
   const filteredPermissions = permissions.filter((permission) => {
     const matchesSearch = permission.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          permission.description.toLowerCase().includes(searchTerm.toLowerCase());
@@ -140,7 +139,6 @@ export default function AccessPermissionsPage() {
 
   const handleCreatePermission = async (formData: any) => {
     try {
-      // TODO: Replace with actual API call
       const newPermission: Permission = {
         id: Date.now().toString(),
         ...formData,
@@ -165,7 +163,6 @@ export default function AccessPermissionsPage() {
     if (!selectedPermission) return;
     
     try {
-      // TODO: Replace with actual API call
       setPermissions(permissions.map(p => 
         p.id === selectedPermission.id ? { ...p, ...formData } : p
       ));
@@ -178,7 +175,6 @@ export default function AccessPermissionsPage() {
 
   const handleDeletePermission = async (permissionId: string) => {
     try {
-      // TODO: Replace with actual API call
       setPermissions(permissions.filter(p => p.id !== permissionId));
       toast.success("Permission deleted successfully");
     } catch (error) {
@@ -313,7 +309,6 @@ export default function AccessPermissionsPage() {
     );
   };
 
-  // Helper functions for GenericTable
   const getPermissionId = useCallback((permission: Permission): number => {
     return parseInt(permission.id);
   }, []);

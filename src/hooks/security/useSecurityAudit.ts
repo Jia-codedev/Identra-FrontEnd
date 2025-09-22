@@ -2,7 +2,6 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { securityAuditApi, type SecAuditLog, type AuditLogFilters, type ActivitySummary, type UserActivityReport } from "@/services/security";
 import { toast } from "sonner";
 
-// Audit Logs Hooks
 export function useAuditLogs(filters: AuditLogFilters = {}) {
   return useQuery({
     queryKey: ["security", "auditLogs", filters],
@@ -101,7 +100,6 @@ export function useDeleteAuditLog() {
   });
 }
 
-// Activity Summary & Reports Hooks
 export function useActivitySummary(filters: {
   from_date?: string;
   to_date?: string;
@@ -149,7 +147,6 @@ export function useTableActivityReport(filters: {
   });
 }
 
-// Analytics Hooks
 export function useOperationStatistics(filters: {
   from_date?: string;
   to_date?: string;
@@ -177,7 +174,6 @@ export function useExportAuditLogs() {
     mutationFn: (filters: AuditLogFilters & { format?: 'csv' | 'excel' } = {}) =>
       securityAuditApi.exportAuditLogs(filters),
     onSuccess: (response, variables) => {
-      // Create download link
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
       link.href = url;
@@ -194,7 +190,6 @@ export function useExportAuditLogs() {
   });
 }
 
-// Cleanup Hook
 export function useCleanupOldLogs() {
   const queryClient = useQueryClient();
 

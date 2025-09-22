@@ -124,8 +124,8 @@ export default function AccessZonesList({
         onDeleteItem={onDeleteItem}
         noDataMessage={t("accessZones.noZonesFound")}
         isLoading={isLoading}
-        onPageChange={() => {}} // No-op since CustomPagination handles this
-        onPageSizeChange={() => {}} // No-op since CustomPagination handles this
+        onPageChange={() => {}}
+        onPageSizeChange={() => {}}
         showActions={true}
       />
     </div>

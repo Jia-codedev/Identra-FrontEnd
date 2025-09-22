@@ -18,7 +18,6 @@ export const useAuth = () => {
       router.push("/login");
     } catch (error) {
       console.error("Logout error:", error);
-      // Force clear user data even if logout request fails
       clearUser();
       toast.error(t("auth.logoutFailed"));
       router.push("/login");

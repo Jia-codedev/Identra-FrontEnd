@@ -1,4 +1,3 @@
-// API response interface
 export interface ApiResponse<T> {
   data: T;
   total: number;
@@ -63,7 +62,6 @@ export interface CreateBuildingRequest {
 
 export interface UpdateBuildingRequest extends Partial<CreateBuildingRequest> {}
 
-// Mock data for development
 const mockBuildings: Building[] = [
   {
     id: 1,
@@ -156,13 +154,10 @@ const mockBuildings: Building[] = [
 ];
 
 const buildingsApi = {
-  // List buildings with filtering and pagination
   list: async (params: ListBuildingsRequest = {}): Promise<ApiResponse<Building[]>> => {
-    await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API delay
-
+    await new Promise(resolve => setTimeout(resolve, 500));
     let filteredBuildings = [...mockBuildings];
 
-    // Apply filters
     if (params.building_name) {
       filteredBuildings = filteredBuildings.filter(building =>
         building.building_name.toLowerCase().includes(params.building_name!.toLowerCase())
@@ -199,7 +194,6 @@ const buildingsApi = {
       );
     }
 
-    // Apply pagination
     const total = filteredBuildings.length;
     const limit = params.limit || 10;
     const offset = params.offset || 0;
@@ -218,7 +212,6 @@ const buildingsApi = {
     };
   },
 
-  // Get building by ID
   getById: async (id: number): Promise<ApiResponse<Building>> => {
     await new Promise(resolve => setTimeout(resolve, 300));
 
@@ -237,7 +230,6 @@ const buildingsApi = {
     };
   },
 
-  // Create new building
   create: async (data: CreateBuildingRequest): Promise<ApiResponse<Building>> => {
     await new Promise(resolve => setTimeout(resolve, 800));
 
@@ -261,7 +253,6 @@ const buildingsApi = {
     };
   },
 
-  // Update building
   update: async (id: number, data: UpdateBuildingRequest): Promise<ApiResponse<Building>> => {
     await new Promise(resolve => setTimeout(resolve, 600));
 
@@ -286,7 +277,6 @@ const buildingsApi = {
     };
   },
 
-  // Delete building (soft delete)
   delete: async (id: number): Promise<ApiResponse<void>> => {
     await new Promise(resolve => setTimeout(resolve, 400));
 
@@ -308,7 +298,6 @@ const buildingsApi = {
     };
   },
 
-  // Bulk delete buildings
   bulkDelete: async (ids: number[]): Promise<ApiResponse<void>> => {
     await new Promise(resolve => setTimeout(resolve, 800));
 

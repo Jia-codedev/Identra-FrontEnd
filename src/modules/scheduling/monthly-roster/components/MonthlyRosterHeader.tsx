@@ -24,19 +24,16 @@ export const MonthlyRosterHeader: React.FC<MonthlyRosterHeaderProps> = ({ filter
   const { t } = useTranslations();
   const { isRTL } = useLanguage();
 
-  // Organizations dropdown
   const [orgOpen, setOrgOpen] = useState(false);
   const [orgSearch, setOrgSearch] = useState('');
   const [orgs, setOrgs] = useState<any[]>([]);
   const [orgLoading, setOrgLoading] = useState(false);
 
-  // Employee groups dropdown
   const [egOpen, setEgOpen] = useState(false);
   const [egSearch, setEgSearch] = useState('');
   const [egs, setEgs] = useState<any[]>([]);
   const [egLoading, setEgLoading] = useState(false);
 
-  // Month/year state
   const [monthOpen, setMonthOpen] = useState(false);
   const [yearOpen, setYearOpen] = useState(false);
 
@@ -89,8 +86,6 @@ export const MonthlyRosterHeader: React.FC<MonthlyRosterHeaderProps> = ({ filter
   const fileInputRef = React.useRef<HTMLInputElement | null>(null);
 
   const handleImportClick = () => {
-    // Create a file input on demand and trigger it. When a file is selected
-    // we append it to FormData under the 'file' key (server expects 'file').
     if (!fileInputRef.current) {
       const input = document.createElement('input');
       input.type = 'file';
@@ -117,7 +112,6 @@ export const MonthlyRosterHeader: React.FC<MonthlyRosterHeaderProps> = ({ filter
       if (selectedIds && selectedIds.length > 0) {
         payload = { ids: selectedIds };
       } else {
-        // send current filters to backend to export all matching rows
         payload = {
           organization_id: filters.organization_id,
           employee_group_id: filters.employee_group_id,
@@ -136,7 +130,6 @@ export const MonthlyRosterHeader: React.FC<MonthlyRosterHeaderProps> = ({ filter
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      // choose filename based on payload
       const fnParts = ['monthly_roster'];
       if (payload.organization_id) fnParts.push(String(payload.organization_id));
       if (payload.year) fnParts.push(String(payload.year));
@@ -146,13 +139,10 @@ export const MonthlyRosterHeader: React.FC<MonthlyRosterHeaderProps> = ({ filter
       a.click();
       a.remove();
       window.URL.revokeObjectURL(url);
-      // show a simple notification
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
       const { toast } = require('sonner');
       try { toast.success('Export started'); } catch {}
     } catch (err) {
       console.error('Export failed', err);
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
       const { toast } = require('sonner');
       try { toast.error('Export failed'); } catch {}
     }

@@ -47,7 +47,6 @@ function AuthComponent() {
         setError(null);
         setSubmitted(true);
 
-        // Debug cookies after successful login
         setTimeout(() => {
           console.log("After login - debugging cookies...");
           CookieDebugger.debugCurrentCookies();

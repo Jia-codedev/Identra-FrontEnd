@@ -33,7 +33,6 @@ export interface SendEmailRequest {
 }
 
 class TaEmailsApi {
-  // TA Emails Management
   getTaEmails(
     { offset = 1, limit = 10, search = "" } = {} as {
       offset?: number;
@@ -62,7 +61,6 @@ class TaEmailsApi {
     return apiClient.delete(`/ta-emails/delete/${id}`);
   }
 
-  // Email Processing
   getPendingEmails() {
     return apiClient.get("/ta-emails/pending");
   }
@@ -75,7 +73,6 @@ class TaEmailsApi {
     return apiClient.post("/ta-emails/process-pending");
   }
 
-  // Email Sending
   queueEmail(data: SendEmailRequest) {
     return apiClient.post("/ta-emails/queue", data);
   }
@@ -84,7 +81,6 @@ class TaEmailsApi {
     return apiClient.post("/ta-emails/send-immediate", data);
   }
 
-  // Stats
   getEmailStats() {
     return apiClient.get("/ta-emails/stats");
   }

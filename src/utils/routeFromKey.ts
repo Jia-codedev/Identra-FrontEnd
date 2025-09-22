@@ -1,5 +1,4 @@
 
-// Converts camelCase or PascalCase to kebab-case
 function camelToKebab(str: string): string {
   return str
     .replace(/([a-z0-9])([A-Z])/g, "$1-$2")
@@ -8,9 +7,7 @@ function camelToKebab(str: string): string {
 }
 
 
-// Maps route keys to their URL prefixes
 const GROUP_PREFIXES: Record<string, string> = {
-  // Main
   selfStatistics: '/',
   teamStatistics: '/',
   activityMonitor: '/',
@@ -42,7 +39,6 @@ const GROUP_PREFIXES: Record<string, string> = {
   monthlyRoster: '/roster-management',
   weeklyRoster: '/roster-management',
   ramadanHours: '/roster-management',
-  // Leave Management
   workFlow: '/leave-management',
   leaves: '/leave-management',
   leaveTypes: '/leave-management',

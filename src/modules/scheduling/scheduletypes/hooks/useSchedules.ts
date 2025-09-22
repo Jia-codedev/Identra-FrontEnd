@@ -32,7 +32,6 @@ export const useSchedules = () => {
   } = useQuery({
     queryKey: ["schedules", state.filters, state.search, state.page, state.pageSize],
     queryFn: () => {
-      // Use search API if there are search filters, otherwise use get all
       if (state.search || state.filters.code || state.filters.organization_name) {
         return schedulesApi
           .searchSchedules({
@@ -53,12 +52,9 @@ export const useSchedules = () => {
     },
   });
 
-  // Get schedules and pagination data from server response
   const { schedules, pageCount, total } = useMemo(() => {
     if (data && data.success && Array.isArray(data.data)) {
       let filteredData: ISchedule[] = data.data;
-      
-      // Apply additional client-side filters if needed
       if (state.filters.organization_id) {
         filteredData = filteredData.filter(
           (schedule) => schedule.organization_id === state.filters.organization_id
@@ -89,7 +85,6 @@ export const useSchedules = () => {
         );
       }
 
-      // Use pagination data from API response if available
       if (data.pagination) {
         return {
           schedules: filteredData,
@@ -98,7 +93,6 @@ export const useSchedules = () => {
         };
       }
 
-      // If we're doing client-side filtering, calculate pagination manually
       if (Object.keys(state.filters).some(key => state.filters[key as keyof ScheduleFilters] !== undefined && key !== 'search')) {
         const totalItems = filteredData.length;
         const totalPages = Math.ceil(totalItems / state.pageSize);
@@ -113,7 +107,6 @@ export const useSchedules = () => {
         };
       }
 
-      // Use default pagination calculation
       return {
         schedules: filteredData,
         pageCount: Math.ceil((filteredData.length || 0) / state.pageSize),
@@ -186,7 +179,7 @@ export const useSchedules = () => {
   return {
     schedules,
     selected: state.selected,
-    search: searchInput, // Use searchInput for display
+    search: searchInput,
     page: state.page,
     pageCount,
     pageSize: state.pageSize,

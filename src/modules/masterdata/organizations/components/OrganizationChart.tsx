@@ -41,19 +41,15 @@ interface OrganizationNodeData {
   style?: ChartStyle;
 }
 
-// Custom Organization Node Component with Handles
 const OrganizationNode: React.FC<{ data: OrganizationNodeData }> = ({
   data,
 }) => {
   const { t } = useTranslations();
   const { currentLocale } = useLanguage();
   const { organization, level, style = "hierarchical" } = data;
-
-  // Check if current language is Arabic
   const isArabic = currentLocale === "ar";
 
   const getNodeColor = (level: number) => {
-    // Different color schemes based on chart style
     switch (style) {
       case "mindmap":
         return `hsl(${(level * 60) % 360}, 70%, 50%)`;
@@ -87,7 +83,7 @@ const OrganizationNode: React.FC<{ data: OrganizationNodeData }> = ({
           "#64748b",
         ];
         return horizontalColors[Math.min(level, horizontalColors.length - 1)];
-      default: // hierarchical
+      default:
         const colors = [
           "#1e40af",
           "#059669",
@@ -100,7 +96,6 @@ const OrganizationNode: React.FC<{ data: OrganizationNodeData }> = ({
     }
   };
 
-  // Get node size based on style
   const getNodeSize = () => {
     switch (style) {
       case "compact":
@@ -114,7 +109,6 @@ const OrganizationNode: React.FC<{ data: OrganizationNodeData }> = ({
     }
   };
 
-  // Get border style based on chart style
   const getBorderStyle = () => {
     switch (style) {
       case "mindmap":
@@ -127,8 +121,6 @@ const OrganizationNode: React.FC<{ data: OrganizationNodeData }> = ({
         return "rounded-lg border-2";
     }
   };
-
-  // Get display names based on language preference
   const getDisplayName = (org: IOrganizationStructure) => {
     if (isArabic) {
       return (
@@ -170,7 +162,6 @@ const OrganizationNode: React.FC<{ data: OrganizationNodeData }> = ({
 
   return (
     <div className="relative">
-      {/* Top Handle - for incoming connections (except root) */}
       {isNotRoot && (
         <Handle
           type="target"
@@ -186,7 +177,6 @@ const OrganizationNode: React.FC<{ data: OrganizationNodeData }> = ({
         />
       )}
 
-      {/* Left Handle - for horizontal layouts */}
       {style === "horizontal" && (
         <Handle
           type="target"
@@ -201,7 +191,6 @@ const OrganizationNode: React.FC<{ data: OrganizationNodeData }> = ({
         />
       )}
 
-      {/* Right Handle - for horizontal layouts */}
       {style === "horizontal" && (
         <Handle
           type="source"
@@ -340,7 +329,6 @@ export const OrganizationChart: React.FC<OrganizationChartProps> = ({
     const nodes: Node[] = [];
     const edges: Edge[] = [];
 
-    // Layout parameters based on style
     const getLayoutParams = () => {
       switch (style) {
         case "hierarchical":
@@ -384,7 +372,6 @@ export const OrganizationChart: React.FC<OrganizationChartProps> = ({
 
     const layoutParams = getLayoutParams();
 
-    // Calculate subtree width for hierarchical layouts
     const calculateSubtreeWidth = (org: IOrganizationStructure): number => {
       if (!org.children || org.children.length === 0) {
         return 1;
@@ -396,7 +383,6 @@ export const OrganizationChart: React.FC<OrganizationChartProps> = ({
       return Math.max(1, childrenWidth);
     };
 
-    // Hierarchical Layout (original)
     const processHierarchicalNode = (
       org: IOrganizationStructure,
       level: number = 0,
@@ -475,7 +461,6 @@ export const OrganizationChart: React.FC<OrganizationChartProps> = ({
       return currentSubtreeWidth;
     };
 
-    // Radial Layout
     const processRadialNode = (
       org: IOrganizationStructure,
       level: number = 0,
@@ -532,7 +517,6 @@ export const OrganizationChart: React.FC<OrganizationChartProps> = ({
       }
     };
 
-    // Horizontal Layout
     const processHorizontalNode = (
       org: IOrganizationStructure,
       level: number = 0,
@@ -611,7 +595,6 @@ export const OrganizationChart: React.FC<OrganizationChartProps> = ({
       return currentSubtreeHeight;
     };
 
-    // Compact Grid Layout
     const processCompactNode = (
       org: IOrganizationStructure,
       level: number = 0,
@@ -692,7 +675,6 @@ export const OrganizationChart: React.FC<OrganizationChartProps> = ({
       return currentSubtreeWidth;
     };
 
-    // Mind Map Layout
     const processMindMapNode = (
       org: IOrganizationStructure,
       level: number = 0,
@@ -724,7 +706,6 @@ export const OrganizationChart: React.FC<OrganizationChartProps> = ({
 
       if (org.children && org.children.length > 0) {
         const childDistance = distance + (layoutParams.BRANCH_LENGTH || 250);
-        // More organic spread for mindmap
         const angleSpread = level === 0 ? Math.PI * 1.5 : Math.PI / 2;
         const angleStep =
           org.children.length > 1
@@ -768,7 +749,6 @@ export const OrganizationChart: React.FC<OrganizationChartProps> = ({
       }
     };
 
-    // Process based on selected style
     if (data.length === 0) return { nodes, edges };
 
     switch (style) {
@@ -883,12 +863,11 @@ export const OrganizationChart: React.FC<OrganizationChartProps> = ({
         break;
     }
     return { nodes, edges };
-  }, [data, style]); // Removed unnecessary currentLocale dependency
+  }, [data, style]);
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
-  // Force update nodes and edges when layout changes
   useEffect(() => {
     setNodes(initialNodes);
     setEdges(initialEdges);
@@ -899,7 +878,6 @@ export const OrganizationChart: React.FC<OrganizationChartProps> = ({
     [setEdges]
   );
 
-  // Get connection type for current style
   const getConnectionType = () => {
     switch (style) {
       case "hierarchical":
@@ -931,7 +909,7 @@ export const OrganizationChart: React.FC<OrganizationChartProps> = ({
       dir={isArabic ? "rtl" : "ltr"}
     >
       <ReactFlow
-        key={`chart-${style}`} // Stable key based only on style
+        key={`chart-${style}`}
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}
@@ -946,7 +924,6 @@ export const OrganizationChart: React.FC<OrganizationChartProps> = ({
           maxZoom: 1.2,
         }}
         defaultViewport={{ x: 0, y: 0, zoom: 0.8 }}
-        // attributionPosition="bottom-left"
         className="bg-background"
         nodesDraggable={true}
         nodesConnectable={false}

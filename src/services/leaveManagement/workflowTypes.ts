@@ -37,7 +37,6 @@ export interface WorkflowRequest {
 }
 
 const workflowTypesApi = {
-  // Workflow Types
   getAllWorkflowTypes: () =>
     apiClient.get("/workflowType/all"),
 
@@ -53,7 +52,6 @@ const workflowTypesApi = {
   deleteWorkflowType: (id: number) =>
     apiClient.delete(`/workflowType/${id}`),
 
-  // Workflow Type Steps
   getAllWorkflowSteps: () =>
     apiClient.get("/workflowTypeStep/all"),
 
@@ -72,7 +70,6 @@ const workflowTypesApi = {
   deleteWorkflowStep: (id: number) =>
     apiClient.delete(`/workflowTypeStep/${id}`),
 
-  // Workflow Requests
   getAllWorkflowRequests: () =>
     apiClient.get("/workflowRequest/all"),
 

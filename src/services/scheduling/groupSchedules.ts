@@ -16,7 +16,6 @@ export interface IGroupSchedule {
   created_time: string;
   last_updated_id: number;
   last_updated_date: string;
-  // Related data that might be included in API responses
   employee_group?: {
     group_id: number;
     group_eng: string;
@@ -133,46 +132,38 @@ export interface IUpdateGroupSchedule {
 class GroupSchedulesApi {
   private baseUrl = "/groupSchedule";
 
-  // Get all group schedules
   async getAll(params?: {
     offset?: number;
     limit?: number;
     employee_group_id?: number;
-    start_date?: string; // ISO
-    end_date?: string; // ISO
+    start_date?: string;
+    end_date?: string;
     search?: string;
   }) {
-    // Ensure only 'search' is used for filtering, remove any legacy code/name params
     const response = await apiClient.get(`${this.baseUrl}/all`, { params });
-    // return the full API payload so callers can access pagination metadata
     return response.data as IGroupSchedulesResponse;
   }
 
-  // Get group schedule by ID
   async getById(id: number) {
     const response = await apiClient.get(`${this.baseUrl}/get/${id}`);
     return response.data;
   }
 
-  // Create new group schedule
   async create(data: ICreateGroupSchedule) {
     const response = await apiClient.post(`${this.baseUrl}/add`, data);
     return response.data;
   }
 
-  // Update group schedule
   async update(id: number, data: IUpdateGroupSchedule) {
     const response = await apiClient.put(`${this.baseUrl}/edit/${id}`, data);
     return response.data;
   }
 
-  // Delete group schedule
   async delete(id: number) {
     const response = await apiClient.delete(`${this.baseUrl}/delete/${id}`);
     return response.data;
   }
 
-  // Delete multiple group schedules
   async deleteMany(ids: number[]) {
     const response = await apiClient.delete(`${this.baseUrl}/delete`, {
       data: { group_schedule_ids: ids },

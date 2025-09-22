@@ -19,7 +19,6 @@ interface WorkflowItem {
   created_date: string;
   last_updated_id: number;
   last_updated_date: string;
-  // Additional computed properties for display
   status?: 'ACTIVE' | 'INACTIVE' | 'DRAFT';
   isActive?: boolean;
 }
@@ -78,7 +77,6 @@ export default function WorkflowList({
   const { t } = useTranslations();
   const { currentLocale } = useLanguage();
 
-  // Helper function to get localized workflow name
   const getLocalizedName = (workflow: WorkflowItem) => {
     if (currentLocale === 'ar') {
       return workflow.workflow_name_arb || workflow.workflow_name_eng || 'N/A';
@@ -86,7 +84,6 @@ export default function WorkflowList({
     return workflow.workflow_name_eng || workflow.workflow_name_arb || 'N/A';
   };
 
-  // Helper function to get localized category
   const getLocalizedCategory = (workflow: WorkflowItem) => {
     if (currentLocale === 'ar') {
       return workflow.workflow_category_arb || workflow.workflow_category_eng || 'N/A';
@@ -94,7 +91,6 @@ export default function WorkflowList({
     return workflow.workflow_category_eng || workflow.workflow_category_arb || 'N/A';
   };
 
-  // Ensure workflows is always an array and filter out invalid items
   const safeWorkflows = React.useMemo(() => {
     if (!Array.isArray(workflows)) return [];
     return workflows.filter(workflow =>
@@ -105,7 +101,6 @@ export default function WorkflowList({
     );
   }, [workflows]);
 
-  // Table columns for workflows
   const columns: TableColumn<WorkflowItem>[] = [
     {
       key: "workflow_code",

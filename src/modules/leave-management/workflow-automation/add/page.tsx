@@ -14,19 +14,15 @@ import { useRouter } from 'next/navigation';
 import workflowApi from '@/services/workforce/workflowService';
 import workflowStepsApi from '@/services/workforce/workflowStepsService';
 import rolesApi from '@/services/security/rolesService';
-
-// Role interface - flexible to handle different API response formats
 interface Role {
   role_id?: number;
   role_name?: string;
   role_description?: string;
-  // Alternative field names in case API uses different naming
   id?: number;
   name?: string;
   description?: string;
 }
 
-// Workflow Type form data  
 interface WorkflowTypeFormData {
   workflow_code: string;
   workflow_name_eng: string;
@@ -35,7 +31,6 @@ interface WorkflowTypeFormData {
   workflow_category_arb?: string;
 }
 
-// Workflow Step form data
 interface WorkflowStepData {
   step_order: number;
   step_eng: string;
@@ -48,8 +43,6 @@ export default function AddWorkflowAutomationPage() {
   const { t } = useTranslations();
   const { currentLocale } = useLanguage();
   const router = useRouter();
-  
-  // Workflow Type State
   const [workflowTypeData, setWorkflowTypeData] = useState<WorkflowTypeFormData>({
     workflow_code: '',
     workflow_name_eng: '',
@@ -58,7 +51,6 @@ export default function AddWorkflowAutomationPage() {
     workflow_category_arb: '',
   });
   
-  // Workflow Steps State (max 4 steps)
   const [workflowSteps, setWorkflowSteps] = useState<WorkflowStepData[]>([
     {
       step_order: 1,
@@ -73,17 +65,14 @@ export default function AddWorkflowAutomationPage() {
   const [workflowTypeErrors, setWorkflowTypeErrors] = useState<Partial<WorkflowTypeFormData>>({});
   const [stepErrors, setStepErrors] = useState<{[key: number]: Partial<{step_eng: string; step_arb: string; role_id: string}>}>({});
   
-  // Roles state
   const [roles, setRoles] = useState<Role[]>([]);
   const [rolesLoading, setRolesLoading] = useState(false);
 
-  // Fetch roles from backend
   const fetchRoles = async () => {
     try {
       setRolesLoading(true);
-      const response = await rolesApi.getRoles({ limit: 100 }); // Get more roles
+      const response = await rolesApi.getRoles({ limit: 100 });
       
-      // Handle different possible response structures
       let rolesData: Role[] = [];
       if (response.data?.data?.roles) {
         rolesData = response.data.data.roles;
@@ -100,14 +89,12 @@ export default function AddWorkflowAutomationPage() {
     } catch (error) {
       console.error('Error fetching roles:', error);
       toast.error('Failed to fetch roles');
-      // Set empty array on error
       setRoles([]);
     } finally {
       setRolesLoading(false);
     }
   };
 
-  // Load roles on component mount
   useEffect(() => {
     fetchRoles();
   }, []);
@@ -119,7 +106,6 @@ export default function AddWorkflowAutomationPage() {
       newErrors.workflow_code = 'Workflow code is required';
     }
     
-    // Language-specific validation
     if (currentLocale === 'ar') {
       if (!workflowTypeData.workflow_name_arb.trim()) {
         newErrors.workflow_name_arb = 'Arabic workflow name is required';
@@ -141,7 +127,6 @@ export default function AddWorkflowAutomationPage() {
     workflowSteps.forEach((step, index) => {
       const stepErrors: Partial<{step_eng: string; step_arb: string; role_id: string}> = {};
       
-      // Language-specific validation for step names
       if (currentLocale === 'ar') {
         if (!step.step_arb.trim()) {
           stepErrors.step_arb = 'Arabic step name is required';
@@ -187,11 +172,9 @@ export default function AddWorkflowAutomationPage() {
     setIsSubmitting(true);
     
     try {
-      // Prepare workflow type data - auto-populate missing language fields
       const submissionData = { ...workflowTypeData };
       
       if (currentLocale === 'ar') {
-        // If Arabic mode, use Arabic as primary and fallback to English if missing
         if (!submissionData.workflow_name_eng && submissionData.workflow_name_arb) {
           submissionData.workflow_name_eng = submissionData.workflow_name_arb;
         }
@@ -199,7 +182,6 @@ export default function AddWorkflowAutomationPage() {
           submissionData.workflow_category_eng = submissionData.workflow_category_arb;
         }
       } else {
-        // If English mode, use English as primary and fallback to Arabic if missing
         if (!submissionData.workflow_name_arb && submissionData.workflow_name_eng) {
           submissionData.workflow_name_arb = submissionData.workflow_name_eng;
         }
@@ -208,26 +190,22 @@ export default function AddWorkflowAutomationPage() {
         }
       }
 
-      // First create the workflow type
       const workflowTypeResponse = await workflowApi.addWorkflow({
         ...submissionData,
-        created_id: 1, // Replace with actual user ID
-        last_updated_id: 1, // Replace with actual user ID
+        created_id: 1, 
+        last_updated_id: 1,
       });
 
       const workflowId = workflowTypeResponse.data.data.workflow_id;
 
-      // Prepare steps data - auto-populate missing language fields
       const stepsWithLanguageFallback = workflowSteps.map(step => {
         const stepData = { ...step };
         
         if (currentLocale === 'ar') {
-          // If Arabic mode, use Arabic as primary and fallback to English if missing
           if (!stepData.step_eng && stepData.step_arb) {
             stepData.step_eng = stepData.step_arb;
           }
         } else {
-          // If English mode, use English as primary and fallback to Arabic if missing
           if (!stepData.step_arb && stepData.step_eng) {
             stepData.step_arb = stepData.step_eng;
           }
@@ -236,7 +214,6 @@ export default function AddWorkflowAutomationPage() {
         return stepData;
       });
 
-      // Then create all workflow steps
       const stepPromises = stepsWithLanguageFallback.map(step => 
         workflowStepsApi.addStep({
           ...step,
@@ -261,16 +238,14 @@ export default function AddWorkflowAutomationPage() {
   const handleWorkflowTypeChange = (field: keyof WorkflowTypeFormData, value: string) => {
     setWorkflowTypeData(prev => ({ ...prev, [field]: value }));
     
-    // Clear error when user starts typing
     if (workflowTypeErrors[field]) {
       setWorkflowTypeErrors(prev => ({ ...prev, [field]: undefined }));
     }
   };
 
   const handleStepChange = (stepIndex: number, field: keyof WorkflowStepData, value: string | number | boolean) => {
-    // Prevent setting disabled values for role_id
     if (field === 'role_id' && (value === 'loading' || value === 'no-roles')) {
-      return; // Don't update state with disabled values
+      return; 
     }
     
     setWorkflowSteps(prev => 
@@ -279,7 +254,6 @@ export default function AddWorkflowAutomationPage() {
       )
     );
 
-    // Clear error when user changes value
     if (stepErrors[stepIndex]?.[field as keyof {step_eng: string; step_arb: string; role_id: string}]) {
       setStepErrors(prev => ({
         ...prev,
@@ -294,7 +268,6 @@ export default function AddWorkflowAutomationPage() {
       return;
     }
 
-    // Mark previous step as not final
     const updatedSteps = workflowSteps.map((step, index) => 
       index === workflowSteps.length - 1 ? { ...step, is_final_step: false } : step
     );
@@ -306,7 +279,7 @@ export default function AddWorkflowAutomationPage() {
         step_eng: '',
         step_arb: '',
         role_id: 0,
-        is_final_step: true, // New step is final by default
+        is_final_step: true,
       }
     ]);
   };
@@ -322,12 +295,11 @@ export default function AddWorkflowAutomationPage() {
       .map((step, index) => ({ 
         ...step, 
         step_order: index + 1,
-        is_final_step: index === workflowSteps.length - 2 // Last remaining step becomes final
+        is_final_step: index === workflowSteps.length - 2 
       }));
 
     setWorkflowSteps(updatedSteps);
 
-    // Remove errors for this step
     const newStepErrors = { ...stepErrors };
     delete newStepErrors[stepIndex];
     setStepErrors(newStepErrors);
@@ -575,7 +547,6 @@ export default function AddWorkflowAutomationPage() {
                               <SelectItem value="no-roles" disabled>No roles found</SelectItem>
                             ) : (
                               roles.map((role) => {
-                                // Handle different possible field names
                                 const roleId = role.role_id || role.id;
                                 const roleName = role.role_name || role.name;
                                 

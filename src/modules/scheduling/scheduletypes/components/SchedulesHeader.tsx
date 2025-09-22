@@ -61,7 +61,7 @@ export const SchedulesHeader: React.FC<SchedulesHeaderProps> = ({
   const activeFiltersCount =
     Object.values(filters).filter(
       (value) => value !== undefined && value !== "" && value !== null
-    ).length - 1; // Subtract 1 for the search filter which is always present
+    ).length - 1; 
 
   const clearFilters = () => {
     onFiltersChange({

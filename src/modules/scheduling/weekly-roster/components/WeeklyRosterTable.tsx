@@ -49,7 +49,6 @@ const ScheduleCell: React.FC<{
   const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
   const textColor = luminance > 0.6 ? '#000' : '#fff';
 
-  // Determine a single concise shift label with precedence: Ramadan > Night > Open > Regular
   const shiftLabel = schedule.ramadan_flag
     ? t('scheduling.weeklyRoster.shift.ramadan') || 'Ramadan'
     : schedule.night_shift_flag
@@ -175,7 +174,6 @@ export const WeeklyRosterTable: React.FC<WeeklyRosterTableProps> = ({
     },
   ];
 
-  // Helper functions for GenericTable
   const handleSelectItem = (id: number) => {
     const newSelection = selectedItems.includes(id) 
       ? selectedItems.filter(item => item !== id)

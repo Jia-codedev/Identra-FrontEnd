@@ -46,7 +46,6 @@ export const useNationalities = () => {
     initialPageParam: 1,
   });
 
-  // Only show the current page's data
   const nationalities = useMemo(() => {
     if (data && data.pages && data.pages[state.page - 1]) {
       return data.pages[state.page - 1].data || [];
@@ -54,7 +53,6 @@ export const useNationalities = () => {
     return [];
   }, [data, state.page]);
 
-  // Total pages: if the API returns total, use it; else, fallback to loaded pages
   const total = data?.pages?.[0]?.total ?? 0;
   const pageCount = total > 0 ? Math.ceil(total / state.pageSize) : (data?.pages?.length || 1);
 
@@ -64,7 +62,6 @@ export const useNationalities = () => {
   const allChecked =
     allIds.length > 0 && allIds.every((id: number) => state.selected.includes(id));
 
-  // Stable debounce for search
   const debouncedRefetch = useMemo(() => lodash.debounce(refetch, 500), [refetch]);
 
   const setSearch = useCallback((search: string) => {
@@ -80,7 +77,6 @@ export const useNationalities = () => {
   const setPage = useCallback(
     async (page: number) => {
       if (page >= 1 && page <= pageCount) {
-        // Always try to fetch the next page if not loaded
         if (data && data.pages && !data.pages[page - 1] && hasNextPage) {
           await fetchNextPage();
         }
@@ -116,7 +112,6 @@ export const useNationalities = () => {
   }, []);
 
   return {
-    // State
     nationalities,
     allNationalities: state.nationalities,
     selected: state.selected,
@@ -130,7 +125,6 @@ export const useNationalities = () => {
     allChecked,
     isLoading,
     refetch,
-    // Actions
     setSearch,
     setPage,
     setPageSize,

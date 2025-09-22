@@ -6,26 +6,20 @@ import { debounce } from 'lodash';
 export function useEmployeeValidation() {
   const [empNoToCheck, setEmpNoToCheck] = useState<string>('');
   const [emailToCheck, setEmailToCheck] = useState<string>('');
-
-  // Check employee number existence
   const empNoQuery = useQuery({
     queryKey: ['checkEmployeeNumber', empNoToCheck],
     queryFn: () => employeeApi.checkEmployeeNumberExists(empNoToCheck),
     enabled: !!empNoToCheck && empNoToCheck.length > 0,
     retry: false,
-    staleTime: 30 * 1000, // 30 seconds
+    staleTime: 30 * 1000,
   });
-
-  // Check email existence
   const emailQuery = useQuery({
     queryKey: ['checkEmail', emailToCheck],
     queryFn: () => employeeApi.checkEmailExists(emailToCheck),
     enabled: !!emailToCheck && emailToCheck.length > 0,
     retry: false,
-    staleTime: 30 * 1000, // 30 seconds
+    staleTime: 30 * 1000, 
   });
-
-  // Debounced functions to avoid too many API calls
   const debouncedCheckEmpNo = useCallback(
     debounce((empNo: string) => {
       if (empNo && empNo.trim()) {

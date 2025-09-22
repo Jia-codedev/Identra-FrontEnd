@@ -13,7 +13,6 @@ export const useWeeklyRosterState = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Selection handlers
   const selectWeeklyRoster = (id: number) => {
     setSelected(prev => 
       prev.includes(id) 
@@ -28,13 +27,11 @@ export const useWeeklyRosterState = () => {
 
   const allChecked = weeklyRosters.length > 0 && selected.length === weeklyRosters.length;
 
-  // Filter handlers
   const onFiltersChange = (newFilters: Partial<WeeklyRosterFilters>) => {
     setFilters(prev => ({ ...prev, ...newFilters }));
-    setPage(1); // Reset to first page when filters change
+    setPage(1); 
   };
 
-  // Clear selections when data changes
   useEffect(() => {
     setSelected([]);
   }, [weeklyRosters]);

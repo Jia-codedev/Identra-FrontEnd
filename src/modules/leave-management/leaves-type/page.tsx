@@ -72,7 +72,6 @@ export default function LeavesTypePage() {
   const [showDialog, setShowDialog] = useState(false);
   const [editingItem, setEditingItem] = useState<LeaveType | null>(null);
 
-  // Delete dialog state
   const [deleteDialog, setDeleteDialog] = useState<{
     open: boolean;
     type: "single" | "bulk" | null;
@@ -100,7 +99,7 @@ export default function LeavesTypePage() {
       mutations.delete.mutateAsync(deleteDialog.id);
     } else if (deleteDialog.type === "bulk" && selected.length > 0) {
       mutations.bulkDelete.mutateAsync(selected);
-      selectAll(); // Clear selection after successful delete
+      selectAll();
     }
     setDeleteDialog({ open: false, type: null });
   };

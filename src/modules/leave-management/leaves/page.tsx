@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { useTranslations } from "@/hooks/use-translations";
 import { LeavesHeader } from "./components/LeavesHeader";
-// import { GenericTable, TableColumn } from "@/components/common/GenericTable";
 import LeavesList from "./components/LeavesList";
 import LeaveRequestForm from "./components/LeaveRequestForm";
 import { Dialog } from "@/components/ui/dialog";
@@ -12,9 +11,7 @@ import { useRouter } from "next/navigation";
 
 import { debounce } from "lodash";
 import useLeaves from "./hooks/useLeaves";
-import employeeLeavesApi from "@/services/leaveManagement/employeeLeaves";
 import { format, parseISO } from "date-fns";
-// approval/rejection flow removed for this view
 
 type LeaveType = {
   id: number;
@@ -45,7 +42,6 @@ export default function LeavesPage() {
     selectAll,
     refetch,
   } = useLeaves();
-  // Helper to format date/time
   const formatDateTime = (dt?: string) => {
     if (!dt) return "-";
     try {

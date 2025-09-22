@@ -7,7 +7,6 @@ import { toast } from "sonner";
 export const usePermissionTypeMutations = () => {
   const queryClient = useQueryClient();
 
-  // Create mutation
   const createMutation = useMutation({
     mutationFn: (data: any) => permissionTypeApi.create(data),
     onSuccess: () => {
@@ -19,8 +18,6 @@ export const usePermissionTypeMutations = () => {
       toast.error(message);
     },
   });
-
-  // Update mutation
   const updateMutation = useMutation({
     mutationFn: ({ id, data }: { id: number; data: any }) =>
       permissionTypeApi.update(id, data),
@@ -33,8 +30,6 @@ export const usePermissionTypeMutations = () => {
       toast.error(message);
     },
   });
-
-  // Delete mutation
   const deleteMutation = useMutation({
     mutationFn: (id: number) => permissionTypeApi.remove(id),
     onSuccess: () => {
@@ -46,8 +41,6 @@ export const usePermissionTypeMutations = () => {
       toast.error(message);
     },
   });
-
-  // Bulk delete mutation
   const bulkDeleteMutation = useMutation({
     mutationFn: (ids: number[]) => permissionTypeApi.removeMany(ids),
     onSuccess: (_, ids) => {

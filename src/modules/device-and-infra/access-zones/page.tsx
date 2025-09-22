@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useState } from 'react';
-import { Dialog } from '@/components/ui/dialog';
-import AccessZonesHeader from '@/modules/device-and-infra/access-zones/components/AccessZonesHeader';
-import AccessZonesList from '@/modules/device-and-infra/access-zones/components/AccessZonesList';
-import AccessZoneForm from '@/modules/device-and-infra/access-zones/components/AccessZoneForm';
-import { useAccessZones } from '@/modules/device-and-infra/access-zones/hooks/useAccessZones';
-import { AccessZone } from '@/services/device-and-infra/accessZonesApi';
-import { CustomPagination } from '@/components/common/dashboard/Pagination';
+import React, { useState } from "react";
+import { Dialog } from "@/components/ui/dialog";
+import AccessZonesHeader from "@/modules/device-and-infra/access-zones/components/AccessZonesHeader";
+import AccessZonesList from "@/modules/device-and-infra/access-zones/components/AccessZonesList";
+import AccessZoneForm from "@/modules/device-and-infra/access-zones/components/AccessZoneForm";
+import { useAccessZones } from "@/modules/device-and-infra/access-zones/hooks/useAccessZones";
+import { AccessZone } from "@/services/device-and-infra/accessZonesApi";
+import { CustomPagination } from "@/components/common/dashboard/Pagination";
 
 export default function AccessZonesPage() {
   const [showForm, setShowForm] = useState(false);
@@ -62,12 +62,11 @@ export default function AccessZonesPage() {
   };
 
   const handleEditZone = (zone: any) => {
-    setEditingZone(zone.raw); // Use the raw AccessZone data
+    setEditingZone(zone.raw);
     setShowForm(true);
   };
 
   const handleDeleteZone = (zoneId: number) => {
-    // TODO: Implement delete functionality
     console.log("Delete zone:", zoneId);
   };
 
@@ -88,12 +87,11 @@ export default function AccessZonesPage() {
         onTypeFilterChange={handleTypeFilterChange}
         onAddNew={handleAddZone}
         onDeleteSelected={() => {
-          // TODO: Implement bulk delete
           console.log("Delete selected zones:", selected);
           clearSelection();
         }}
       />
-      
+
       <AccessZonesList
         accessZones={accessZones}
         selected={selected}
@@ -113,10 +111,7 @@ export default function AccessZonesPage() {
         onPageSizeChange={setPageSize}
       />
       <Dialog open={showForm} onOpenChange={setShowForm}>
-        <AccessZoneForm
-          zone={editingZone}
-          onClose={handleCloseForm}
-        />
+        <AccessZoneForm zone={editingZone} onClose={handleCloseForm} />
       </Dialog>
     </div>
   );

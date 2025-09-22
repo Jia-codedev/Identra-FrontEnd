@@ -14,7 +14,6 @@ export default function useAttendanceMutations() {
     queryClient.invalidateQueries({ queryKey: ["attendance-summary"] });
   };
 
-  // Create attendance record
   const create = useMutation({
     mutationFn: attendanceApi.createAttendance,
     onSuccess: () => {
@@ -28,7 +27,6 @@ export default function useAttendanceMutations() {
     },
   });
 
-  // Update attendance record
   const update = useMutation({
     mutationFn: ({ id, data }: { id: number; data: any }) =>
       attendanceApi.updateAttendance(id, data),
@@ -43,7 +41,6 @@ export default function useAttendanceMutations() {
     },
   });
 
-  // Delete attendance record
   const remove = useMutation({
     mutationFn: attendanceApi.deleteAttendance,
     onSuccess: () => {
@@ -57,7 +54,6 @@ export default function useAttendanceMutations() {
     },
   });
 
-  // Bulk update attendance records
   const bulkUpdate = useMutation({
     mutationFn: attendanceApi.bulkUpdateAttendance,
     onSuccess: () => {
@@ -72,11 +68,9 @@ export default function useAttendanceMutations() {
     },
   });
 
-  // Export attendance data
   const exportData = useMutation({
     mutationFn: attendanceApi.exportAttendance,
     onSuccess: (response) => {
-      // Create download link for exported file
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
       link.href = url;

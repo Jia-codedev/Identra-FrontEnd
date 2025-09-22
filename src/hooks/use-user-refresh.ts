@@ -23,7 +23,6 @@ export const useUserRefresh = () => {
     }
   }, [refreshUser, isRefreshing]);
 
-  // Auto-refresh on mount if user is logged in
   useEffect(() => {
     if (isLoggedIn) {
       refreshUserData();
@@ -36,7 +35,6 @@ export const useUserRefresh = () => {
   };
 };
 
-// Hook for manual refresh with loading state
 export const useManualUserRefresh = () => {
   const refreshUser = useRefreshUser();
   const isRefreshing = useIsRefreshing();
@@ -59,7 +57,6 @@ export const useManualUserRefresh = () => {
   };
 };
 
-// Hook that refreshes user data on window focus (to keep data fresh)
 export const useUserRefreshOnFocus = (enabled: boolean = true) => {
   const refreshUser = useRefreshUser();
   const isLoggedIn = useIsLoggedIn();
@@ -69,7 +66,6 @@ export const useUserRefreshOnFocus = (enabled: boolean = true) => {
   const refreshOnFocus = useCallback(async () => {
     if (!enabled || !isLoggedIn || isRefreshing) return;
     
-    // Throttle refresh to once every 30 seconds
     const now = Date.now();
     if (now - lastRefreshTime.current < 30000) return;
     

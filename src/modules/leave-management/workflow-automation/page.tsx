@@ -28,10 +28,9 @@ export default function WorkflowAutomationPage() {
     initialLimit: 25,
   });
 
-  // Update filters when search term changes
   useEffect(() => {
     handleFiltersChange({ search: searchTerm });
-  }, [searchTerm]); // Remove handleFiltersChange from dependencies
+  }, [searchTerm]); 
 
   const totalPages = Math.ceil(total / limit);
 
@@ -40,32 +39,26 @@ export default function WorkflowAutomationPage() {
   };
 
   const handleEdit = (workflow: any) => {
-    // TODO: Implement edit workflow functionality
     console.log(t('leaveManagement.workflowAutomation.actions.edit') || "Edit workflow:", workflow);
   };
 
   const handleDelete = (id: number) => {
-    // TODO: Implement delete workflow functionality
     console.log(t('leaveManagement.workflowAutomation.actions.delete') || "Delete workflow:", id);
   };
 
   const handleToggleStatus = (id: number, status: 'ACTIVE' | 'INACTIVE') => {
-    // TODO: Implement toggle workflow status functionality
     console.log(t('leaveManagement.workflowAutomation.actions.activate') || "Toggle workflow status:", id, status);
   };
 
   const handleExport = () => {
-    // TODO: Implement export functionality
     console.log(t('common.export') || "Export workflows");
   };
 
   const handleImport = () => {
-    // TODO: Implement import functionality
     console.log(t('common.import') || "Import workflows");
   };
 
   const handleSettings = () => {
-    // TODO: Implement settings functionality
     console.log(t('common.settings') || "Open workflow settings");
   };
 

@@ -15,21 +15,18 @@ export default function useWorkflow(params: UseWorkflowParams = {}) {
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
   const [filters, setFilters] = useState<any>({});
 
-  // Get workflow types with pagination
   const workflowTypesQuery = useQuery({
     queryKey: ["workflow-types", { page, limit, ...filters }],
     queryFn: () => workflowTypesApi.getAllWorkflowTypes(),
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 5 * 60 * 1000,
   });
 
-  // Get workflow steps
   const stepsQuery = useQuery({
     queryKey: ["workflow-steps"],
     queryFn: () => workflowTypesApi.getAllWorkflowSteps(),
-    staleTime: 10 * 60 * 1000, // 10 minutes
+    staleTime: 10 * 60 * 1000,
   });
 
-  // Get workflow requests
   const requestsQuery = useQuery({
     queryKey: ["workflow-requests", { page, limit, ...filters }],
     queryFn: () => workflowTypesApi.getAllWorkflowRequests(),
@@ -47,12 +44,12 @@ export default function useWorkflow(params: UseWorkflowParams = {}) {
 
   const handleLimitChange = useCallback((newLimit: number) => {
     setLimit(newLimit);
-    setPage(1); // Reset to first page when changing limit
+    setPage(1);
   }, []);
 
   const handleFiltersChange = useCallback((newFilters: any) => {
     setFilters(newFilters);
-    setPage(1); // Reset to first page when changing filters
+    setPage(1);
   }, []);
 
   const handleSelectItem = useCallback((id: number) => {
@@ -82,26 +79,21 @@ export default function useWorkflow(params: UseWorkflowParams = {}) {
   }, [workflowTypesQuery, stepsQuery, requestsQuery]);
 
   return {
-    // Data
     workflowTypes,
     steps,
     requests,
     total,
     
-    // Pagination
     page,
     limit,
     
-    // Selection
     selectedItems,
     
-    // Loading states
     isLoading: workflowTypesQuery.isLoading || stepsQuery.isLoading,
     isFetching: workflowTypesQuery.isFetching || stepsQuery.isFetching,
     isError: workflowTypesQuery.isError || stepsQuery.isError,
     error: workflowTypesQuery.error || stepsQuery.error,
     
-    // Actions
     handlePageChange,
     handleLimitChange,
     handleFiltersChange,
@@ -110,7 +102,6 @@ export default function useWorkflow(params: UseWorkflowParams = {}) {
     clearSelection,
     refresh,
     
-    // Computed values
     hasSelection: selectedItems.length > 0,
     isAllSelected: selectedItems.length === workflowTypes.length && workflowTypes.length > 0,
   };

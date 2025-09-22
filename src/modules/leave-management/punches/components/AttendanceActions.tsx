@@ -48,8 +48,6 @@ const AttendanceActions: React.FC<Props> = ({ attendance, onEdit, onRefresh }) =
         to_date: attendance.Ddate,
       });
       
-      // Display summary in a simple alert for now
-      // In a real app, you'd want to show this in a modal or separate view
       alert(`Attendance Summary:\n${JSON.stringify(summary.data, null, 2)}`);
     } catch (error: any) {
       toast.error(error?.message || t('leave-management.attendance.messages.summaryError') || 'Failed to get attendance summary');

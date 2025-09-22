@@ -27,7 +27,7 @@ interface AppThemeProviderProps {
 
 export function AppThemeProvider({ children }: AppThemeProviderProps) {
   const { theme, setTheme } = useTheme();
-  const [primaryColor, setPrimaryColorState] = useState('#3b82f6'); // Default blue
+  const [primaryColor, setPrimaryColorState] = useState('#3b82f6');
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
     setMounted(true);

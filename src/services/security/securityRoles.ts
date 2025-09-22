@@ -25,7 +25,6 @@ export interface SecUserRole {
   created_date?: string;
   last_updated_id?: number;
   last_updated_date?: string;
-  // Relations
   sec_roles?: SecRole;
   sec_users?: {
     user_id: number;
@@ -49,7 +48,6 @@ export interface CreateSecUserRoleRequest {
 }
 
 class SecurityRolesApi {
-  // Roles Management
   getRoles(
     { offset = 1, limit = 10, search = "" } = {} as {
       offset?: number;
@@ -86,7 +84,6 @@ class SecurityRolesApi {
     return apiClient.delete("/secRole/delete", { data: { ids } });
   }
 
-  // User Role Assignments
   getUserRoles(
     { offset = 1, limit = 10, user_id, role_id } = {} as {
       offset?: number;

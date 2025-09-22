@@ -40,7 +40,6 @@ class OrganizationsApi {
     return apiClient.get("/organization/structure");
   }
 
-  // Dropdown specific endpoint
   getOrganizationsForDropdown(params?: {
     offset?: number;
     limit?: number;

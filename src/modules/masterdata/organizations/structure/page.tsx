@@ -55,7 +55,6 @@ const OrganizationStructurePage: React.FC = () => {
     setLanguage(newLanguage);
   };
 
-  // Calculate statistics
   const getStatistics = () => {
     if (!organizationData?.data)
       return { totalOrgs: 0, maxDepth: 0, totalTypes: 0 };
@@ -87,8 +86,6 @@ const OrganizationStructurePage: React.FC = () => {
       totalTypes: organizationTypes.size,
     };
   };
-
-  // const statistics = getStatistics(); // Commented out as it's not used
 
   return (
     <div

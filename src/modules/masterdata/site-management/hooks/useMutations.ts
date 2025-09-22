@@ -33,9 +33,7 @@ export function useSiteMutations() {
     onSuccess: (data) => {
       if (!data) return;
       toast.success(t("toast.success.created"));
-      // Invalidate all `sites` queries so they refetch
       queryClient.invalidateQueries({ predicate: (query) => Array.isArray(query.queryKey) && query.queryKey[0] === "sites" });
-      // Also try to update any matching cached list (same search + pageSize) by prepending the new site
       const newSite = data.data;
       const queries = queryClient.getQueriesData({ predicate: (query: any) => Array.isArray(query.queryKey) && query.queryKey[0] === "sites" });
       queries.forEach(([queryKey, queryData]: any) => {
@@ -96,23 +94,19 @@ export function useSiteMutations() {
         const data = await sitesApi.updateSite(id, siteData);
         if (data.status !== 200) {
           const msg = data?.data?.message;
-          // Throw so onError receives it
           throw new Error(msg || t("toast.error.updating"));
         }
         onClose();
         let updatedSiteData = data?.data?.data || data?.data || undefined;
         return { data: updatedSiteData, onClose, search, pageSize };
       } catch (err: any) {
-        // Rethrow original Axios error so onError can inspect status/response
         throw err;
       }
     },
     onSuccess: (data) => {
       if (!data) return;
       toast.success(t("toast.success.updated"));
-      // Invalidate all `sites` queries so UI refetches
       queryClient.invalidateQueries({ predicate: (q: any) => Array.isArray(q.queryKey) && q.queryKey[0] === "sites" });
-      // Optimistically update any matching cached lists for the same search/pageSize
       const updatedSite = data.data;
       const cached = queryClient.getQueriesData({ predicate: (q: any) => Array.isArray(q.queryKey) && q.queryKey[0] === "sites" });
       cached.forEach(([queryKey, queryData]: any) => {

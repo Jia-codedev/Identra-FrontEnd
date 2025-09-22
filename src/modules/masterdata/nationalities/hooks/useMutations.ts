@@ -18,7 +18,6 @@ export function useNationalityMutations() {
                     return null;
                 }
                 onClose();
-                // Defensive: handle possible undefined structure
                 let updatedNationalityData = undefined;
                 if (data && data.data && data.data.data) {
                     updatedNationalityData = data.data.data;
@@ -53,11 +52,9 @@ export function useNationalityMutations() {
             if (!data) return;
             toast.success(t('toast.success.created'));
             console.log("Nationality created:", data);
-            // Update the cache for the current search and pageSize
             queryClient.setQueryData(["nationalities", data.search ?? "", data.pageSize ?? 5], (oldData: any) => {
                 if (!oldData || !data.data) return oldData;
                 if (oldData?.pages) {
-                    // Insert new nationality at the start of the first page
                     const firstPage = oldData.pages[0];
                     const newPage = {
                         ...firstPage,
@@ -85,7 +82,6 @@ export function useNationalityMutations() {
                     return null;
                 }
                 onClose();
-                // Defensive: handle possible undefined structure
                 let updatedNationalityData = undefined;
                 if (data && data.data && data.data.data) {
                     updatedNationalityData = data.data.data;
@@ -120,7 +116,6 @@ export function useNationalityMutations() {
             if (!data) return;
             toast.success(t('toast.success.updated'));
             console.log("Nationality updated:", data);
-            // Update the cache for the current search and pageSize
             queryClient.setQueryData(["nationalities", data.search ?? "", data.pageSize ?? 5], (oldData: any) => {
                 if (!oldData || !data.data) return oldData;
                 if (oldData?.pages) {
@@ -175,7 +170,6 @@ export function useNationalityMutations() {
             queryClient.invalidateQueries({ queryKey: ["nationalities"] });
         },
         onError: (error) => {
-            // keep a concise toast; details logged above in mutationFn
             toast.error(t('toast.error.deleting'));
         },
     });
@@ -211,7 +205,6 @@ export function useNationalityMutations() {
             queryClient.invalidateQueries({ queryKey: ["nationalities"] });
         },
         onError: (error) => {
-            // concise toast; details logged in mutationFn
             toast.error(t('toast.error.deletingMultiple'));
         },
     });

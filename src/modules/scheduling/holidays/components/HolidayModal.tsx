@@ -53,7 +53,6 @@ export const HolidayModal: React.FC<HolidayModalProps> = ({
   const { t } = useTranslations();
   const { isRTL } = useLanguage();
 
-  // Create dynamic schema based on language
   const holidaySchema = useMemo(
     () =>
       z
@@ -125,7 +124,6 @@ export const HolidayModal: React.FC<HolidayModalProps> = ({
   }, [isOpen, mode, holiday, form]);
 
   const onSubmit = (data: DynamicHolidayFormValues) => {
-    // Prepare the data with proper language handling
     const submittedName = isRTL
       ? data.holiday_arb || ""
       : data.holiday_eng || "";

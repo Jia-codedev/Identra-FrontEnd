@@ -71,7 +71,7 @@ export default function BuildingsPage() {
   };
 
   const handleEditBuilding = (building: any) => {
-    setEditingBuilding(building.raw); // Use the raw Building data
+    setEditingBuilding(building.raw);
     setShowForm(true);
   };
 

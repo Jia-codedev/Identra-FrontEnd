@@ -60,7 +60,6 @@ export default function EmployeeGroupsPage() {
     id?: number;
   }>({ open: false, type: null });
 
-  // --- Modal Handlers ---
   const handleAddEmployeeGroup = () => {
     setModalState({ isOpen: true, mode: "add", employeeGroup: null });
   };
@@ -100,7 +99,6 @@ export default function EmployeeGroupsPage() {
     }
   };
 
-  // --- Delete Handlers ---
   const handleDeleteEmployeeGroup = (id: number) => {
     setDeleteDialog({ open: true, type: "single", id });
   };

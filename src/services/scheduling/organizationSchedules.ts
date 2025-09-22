@@ -38,7 +38,6 @@ export interface OrganizationScheduleFilters {
 }
 
 class OrganizationSchedulesApi {
-  // Organization Schedules Management
   getOrganizationSchedules(
     { offset = 1, limit = 10, search = "" } = {} as {
       offset?: number;

@@ -28,11 +28,9 @@ export const LogoutConfirmation: React.FC<LogoutConfirmationProps> = ({
 
   const handleLogout = async () => {
     try {
-      // Call the logout service which handles cookie-based logout
       await logout();
     } catch (error) {
       console.error("Logout error:", error);
-      // Force logout even if request fails
       if (typeof window !== "undefined") {
         window.location.href = "/";
       }

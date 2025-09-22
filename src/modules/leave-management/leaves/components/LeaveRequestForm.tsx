@@ -45,7 +45,6 @@ const LeaveRequestForm: React.FC<Props> = ({ open, onSuccess, onCancel }) => {
   const [file, setFile] = useState<File | null>(null);
 
   useEffect(() => {
-    // Fetch leave types from backend
     const fetchLeaveTypes = async () => {
       try {
         const res = await employeeLeavesApi.getLeaveTypes();
@@ -67,8 +66,6 @@ const LeaveRequestForm: React.FC<Props> = ({ open, onSuccess, onCancel }) => {
       const formData = new FormData();
       formData.append("employee_id", String(userId ?? ""));
       formData.append("leave_type_id", String(leaveType ?? ""));
-      // No approver_id sent
-      // Combine date and time for from_date and to_date
       const formatDate = (date: Date | undefined) =>
         date
           ? `${date.getFullYear()}-${(date.getMonth() + 1)

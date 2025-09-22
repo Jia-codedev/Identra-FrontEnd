@@ -15,7 +15,6 @@ export default function useAttendance(params: UseAttendanceParams = {}) {
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
   const [filters, setFilters] = useState<any>({});
 
-  // Get employee event transactions with pagination
   const attendanceQuery = useQuery({
     queryKey: ["employeeEventTransactions", { page, limit, ...filters }],
     queryFn: () => employeeEventTransactionsApi.getAllEmployeeEventTransactions({ 
@@ -23,7 +22,7 @@ export default function useAttendance(params: UseAttendanceParams = {}) {
       offset: page, 
       ...filters 
     }),
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 5 * 60 * 1000, 
   });
 
   const data = attendanceQuery.data?.data || [];
@@ -35,12 +34,12 @@ export default function useAttendance(params: UseAttendanceParams = {}) {
 
   const handleLimitChange = useCallback((newLimit: number) => {
     setLimit(newLimit);
-    setPage(1); // Reset to first page when changing limit
+    setPage(1);
   }, []);
 
   const handleFiltersChange = useCallback((newFilters: any) => {
     setFilters(newFilters);
-    setPage(1); // Reset to first page when changing filters
+    setPage(1);
   }, []);
 
   const handleSelectItem = useCallback((id: number) => {
@@ -68,24 +67,19 @@ export default function useAttendance(params: UseAttendanceParams = {}) {
   }, [attendanceQuery]);
 
   return {
-    // Data
     data,
     total,
     
-    // Pagination
     page,
     limit,
     
-    // Selection
     selectedItems,
     
-    // Loading states
     isLoading: attendanceQuery.isLoading,
     isFetching: attendanceQuery.isFetching,
     isError: attendanceQuery.isError,
     error: attendanceQuery.error,
     
-    // Actions
     handlePageChange,
     handleLimitChange,
     handleFiltersChange,
@@ -94,7 +88,6 @@ export default function useAttendance(params: UseAttendanceParams = {}) {
     clearSelection,
     refresh,
     
-    // Computed values
     hasSelection: selectedItems.length > 0,
     isAllSelected: selectedItems.length === data.length && data.length > 0,
   };

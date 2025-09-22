@@ -9,7 +9,6 @@ export const useLeaveTypeMutations = () => {
   const queryClient = useQueryClient();
   const { t } = useTranslations();
 
-  // Create mutation
   const createMutation = useMutation({
     mutationFn: (data: any) => leaveTypeApi.create(data),
     onSuccess: () => {
@@ -21,8 +20,6 @@ export const useLeaveTypeMutations = () => {
       toast.error(message);
     },
   });
-
-  // Update mutation
   const updateMutation = useMutation({
     mutationFn: ({ id, data }: { id: number; data: any }) =>
       leaveTypeApi.update(id, data),
@@ -35,8 +32,6 @@ export const useLeaveTypeMutations = () => {
       toast.error(message);
     },
   });
-
-  // Delete mutation
   const deleteMutation = useMutation({
     mutationFn: (id: number) => leaveTypeApi.remove(id),
     onSuccess: () => {
@@ -48,8 +43,6 @@ export const useLeaveTypeMutations = () => {
       toast.error(message);
     },
   });
-
-  // Bulk delete mutation
   const bulkDeleteMutation = useMutation({
     mutationFn: (ids: number[]) => leaveTypeApi.removeMany(ids),
     onSuccess: (_, ids) => {

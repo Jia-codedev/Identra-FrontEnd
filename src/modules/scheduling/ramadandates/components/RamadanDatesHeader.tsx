@@ -40,7 +40,6 @@ const RamadanDatesHeader: React.FC<RamadanDatesHeaderProps> = ({
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 5 }, (_, i) => currentYear - 2 + i);
 
-  // Use a more reliable approach for months
   const getMonthName = (monthNum: number) => {
     try {
       return t(
@@ -62,7 +61,6 @@ const RamadanDatesHeader: React.FC<RamadanDatesHeaderProps> = ({
         }`
       );
     } catch {
-      // Fallback to English month names
       const monthNames = [
         "January",
         "February",

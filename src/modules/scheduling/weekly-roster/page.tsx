@@ -17,7 +17,6 @@ export default function WeeklyRosterPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingSchedule, setEditingSchedule] = useState<IGroupSchedule | null>(null);
 
-  // Use the weekly roster state hook
   const {
     weeklyRosters,
     selected,
@@ -36,7 +35,6 @@ export default function WeeklyRosterPage() {
     allChecked,
   } = useWeeklyRosterState();
 
-  // Fetch data using the custom hook with filters and pagination
   const {
     data: weeklySchedulesResp,
     isLoading,
@@ -47,7 +45,6 @@ export default function WeeklyRosterPage() {
   const weeklySchedules = weeklySchedulesResp?.data ?? [];
   const total = weeklySchedulesResp?.total ?? 0;
 
-  // Mutations for CRUD operations
   const {
     createMutation,
     updateMutation,
@@ -93,14 +90,12 @@ export default function WeeklyRosterPage() {
   const handleSave = async (data: ICreateGroupSchedule | IUpdateGroupSchedule) => {
     try {
       if (editingSchedule) {
-        // Update existing schedule
         await updateMutation.mutateAsync({
           id: editingSchedule.group_schedule_id!,
           data: data as IUpdateGroupSchedule
         });
         toast.success(t('common.updateSuccess'));
       } else {
-        // Create new schedule
         await createMutation.mutateAsync(data as ICreateGroupSchedule);
         toast.success(t('common.createSuccess'));
       }
@@ -150,13 +145,11 @@ export default function WeeklyRosterPage() {
         isLoading={isLoading || stateLoading}
         selectedItems={selected}
   onSelectionChange={(selectedIds: number[]) => {
-          // Update the selected state based on the new selection
           selectedIds.forEach(id => {
             if (!selected.includes(id)) {
               selectWeeklyRoster(id);
             }
           });
-          // Remove deselected items
           selected.forEach(id => {
             if (!selectedIds.includes(id)) {
               selectWeeklyRoster(id);

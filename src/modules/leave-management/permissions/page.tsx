@@ -63,7 +63,6 @@ export default function PermissionsPage() {
 
   const confirmDelete = async () => {
     try {
-      // Delete all selected permissions
       for (const permissionId of selected) {
         await mutations.remove.mutateAsync(permissionId);
       }

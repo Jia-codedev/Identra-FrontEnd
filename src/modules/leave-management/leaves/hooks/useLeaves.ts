@@ -44,10 +44,8 @@ export const useLeaves = () => {
   const hasNext = (data as any)?.hasNext ?? false;
   const pageCount = useMemo(() => {
     if (hasNext) {
-      // If there are more pages, calculate based on current page + 1
       return page + 1;
     } else {
-      // If no more pages, this is the last page
       return page;
     }
   }, [page, hasNext]);

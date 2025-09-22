@@ -22,7 +22,7 @@ export const useBiometricTerminals = () => {
       device_no: search 
     } : {}),
     ...(statusFilter !== undefined ? { device_status: statusFilter } : {}),
-    delete_flag: false, // Only show non-deleted biometric terminals
+    delete_flag: false,
   }), [page, pageSize, search, statusFilter]);
 
   const { data, isLoading, refetch } = useQuery({

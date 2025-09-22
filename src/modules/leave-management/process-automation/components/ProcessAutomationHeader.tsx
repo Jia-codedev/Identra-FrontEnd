@@ -8,7 +8,7 @@ import { useTranslations } from '@/hooks/use-translations';
 import { useLanguage } from '@/providers/language-provider';
 
 interface ProcessAutomationHeaderProps {
-  search: string; // Add search prop
+  search: string;
   onSearchChange: (value: string) => void;
   onAdd: () => void;
   selectedCount: number;

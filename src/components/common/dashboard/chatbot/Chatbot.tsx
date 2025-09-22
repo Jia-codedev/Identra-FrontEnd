@@ -22,7 +22,6 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { PermissionForm, LeaveForm, ManualPunchForm } from './ChatbotForms';
 import { useTranslations } from '@/hooks/use-translations';
 
-// Exportable ChatBot Interface
 export interface ChatBotConfig {
   position?: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left';
   primaryColor?: string;
@@ -67,8 +66,6 @@ export interface ChatAction {
 
 function Chatbot({ config = {} }: { config?: ChatBotConfig }) {
   const { t } = useTranslations();
-
-  // Bot state management
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -79,8 +76,6 @@ function Chatbot({ config = {} }: { config?: ChatBotConfig }) {
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-
-  // Default configuration
   const defaultConfig: ChatBotConfig = {
     position: 'bottom-right',
     botName: 'CHRONEXA BOT',
@@ -88,8 +83,6 @@ function Chatbot({ config = {} }: { config?: ChatBotConfig }) {
     userRole: 'employee',
     ...config
   };
-
-  // Default actions based on user role
   const defaultActions: ChatBotAction[] = [
     {
       id: 'apply-permission',
@@ -133,15 +126,11 @@ function Chatbot({ config = {} }: { config?: ChatBotConfig }) {
     }
   ];
 
-  // Filter actions based on user role
   const availableActions = defaultActions.filter(action =>
     !action.requiredRole || action.requiredRole.includes(defaultConfig.userRole || 'employee')
   );
-
-  // Initialize bot with welcome message
   useEffect(() => {
     if (isOpen && messages.length === 0) {
-      // Show welcome message and all available actions by default
       const welcomeMessage: ChatMessage = {
         id: `msg-${Date.now()}`,
         type: 'bot',
@@ -164,12 +153,10 @@ function Chatbot({ config = {} }: { config?: ChatBotConfig }) {
     }
   }, [isOpen, messages.length, defaultConfig.welcomeMessage, t, availableActions]);
 
-  // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // Handle sending messages
   const handleSendMessage = async () => {
     if (!inputValue.trim()) return;
 
@@ -184,7 +171,6 @@ function Chatbot({ config = {} }: { config?: ChatBotConfig }) {
     setInputValue('');
     setIsTyping(true);
 
-    // Simulate bot response
     setTimeout(() => {
       const botResponse = generateBotResponse(inputValue);
       setMessages(prev => [...prev, botResponse]);
@@ -192,7 +178,6 @@ function Chatbot({ config = {} }: { config?: ChatBotConfig }) {
     }, 1000);
   };
 
-  // Generate bot response based on user input
   const generateBotResponse = (userInput: string): ChatMessage => {
     const input = userInput.toLowerCase();
 
@@ -244,8 +229,6 @@ function Chatbot({ config = {} }: { config?: ChatBotConfig }) {
       actions
     };
   };
-
-  // Handle action clicks
   const handleActionClick = (actionId: string) => {
     setCurrentAction(actionId);
 
@@ -264,12 +247,10 @@ function Chatbot({ config = {} }: { config?: ChatBotConfig }) {
       };
       setMessages(prev => [...prev, actionsMessage]);
     } else {
-      // Handle specific actions
       handleSpecificAction(actionId);
     }
   };
 
-  // Handle specific actions
   const handleSpecificAction = (actionId: string) => {
     let response = '';
 
@@ -307,7 +288,6 @@ function Chatbot({ config = {} }: { config?: ChatBotConfig }) {
     setMessages(prev => [...prev, actionMessage]);
   };
 
-  // Handle form submissions
   const handleFormSubmit = (formData: any) => {
     const submissionMessage: ChatMessage = {
       id: `msg-${Date.now()}`,
@@ -320,9 +300,7 @@ function Chatbot({ config = {} }: { config?: ChatBotConfig }) {
     setMessages(prev => [...prev, submissionMessage]);
     setActiveForm(null);
 
-    // Call external API if provided
     if (config?.apiEndpoints?.submitRequest) {
-      // Handle API submission here
       console.log('Submitting to API:', formData);
     }
   };
@@ -338,7 +316,6 @@ function Chatbot({ config = {} }: { config?: ChatBotConfig }) {
     setMessages(prev => [...prev, cancelMessage]);
   };
 
-  // Chat position styles
   const getButtonPositionStyles = () => {
     const base = 'fixed z-40';
     switch (defaultConfig.position) {
@@ -354,16 +331,16 @@ function Chatbot({ config = {} }: { config?: ChatBotConfig }) {
   };
 
   const getChatWindowPositionStyles = () => {
-    const base = 'fixed z-50'; // Lower z-index than button
+    const base = 'fixed z-50'; 
     switch (defaultConfig.position) {
       case 'bottom-left':
-        return `${base} bottom-4 left-4`; // Position beside button
+        return `${base} bottom-4 left-4`; 
       case 'top-right':
-        return `${base} top-4 right-4`; // Position beside button  
+        return `${base} top-4 right-4`; 
       case 'top-left':
-        return `${base} top-4 left-4`; // Position beside button
+        return `${base} top-4 left-4`; 
       default:
-        return `${base} bottom-4 right-4`; // Position beside button (default: bottom-right)
+        return `${base} bottom-4 right-4`;
     }
   };
 

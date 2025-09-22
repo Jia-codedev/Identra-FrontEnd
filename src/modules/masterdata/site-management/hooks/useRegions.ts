@@ -24,7 +24,7 @@ export const useRegions = () => {
       queryFn: ({ pageParam = 1 }) =>
         regionsApi
           .getSites({
-            offset: pageParam - 1, // Ensure zero-based offset for proper pagination
+            offset: pageParam - 1,
             limit: state.pageSize,
             search: state.search,
           })
@@ -35,13 +35,12 @@ export const useRegions = () => {
           Array.isArray(lastPage.data) &&
           lastPage.data.length === state.pageSize
         ) {
-          return allPages.length + 1; // Increment by 1 for proper pagination
+          return allPages.length + 1;
         }
         return undefined;
       },
       initialPageParam: 1,
     });
-  // Only show the current page's data
   const regions = useMemo(() => {
     if (data && data.pages && data.pages[state.page - 1]) {
       return data.pages[state.page - 1].data || [];
@@ -49,7 +48,6 @@ export const useRegions = () => {
     return [];
   }, [data, state.page]);
 
-  // Total pages: if the API returns total, use it; else, fallback to loaded pages
   const total = data?.pages?.[0]?.total ?? 0;
   const pageCount =
     total > 0 ? Math.ceil(total / state.pageSize) : data?.pages?.length || 1;
@@ -61,7 +59,6 @@ export const useRegions = () => {
     allIds.length > 0 &&
     allIds.every((id: number) => state.selected.includes(id));
 
-  // Stable debounce for search
   const debouncedRefetch = useMemo(
     () => lodash.debounce(refetch, 500),
     [refetch]
@@ -85,7 +82,6 @@ export const useRegions = () => {
   const setPage = useCallback(
     async (page: number) => {
       if (page >= 1 && page <= pageCount) {
-        // Always try to fetch the next page if not loaded
         if (data && data.pages && !data.pages[page - 1] && hasNextPage) {
           await fetchNextPage();
         }
@@ -121,7 +117,6 @@ export const useRegions = () => {
   }, []);
 
   return {
-    // State
     regions,
     allRegions: state.sites,
     selected: state.selected,
@@ -135,7 +130,6 @@ export const useRegions = () => {
     allChecked,
     isLoading,
     refetch,
-    // Actions
     setSearch,
     setPage,
     setPageSize,

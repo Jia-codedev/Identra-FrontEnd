@@ -32,12 +32,10 @@ const chartConfig = {
   leaves: {
     label: "Leaves taken",
     color: "var(--primary)",
-    // color: "var(--chart-leave)",
   },
   absent: {
     label: "Leaves absent",
     color: "var(--primary)",
-    // color: "var(--chart-absent)",
   },
 } satisfies ChartConfig
 

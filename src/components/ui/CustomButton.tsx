@@ -31,7 +31,6 @@ type ButtonProps = {
   disabled?: boolean;
 };
 
-// eslint-disable-next-line react/display-name
 const CustomButton = React.forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
   const { className, width, height, variant, borderRadius, btnText, btnIcon, onClick, disabled, ...rest } = props;
   const classes = cn([

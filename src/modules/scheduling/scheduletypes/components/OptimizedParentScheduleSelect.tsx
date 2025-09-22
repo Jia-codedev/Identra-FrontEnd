@@ -42,8 +42,8 @@ interface OptimizedParentScheduleSelectProps {
   disabled?: boolean;
   error?: string;
   organizationId?: number;
-  excludeScheduleId?: number; // Exclude current schedule when editing
-  refreshTrigger?: number; // Add a prop to trigger refresh when needed
+  excludeScheduleId?: number; 
+  refreshTrigger?: number;
 }
 
 export const OptimizedParentScheduleSelect: React.FC<OptimizedParentScheduleSelectProps> = ({
@@ -54,7 +54,7 @@ export const OptimizedParentScheduleSelect: React.FC<OptimizedParentScheduleSele
   error,
   organizationId,
   excludeScheduleId,
-  refreshTrigger, // Add refreshTrigger prop
+  refreshTrigger, 
 }) => {
   const { t } = useTranslations();
   const { isRTL } = useLanguage();
@@ -62,7 +62,6 @@ export const OptimizedParentScheduleSelect: React.FC<OptimizedParentScheduleSele
   const [search, setSearch] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
 
-  // Debounce search to avoid too many API calls
   const debouncedSetSearch = useMemo(
     () => debounce((searchValue: string) => {
       setDebouncedSearch(searchValue);
@@ -76,42 +75,35 @@ export const OptimizedParentScheduleSelect: React.FC<OptimizedParentScheduleSele
       debouncedSetSearch.cancel();
     };
   }, [search, debouncedSetSearch]);
-
-  // Fetch parent schedules with search and organization filter
   const { data: schedulesData, isLoading, error: queryError } = useQuery({
     queryKey: ['parent-schedules-search', debouncedSearch, organizationId, refreshTrigger],
     queryFn: () => schedulesApi.getSchedulesForDropdown({
       status_flag: true,
       organization_id: organizationId,
     }),
-    enabled: true, // Always enabled to allow initial data load
-    staleTime: 10 * 1000, // Very short cache - 10 seconds
-    refetchOnMount: true, // Always refetch when component mounts
-    refetchOnWindowFocus: false, // Don't refetch on window focus to avoid too many requests
+    enabled: true,
+    staleTime: 10 * 1000,
+    refetchOnMount: true,
+    refetchOnWindowFocus: false, 
   });
 
   let schedules: Schedule[] = schedulesData?.data?.data || [];
   const [selectedFallback, setSelectedFallback] = useState<Schedule | undefined>(undefined);
   
-  // Filter schedules based on search and exclude current schedule
   if (debouncedSearch) {
     schedules = schedules.filter((schedule: any) => 
       schedule.schedule_code?.toLowerCase().includes(debouncedSearch.toLowerCase())
     );
   }
   
-  // Exclude current schedule when editing
   if (excludeScheduleId) {
     schedules = schedules.filter((schedule: any) => schedule.schedule_id !== excludeScheduleId);
   }
   
-  // Limit results for performance
   schedules = schedules.slice(0, 50);
 
-  // Find selected schedule
   const selectedSchedule = schedules.find(sch => sch.schedule_id === value);
 
-  // If a value exists but it's not in the current list (due to filters/limits), fetch it by ID
   useEffect(() => {
     const loadSelectedIfMissing = async () => {
       if (value && !selectedSchedule) {
@@ -120,21 +112,18 @@ export const OptimizedParentScheduleSelect: React.FC<OptimizedParentScheduleSele
           const sch: Schedule | undefined = res?.data?.data;
           if (sch) setSelectedFallback(sch);
         } catch (_) {
-          // ignore
         }
       } else if (!value) {
         setSelectedFallback(undefined);
       }
     };
     loadSelectedIfMissing();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value, selectedSchedule]);
 
   const effectiveSelected = selectedSchedule ?? selectedFallback;
 
   const handleSelect = (schId: string) => {
     const id = schId === 'none' ? undefined : parseInt(schId, 10);
-    // Make sure we only pass valid numbers or undefined
     if (schId === 'none' || isNaN(id!)) {
       onValueChange(undefined);
     } else {

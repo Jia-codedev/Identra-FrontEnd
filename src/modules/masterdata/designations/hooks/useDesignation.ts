@@ -49,7 +49,6 @@ export const useDesignations = () => {
     initialPageParam: 1,
   });
 
-  // Only show the current page's data
   const designations = useMemo(() => {
     if (data && data.pages && data.pages[state.page - 1]) {
       return data.pages[state.page - 1].data || [];
@@ -57,7 +56,6 @@ export const useDesignations = () => {
     return [];
   }, [data, state.page]);
 
-  // Total pages
   const total = data?.pages?.[0]?.total ?? 0;
   const pageCount =
     total > 0
@@ -72,7 +70,6 @@ export const useDesignations = () => {
     allIds.length > 0 &&
     allIds.every((id: number) => state.selected.includes(id));
 
-  // Stable debounce for search
   const debouncedRefetch = useMemo(
     () => lodash.debounce(refetch, 500),
     [refetch]
@@ -132,7 +129,6 @@ export const useDesignations = () => {
   }, []);
 
   return {
-    // State
     designations,
     allDesignations: state.designations,
     selected: state.selected,
@@ -146,7 +142,6 @@ export const useDesignations = () => {
     allChecked,
     isLoading,
     refetch,
-    // Actions
     setSearch,
     setPage,
     setPageSize,

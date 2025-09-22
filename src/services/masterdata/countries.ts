@@ -19,14 +19,14 @@ class CountriesApi {
       limit?: number;
       name?: string;
       code?: string;
+      search?: string;
     }
   ) {
     return apiClient.get("/countries/all", {
       params: {
         offset,
         limit,
-        name,
-        code,
+        search,
       },
     });
   }

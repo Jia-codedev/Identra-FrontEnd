@@ -37,26 +37,19 @@ export class CookieUtils {
       cookieParts.push(`domain=${options.domain}`);
     }
     
-    // Use secure flag only in production and when requested
     if (options.secure !== false && isProduction) {
       cookieParts.push('secure');
     }
     
-    // Use lax for better IIS compatibility instead of strict
     const sameSite = options.sameSite || 'lax';
     cookieParts.push(`samesite=${sameSite}`);
     
-    // HttpOnly should be false for client-side access
     if (options.httpOnly === false) {
-      // Don't add httponly flag to allow JavaScript access
     }
     
     document.cookie = cookieParts.join('; ');
   }
 
-  /**
-   * Get a cookie value by name
-   */
   static getCookie(name: string): string | null {
     if (typeof window === 'undefined') return null;
     
@@ -93,20 +86,18 @@ export class CookieUtils {
     document.cookie = cookieParts.join('; ');
   }
 
-  /**
-   * Set authentication token with proper expiration
-   */
+
   static setAuthToken(token: string, rememberMe: boolean = false) {
     const expires = rememberMe
-      ? new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days
-      : new Date(Date.now() + 24 * 60 * 60 * 1000); // 1 day
+      ? new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+      : new Date(Date.now() + 24 * 60 * 60 * 1000); 
     
     this.setCookie('token', token, {
       expires,
       path: '/',
-      secure: false, // Will be set automatically based on environment
+      secure: false, 
       sameSite: 'lax',
-      httpOnly: false // Allow JavaScript access
+      httpOnly: false 
     });
   }
 
@@ -117,9 +108,6 @@ export class CookieUtils {
     this.removeCookie('token');
   }
 
-  /**
-   * Check if cookies are enabled in the browser
-   */
   static areCookiesEnabled(): boolean {
     if (typeof window === 'undefined') return false;
     
@@ -127,7 +115,6 @@ export class CookieUtils {
     document.cookie = `${testCookie}=test; path=/; samesite=lax`;
     const enabled = document.cookie.indexOf(testCookie) !== -1;
     
-    // Clean up test cookie
     if (enabled) {
       this.removeCookie(testCookie);
     }

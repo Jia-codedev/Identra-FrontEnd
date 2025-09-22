@@ -25,7 +25,7 @@ export const useBuildings = () => {
     ...(statusFilter !== undefined ? { building_status: statusFilter } : {}),
     ...(typeFilter ? { building_type: typeFilter } : {}),
     ...(cityFilter ? { city: cityFilter } : {}),
-    delete_flag: false, // Only show non-deleted buildings
+    delete_flag: false,
   }), [page, pageSize, search, statusFilter, typeFilter, cityFilter]);
 
   const { data, isLoading, refetch } = useQuery({

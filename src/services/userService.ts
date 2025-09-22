@@ -7,9 +7,7 @@ import { CookieUtils } from "@/utils/cookieUtils";
 class UserService {
   async restoreUserFromToken(): Promise<boolean> {
     try {
-      // Instead of checking for a token in JS, always try to fetch user data from backend
-      // The backend will use its own cookies for authentication
-      const response = await apiClient.get(`/secuser/me`); // You may need to implement this endpoint
+      const response = await apiClient.get(`/secuser/me`);
       if (response.status === 200 && response.data.success) {
         const userData = response.data.data;
         const employeeData = userData.employee_master;
@@ -48,8 +46,6 @@ class UserService {
         withCredentials: true 
       });
       
-      // The axios interceptor will handle 401 errors and automatic token refresh
-      // We don't need manual token handling here since we're using HttpOnly cookies
 
       if (response.status === 200 && response.data.success) {
         const userData = response.data.data;
@@ -67,7 +63,7 @@ class UserService {
           radius: employeeData?.radius || 0,
           email: employeeData?.email || "",
           isGeofence: employeeData?.geofence_flag || false,
-          role: currentUser.role, // Keep existing role
+          role: currentUser.role,
         };
 
         useUserStore.getState().setUser(updatedUser);
@@ -94,12 +90,10 @@ class UserService {
 
   async restoreUserFromSession(): Promise<void> {
     try {
-      // Check if token exists in localStorage or cookies
       let token = null;
       if (typeof window !== "undefined") {
         token = localStorage.getItem("token");
         
-        // If no token in localStorage, try cookies using utility
         if (!token) {
           token = CookieUtils.getCookie('token');
           if (token) {
@@ -112,7 +106,6 @@ class UserService {
         return;
       }
       
-      // Try to get user profile from backend using Bearer token
       const response = await authService.getProfile();
       
       if (response.status === 200 && response.data.user) {
@@ -121,7 +114,6 @@ class UserService {
       } else {
       }
     } catch (error) {
-      // Clear invalid tokens
       if (typeof window !== "undefined") {
         localStorage.removeItem("token");
         CookieUtils.removeAuthToken();
@@ -131,7 +123,6 @@ class UserService {
 
   clearUser(): void {
     useUserStore.getState().clearUser();
-    // Clear tokens from both localStorage and cookies
     if (typeof window !== "undefined") {
       localStorage.removeItem("token");
       localStorage.removeItem("refreshToken");

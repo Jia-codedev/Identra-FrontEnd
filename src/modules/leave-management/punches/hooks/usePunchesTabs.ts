@@ -45,7 +45,7 @@ export default function usePunchesTabs(params: UsePunchesTabsParams = {}) {
       return { employee_id: currentUserId };
     } else if (activeTab === "team-punches") {
       const teamMemberIds = teamMembersQuery.data?.map((emp: any) => emp.emp_no) || [];
-      return teamMemberIds.length > 0 ? { employee_ids: teamMemberIds } : { employee_id: -1 }; // -1 to return no results if no team members
+      return teamMemberIds.length > 0 ? { employee_ids: teamMemberIds } : { employee_id: -1 };
     }
     return {};
   }, [activeTab, currentUserId, teamMembersQuery.data]);
@@ -67,8 +67,8 @@ export default function usePunchesTabs(params: UsePunchesTabsParams = {}) {
 
   const handleTabChange = useCallback((tab: PunchesTabType) => {
     setActiveTab(tab);
-    setPage(1); // Reset to first page when changing tabs
-    setSelectedItems([]); // Clear selection
+    setPage(1);
+    setSelectedItems([]);
   }, []);
 
   const handlePageChange = useCallback((newPage: number) => {
@@ -77,12 +77,12 @@ export default function usePunchesTabs(params: UsePunchesTabsParams = {}) {
 
   const handleLimitChange = useCallback((newLimit: number) => {
     setLimit(newLimit);
-    setPage(1); // Reset to first page when changing limit
+    setPage(1);
   }, []);
 
   const handleFiltersChange = useCallback((newFilters: any) => {
     setFilters(newFilters);
-    setPage(1); // Reset to first page when changing filters
+    setPage(1);
   }, []);
 
   const handleSelectItem = useCallback((id: number) => {
@@ -113,29 +113,23 @@ export default function usePunchesTabs(params: UsePunchesTabsParams = {}) {
   }, [punchesQuery, teamMembersQuery, activeTab]);
 
   return {
-    // Tab state
     activeTab,
     handleTabChange,
     
-    // Data
     data,
     total,
     teamMembers: teamMembersQuery.data || [],
     
-    // Pagination
     page,
     limit,
     
-    // Selection
     selectedItems,
     
-    // Loading states
     isLoading: punchesQuery.isLoading || (activeTab === "team-punches" && teamMembersQuery.isLoading),
     isFetching: punchesQuery.isFetching || teamMembersQuery.isFetching,
     isError: punchesQuery.isError || teamMembersQuery.isError,
     error: punchesQuery.error || teamMembersQuery.error,
     
-    // Actions
     handlePageChange,
     handleLimitChange,
     handleFiltersChange,
@@ -143,12 +137,8 @@ export default function usePunchesTabs(params: UsePunchesTabsParams = {}) {
     handleSelectAll,
     clearSelection,
     refresh,
-    
-    // Computed values
     hasSelection: selectedItems.length > 0,
     isAllSelected: selectedItems.length === data.length && data.length > 0,
-    
-    // User info
     currentUserId,
   };
 }

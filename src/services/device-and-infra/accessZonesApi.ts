@@ -67,10 +67,9 @@ export interface CreateAccessZoneResponse {
 }
 
 class AccessZonesApi {
-  private baseUrl = "/access-zones"; // Backend endpoint when ready
+  private baseUrl = "/access-zones";
 
   async list(params: ListAccessZonesRequest = {}): Promise<AccessZonesListResponse> {
-    // Mock data for now - replace with actual API call when backend is ready
     const mockData: AccessZone[] = [
       {
         zone_id: 1,
@@ -122,7 +121,6 @@ class AccessZonesApi {
       }
     ];
 
-    // Apply filtering
     let filteredData = mockData.filter(zone => !zone.delete_flag);
     
     if (params.zone_name) {
@@ -139,7 +137,6 @@ class AccessZonesApi {
       filteredData = filteredData.filter(zone => zone.zone_type === params.zone_type);
     }
 
-    // Apply pagination
     const limit = params.limit || 10;
     const offset = params.offset || 0;
     const paginatedData = filteredData.slice(offset, offset + limit);
@@ -153,7 +150,6 @@ class AccessZonesApi {
   }
 
   async getById(id: number): Promise<AccessZoneResponse> {
-    // Mock implementation - replace with actual API call
     const mockZone: AccessZone = {
       zone_id: id,
       zone_name: "Mock Zone",
@@ -178,7 +174,6 @@ class AccessZonesApi {
   }
 
   async create(data: CreateAccessZoneRequest): Promise<CreateAccessZoneResponse> {
-    // Mock implementation - replace with actual API call
     const mockZone: AccessZone = {
       zone_id: Math.floor(Math.random() * 1000),
       zone_name: data.zone_name,
@@ -203,7 +198,6 @@ class AccessZonesApi {
   }
 
   async update(id: number, data: UpdateAccessZoneRequest): Promise<CreateAccessZoneResponse> {
-    // Mock implementation - replace with actual API call
     const mockZone: AccessZone = {
       zone_id: id,
       zone_name: data.zone_name || "Updated Zone",
@@ -228,7 +222,6 @@ class AccessZonesApi {
   }
 
   async delete(id: number): Promise<{ message: string }> {
-    // Mock implementation - replace with actual API call
     return {
       message: "Access zone deleted successfully"
     };

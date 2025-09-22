@@ -64,7 +64,7 @@ export const EmployeesTable: React.FC<EmployeesTableProps> = ({
     {
       key: "actions",
       header: t("common.actions"),
-      accessor: () => null, // Actions handled by GenericTable
+      accessor: () => null,
     },
   ];
 

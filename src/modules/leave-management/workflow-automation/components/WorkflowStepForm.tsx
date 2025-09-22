@@ -20,7 +20,6 @@ const WorkflowStepForm: React.FC<Props> = ({ workflowStep, workflowId, onClose }
   const { currentLocale } = useLanguage();
   const [workflows, setWorkflows] = useState<WorkflowType[]>([]);
 
-  // Helper function to get localized workflow name
   const getLocalizedName = (workflow: WorkflowType) => {
     if (currentLocale === 'ar') {
       return workflow.workflow_name_arb || workflow.workflow_name_eng || 'Unnamed';
@@ -40,7 +39,6 @@ const WorkflowStepForm: React.FC<Props> = ({ workflowStep, workflowId, onClose }
   const [error, setError] = useState("");
 
   useEffect(() => {
-    // Fetch workflow types for dropdown
     workflowTypesApi.getAllWorkflowTypes().then((res) => {
       const workflowTypes = Array.isArray(res?.data?.data) 
         ? res.data.data 

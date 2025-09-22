@@ -26,7 +26,6 @@ interface Props {
   onPageSizeChange: (size: number) => void;
 }
 
-// Helper functions
 const formatDateTime = (dt: string) => {
   if (!dt) return "-";
   try {
@@ -69,7 +68,6 @@ const PermissionsList: React.FC<Props> = ({
 }) => {
   const { t } = useTranslations();
 
-  // Table columns definition
   const columns: TableColumn<Permission>[] = [
     {
       key: "employee",

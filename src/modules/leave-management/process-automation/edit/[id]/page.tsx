@@ -35,7 +35,6 @@ export default function EditWorkflowPage() {
     let mounted = true;
     if (!id) return;
 
-    // load workflow
     workflowApi.getWorkflowById(id).then((res) => {
       const data = res?.data?.data || res?.data || {};
       if (!mounted) return;
@@ -46,12 +45,10 @@ export default function EditWorkflowPage() {
       setCategoryArb(data.workflow_category_arb || '');
     }).catch(() => {}).finally(() => {});
 
-    // load steps
     workflowStepsApi.getStepsByWorkflow(id).then((res) => {
       const data = res?.data?.data || res?.data || [];
       if (!mounted) return;
       const arr = Array.isArray(data) ? data : [];
-      // normalize to our step shape
       const normalized = arr.map((s: any, idx: number) => ({
         workflow_steps_id: s.workflow_steps_id,
         step_order: s.step_order || idx + 1,
@@ -63,7 +60,6 @@ export default function EditWorkflowPage() {
       setSteps(normalized.map((st, i) => ({ ...st, step_order: i + 1 })));
     }).catch(() => setSteps([]));
 
-    // load roles
     setRolesLoading(true);
     rolesApi.getRoles({ offset: 1, limit: 10 }).then((res) => {
       const data = (res?.data && res.data.data) || res?.data || [];
@@ -125,26 +121,21 @@ export default function EditWorkflowPage() {
     };
 
     try {
-      // Update workflow
       const payload = {
         workflow_code: code,
         workflow_name_eng: nameEng,
         workflow_name_arb: nameArb,
         workflow_category_eng: categoryEng,
         workflow_category_arb: categoryArb,
-        last_updated_id: 1, // TODO: replace with auth user id
+        last_updated_id: 1
       };
 
       await workflowApi.updateWorkflow(id, payload);
 
-      // Sync steps: existing -> edit, new (no workflow_steps_id) -> add, deleted -> delete
-      // First handle deletions
       for (const sid of deletedStepIds) {
         await workflowStepsApi.deleteStep(sid);
       }
 
-      // Then iterate current steps
-      // Strict per-step validation: every step must have a name and a role
       for (let i = 0; i < steps.length; i++) {
         const st = steps[i];
         const hasName = currentLocale === 'en' ? !!(st.step_eng && st.step_eng.trim()) : !!(st.step_arb && st.step_arb.trim());
@@ -177,7 +168,6 @@ export default function EditWorkflowPage() {
         if (st.workflow_steps_id) {
           await workflowStepsApi.editStep(st.workflow_steps_id, payloadStep);
         } else {
-          // created_id required for add
           await workflowStepsApi.addStep({ ...payloadStep, created_id: 1 });
         }
       }

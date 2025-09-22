@@ -2,7 +2,6 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { securityRolesApi, type SecRole, type CreateSecRoleRequest, type SecUserRole, type CreateSecUserRoleRequest } from "@/services/security";
 import { toast } from "sonner";
 
-// Roles Hooks
 export function useRoles(params: {
   offset?: number;
   limit?: number;
@@ -95,7 +94,6 @@ export function useDeleteMultipleRoles() {
   });
 }
 
-// User Role Assignment Hooks
 export function useUserRoles(params: {
   offset?: number;
   limit?: number;

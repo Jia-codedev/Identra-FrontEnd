@@ -14,7 +14,7 @@ class EmployeeApi {
       params: {
         offset,
         limit,
-        ...(search && { search }), // The backend expects 'search' parameter for name search
+        ...(search && { search }),
         ...(manager_flag !== null && { manager_flag: manager_flag.toString() }),
       },
     });
@@ -48,7 +48,6 @@ class EmployeeApi {
 
   addEmployee(data: Partial<IEmployee>) {
     return apiClient.post("/employee/add", data).catch((err) => {
-      // Attach request payload to error for easier debugging
       try {
         console.error("addEmployee payload:", data);
         console.error(
@@ -57,7 +56,6 @@ class EmployeeApi {
         );
       } catch {}
       
-      // Enhance error message for better user experience
       if (err?.response?.status === 409) {
         const errorMessage = err?.response?.data?.message || 'Duplicate entry found';
         const enhancedError = new Error(errorMessage);

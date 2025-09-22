@@ -16,7 +16,6 @@ export interface SecUser {
   created_date?: string;
   last_updated_id?: number;
   last_updated_date?: string;
-  // Relations
   employee_master?: {
     emp_no: string;
     firstname_eng: string;
@@ -37,7 +36,6 @@ export interface SecUserSession {
   session_status: string;
   created_date?: string;
   last_updated_date?: string;
-  // Relations
   sec_users?: SecUser;
 }
 
@@ -66,7 +64,6 @@ export interface SessionFilters {
 }
 
 class SecuritySessionsApi {
-  // Users Management
   getUsers(
     { offset = 1, limit = 10, search = "", is_active } = {} as {
       offset?: number;
@@ -117,7 +114,6 @@ class SecuritySessionsApi {
     return apiClient.delete(`/secUser/delete/${id}`);
   }
 
-  // Sessions Management
   getSessions(filters: SessionFilters = {}) {
     const { offset = 1, limit = 10, ...rest } = filters;
     return apiClient.get("/secUserSession/all", {
@@ -165,7 +161,6 @@ class SecuritySessionsApi {
     return apiClient.delete(`/secUserSession/delete/${id}`);
   }
 
-  // Session Statistics
   getSessionStats() {
     return apiClient.get("/secUserSession/stats");
   }

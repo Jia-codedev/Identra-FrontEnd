@@ -51,9 +51,7 @@ export const MonthlyRosterAddModal: React.FC<MonthlyRosterAddModalProps> = ({
       if (initialData.to_date) {
         try { setToDate(new Date(initialData.to_date)); } catch { setToDate(undefined); }
       }
-  // If editing, keep finalize_flag as provided
     } else {
-      // clear when modal closed or initialData removed
       setFormData({ employee_id: undefined, from_date: '', to_date: '', version_no: 1, finalize_flag: false });
       setFromDate(undefined);
       setToDate(undefined);

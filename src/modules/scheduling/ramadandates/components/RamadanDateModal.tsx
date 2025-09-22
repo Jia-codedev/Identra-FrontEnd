@@ -121,7 +121,6 @@ const RamadanDateModal: React.FC<RamadanDateModalProps> = ({
   }, [ramadanDate, form]);
 
   const handleSubmit = (data: RamadanFormData) => {
-    // Handle the language-specific name submission like the holiday modal
     const submittedName = isRTL
       ? data.ramadan_name_arb || ""
       : data.ramadan_name_eng || "";

@@ -83,8 +83,6 @@ export default function EmployeePage() {
   };
 
   const handleSaveEmployee = (data: IEmployee) => {
-    // The modal already handles the mutation internally
-    // This is just a success callback to close the modal and refresh data
     console.log("Employee saved successfully:", data);
     handleCloseModal();
   };

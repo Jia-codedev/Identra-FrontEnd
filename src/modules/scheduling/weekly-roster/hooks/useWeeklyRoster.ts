@@ -21,7 +21,7 @@ export const useWeeklyRoster = ({ page = 1, pageSize = 10, filters = {}, search 
       const groups = gsResp?.data ?? [];
       return { data: groups, total: gsResp?.total ?? 0, hasNext: gsResp?.hasNext ?? false };
     },
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
   });
 };

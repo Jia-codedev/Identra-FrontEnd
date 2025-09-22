@@ -40,8 +40,6 @@ export const SecondaryNav: React.FC<SecondaryNavProps> = ({
       {secondaryLinks.map((item: any, idx: number) => {
         const isActive = pathname === item.href;
         const key = item.href || item.label || `sub-link-${idx}`;
-        // Prefer translating via labelKey. If stored item lacks labelKey (older persisted data),
-        // try to find a matching item from the active menu to obtain its labelKey.
         let displayLabel: string = item.label;
         if (item.labelKey) {
           displayLabel = t(item.labelKey);

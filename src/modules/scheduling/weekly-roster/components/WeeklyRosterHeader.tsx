@@ -39,17 +39,14 @@ export const WeeklyRosterHeader: React.FC<WeeklyRosterHeaderProps> = ({
   const { t } = useTranslations();
   const { isRTL } = useLanguage();
 
-  // Employee Groups state
   const [employeeGroups, setEmployeeGroups] = useState<EmployeeGroup[]>([]);
   const [employeeGroupSearch, setEmployeeGroupSearch] = useState("");
   const [isEmployeeGroupOpen, setIsEmployeeGroupOpen] = useState(false);
   const [isLoadingGroups, setIsLoadingGroups] = useState(false);
 
-  // Calendar state
   const [startDateOpen, setStartDateOpen] = useState(false);
   const [endDateOpen, setEndDateOpen] = useState(false);
 
-  // Load employee groups
   const loadEmployeeGroups = async (searchTerm: string = "") => {
     try {
       setIsLoadingGroups(true);
@@ -64,12 +61,10 @@ export const WeeklyRosterHeader: React.FC<WeeklyRosterHeaderProps> = ({
     }
   };
 
-  // Load initial employee groups
   useEffect(() => {
     loadEmployeeGroups();
   }, []);
 
-  // Debounced search for employee groups
   useEffect(() => {
     const timer = setTimeout(() => {
       if (isEmployeeGroupOpen) {

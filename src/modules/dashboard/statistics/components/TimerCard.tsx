@@ -21,7 +21,7 @@ function TimerCard() {
         })
       );
     };
-    updateTime(); // Set immediately on mount
+    updateTime();
     const interval = setInterval(updateTime, 1000);
     return () => clearInterval(interval);
   }, []);

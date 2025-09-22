@@ -17,7 +17,6 @@ export interface CreateSecSubModuleRequest {
 }
 
 class SecuritySubModulesApi {
-  // Sub Modules Management
   getSubModules(
     { offset = 1, limit = 10, search = "" } = {} as {
       offset?: number;

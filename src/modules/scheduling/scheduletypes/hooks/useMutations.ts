@@ -27,11 +27,9 @@ export const useScheduleMutations = () => {
   const createSchedule = useMutation({
     mutationFn: (data: CreateScheduleRequest) => schedulesApi.addSchedule(data),
     onSuccess: (data, variables) => {
-      // Invalidate all schedule-related queries
       queryClient.invalidateQueries({ queryKey: ["schedules"] });
       queryClient.invalidateQueries({ queryKey: ["parent-schedules-search"] });
       queryClient.invalidateQueries({ queryKey: ["parentSchedules"] });
-      // Also refresh organization and location caches
       queryClient.invalidateQueries({ queryKey: ["organizations-search"] });
       queryClient.invalidateQueries({ queryKey: ["locations-search"] });
       toast.success(t("messages.success.scheduleCreated"));
@@ -47,11 +45,9 @@ export const useScheduleMutations = () => {
     mutationFn: ({ id, data }: { id: number; data: UpdateScheduleRequest }) =>
       schedulesApi.updateSchedule(id, data),
     onSuccess: (data, variables) => {
-      // Invalidate all schedule-related queries
       queryClient.invalidateQueries({ queryKey: ["schedules"] });
       queryClient.invalidateQueries({ queryKey: ["parent-schedules-search"] });
       queryClient.invalidateQueries({ queryKey: ["parentSchedules"] });
-      // Also refresh organization and location caches
       queryClient.invalidateQueries({ queryKey: ["organizations-search"] });
       queryClient.invalidateQueries({ queryKey: ["locations-search"] });
       toast.success(t("messages.success.scheduleUpdated"));
@@ -66,7 +62,6 @@ export const useScheduleMutations = () => {
   const deleteSchedule = useMutation({
     mutationFn: (id: number) => schedulesApi.deleteSchedule(id),
     onSuccess: () => {
-      // Invalidate all schedule-related queries
       queryClient.invalidateQueries({ queryKey: ["schedules"] });
       queryClient.invalidateQueries({ queryKey: ["parent-schedules-search"] });
       queryClient.invalidateQueries({ queryKey: ["parentSchedules"] });

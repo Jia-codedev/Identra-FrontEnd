@@ -38,39 +38,30 @@ export interface AttendanceListResponse {
 }
 
 const attendanceApi = {
-  // Get attendance records with pagination and filters
   getAllAttendance: (params: AttendanceFilter = {}) =>
     apiClient.get<AttendanceListResponse>('/dailyAttendance/all', { params }),
 
-  // Get attendance by ID
   getAttendanceById: (id: number) =>
     apiClient.get<AttendanceRecord>(`/dailyAttendance/${id}`),
 
-  // Get employee specific attendance
   getEmployeeAttendance: (employeeId: number, params: AttendanceFilter = {}) =>
     apiClient.get<AttendanceListResponse>(`/dailyAttendance/employee/${employeeId}`, { params }),
 
-  // Create new attendance record
   createAttendance: (data: Partial<AttendanceRecord>) =>
     apiClient.post<AttendanceRecord>('/dailyAttendance/add', data),
 
-  // Update attendance record
   updateAttendance: (id: number, data: Partial<AttendanceRecord>) =>
     apiClient.put<AttendanceRecord>(`/dailyAttendance/${id}`, data),
 
-  // Delete attendance record
   deleteAttendance: (id: number) =>
     apiClient.delete(`/dailyAttendance/${id}`),
 
-  // Bulk operations
   bulkUpdateAttendance: (records: Partial<AttendanceRecord>[]) =>
     apiClient.post('/dailyAttendance/bulk-update', { records }),
 
-  // Get attendance summary/statistics
   getAttendanceSummary: (params: { employee_id?: number; from_date?: string; to_date?: string }) =>
     apiClient.get('/dailyAttendance/summary', { params }),
 
-  // Export attendance data
   exportAttendance: (params: AttendanceFilter = {}) =>
     apiClient.get('/dailyAttendance/export', { 
       params,

@@ -16,7 +16,6 @@ export function useGradeMutations() {
                 return null;
             }
             onClose();
-            // Defensive: handle possible undefined structure
             let updatedGradeData = undefined;
             if (data && data.data && data.data.data) {
                 updatedGradeData = data.data.data;
@@ -31,11 +30,9 @@ export function useGradeMutations() {
             if (!data) return;
             toast.success(t('toast.success.created'));
             console.log("Grade created:", data);
-            // Update the cache for the current search and pageSize
             queryClient.setQueryData(["grades", data.search ?? "", data.pageSize ?? 5], (oldData: any) => {
                 if (!oldData || !data.data) return oldData;
                 if (oldData?.pages) {
-                    // Insert new grade at the start of the first page
                     const firstPage = oldData.pages[0];
                     const newPage = {
                         ...firstPage,
@@ -61,7 +58,6 @@ export function useGradeMutations() {
                 return null;
             }
             onClose();
-            // Defensive: handle possible undefined structure
             let updatedGradeData = undefined;
             if (data && data.data && data.data.data) {
                 updatedGradeData = data.data.data;
@@ -76,7 +72,6 @@ export function useGradeMutations() {
             if (!data) return;
             toast.success(t('toast.success.updated'));
             console.log("Grade updated:", data);
-            // Update the cache for the current search and pageSize
             queryClient.setQueryData(["grades", data.search ?? "", data.pageSize ?? 5], (oldData: any) => {
                 if (!oldData || !data.data) return oldData;
                 if (oldData?.pages) {

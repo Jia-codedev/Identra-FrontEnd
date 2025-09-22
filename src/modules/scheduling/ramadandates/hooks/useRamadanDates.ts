@@ -38,14 +38,12 @@ export const useRamadanDates = () => {
         .then((response) => response.data),
   });
 
-  // Filter and paginate data
   const { ramadanDates, pageCount } = useMemo(() => {
     let filteredData: IRamadanDate[] = [];
     
     if (data && data.success && Array.isArray(data.data)) {
       filteredData = data.data;
       
-      // Apply search filter
       if (state.search) {
         const searchLower = state.search.toLowerCase();
         filteredData = filteredData.filter(
@@ -57,7 +55,6 @@ export const useRamadanDates = () => {
       }
     }
 
-    // Calculate pagination
     const totalItems = filteredData.length;
     const totalPages = Math.ceil(totalItems / state.pageSize);
     const startIndex = (state.page - 1) * state.pageSize;

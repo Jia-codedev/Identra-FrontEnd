@@ -25,7 +25,6 @@ import {
     Target
 } from "lucide-react";
 
-// Mock data for announcements
 const mockAnnouncements: AnnouncementItem[] = [
     {
         id: "1",

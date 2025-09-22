@@ -106,7 +106,6 @@ export const useSocket = (options: UseSocketOptions = {}): UseSocketReturn => {
   );
 
   useEffect(() => {
-    // Set up event listeners
     const handleConnect = () => {
       setIsConnected(true);
       setIsConnecting(false);

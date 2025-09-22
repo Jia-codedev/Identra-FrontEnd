@@ -4,7 +4,6 @@ const path = require('path');
 const root = __dirname;
 const localesDir = path.join(root, 'locales');
 
-// Map file names to namespace keys expected by config
 const fileToNamespace = new Map([
   ['common.json', 'common'],
   ['auth.json', 'auth'],

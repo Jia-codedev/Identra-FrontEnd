@@ -22,7 +22,6 @@ export const EmployeeLoginStep: React.FC<EmployeeStepProps> = ({
     const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
     let password = "";
     
-    // Ensure at least one character from each required set
     const lowercase = "abcdefghijklmnopqrstuvwxyz";
     const uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     const numbers = "0123456789";
@@ -33,12 +32,10 @@ export const EmployeeLoginStep: React.FC<EmployeeStepProps> = ({
     password += numbers[Math.floor(Math.random() * numbers.length)];
     password += symbols[Math.floor(Math.random() * symbols.length)];
     
-    // Fill the rest with random characters
     for (let i = 4; i < length; i++) {
       password += charset[Math.floor(Math.random() * charset.length)];
     }
     
-    // Shuffle the password
     password = password.split('').sort(() => Math.random() - 0.5).join('');
     
     onInputChange("password", password);

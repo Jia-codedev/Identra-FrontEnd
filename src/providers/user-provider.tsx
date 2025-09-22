@@ -24,7 +24,7 @@ export function UserProvider({ children }: UserProviderProps) {
     initializeUser();
   }, []);
   if (!isInitialized) {
-    return <div>Loading...</div>; // or your loading component
+    return <div>Loading...</div>;
   }
 
   return <>{children}</>;

@@ -17,7 +17,6 @@ export function useOrganizationMutations() {
                 return null;
             }
             onClose();
-            // Defensive: handle possible undefined structure
             let updatedOrganizationData = undefined;
             if (data && data.data && data.data.data) {
                 updatedOrganizationData = data.data.data;
@@ -32,11 +31,9 @@ export function useOrganizationMutations() {
             if (!data) return;
             toast.success(t('toast.success.created'));
             console.log("Organization created:", data);
-            // Update the cache for the current search and pageSize
             queryClient.setQueryData(["organizations", data.search ?? "", data.pageSize ?? 5], (oldData: any) => {
                 if (!oldData || !data.data) return oldData;
                 if (oldData?.pages) {
-                    // Insert new organization at the start of the first page
                     const firstPage = oldData.pages[0];
                     const newPage = {
                         ...firstPage,
@@ -62,7 +59,6 @@ export function useOrganizationMutations() {
                 return null;
             }
             onClose();
-            // Defensive: handle possible undefined structure
             let updatedOrganizationData = undefined;
             if (data && data.data && data.data.data) {
                 updatedOrganizationData = data.data.data;
@@ -77,7 +73,6 @@ export function useOrganizationMutations() {
             if (!data) return;
             toast.success(t('toast.success.updated'));
             console.log("Organization updated:", data);
-            // Update the cache for the current search and pageSize
             queryClient.setQueryData(["organizations", data.search ?? "", data.pageSize ?? 5], (oldData: any) => {
                 if (!oldData || !data.data) return oldData;
                 if (oldData?.pages) {
@@ -103,12 +98,10 @@ export function useOrganizationMutations() {
     const deleteOrganizationMutation = useMutation({
         mutationFn: async (id: number) => {
             const response = await organizationsApi.deleteOrganization(id);
-            // If backend returns Conflict (409), surface the message and return null
             if (response?.status === 409) {
                 toast.error(response.data?.message || t('toast.error.deleting'));
                 return null;
             }
-            // For other non-success statuses, show generic error and return null
             if (response?.status !== 200) {
                 toast.error(response.data?.message || t('toast.error.deleting'));
                 return null;
@@ -116,7 +109,6 @@ export function useOrganizationMutations() {
             return response;
         },
         onSuccess: (data) => {
-            // If mutationFn returned null (conflict or handled error), do nothing
             if (!data) return;
             toast.success(t('toast.success.deleted'));
             queryClient.invalidateQueries({ queryKey: ["organizations"] });

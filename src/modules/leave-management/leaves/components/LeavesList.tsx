@@ -52,7 +52,6 @@ const LeavesList: React.FC<Props> = ({
 }) => {
   const { t } = useTranslations();
 
-  // Define table columns
   const columns: TableColumn<Leave>[] = [
     {
       key: "leave_type",

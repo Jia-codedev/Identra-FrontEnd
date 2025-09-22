@@ -13,7 +13,6 @@ export default function useWorkflowMutations() {
     queryClient.invalidateQueries({ queryKey: ["workflow-requests"] });
   };
 
-  // Workflow Type mutations
   const createWorkflowType = useMutation({
     mutationFn: workflowTypesApi.createWorkflowType,
     onSuccess: () => {
@@ -48,7 +47,6 @@ export default function useWorkflowMutations() {
     },
   });
 
-  // Workflow Step mutations
   const createWorkflowStep = useMutation({
     mutationFn: workflowTypesApi.createWorkflowStep,
     onSuccess: () => {
@@ -83,7 +81,6 @@ export default function useWorkflowMutations() {
     },
   });
 
-  // Workflow Request mutations
   const createWorkflowRequest = useMutation({
     mutationFn: workflowTypesApi.createWorkflowRequest,
     onSuccess: () => {
@@ -119,17 +116,14 @@ export default function useWorkflowMutations() {
   });
 
   return {
-    // Workflow Type mutations
     createWorkflowType,
     updateWorkflowType,
     deleteWorkflowType,
 
-    // Workflow Step mutations
     createWorkflowStep,
     updateWorkflowStep,
     deleteWorkflowStep,
 
-    // Workflow Request mutations
     createWorkflowRequest,
     updateWorkflowRequest,
     deleteWorkflowRequest,

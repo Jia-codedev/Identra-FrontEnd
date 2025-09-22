@@ -76,7 +76,6 @@ export default function RolesManagementPage() {
     },
   ];
 
-  // Helper functions for GenericTable
   const getRoleId = useCallback((role: SecRole): number => {
     return role.role_id;
   }, []);

@@ -61,7 +61,6 @@ export const OrganizationTypeModal: React.FC<OrganizationTypeModalProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Ensure org_type_level is a number before submitting
     const submissionData = {
       ...formData,
       org_type_level: Number(formData.org_type_level) || 1

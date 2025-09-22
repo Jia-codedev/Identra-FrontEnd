@@ -10,7 +10,6 @@ export interface ReportFilters {
 }
 
 class ReportsApi {
-  // Reports
   getFilteredReport(filters: ReportFilters = {}) {
     return apiClient.get("/report", { params: filters });
   }

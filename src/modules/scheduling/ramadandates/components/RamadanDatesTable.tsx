@@ -40,7 +40,6 @@ export const RamadanDatesTable: React.FC<RamadanDatesTableProps> = ({
 }) => {
   const { t } = useTranslations();
   const { currentLocale } = useLanguage();
-  // const isRTL = currentLocale === 'ar'; // Commented out as unused
 
   const formatDate = (dateString: string) => {
     try {

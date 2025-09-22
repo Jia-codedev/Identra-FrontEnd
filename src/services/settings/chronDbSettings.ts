@@ -26,7 +26,6 @@ export interface CreateChronDbSettingRequest {
 }
 
 class ChronDbSettingsApi {
-  // Database Settings Management
   getDbSettings(
     { offset = 1, limit = 10, search = "" } = {} as {
       offset?: number;

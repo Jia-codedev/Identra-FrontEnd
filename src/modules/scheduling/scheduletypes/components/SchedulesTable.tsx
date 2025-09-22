@@ -53,7 +53,6 @@ export const SchedulesTable: React.FC<SchedulesTableProps> = ({
 
   const formatWorkHours = (timeString?: string) => {
     if (!timeString) return '-';
-    // If it's already in HH:mm:ss format, just return HH:mm
     if (timeString.includes(':')) {
       const parts = timeString.split(':');
       return `${parts[0]}:${parts[1]}`;

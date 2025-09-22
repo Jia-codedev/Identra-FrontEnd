@@ -53,8 +53,6 @@ export const OptimizedLocationSelect: React.FC<OptimizedLocationSelectProps> = (
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
-
-  // Debounce search to avoid too many API calls
   const debouncedSetSearch = useMemo(
     () => debounce((searchValue: string) => {
       setDebouncedSearch(searchValue);
@@ -69,26 +67,23 @@ export const OptimizedLocationSelect: React.FC<OptimizedLocationSelectProps> = (
     };
   }, [search, debouncedSetSearch]);
 
-  // Fetch locations with search
   const { data: locationsData, isLoading, error: queryError } = useQuery({
     queryKey: ['locations-dropdown', debouncedSearch],
     queryFn: () => locationsApi.getLocationsForDropdown({
       name: debouncedSearch,
-      limit: 50, // Limit results for performance
+      limit: 50,
       offset: 0,
     }),
-    enabled: true, // Always enabled to allow initial data load
-    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+    enabled: true,
+    staleTime: 5 * 60 * 1000,
   });
 
   const locations: Location[] = locationsData?.data?.data || [];
 
-  // Find selected location
   const selectedLocation = locations.find(loc => loc.location_id === value);
 
   const handleSelect = (locId: string) => {
     const id = locId === 'none' ? undefined : parseInt(locId, 10);
-    // Make sure we only pass valid numbers or undefined
     if (locId === 'none' || isNaN(id!)) {
       onValueChange(undefined);
     } else {

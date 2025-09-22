@@ -33,7 +33,6 @@ export default function HolidaysPage() {
     pageSizeOptions,
     filters,
     allChecked,
-    // total, // Commented out as unused
     setSearch,
     setPage,
     setPageSize,
@@ -105,8 +104,6 @@ export default function HolidaysPage() {
     if (deleteDialog.type === "single" && deleteDialog.id !== undefined) {
       deleteHoliday(deleteDialog.id);
     } else if (deleteDialog.type === "bulk" && selected.length > 0) {
-      // Note: Bulk delete is not implemented in the API yet
-      // You can implement this when the API supports it
       selected.forEach(id => deleteHoliday(id));
     }
     setDeleteDialog({ open: false, type: null });

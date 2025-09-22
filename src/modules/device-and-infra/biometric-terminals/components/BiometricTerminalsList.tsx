@@ -43,11 +43,11 @@ export default function BiometricTerminalsList({
   const { isRTL } = useLanguage();
 
   const formatDate = (dateString: string) => {
-    if (!dateString) return '-';
+    if (!dateString) return "-";
     try {
       return new Date(dateString).toLocaleDateString();
     } catch {
-      return '-';
+      return "-";
     }
   };
 
@@ -86,15 +86,17 @@ export default function BiometricTerminalsList({
         pageSize={10}
         allChecked={allChecked}
         getItemId={(item: BiometricTerminal) => item.id}
-        getItemDisplayName={(item: BiometricTerminal) => `${item.device_name} (${item.device_no})`}
+        getItemDisplayName={(item: BiometricTerminal) =>
+          `${item.device_name} (${item.device_no})`
+        }
         onSelectItem={onSelectItem}
         onSelectAll={onSelectAll}
         onEditItem={onEditItem}
         onDeleteItem={onDeleteItem}
         noDataMessage={t("biometricTerminals.noTerminalsFound")}
         isLoading={isLoading}
-        onPageChange={() => {}} // No-op since CustomPagination handles this
-        onPageSizeChange={() => {}} // No-op since CustomPagination handles this
+        onPageChange={() => {}}
+        onPageSizeChange={() => {}}
         showActions={true}
       />
     </div>

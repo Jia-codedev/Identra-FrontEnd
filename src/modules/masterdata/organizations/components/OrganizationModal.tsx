@@ -58,7 +58,6 @@ export const OrganizationModal: React.FC<OrganizationModalProps> = ({
   const [errors, setErrors] = useState<Partial<Record<keyof OrganizationFormFields, string>>>({});
   const [dropdownsLoaded, setDropdownsLoaded] = useState(false);
 
-  // Set form data when organization changes or dropdowns are loaded
   useEffect(() => {
     if (organization && mode === 'edit' && (dropdownsLoaded || !isOpen)) {
       setFormData({

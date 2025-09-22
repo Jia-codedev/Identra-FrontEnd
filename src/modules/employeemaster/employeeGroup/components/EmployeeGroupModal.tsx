@@ -46,10 +46,9 @@ export const EmployeeGroupModal: React.FC<EmployeeGroupModalProps> = ({
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearching, setIsSearching] = useState(false);
   const [totalResults, setTotalResults] = useState(0);
-  const [displayLimit] = useState(10); // Show only 10 results at a time
+  const [displayLimit] = useState(10);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
 
-  // Use a form data type with string values for inputs to avoid controlled/uncontrolled issues
   const [formData, setFormData] = useState({
     employee_group_id: undefined as number | undefined,
     group_code: "",
@@ -62,13 +61,11 @@ export const EmployeeGroupModal: React.FC<EmployeeGroupModalProps> = ({
     reporting_person_id: "",
   });
 
-  // Define searchEmployees function
   const searchEmployees = async (query: string) => {
     const response = await employeeApi.searchEmployees(query);
     return response.data.data;
   };
 
-  // Move all hooks before any conditional logic
   const debouncedSearch = React.useMemo(
     () =>
       debounce(async (query: string) => {
@@ -77,10 +74,8 @@ export const EmployeeGroupModal: React.FC<EmployeeGroupModalProps> = ({
           try {
             const results = await searchEmployees(query);
             
-            // Ensure results is always an array
             const validResults = Array.isArray(results) ? results : [];
             setTotalResults(validResults.length);
-            // Limit the displayed results for better performance
             const limitedResults = validResults.slice(0, displayLimit);
             setSearchResults(limitedResults);
           } catch (error) {
@@ -125,16 +120,12 @@ export const EmployeeGroupModal: React.FC<EmployeeGroupModalProps> = ({
           : "",
       });
 
-      // If there's a reporting person ID, set up the search query for display
       if ((employeeGroup as any).reporting_person_id) {
-        // You might want to fetch the employee details to show the name
-        // For now, just show the ID
         setSearchQuery(
           `Employee ID: ${(employeeGroup as any).reporting_person_id}`
         );
       }
     } else {
-      // Reset form when not in edit mode or no employee group
       setSelectedEmployee(null);
       setSearchQuery("");
       setSearchResults([]);
@@ -149,7 +140,6 @@ export const EmployeeGroupModal: React.FC<EmployeeGroupModalProps> = ({
     };
   }, [debouncedSearch]);
 
-  // Define event handlers
   const handleChange = (field: string, value: any) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
@@ -162,12 +152,10 @@ export const EmployeeGroupModal: React.FC<EmployeeGroupModalProps> = ({
     }));
     setSearchQuery(`${employee.firstname_eng} ${employee.lastname_eng}`);
     setHighlightedIndex(-1);
-    // Hide dropdown by clearing search results
     setSearchResults([]);
     setTotalResults(0);
   };
 
-  // Handle keyboard navigation
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (!searchResults.length) return;
 
@@ -213,7 +201,6 @@ export const EmployeeGroupModal: React.FC<EmployeeGroupModalProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Convert form data to the expected IEmployeeGroup format
     const submissionData: IEmployeeGroup = {
       employee_group_id: formData.employee_group_id,
       group_code: formData.group_code,
@@ -244,7 +231,6 @@ export const EmployeeGroupModal: React.FC<EmployeeGroupModalProps> = ({
       group_end_date: "",
       reporting_person_id: "",
     });
-    // Reset search state
     setSelectedEmployee(null);
     setSearchQuery("");
     setSearchResults([]);
@@ -252,7 +238,6 @@ export const EmployeeGroupModal: React.FC<EmployeeGroupModalProps> = ({
     setIsSearching(false);
   };
 
-  // Conditional rendering after all hooks
   if (!isOpen) return null;
 
   return (
@@ -434,7 +419,7 @@ export const EmployeeGroupModal: React.FC<EmployeeGroupModalProps> = ({
                     value={searchQuery}
                     onChange={(e) => {
                       setSearchQuery(e.target.value);
-                      setHighlightedIndex(-1); // Reset highlight when typing
+                      setHighlightedIndex(-1); 
                       debouncedSearch(e.target.value);
                     }}
                     onKeyDown={handleKeyDown}

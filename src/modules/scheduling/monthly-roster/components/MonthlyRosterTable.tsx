@@ -83,7 +83,6 @@ export const MonthlyRosterTable: React.FC<MonthlyRosterTableProps> = ({
       },
     ];
 
-    // Add day columns
     const dayColumns: TableColumn<MonthlyRosterRow>[] = dayKeys.map((key, idx) => ({
       key,
       header: `${idx + 1}`,
@@ -119,14 +118,14 @@ export const MonthlyRosterTable: React.FC<MonthlyRosterTableProps> = ({
     <GenericTable
       data={data}
       columns={columns}
-      selected={[]} // No selection needed for this table
+      selected={[]}
       page={1}
       pageSize={data.length}
       allChecked={false}
       getItemId={(item) => item.schedule_roster_id}
       getItemDisplayName={(item) => item.employee_name || item.employee_name_arb || 'Unknown'}
-      onSelectItem={() => {}} // No selection
-      onSelectAll={() => {}} // No selection
+      onSelectItem={() => {}}
+      onSelectAll={() => {}}
       onEditItem={onEdit}
       onDeleteItem={(id) => {
         const row = data.find(r => r.schedule_roster_id === id);
@@ -135,8 +134,8 @@ export const MonthlyRosterTable: React.FC<MonthlyRosterTableProps> = ({
       actions={actions}
       noDataMessage={noDataMessage}
       isLoading={isLoading}
-      onPageChange={() => {}} // No pagination
-      onPageSizeChange={() => {}} // No pagination
+      onPageChange={() => {}}
+      onPageSizeChange={() => {}}
       showActions={true}
     />
   );

@@ -2,7 +2,6 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { securityPermissionsApi, type SecPrivilege, type CreateSecPrivilegeRequest, type SecRolePrivilege, type CreateSecRolePrivilegeRequest, type SecModule } from "@/services/security";
 import { toast } from "sonner";
 
-// Privileges Hooks
 export function usePrivileges(params: {
   offset?: number;
   limit?: number;
@@ -96,7 +95,6 @@ export function useDeleteMultiplePrivileges() {
   });
 }
 
-// Role-Privilege Assignment Hooks
 export function useRolePrivileges(params: {
   offset?: number;
   limit?: number;
@@ -166,7 +164,6 @@ export function useDeleteRolePrivilege() {
   });
 }
 
-// Modules Hooks
 export function useModules(params: {
   offset?: number;
   limit?: number;

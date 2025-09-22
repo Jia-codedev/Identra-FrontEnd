@@ -59,7 +59,6 @@ export default function PermissionTypesPage() {
   const [showDialog, setShowDialog] = useState(false);
   const [editingItem, setEditingItem] = useState<PermissionType | null>(null);
 
-  // Delete dialog state
   const [deleteDialog, setDeleteDialog] = useState<{
     open: boolean;
     type: "single" | "bulk" | null;
@@ -87,7 +86,7 @@ export default function PermissionTypesPage() {
       mutations.delete.mutateAsync(deleteDialog.id);
     } else if (deleteDialog.type === "bulk" && selected.length > 0) {
       mutations.bulkDelete.mutateAsync(selected);
-      selectAll(); // Clear selection after successful delete
+      selectAll();
     }
     setDeleteDialog({ open: false, type: null });
   };

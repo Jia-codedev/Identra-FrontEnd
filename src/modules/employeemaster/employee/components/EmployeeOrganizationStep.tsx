@@ -21,7 +21,6 @@ export const EmployeeOrganizationStep: React.FC<EmployeeStepProps> = ({
   const [isLoadingManagers, setIsLoadingManagers] = useState(false);
   const [managerSearchTerm, setManagerSearchTerm] = useState("");
 
-  // Load managers based on search term
   const loadManagers = useCallback(async (searchTerm: string) => {
     if (!searchTerm.trim() || searchTerm.length < 2) {
       setManagers([]);
@@ -31,7 +30,6 @@ export const EmployeeOrganizationStep: React.FC<EmployeeStepProps> = ({
     setIsLoadingManagers(true);
     
     try {
-      // Use the getEmployees method with manager_flag filter and name search
       const response = await employeeApi.getEmployees({
         offset: 1,
         limit: 20,
@@ -40,7 +38,6 @@ export const EmployeeOrganizationStep: React.FC<EmployeeStepProps> = ({
       });
       
       if (response.data?.success && response.data.data && Array.isArray(response.data.data)) {
-        // Format the manager data
         const managerList = response.data.data.map((manager: any) => ({
           label: `${manager.firstname_eng} ${manager.lastname_eng} (${manager.emp_no})`,
           value: manager.employee_id,
@@ -58,11 +55,8 @@ export const EmployeeOrganizationStep: React.FC<EmployeeStepProps> = ({
     }
   }, []);
 
-  // Load current manager if in edit mode
   useEffect(() => {
     if (formData.manager_id && managers.length === 0) {
-      // If we have a manager_id but no managers loaded, we need to find the current manager
-      // Since we can't search by ID, we'll load it by calling the employees endpoint
       const loadCurrentManager = async () => {
         try {
           const response = await employeeApi.getEmployeeById(formData.manager_id!);
@@ -81,11 +75,10 @@ export const EmployeeOrganizationStep: React.FC<EmployeeStepProps> = ({
     }
   }, [formData.manager_id, managers.length]);
 
-  // Load managers when search term changes
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       loadManagers(managerSearchTerm);
-    }, 300); // Debounce for 300ms
+    }, 300); 
 
     return () => clearTimeout(timeoutId);
   }, [managerSearchTerm, loadManagers]);

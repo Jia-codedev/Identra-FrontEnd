@@ -29,7 +29,6 @@ export interface SecRolePrivilege {
   created_date?: string;
   last_updated_id?: number;
   last_updated_date?: string;
-  // Relations
   sec_roles?: {
     role_id: number;
     role_name: string;
@@ -56,7 +55,6 @@ export interface SecModule {
 }
 
 class SecurityPermissionsApi {
-  // Privileges Management
   getPrivileges(
     { offset = 1, limit = 10, search = "", module_name = "" } = {} as {
       offset?: number;
@@ -99,7 +97,6 @@ class SecurityPermissionsApi {
     return apiClient.delete("/secPrivilege/delete", { data: { ids } });
   }
 
-  // Role-Privilege Assignments
   getRolePrivileges(
     { offset = 1, limit = 10, role_id, priv_id } = {} as {
       offset?: number;
@@ -129,7 +126,6 @@ class SecurityPermissionsApi {
     return apiClient.delete(`/secRolePrivilege/delete/${id}`);
   }
 
-  // Modules Management
   getModules(
     { offset = 1, limit = 10, search = "" } = {} as {
       offset?: number;

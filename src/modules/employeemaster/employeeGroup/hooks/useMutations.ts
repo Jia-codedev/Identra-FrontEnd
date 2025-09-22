@@ -8,7 +8,6 @@ export function useEmployeeGroupMutations() {
   const queryClient = useQueryClient();
   const { t } = useTranslations();
 
-  // Create Employee Group
   const createEmployeeGroupMutation = useMutation({
     mutationFn: async ({
       employeeGroupData,
@@ -62,7 +61,6 @@ export function useEmployeeGroupMutations() {
     },
   });
 
-  // Update Employee Group
   const updateEmployeeGroupMutation = useMutation({
     mutationFn: async ({
       id,
@@ -127,7 +125,6 @@ export function useEmployeeGroupMutations() {
     },
   });
 
-  // Delete Single Employee Group
   const deleteEmployeeGroupMutation = useMutation({
     mutationFn: async (id: number) => {
       if (typeof id !== "number" || isNaN(id)) {
@@ -154,7 +151,6 @@ export function useEmployeeGroupMutations() {
         resData,
         error,
       });
-      // Surface server-provided message when available
       const serverMessage = resData?.message || resData?.error || null;
       if (serverMessage) {
         toast.error(serverMessage);
@@ -164,7 +160,6 @@ export function useEmployeeGroupMutations() {
     },
   });
 
-  // Delete Multiple Employee Groups
   const deleteEmployeeGroupsMutation = useMutation({
     mutationFn: async (ids: number[]) => {
       const data = await employeeGroupApi.deleteEmployeeGroups(ids);

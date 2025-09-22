@@ -14,7 +14,6 @@ export interface CreateSecPrivilegeGroupRequest {
 }
 
 class SecurityPrivilegeGroupsApi {
-  // Privilege Groups Management
   getPrivilegeGroups(
     { offset = 1, limit = 10, search = "" } = {} as {
       offset?: number;

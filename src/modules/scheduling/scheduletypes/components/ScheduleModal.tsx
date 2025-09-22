@@ -82,9 +82,7 @@ const scheduleSchema = z.object({
 
 type ScheduleFormData = z.infer<typeof scheduleSchema>;
 
-// Custom transform function for form data
 const transformFormData = (data: any): ScheduleFormData => {
-  // Helper function to safely convert values
   const safeTransform = (value: any, fieldName: string) => {
     if (
       value === null ||
@@ -95,18 +93,14 @@ const transformFormData = (data: any): ScheduleFormData => {
       return undefined;
     }
 
-    // If it's already a number, return it
     if (typeof value === "number") {
       return value;
     }
 
-    // If it's a string, try to parse it
     if (typeof value === "string") {
       const parsed = parseInt(value, 10);
       return isNaN(parsed) ? undefined : parsed;
     }
-
-    // If it's an object, it might be a React event or invalid data
     if (typeof value === "object") {
       console.warn(`${fieldName} received object value:`, value);
       return undefined;
@@ -147,11 +141,9 @@ export const ScheduleModal: React.FC<ScheduleModalProps> = ({
     setValue,
     formState: { errors, isSubmitting },
   } = useForm<ScheduleFormData>({
-    // Temporarily disable zodResolver to handle validation manually
-    // resolver: zodResolver(scheduleSchema),
     mode: "onChange",
     defaultValues: {
-      organization_id: 1, // Set a default organization ID
+      organization_id: 1,
       schedule_code: "",
       in_time: "",
       out_time: "",
@@ -172,7 +164,6 @@ export const ScheduleModal: React.FC<ScheduleModalProps> = ({
     },
   });
 
-  // Watch form values for real-time updates
   const watchedValues = watch();
 
   useEffect(() => {
@@ -207,7 +198,7 @@ export const ScheduleModal: React.FC<ScheduleModalProps> = ({
       });
     } else if (mode === "add") {
       reset({
-        organization_id: 1, // Set a default organization ID
+        organization_id: 1,
         schedule_code: "",
         in_time: "",
         out_time: "",
@@ -232,7 +223,6 @@ export const ScheduleModal: React.FC<ScheduleModalProps> = ({
     }
   }, [schedule, mode, reset, isOpen]);
 
-  // Refresh dropdown data when modal opens
   useEffect(() => {
     if (isOpen) {
       setRefreshTrigger((prev) => prev + 1);
@@ -249,10 +239,8 @@ export const ScheduleModal: React.FC<ScheduleModalProps> = ({
       dataToUse = watchedValues;
     }
 
-    // Use the same transform logic that works in the test
     const transformedValues = transformFormData(dataToUse);
 
-    // Test validation using the same logic as the working test
     const validationResult = scheduleSchema.safeParse(transformedValues);
 
     if (!validationResult.success) {
@@ -277,7 +265,7 @@ export const ScheduleModal: React.FC<ScheduleModalProps> = ({
     if (mode === "add") {
       queryClient.invalidateQueries({
         queryKey: ["parent-schedules-search"],
-        exact: false, // This will invalidate all queries that start with this key
+        exact: false,
       });
     }
   };

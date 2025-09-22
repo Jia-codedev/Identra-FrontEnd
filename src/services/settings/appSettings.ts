@@ -21,7 +21,6 @@ export interface CreateAppSettingRequest {
 }
 
 class AppSettingsApi {
-  // App Settings Management
   getAppSettings(
     { offset = 1, limit = 10, search = "" } = {} as {
       offset?: number;

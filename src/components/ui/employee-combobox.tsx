@@ -34,11 +34,9 @@ export const EmployeeCombobox: React.FC<EmployeeComboboxProps> = ({
       if (q && q.length > 0) {
         resp = await employeeApi.getEmployees({ offset: 1, limit, search: q });
       } else {
-        // Try non-paginated endpoint for full list first to populate dropdown
         try {
           resp = await employeeApi.getEmployeesWithoutPagination();
         } catch (e) {
-          // fallback to paginated endpoint
           resp = await employeeApi.getEmployees({ offset: 1, limit });
         }
       }
@@ -48,8 +46,6 @@ export const EmployeeCombobox: React.FC<EmployeeComboboxProps> = ({
       const data = raw?.data ?? raw;
 
       if (status !== 200 && status !== 201) {
-        // log for debugging (network/auth issues)
-        // eslint-disable-next-line no-console
         console.warn('EmployeeCombobox: unexpected response status', status, raw);
         setOptions([]);
         return;
@@ -62,7 +58,6 @@ export const EmployeeCombobox: React.FC<EmployeeComboboxProps> = ({
         }));
         setOptions(opts);
       } else {
-        // If data is an object but contains a single record, convert it
         if (data && typeof data === 'object') {
           const single = data;
           if (single.employee_id) {
@@ -79,7 +74,6 @@ export const EmployeeCombobox: React.FC<EmployeeComboboxProps> = ({
     }
   }, [limit]);
 
-  // debounce
   const debouncedSearch = React.useCallback((q: string) => {
     searchRef.current = q;
     const id = setTimeout(() => {
@@ -88,7 +82,6 @@ export const EmployeeCombobox: React.FC<EmployeeComboboxProps> = ({
     return () => clearTimeout(id);
   }, [load]);
 
-  // preload selected
   useEffect(() => {
     let mounted = true;
     (async () => {
@@ -102,12 +95,10 @@ export const EmployeeCombobox: React.FC<EmployeeComboboxProps> = ({
             if (status === 200 && emp) {
               setOptions([{ label: `${emp.firstname_eng || ''} ${emp.lastname_eng || ''} (${emp.emp_no || emp.employee_id || ''})`, value: String(emp.employee_id) }]);
             } else {
-              // eslint-disable-next-line no-console
               console.warn('EmployeeCombobox preload: unexpected response', status, raw);
             }
           }
         } catch (e) {
-          // eslint-disable-next-line no-console
           console.error('EmployeeCombobox preload error', e);
         }
       }
@@ -115,7 +106,6 @@ export const EmployeeCombobox: React.FC<EmployeeComboboxProps> = ({
     return () => { mounted = false; };
   }, [value]);
 
-  // initial load
   useEffect(() => { load(''); }, [load]);
 
   return (

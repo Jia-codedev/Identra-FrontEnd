@@ -18,21 +18,17 @@ export const useCreateRamadanDate = () => {
     mutationFn: (data: CreateRamadanDateRequest) =>
       ramadanDatesApi.addRamadanDate(data),
     onMutate: async (variables: CreateRamadanDateRequest) => {
-      // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
       await queryClient.cancelQueries({ queryKey: ["ramadanDates"] });
 
-      // Snapshot the previous value
       const previousData = queryClient.getQueriesData({ queryKey: ["ramadanDates"] });
 
-      // Optimistically update all caches
       queryClient.setQueriesData(
         { queryKey: ["ramadanDates"] },
         (old: any) => {
           if (!old || !old.success || !Array.isArray(old.data)) return old;
           
-          // Create optimistic ramadan date
           const optimisticRamadanDate: IRamadanDate = {
-            ramadan_id: Date.now(), // Temporary ID
+            ramadan_id: Date.now(),
             ramadan_name_eng: variables.ramadan_name_eng,
             ramadan_name_arb: variables.ramadan_name_arb,
             remarks: variables.remarks,
@@ -48,17 +44,14 @@ export const useCreateRamadanDate = () => {
         }
       );
 
-      // Return a context object with the snapshotted value
       return { previousData };
     },
     onSuccess: (response: any, variables: CreateRamadanDateRequest) => {
-      // Update with real data from server
       queryClient.setQueriesData(
         { queryKey: ["ramadanDates"] },
         (old: any) => {
           if (!old || !old.success || !Array.isArray(old.data)) return old;
           
-          // Replace the optimistic entry with the real one from server
           const realRamadanDate: IRamadanDate = response?.data?.data || response?.data || {
             ramadan_id: response?.data?.ramadan_id || Date.now(),
             ramadan_name_eng: variables.ramadan_name_eng,
@@ -69,7 +62,6 @@ export const useCreateRamadanDate = () => {
             created_date: new Date().toISOString(),
           };
 
-          // Find and replace the optimistic entry
           const updatedData = old.data.map((item: IRamadanDate, index: number) => 
             index === 0 ? realRamadanDate : item
           );
@@ -84,7 +76,6 @@ export const useCreateRamadanDate = () => {
       toast.success(t("scheduling.ramadanDates.created"));
     },
     onError: (error: any, variables: CreateRamadanDateRequest, context: any) => {
-      // Rollback to previous data on error
       if (context?.previousData) {
         context.previousData.forEach(([queryKey, data]: [any, any]) => {
           queryClient.setQueryData(queryKey, data);
@@ -95,7 +86,6 @@ export const useCreateRamadanDate = () => {
       toast.error(errorMessage);
     },
     onSettled: () => {
-      // Always refetch after error or success to ensure consistency
       queryClient.invalidateQueries({ queryKey: ["ramadanDates"] });
     },
   });
@@ -110,13 +100,10 @@ export const useUpdateRamadanDate = () => {
     mutationFn: ({ id, data }: { id: number; data: UpdateRamadanDateRequest }) =>
       ramadanDatesApi.updateRamadanDate(id, data),
     onMutate: async ({ id, data }: { id: number; data: UpdateRamadanDateRequest }) => {
-      // Cancel any outgoing refetches
       await queryClient.cancelQueries({ queryKey: ["ramadanDates"] });
 
-      // Snapshot the previous values
       const previousData = queryClient.getQueriesData({ queryKey: ["ramadanDates"] });
 
-      // Optimistically update all caches
       queryClient.setQueriesData(
         { queryKey: ["ramadanDates"] },
         (old: any) => {
@@ -147,7 +134,6 @@ export const useUpdateRamadanDate = () => {
       toast.success(t("scheduling.ramadanDates.updated"));
     },
     onError: (error: any, variables: any, context: any) => {
-      // Rollback to previous data on error
       if (context?.previousData) {
         context.previousData.forEach(([queryKey, data]: [any, any]) => {
           queryClient.setQueryData(queryKey, data);
@@ -158,7 +144,6 @@ export const useUpdateRamadanDate = () => {
       toast.error(errorMessage);
     },
     onSettled: () => {
-      // Always refetch after error or success to ensure consistency
       queryClient.invalidateQueries({ queryKey: ["ramadanDates"] });
     },
   });
@@ -173,13 +158,10 @@ export const useDeleteRamadanDate = () => {
     mutationFn: (id: number) =>
       ramadanDatesApi.deleteRamadanDate(id),
     onMutate: async (id: number) => {
-      // Cancel any outgoing refetches
       await queryClient.cancelQueries({ queryKey: ["ramadanDates"] });
 
-      // Snapshot the previous values
       const previousData = queryClient.getQueriesData({ queryKey: ["ramadanDates"] });
 
-      // Optimistically remove the item from all caches
       queryClient.setQueriesData(
         { queryKey: ["ramadanDates"] },
         (old: any) => {
@@ -198,7 +180,6 @@ export const useDeleteRamadanDate = () => {
       toast.success(t("scheduling.ramadanDates.deleted"));
     },
     onError: (error: any, variables: any, context: any) => {
-      // Rollback to previous data on error
       if (context?.previousData) {
         context.previousData.forEach(([queryKey, data]: [any, any]) => {
           queryClient.setQueryData(queryKey, data);
@@ -209,7 +190,6 @@ export const useDeleteRamadanDate = () => {
       toast.error(errorMessage);
     },
     onSettled: () => {
-      // Always refetch after error or success to ensure consistency
       queryClient.invalidateQueries({ queryKey: ["ramadanDates"] });
     },
   });

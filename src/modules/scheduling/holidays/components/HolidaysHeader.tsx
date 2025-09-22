@@ -14,7 +14,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { HolidayFilters } from "../types";
-// Using simple segmented buttons for better UX instead of Toggle
 
 interface HolidaysHeaderProps {
   search: string;
@@ -24,7 +23,6 @@ interface HolidaysHeaderProps {
   onDeleteSelected?: () => void;
   filters: HolidayFilters;
   onFiltersChange: (filters: Partial<HolidayFilters>) => void;
-  // view mode: 'table' or 'calendar'
   viewMode?: "table" | "calendar";
   onViewModeChange?: (mode: "table" | "calendar") => void;
 }
@@ -45,8 +43,6 @@ export const HolidaysHeader: React.FC<HolidaysHeaderProps> = ({
 
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 5 }, (_, i) => currentYear - 2 + i);
-
-  // Use a more reliable approach for months
   const getMonthName = (monthNum: number) => {
     try {
       return t(
@@ -68,7 +64,6 @@ export const HolidaysHeader: React.FC<HolidaysHeaderProps> = ({
         }`
       );
     } catch {
-      // Fallback to English month names
       const monthNames = [
         "January",
         "February",
@@ -95,7 +90,6 @@ export const HolidaysHeader: React.FC<HolidaysHeaderProps> = ({
   return (
     <div className="sticky top-0 z-10 bg-background rounded-t-3xl px-2 sm:px-4 py-4 sm:py-8 ">
       <div className="flex flex-col gap-4 sm:gap-6">
-        {/* Title and Description */}
         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4 sm:gap-6">
           <div className="flex-1">
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-primary tracking-tight leading-tight mb-1">
@@ -103,9 +97,7 @@ export const HolidaysHeader: React.FC<HolidaysHeaderProps> = ({
             </h1>
           </div>
 
-          {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-2">
-            {/* Segmented view toggle for better UX */}
             <div className="flex items-center">
               <div
                 role="tablist"
@@ -163,9 +155,7 @@ export const HolidaysHeader: React.FC<HolidaysHeaderProps> = ({
           </div>
         </div>
 
-        {/* Search and Filters */}
         <div className="flex gap-4 w-full">
-          {/* Search */}
           <div
             className={`flex flex-2 items-center gap-0 bg-card/80 border border-border rounded-xl px-2 py-1 ${
               isRTL ? "flex-row-reverse" : "flex-row"
@@ -186,10 +176,8 @@ export const HolidaysHeader: React.FC<HolidaysHeaderProps> = ({
             />
           </div>
 
-          {/* Filters */}
           <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
             <div className="flex flex-wrap gap-2">
-              {/* Year Filter */}
               <div className="flex items-center gap-1">
                 <Calendar
                   size={14}
@@ -217,7 +205,6 @@ export const HolidaysHeader: React.FC<HolidaysHeaderProps> = ({
                 </Select>
               </div>
 
-              {/* Month Filter */}
               <div className="flex items-center gap-1">
                 <Calendar
                   size={14}
@@ -248,7 +235,6 @@ export const HolidaysHeader: React.FC<HolidaysHeaderProps> = ({
                 </Select>
               </div>
 
-              {/* Recurring Filter */}
               <div className="flex items-center gap-1">
                 <Clock
                   size={14}
@@ -286,7 +272,6 @@ export const HolidaysHeader: React.FC<HolidaysHeaderProps> = ({
                 </Select>
               </div>
 
-              {/* Public Holiday Filter */}
               <div className="flex items-center gap-1">
                 <Users
                   size={14}

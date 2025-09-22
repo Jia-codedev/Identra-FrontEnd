@@ -10,11 +10,9 @@ export function useEmployeeMutations() {
 
   const createEmployeeMutation = useMutation({
     mutationFn: async (employeeData: IEmployee) => {
-      // Basic client-side validation to avoid sending empty payloads
       if (!employeeData || typeof employeeData !== 'object') {
         throw new Error('Invalid employee data');
       }
-      // emp_no is required by backend schema
       if (!employeeData.emp_no || employeeData.emp_no.toString().trim() === '') {
         throw new Error('Employee number (emp_no) is required');
       }
@@ -26,13 +24,11 @@ export function useEmployeeMutations() {
       if (!data) return;
       toast.success(t('toast.success.created'));
       
-      // Update cache by adding the new employee to existing queries
       queryClient.setQueriesData(
         { queryKey: ["employees"] },
         (oldData: any) => {
           if (!oldData || !oldData.pages) return oldData;
           
-          // Add new employee to the first page
           const newPages = [...oldData.pages];
           if (newPages[0] && newPages[0].data) {
             newPages[0] = {
@@ -52,7 +48,6 @@ export function useEmployeeMutations() {
     onError: (error: any) => {
       console.error("Error creating employee:", error);
       
-      // Handle specific error types
       if (error?.status === 409 || error?.response?.status === 409) {
         const conflictMessage = error?.message || error?.response?.data?.message;
         if (conflictMessage?.toLowerCase().includes('emp_no') || conflictMessage?.toLowerCase().includes('employee number')) {
@@ -88,10 +83,8 @@ export function useEmployeeMutations() {
     onSuccess: ({ id, data }) => {
       toast.success(t('toast.success.updated'));
       
-      // Update the specific employee in cache
       queryClient.setQueryData(["employee", id], data.data || data);
       
-      // Update employee in all employee list queries
       queryClient.setQueriesData(
         { queryKey: ["employees"] },
         (oldData: any) => {
@@ -127,13 +120,10 @@ export function useEmployeeMutations() {
     mutationFn: async (id: number) => {
       const response = await employeeApi.deleteEmployee(id);
       
-      // Check for business logic errors (400 status code)
       if (response.status === 400) {
         toast.error(response.data?.message || "Cannot delete employee");
         return null
       }
-      
-      // Check for other error status codes
       if (response.status !== 200) {
         toast.error(response.data?.message || "Failed to delete employee");
         return null;
@@ -147,10 +137,8 @@ export function useEmployeeMutations() {
       
       toast.success(t('toast.success.deleted'));
       
-      // Remove the specific employee from cache
       queryClient.removeQueries({ queryKey: ["employee", id] });
       
-      // Remove employee from all employee list queries
       queryClient.setQueriesData(
         { queryKey: ["employees"] },
         (oldData: any) => {
@@ -182,19 +170,16 @@ export function useEmployeeMutations() {
     mutationFn: async (ids: number[]) => {
       const response = await employeeApi.deleteEmployees(ids);
       
-      // Check for business logic errors (400 status code)
       if (response.status === 400) {
         toast.error(response.data?.message || "Cannot delete employees");
         return null;
       }
       
-      // Check for server errors (500 status code)
       if (response.status === 500) {
         toast.error(response.data?.message || "Failed to delete employees");
         return null;
       }
       
-      // Check for other error status codes
       if (response.status !== 200) {
         toast.error(response.data?.message || "Failed to delete employees");
         return null;
@@ -208,12 +193,10 @@ export function useEmployeeMutations() {
       
       toast.success(`${ids.length} ${t('toast.success.deletedMultiple')}`);
       
-      // Remove all deleted employees from individual caches
       ids.forEach((id) => {
         queryClient.removeQueries({ queryKey: ["employee", id] });
       });
       
-      // Remove employees from all employee list queries
       queryClient.setQueriesData(
         { queryKey: ["employees"] },
         (oldData: any) => {
@@ -246,7 +229,6 @@ export function useEmployeeMutations() {
     updateEmployee: updateEmployeeMutation.mutateAsync,
     deleteEmployee: deleteEmployeeMutation.mutate,
     deleteEmployees: deleteEmployeesMutation.mutate,
-    // Also expose the mutation objects for loading states
     createEmployeeMutation,
     updateEmployeeMutation,
     deleteEmployeeMutation,

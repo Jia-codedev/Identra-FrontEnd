@@ -13,13 +13,12 @@ interface HolidaysCalendarViewProps {
   holidays: IHoliday[];
 }
 
-const cellSize = 112; // large square cell size (px)
+const cellSize = 112;
 
 const HolidaysCalendarView: React.FC<HolidaysCalendarViewProps> = ({ holidays }) => {
   const { isRTL } = useLanguage();
   const [current, setCurrent] = React.useState<Date>(new Date());
 
-  // Map dates (yyyy-mm-dd) to holidays
   const dateMap = React.useMemo(() => {
     const m = new Map<string, IHoliday[]>();
     holidays.forEach(h => {

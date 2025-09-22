@@ -39,7 +39,6 @@ export function useOrganizationTypeMutations() {
         onSuccess: (data) => {
             if (!data) return;
             toast.success(t('toast.success.created'));
-            // Update the cache using the correct query key pattern
             queryClient.setQueryData(["organizationtypes", data.search ?? "", data.pageSize ?? 5], (oldData: any) => {
                 if (!oldData || !data.data) return oldData;
                 if (oldData?.pages) {
@@ -55,7 +54,6 @@ export function useOrganizationTypeMutations() {
                 }
                 return oldData;
             });
-            // Also invalidate all organizationtypes queries to ensure consistency
             queryClient.invalidateQueries({ queryKey: ["organizationtypes"] });
         },
         onError: (error) => {
@@ -84,7 +82,6 @@ export function useOrganizationTypeMutations() {
         onSuccess: (data) => {
             if (!data) return;
             toast.success(t('toast.success.updated'));
-            // Update the cache using the correct query key pattern
             queryClient.setQueryData(["organizationtypes", data.search ?? "", data.pageSize ?? 5], (oldData: any) => {
                 if (!oldData || !data.data) return oldData;
                 if (oldData?.pages) {
@@ -102,7 +99,6 @@ export function useOrganizationTypeMutations() {
                 }
                 return oldData;
             });
-            // Also invalidate all organizationtypes queries to ensure consistency
             queryClient.invalidateQueries({ queryKey: ["organizationtypes"] });
         },
         onError: (error) => {
@@ -117,7 +113,6 @@ export function useOrganizationTypeMutations() {
         },
         onSuccess: ({ id }) => {
             toast.success(t('toast.success.deleted'));
-            // Update cache by removing the deleted item from all pages
             queryClient.setQueriesData({ queryKey: ["organizationtypes"] }, (oldData: any) => {
                 if (!oldData?.pages) return oldData;
 
@@ -132,7 +127,6 @@ export function useOrganizationTypeMutations() {
 
                 return { ...oldData, pages: updatedPages };
             });
-            // Also invalidate queries to ensure consistency
             queryClient.invalidateQueries({ queryKey: ["organizationtypes"] });
         },
         onError: (error) => {
@@ -158,7 +152,6 @@ export function useOrganizationTypeMutations() {
             if (!data) return;
             const { ids } = data;
             toast.success(t('toast.success.deletedMultiple'));
-            // Update cache by removing the deleted items from all pages
             queryClient.setQueriesData({ queryKey: ["organizationtypes"] }, (oldData: any) => {
                 if (!oldData?.pages) return oldData;
 
@@ -173,7 +166,6 @@ export function useOrganizationTypeMutations() {
 
                 return { ...oldData, pages: updatedPages };
             });
-            // Also invalidate queries to ensure consistency
             queryClient.invalidateQueries({ queryKey: ["organizationtypes"] });
         },
         onError: (error) => {

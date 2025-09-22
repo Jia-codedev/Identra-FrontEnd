@@ -1,7 +1,6 @@
 import apiClient from "@/configs/api/Axios";
 
 class SystemTimeApi {
-  // System Time
   getServerTime() {
     return apiClient.get("/systime/");
   }

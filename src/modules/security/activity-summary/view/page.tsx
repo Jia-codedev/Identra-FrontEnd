@@ -184,7 +184,6 @@ export default function ActivitySummaryPage() {
   };
 
   const handleExportData = () => {
-    // TODO: Implement export functionality
     toast.success("Export functionality will be implemented");
   };
 

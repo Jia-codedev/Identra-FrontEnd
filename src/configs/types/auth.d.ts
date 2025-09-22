@@ -12,7 +12,7 @@ declare global {
       lastarb: string;
     };
     employeenumber: number;
-    scheduledgeocoordinates: [number, number] | null; // or a more specific type if known
+    scheduledgeocoordinates: [number, number] | null;
     radius: number;
     email: string | null;
     isGeofence: boolean;

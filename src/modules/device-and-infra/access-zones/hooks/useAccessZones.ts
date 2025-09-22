@@ -23,7 +23,7 @@ export const useAccessZones = () => {
     } : {}),
     ...(statusFilter !== undefined ? { zone_status: statusFilter } : {}),
     ...(typeFilter ? { zone_type: typeFilter } : {}),
-    delete_flag: false, // Only show non-deleted access zones
+    delete_flag: false,
   }), [page, pageSize, search, statusFilter, typeFilter]);
 
   const { data, isLoading, refetch } = useQuery({

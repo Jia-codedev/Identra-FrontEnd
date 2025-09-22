@@ -13,7 +13,6 @@ export interface MonthlyRoster {
   finalize_flag: boolean;
   created_date?: string;
   last_updated_date?: string;
-  // Day schedules
   D1?: number | null; D2?: number | null; D3?: number | null; D4?: number | null; D5?: number | null;
   D6?: number | null; D7?: number | null; D8?: number | null; D9?: number | null; D10?: number | null;
   D11?: number | null; D12?: number | null; D13?: number | null; D14?: number | null; D15?: number | null;
@@ -24,12 +23,11 @@ export interface MonthlyRoster {
 
 export interface CreateMonthlyRosterRequest {
   employee_id: number;
-  from_date: string; // ISO
-  to_date: string;   // ISO
+  from_date: string;
+  to_date: string;  
   version_no: number;
   finalize_flag: boolean;
   manager_id?: number;
-  // Days optional
   [key: `D${number}`]: number | undefined;
 }
 
@@ -45,8 +43,8 @@ export interface UpdateMonthlyRosterRequest {
 
 export interface FilterMonthlyRosterRequest {
   organization_id: number;
-  month: number; // 1-12
-  year: number;  // yyyy
+  month: number;
+  year: number; 
   day?: number;
   employee_id?: number;
   employee_group_id?: number;
@@ -84,17 +82,12 @@ class EmployeeMonthlyRosterApi {
     return apiClient.post("/employeeMonthlyRoster/filter", data);
   }
 
-  // Bulk import monthly roster via file upload (CSV/Excel)
   importFile(formData: FormData) {
-    // Do not set Content-Type header here — letting the browser/axios
-    // populate the correct multipart boundary is required for servers
-    // to parse the file field correctly.
     return apiClient.post("/employeeMonthlyRoster/import", formData, {
       headers: { 'Content-Type': undefined as any },
     });
   }
 
-  // Export monthly roster for provided filters as a file (blob)
   export(data: FilterMonthlyRosterRequest) {
     return apiClient.post("/employeeMonthlyRoster/export", data, { responseType: 'blob' });
   }

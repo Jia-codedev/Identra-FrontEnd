@@ -24,7 +24,6 @@ export interface CreateChronEmailSettingRequest {
 }
 
 class ChronEmailSettingsApi {
-  // Email Settings Management
   getEmailSettings(
     { offset = 1, limit = 10, search = "" } = {} as {
       offset?: number;

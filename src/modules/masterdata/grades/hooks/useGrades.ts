@@ -45,7 +45,6 @@ export const useGrades = () => {
     initialPageParam: 1,
   });
 
-  // Only show the current page's data
   const grades = useMemo(() => {
     if (data && data.pages && data.pages[state.page - 1]) {
       return data.pages[state.page - 1].data || [];
@@ -54,7 +53,6 @@ export const useGrades = () => {
   }, [data, state.page]);
 
 
-  // Total pages: if the API returns total, use it; else, fallback to loaded pages
   const total = data?.pages?.[0]?.total ?? 0;
   const pageCount = total > 0 ? Math.ceil(total / state.pageSize) : (data?.pages?.length || 1);
 
@@ -64,7 +62,6 @@ export const useGrades = () => {
   const allChecked =
     allIds.length > 0 && allIds.every((id: number) => state.selected.includes(id));
 
-  // Stable debounce for search
   const debouncedRefetch = useMemo(() => lodash.debounce(refetch, 500), [refetch]);
 
   const setSearch = useCallback((search: string) => {
@@ -82,7 +79,6 @@ export const useGrades = () => {
   const setPage = useCallback(
     async (page: number) => {
       if (page >= 1 && page <= pageCount) {
-        // Always try to fetch the next page if not loaded
         if (data && data.pages && !data.pages[page - 1] && hasNextPage) {
           await fetchNextPage();
         }
@@ -121,7 +117,6 @@ export const useGrades = () => {
   }, []);
 
   return {
-    // State
     grades,
     allGrades: state.grades,
     selected: state.selected,
@@ -135,7 +130,6 @@ export const useGrades = () => {
     allChecked,
     isLoading,
     refetch,
-    // Actions
     setSearch,
     setPage,
     setPageSize,

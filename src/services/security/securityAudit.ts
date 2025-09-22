@@ -11,7 +11,6 @@ export interface SecAuditLog {
   ip_address?: string;
   user_agent?: string;
   timestamp: string;
-  // Relations
   sec_users?: {
     user_id: number;
     username: string;
@@ -77,7 +76,6 @@ export interface UserActivityReport {
 }
 
 class SecurityAuditApi {
-  // Audit Logs
   getAuditLogs(filters: AuditLogFilters = {}) {
     const { offset = 1, limit = 10, ...rest } = filters;
     return apiClient.get("/secAuditLog/all", {
@@ -139,7 +137,6 @@ class SecurityAuditApi {
     return apiClient.delete(`/secAuditLog/delete/${id}`);
   }
 
-  // Activity Summary & Reports
   getActivitySummary(filters: {
     from_date?: string;
     to_date?: string;
@@ -178,7 +175,6 @@ class SecurityAuditApi {
     });
   }
 
-  // Analytics
   getOperationStatistics(filters: {
     from_date?: string;
     to_date?: string;
@@ -204,7 +200,6 @@ class SecurityAuditApi {
     });
   }
 
-  // Cleanup
   cleanupOldLogs(beforeDate: string) {
     return apiClient.delete("/secAuditLog/cleanup", {
       data: { before_date: beforeDate }

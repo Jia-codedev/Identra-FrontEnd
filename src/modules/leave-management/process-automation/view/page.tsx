@@ -23,7 +23,7 @@ type WorkflowType = {
   description?: string | null;
   is_active?: number | boolean;
   _count?: {
-    workflow_type_steps: number; // Added count for workflow_type_steps
+    workflow_type_steps: number;
   };
 };
 
@@ -32,7 +32,6 @@ export default function ProcessAutomationPage() {
   const { currentLocale } = useLanguage();
   const router = useRouter();
 
-  // Helper function to get localized workflow name
   const getLocalizedName = (workflow: WorkflowType) => {
     if (currentLocale === 'ar') {
       return workflow.workflow_name_arb || workflow.workflow_name_eng || '-';
@@ -56,11 +55,10 @@ export default function ProcessAutomationPage() {
       const res = await workflowApi.getWorkflows({
         offset: page,
         limit: pageSize,
-        search, // Pass search query to the API
+        search,
       });
       let items: any = res?.data?.data ?? res?.data ?? [];
 
-      // Normalize response to an array in common shapes
       if (!Array.isArray(items)) {
         if (items && Array.isArray(items.data)) items = items.data;
         else if (items && Array.isArray(items.rows)) items = items.rows;
@@ -80,13 +78,12 @@ export default function ProcessAutomationPage() {
 
   useEffect(() => {
     fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, pageSize]);
 
   const columns: TableColumn<WorkflowType>[] = [
     { key: "code", header: t("workflow.code") || "Code", accessor: (item) => item.workflow_code || "-", width: "w-40" },
     { key: "name", header: t("workflow.name") || "Name", accessor: (item) => getLocalizedName(item) },
-    { key: "steps", header: t("workflow.steps") || "Steps", accessor: (item) => item._count?.workflow_type_steps || 0 }, // Add step count column
+    { key: "steps", header: t("workflow.steps") || "Steps", accessor: (item) => item._count?.workflow_type_steps || 0 },
   ];
 
   const getItemId = (item: WorkflowType) => item.workflow_id;
@@ -114,7 +111,6 @@ export default function ProcessAutomationPage() {
       if (deleteDialog.type === "single" && deleteDialog.id) {
         await workflowApi.deleteWorkflow(deleteDialog.id);
       } else if (deleteDialog.type === "bulk" && selected.length > 0) {
-        // call delete for each selected
         await Promise.all(selected.map((id) => workflowApi.deleteWorkflow(id)));
       }
       setDeleteDialog({ open: false, type: null });
@@ -125,11 +121,11 @@ export default function ProcessAutomationPage() {
     }
   };
 
-  const debouncedFetchData = debounce(fetchData, 300); // Debounce fetchData by 300ms
+  const debouncedFetchData = debounce(fetchData, 300);
 
   const handleSearchChange = (value: string) => {
     setSearch(value);
-    debouncedFetchData(); // Use debounced function for search
+    debouncedFetchData(); 
   };
 
   return (
@@ -138,7 +134,7 @@ export default function ProcessAutomationPage() {
         <div className="py-4 border-border bg-background/90 p-4">
           <ProcessAutomationHeader
             search={search}
-            onSearchChange={handleSearchChange} // Pass debounced handler
+            onSearchChange={handleSearchChange} 
             onAdd={() => router.push('/leave-management/process-automation/add')}
             selectedCount={selected.length}
             onDeleteSelected={() => handleDelete()}

@@ -29,7 +29,6 @@ const PermissionActions: React.FC<Props> = ({ permission, onEdit, onRefresh }) =
       await mutations.approve.mutateAsync({ id: permission.id });
       onRefresh();
     } catch (error) {
-      // Error handling is done in the mutation
     } finally {
       setLoading(false);
     }
@@ -41,7 +40,6 @@ const PermissionActions: React.FC<Props> = ({ permission, onEdit, onRefresh }) =
       await mutations.reject.mutateAsync({ id: permission.id });
       onRefresh();
     } catch (error) {
-      // Error handling is done in the mutation
     } finally {
       setLoading(false);
     }
@@ -57,7 +55,6 @@ const PermissionActions: React.FC<Props> = ({ permission, onEdit, onRefresh }) =
       await mutations.remove.mutateAsync(permission.id);
       onRefresh();
     } catch (error) {
-      // Error handling is done in the mutation
     } finally {
       setLoading(false);
     }

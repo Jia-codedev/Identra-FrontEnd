@@ -54,7 +54,6 @@ const PermissionRequestForm: React.FC<Props> = ({ permission, onClose }) => {
     e.preventDefault();
     setError("");
     
-    // Basic validation
     if (!type) {
       setError("Please select a permission type");
       return;

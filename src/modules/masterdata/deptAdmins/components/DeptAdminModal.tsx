@@ -81,7 +81,6 @@ export const DeptAdminModal: React.FC<DeptAdminModalProps> = ({
         active_status: String(deptAdmin.active_status ?? "true"),
         remarks: deptAdmin.remarks || "",
       });
-      // initialize Date objects used by Calendar picker
       try {
         setFromDateObj(
           deptAdmin.from_date
@@ -138,7 +137,6 @@ export const DeptAdminModal: React.FC<DeptAdminModalProps> = ({
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  // using shared EmployeeCombobox component
 
   if (!isOpen) return null;
 

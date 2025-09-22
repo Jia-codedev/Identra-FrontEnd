@@ -34,7 +34,6 @@ class LocationsApi {
     return apiClient.delete("/location/delete", { data: { ids } });
   }
 
-  // Dropdown specific endpoint
   getLocationsForDropdown(params?: {
     offset?: number;
     limit?: number;

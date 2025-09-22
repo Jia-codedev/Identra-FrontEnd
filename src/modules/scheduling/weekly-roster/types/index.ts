@@ -1,4 +1,3 @@
-// Group Schedule related types
 export interface GroupSchedule {
   id: number;
   group_name: string;
@@ -16,7 +15,6 @@ export interface GroupSchedule {
   created_at?: string;
   updated_at?: string;
   
-  // Related schedule data (populated when included in API response)
   monday_schedule?: ScheduleInfo;
   tuesday_schedule?: ScheduleInfo;
   wednesday_schedule?: ScheduleInfo;
@@ -25,7 +23,6 @@ export interface GroupSchedule {
   saturday_schedule?: ScheduleInfo;
   sunday_schedule?: ScheduleInfo;
   
-  // Related entity data
   employee_group?: {
     id: number;
     group_name: string;
@@ -94,7 +91,6 @@ export interface GroupScheduleListParams {
   is_active?: boolean;
 }
 
-// Day mapping types
 export type DayKey = 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday';
 
 export interface DayInfo {
@@ -113,7 +109,6 @@ export const DAYS_OF_WEEK: DayInfo[] = [
   { key: 'sunday', label: 'Sunday', field: 'sunday_schedule_id' },
 ];
 
-// Weekly Roster Filter types
 export interface WeeklyRosterFilters {
   employee_group_id?: number;
   start_date?: Date;
@@ -138,7 +133,6 @@ export interface CreateWeeklyRosterRequest {
   end_date: string;
 }
 
-// Employee Group types for dropdown
 export interface EmployeeGroup {
   employee_group_id: number;
   group_code: string;

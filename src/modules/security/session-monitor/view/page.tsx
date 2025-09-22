@@ -59,7 +59,6 @@ export default function SessionMonitorPage() {
   const [selectedSessions, setSelectedSessions] = useState<number[]>([]);
   const [allChecked, setAllChecked] = useState(false);
 
-  // Sample session data
   const mockSessions: UserSession[] = [
     {
       id: "1",
@@ -123,7 +122,6 @@ export default function SessionMonitorPage() {
     },
   ];
 
-  // Sample summary data
   const sessionSummary: SessionSummary = {
     totalSessions: 23,
     activeSessions: 15,
@@ -160,7 +158,6 @@ export default function SessionMonitorPage() {
 
   const handleTerminateSession = async (sessionId: string) => {
     try {
-      // TODO: Replace with actual API call
       setSessions(sessions.filter(s => s.id !== sessionId));
       toast.success("Session terminated successfully");
     } catch (error) {
@@ -170,7 +167,6 @@ export default function SessionMonitorPage() {
 
   const handleBanUser = async (userId: string) => {
     try {
-      // TODO: Replace with actual API call
       console.log("Ban user:", userId);
       toast.success("User banned successfully");
     } catch (error) {
@@ -180,7 +176,6 @@ export default function SessionMonitorPage() {
 
   const handleRefresh = () => {
     setIsLoading(true);
-    // TODO: Replace with actual API call
     setTimeout(() => {
       setSessions(mockSessions);
       setIsLoading(false);
@@ -188,7 +183,6 @@ export default function SessionMonitorPage() {
     }, 1000);
   };
 
-  // Auto-refresh functionality
   useEffect(() => {
     if (refreshInterval > 0) {
       const interval = setInterval(() => {

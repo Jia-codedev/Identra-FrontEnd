@@ -53,7 +53,7 @@ export interface CreateBiometricTerminalResponse {
 }
 
 class BiometricTerminalsApi {
-  private baseUrl = "/device"; // Keep existing backend endpoint for now
+  private baseUrl = "/device";
 
   async list(params: ListBiometricTerminalsRequest = {}): Promise<BiometricTerminalsListResponse> {
     const queryParams = new URLSearchParams();

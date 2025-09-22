@@ -49,7 +49,6 @@ import {
   WeeklyRosterData,
 } from "../types";
 
-// Form data type that matches the API structure
 interface FormData {
   employee_group_id: number;
   from_date: Date;
@@ -96,17 +95,14 @@ export function WeeklyRosterModal({
   const { currentLocale } = useLanguage();
   const isRTL = currentLocale === "ar";
 
-  // Employee Groups state
   const [employeeGroups, setEmployeeGroups] = useState<EmployeeGroup[]>([]);
   const [employeeGroupSearch, setEmployeeGroupSearch] = useState("");
   const [isEmployeeGroupOpen, setIsEmployeeGroupOpen] = useState(false);
   const [isLoadingGroups, setIsLoadingGroups] = useState(false);
 
-  // Calendar state
   const [startDateOpen, setStartDateOpen] = useState(false);
   const [endDateOpen, setEndDateOpen] = useState(false);
 
-  // Form validation schema
   const formSchema = z
     .object({
       employee_group_id: z
@@ -143,7 +139,6 @@ export function WeeklyRosterModal({
     },
   });
 
-  // Load employee groups
   const loadEmployeeGroups = async (searchTerm: string = "") => {
     try {
       setIsLoadingGroups(true);
@@ -158,14 +153,12 @@ export function WeeklyRosterModal({
     }
   };
 
-  // Load initial employee groups
   useEffect(() => {
     if (isOpen) {
       loadEmployeeGroups();
     }
   }, [isOpen]);
 
-  // Debounced search for employee groups
   useEffect(() => {
     const timer = setTimeout(() => {
       if (isEmployeeGroupOpen) {
@@ -176,7 +169,6 @@ export function WeeklyRosterModal({
     return () => clearTimeout(timer);
   }, [employeeGroupSearch, isEmployeeGroupOpen]);
 
-  // Update form when groupSchedule changes
   useEffect(() => {
     if (groupSchedule && mode === "edit") {
       form.reset({
@@ -215,7 +207,6 @@ export function WeeklyRosterModal({
 
   const handleFormSubmit = async (data: FormData) => {
     try {
-      // Validate required fields
       if (!data.employee_group_id || data.employee_group_id <= 0) {
         form.setError("employee_group_id", {
           message: t(
@@ -225,13 +216,12 @@ export function WeeklyRosterModal({
         return;
       }
 
-      // Prepare data for API
       const submitData = {
         ...data,
         from_date: data.from_date.toISOString(),
         to_date: data.to_date.toISOString(),
-        created_id: 1, // TODO: Get from user context
-        last_updated_id: 1, // TODO: Get from user context
+        created_id: 1,
+        last_updated_id: 1
       };
 
       await onSubmit(submitData as ICreateGroupSchedule | IUpdateGroupSchedule);

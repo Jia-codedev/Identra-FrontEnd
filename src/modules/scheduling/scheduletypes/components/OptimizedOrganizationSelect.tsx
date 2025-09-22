@@ -60,7 +60,6 @@ export const OptimizedOrganizationSelect: React.FC<OptimizedOrganizationSelectPr
   const [search, setSearch] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
 
-  // Debounce search to avoid too many API calls
   const debouncedSetSearch = useMemo(
     () => debounce((searchValue: string) => {
       setDebouncedSearch(searchValue);
@@ -75,21 +74,19 @@ export const OptimizedOrganizationSelect: React.FC<OptimizedOrganizationSelectPr
     };
   }, [search, debouncedSetSearch]);
 
-  // Fetch organizations with search
   const { data: organizationsData, isLoading, error: queryError } = useQuery({
     queryKey: ['organizations-dropdown', debouncedSearch],
     queryFn: () => organizationsApi.getOrganizationsForDropdown({
-      name: debouncedSearch,
-      limit: 50, // Limit results for performance
+      search: debouncedSearch,
+      limit: 50,
       offset: 0,
     }),
-    enabled: true, // Always enabled to allow initial data load
-    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+    enabled: true,
+    staleTime: 5 * 60 * 1000,
   });
 
   const organizations: Organization[] = organizationsData?.data?.data || [];
 
-  // Find selected organization
   const selectedOrg = organizations.find(org => org.organization_id === value);
 
   const handleSelect = (orgId: string) => {

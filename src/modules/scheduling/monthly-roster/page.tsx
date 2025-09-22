@@ -33,7 +33,6 @@ export default function MonthlyRosterPage() {
   const { t } = useTranslations();
   const [allSchedules, setAllSchedules] = useState<any[]>([]);
   const [assigning, setAssigning] = useState(false);
-  // Fetch all schedules for dropdown
   useEffect(() => {
     async function fetchSchedules() {
       try {
@@ -57,13 +56,6 @@ export default function MonthlyRosterPage() {
     setSelected,
   } = useMonthlyRosterState();
 
-  // Do not auto-set month/year on mount — initial view should show all records without filters
-
-  // Try to auto-select first organization if not set
-  // Previously we attempted to auto-select the first organization when none was set.
-  // That caused the page to fetch again and sometimes hide records returned for the month/year without an organization filter.
-  // To avoid unexpected hiding of data, we do not auto-select an organization anymore.
-
   const [data, setData] = useState<any[]>([]);
   const [total, setTotal] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -82,7 +74,6 @@ export default function MonthlyRosterPage() {
     >
   >({});
 
-  // Helper: choose readable text color (black/white) for a given hex background
   const getContrastColor = (hex?: string) => {
     if (!hex) return "#fff";
     try {
@@ -120,7 +111,6 @@ export default function MonthlyRosterPage() {
   const [assignSelection, setAssignSelection] = useState<string | undefined>(
     undefined
   );
-  // Fetch all unique schedule IDs in the data and cache their code/color (robust to HTML/non-JSON responses)
   useEffect(() => {
     const ids = new Set<number>();
     for (const row of data) {
@@ -161,7 +151,6 @@ export default function MonthlyRosterPage() {
           toFetch.map(async (id) => {
             const s = await safeGetSchedule(id);
             if (!mounted) return;
-            // normalize keys
             const code = s.schedule_code ?? s.code ?? `SCH-${id}`;
             const color = s.sch_color ?? s.color ?? "#999";
             const open_shift_flag =
@@ -190,18 +179,15 @@ export default function MonthlyRosterPage() {
     return () => {
       mounted = false;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   const { createMutation, finalizeMutation, deleteMutation, editMutation } =
     useMonthlyRosterMutations();
   const currentUserId = useUserId();
 
-  // Compute whether all visible rows are selected (use data length, not pageSize)
   const allCheckedLocal =
     selected.length > 0 && selected.length === data.length;
 
-  // Centralized fetch function so we can call it after mutations
   const fetchData = async () => {
     setIsLoading(true);
     try {
@@ -218,7 +204,6 @@ export default function MonthlyRosterPage() {
       };
 
       let resp: any;
-      // If month/year provided, prefer filter endpoint (handles overlap logic)
   if (filters.month && filters.year) {
         const params = {
           ...baseParams,
@@ -283,7 +268,7 @@ export default function MonthlyRosterPage() {
     try {
       await finalizeMutation.mutateAsync(row.schedule_roster_id);
       toast.success(t('scheduling.monthlyRoster.table.finalized') || 'Finalized');
-      setPage(1); // reload first page
+      setPage(1);
       await fetchData();
     } catch (e) {
       toast.error(t('scheduling.monthlyRoster.table.finalizeFailed') || 'Failed to finalize');
@@ -301,7 +286,6 @@ export default function MonthlyRosterPage() {
     }
   };
 
-  // Table columns for GenericTable
   const columns: TableColumn<any>[] = [
     {
       key: "emp_no",
@@ -373,7 +357,6 @@ export default function MonthlyRosterPage() {
             </button>
           );
         }
-        // If scheduleId exists but we don't have details yet, show a small fallback label
         if (typeof scheduleId === "number") {
           return (
             <div className="w-full h-8 flex items-center justify-center rounded bg-muted/40 text-sm">
@@ -392,7 +375,6 @@ export default function MonthlyRosterPage() {
             </div>
           );
         }
-        // No schedule assigned: show a button to assign
         return (
           <div className="w-full h-8 flex items-center justify-center border-dashed border-muted/30 bg-muted/10">
             <button
@@ -411,7 +393,6 @@ export default function MonthlyRosterPage() {
     })),
   ];
 
-  // Assign Modal handler and UI (moved outside columns accessor)
   const handleAssign = async (scheduleId: number) => {
     if (!editCell) return;
     setAssigning(true);

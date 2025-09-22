@@ -46,7 +46,6 @@ const PermissionTypesList: React.FC<Props> = ({
 }) => {
   const { t } = useTranslations();
 
-  // Define table columns
   const columns: TableColumn<PermissionType>[] = [
     {
       key: "code",

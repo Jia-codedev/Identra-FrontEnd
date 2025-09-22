@@ -51,7 +51,6 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
     Partial<Record<keyof EmployeeFormFields, string>>
   >({});
 
-  // Dropdown data
   const [organizations, setOrganizations] = useState<DropdownOption[]>([]);
   const [designations, setDesignations] = useState<DropdownOption[]>([]);
   const [nationalities, setNationalities] = useState<DropdownOption[]>([]);
@@ -60,7 +59,6 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
   const [grades, setGrades] = useState<DropdownOption[]>([]);
   const [locations, setLocations] = useState<DropdownOption[]>([]);
 
-  // Move initialForm outside to prevent recreation on every render
   const initialForm = React.useMemo<EmployeeFormFields>(
     () => ({
       emp_no: "",
@@ -115,7 +113,6 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
 
   const [formData, setFormData] = useState<EmployeeFormFields>(initialForm);
 
-  // Reset form when modal is closed
   useEffect(() => {
     if (!isOpen) {
       setFormData(initialForm);
@@ -125,7 +122,6 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
     }
   }, [isOpen, initialForm]);
 
-  // Define steps
   const steps: Step[] = [
     {
       id: "basic",
@@ -163,14 +159,12 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
       : []),
   ];
 
-  // Load dropdown data and then load employee data for edit mode
   useEffect(() => {
     if (!isOpen) return;
 
     const fetchDropdownData = async () => {
       setIsLoadingData(true);
       try {
-        // Use the getEmployeeLookupData method and fetch countries
         const [lookupDataResults, countriesRes] = await Promise.all([
           employeeApi.getEmployeeLookupData(),
           countriesApi.getCountriesWithoutPagination().catch((err) => {
@@ -188,7 +182,6 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
           locationRes,
         ] = lookupDataResults;
 
-        // Set organizations
         if (orgRes.data?.success) {
           setOrganizations(
             orgRes.data.data.map((org: any) => ({
@@ -200,7 +193,6 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
           );
         }
 
-        // Set grades
         if (gradeRes.data?.success) {
           setGrades(
             gradeRes.data.data.map((grade: any) => ({
@@ -212,7 +204,6 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
           );
         }
 
-        // Set designations
         if (designationRes.data?.success) {
           setDesignations(
             designationRes.data.data.map((des: any) => ({
@@ -223,8 +214,6 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
             }))
           );
         }
-
-        // Set nationalities
         if (nationalityRes.data?.success) {
           setNationalities(
             nationalityRes.data.data.map((nat: any) => ({
@@ -236,7 +225,6 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
           );
         }
 
-        // Set countries (for passport issue country)
         if (countriesRes.data?.success) {
           setCountries(
             countriesRes.data.data.map((country: any) => ({
@@ -251,11 +239,9 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
             "Countries API response was not successful:",
             countriesRes
           );
-          // Fallback to empty array if countries API fails
           setCountries([]);
         }
 
-        // Set employee types
         if (employeeTypeRes.data?.success) {
           setEmployeeTypes(
             employeeTypeRes.data.data.map((et: any) => ({
@@ -267,7 +253,6 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
           );
         }
 
-        // Set locations
         if (locationRes.data?.success) {
           setLocations(
             locationRes.data.data.map((loc: any) => ({
@@ -279,7 +264,6 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
           );
         }
 
-        // IMPORTANT: Set form data AFTER dropdown options are loaded
         if (mode === "edit" && employee) {
           console.log(
             "Setting form data for edit mode after dropdown data loaded:",
@@ -294,7 +278,6 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
           );
           console.log("Employee organization_id:", employee.organization_id);
 
-          // Use setTimeout to ensure state updates are processed
           setTimeout(() => {
             setFormData({
               emp_no: employee.emp_no || "",
@@ -366,7 +349,7 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
               manager_id: employee.manager_id,
               citizenship_id: employee.citizenship_id,
             });
-          }, 100); // Small delay to ensure state updates
+          }, 100);
         } else if (mode === "add") {
           console.log("Resetting form for add mode");
           setFormData(initialForm);
@@ -386,7 +369,6 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
   const handleInputChange = useCallback(
     (field: keyof EmployeeFormFields, value: any) => {
       setFormData((prev) => ({ ...prev, [field]: value }));
-      // Clear error when user starts typing
       if (errors[field]) {
         setErrors((prev) => ({ ...prev, [field]: undefined }));
       }
@@ -398,7 +380,7 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
     const stepErrors: Partial<Record<keyof EmployeeFormFields, string>> = {};
 
     switch (currentStep) {
-      case 0: // Basic Info
+      case 0:
         if (!formData.emp_no.trim()) {
           stepErrors.emp_no = t("validation.required");
         }
@@ -419,7 +401,7 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
         }
         break;
 
-      case 1: // Organization Info
+      case 1:
         if (!formData.organization_id) {
           stepErrors.organization_id = t("validation.required");
         }
@@ -431,11 +413,11 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
         }
         break;
 
-      case 2: // Personal Info
+      case 2:
         if (!formData.citizenship_id) {
           stepErrors.citizenship_id = t("validation.required");
         }
-        // Make email mandatory
+
         if (!formData.email || !formData.email.trim()) {
           stepErrors.email = t("validation.required");
         } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
@@ -443,17 +425,16 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
         }
         break;
 
-      case 3: // Employment Info
+      case 3:
         if (!formData.join_date) {
           stepErrors.join_date = t("validation.required");
         }
         break;
 
-      case 4: // Settings
-        // No required fields in settings step
+      case 4:
         break;
 
-      case 5: // Login Credentials - only for add mode
+      case 5:
         if (mode === "add") {
           if (!formData.login_id.trim()) {
             stepErrors.login_id = t("validation.required");
@@ -461,7 +442,6 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
           if (!formData.password.trim()) {
             stepErrors.password = t("validation.required");
           } else {
-            // Password validation
             const password = formData.password;
             if (password.length < 8) {
               stepErrors.password =
@@ -534,11 +514,9 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
       inactive_date: formData.inactive_date || undefined,
     };
 
-    // Debug logging to identify empty payload issues
     console.log("Form Data before submission:", formData);
     console.log("Employee Data to be sent:", employeeData);
 
-    // Additional validation to prevent empty payloads
     if (!employeeData.emp_no || employeeData.emp_no.toString().trim() === "") {
       console.error("Employee number is missing or empty");
       toast.error("Employee number is required");
@@ -566,9 +544,7 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
           password: formData.password,
         } as IEmployee);
 
-        // Only call onSave after successful creation
         onSave(employeeData as IEmployee);
-        // Don't call onClose here - let the parent handle it via onSave
       } else if (employee?.employee_id) {
         console.log("Updating employee...");
         await updateEmployee({
@@ -576,11 +552,9 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
           employeeData: employeeData as IEmployee,
         });
         onSave(employeeData as IEmployee);
-        // Don't call onClose here - let the parent handle it via onSave
       }
     } catch (error) {
       console.error("Error saving employee:", error);
-      // Don't close the modal on error so user can fix the issue
     }
   };
 
@@ -602,17 +576,17 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
     };
 
     switch (currentStep) {
-      case 0: // Basic Info
+      case 0:
         return <EmployeeBasicInfoStep {...stepProps} />;
-      case 1: // Organization Info
+      case 1:
         return <EmployeeOrganizationStep {...stepProps} />;
-      case 2: // Personal Info
+      case 2:
         return <EmployeePersonalStep {...stepProps} />;
-      case 3: // Employment Info
+      case 3:
         return <EmployeeEmploymentStep {...stepProps} />;
-      case 4: // Settings
+      case 4:
         return <EmployeeSettingsStep {...stepProps} />;
-      case 5: // Login Credentials
+      case 5:
         return <EmployeeLoginStep {...stepProps} />;
       default:
         return null;

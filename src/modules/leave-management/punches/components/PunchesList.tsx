@@ -95,11 +95,9 @@ export default function PunchesList({
   const { t } = useTranslations();
   const { isRTL } = useLanguage();
 
-  // Ensure we have valid data and filter out any invalid entries
   const validPunches = Array.isArray(punches) ? 
     punches.filter(punch => punch && (punch.transaction_id || punch.employee_id)) : [];
 
-  // Define table columns for GenericTable
   const columns: TableColumn<EmployeeEventTransaction>[] = [
     {
       key: 'employee',
@@ -200,7 +198,6 @@ export default function PunchesList({
     );
   }
 
-  // Always use table view
   return (
       <GenericTable
         data={validPunches}

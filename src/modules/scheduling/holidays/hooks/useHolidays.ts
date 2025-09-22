@@ -66,8 +66,6 @@ export const useHolidays = () => {
             if (!old || !old.success) return old;
 
             const existing: IHoliday[] = Array.isArray(old.data) ? old.data : [];
-
-            // Prepend new holiday to the current page's data and trim to pageSize
             const newList = [response.data, ...existing].slice(0, state.pageSize);
 
             return {
@@ -77,21 +75,15 @@ export const useHolidays = () => {
             };
           });
         } catch (e) {
-          // If updating cache fails, don't throw — leave original cache intact
-          // The caller can still call refetch() if needed
-          // eslint-disable-next-line no-console
           console.error("Failed to update holidays cache after add:", e);
         }
     },
   });
 
-  // Get holidays and pagination data from server response
   const { holidays, pageCount, total } = useMemo(() => {
     if (data && data.success && Array.isArray(data.data)) {
       let filteredData: IHoliday[] = data.data;
       
-      // Apply client-side search filter if search term exists
-      // (since the backend doesn't support search filtering yet)
       if (state.search) {
         const searchLower = state.search.toLowerCase();
         filteredData = filteredData.filter(
@@ -102,7 +94,6 @@ export const useHolidays = () => {
         );
       }
 
-      // If we're doing client-side search, calculate pagination manually
       if (state.search) {
         const totalItems = filteredData.length;
         const totalPages = Math.ceil(totalItems / state.pageSize);
@@ -116,8 +107,6 @@ export const useHolidays = () => {
           total: totalItems,
         };
       }
-
-      // Use server-side pagination data when no search
       return {
         holidays: filteredData,
         pageCount: Math.ceil((data.total || 0) / state.pageSize),
@@ -190,7 +179,7 @@ export const useHolidays = () => {
   return {
     holidays,
     selected: state.selected,
-    search: searchInput, // Use searchInput for display
+    search: searchInput,
     page: state.page,
     pageCount,
     pageSize: state.pageSize,
@@ -208,7 +197,6 @@ export const useHolidays = () => {
     selectAll,
     clearSelection,
     refetch,
-    // Mutation helpers to add holidays and update cache without invalidation
     addHoliday: addHolidayMutation.mutate,
     addHolidayAsync: addHolidayMutation.mutateAsync,
     addHolidayStatus: {
