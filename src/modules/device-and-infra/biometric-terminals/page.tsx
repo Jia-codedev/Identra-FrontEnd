@@ -3,7 +3,16 @@
 import React, { useState } from "react";
 import { useTranslations } from "@/hooks/use-translations";
 import { Dialog } from "@/components/ui/dialog";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { CustomPagination } from "@/components/common/dashboard/Pagination";
 import BiometricTerminalsHeader from "./components/BiometricTerminalsHeader";
 import BiometricTerminalsList from "./components/BiometricTerminalsList";
@@ -15,7 +24,8 @@ import { BiometricTerminal } from "@/services/biometric-terminals/biometricTermi
 export default function BiometricTerminalManagementPage() {
   const { t } = useTranslations();
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [editingTerminal, setEditingTerminal] = useState<BiometricTerminal | null>(null);
+  const [editingTerminal, setEditingTerminal] =
+    useState<BiometricTerminal | null>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [terminalToDelete, setTerminalToDelete] = useState<number | null>(null);
   const [showBulkDeleteConfirm, setShowBulkDeleteConfirm] = useState(false);
@@ -98,7 +108,10 @@ export default function BiometricTerminalManagementPage() {
             selectedCount={selected.length}
             onSearchChange={setSearch}
             onStatusFilterChange={setStatusFilter}
-            onAddNew={handleAddNew}
+            onAddNew={() => {
+              setEditingTerminal(null);
+              handleAddNew();
+            }}
             onDeleteSelected={handleBulkDelete}
           />
 
@@ -125,8 +138,14 @@ export default function BiometricTerminalManagementPage() {
       </div>
 
       {/* Add/Edit Biometric Terminal Dialog */}
-      <Dialog open={isAddModalOpen} onOpenChange={(open) => !open && handleCloseModal()}>
-        <BiometricTerminalForm terminal={editingTerminal} onClose={handleCloseModal} />
+      <Dialog
+        open={isAddModalOpen}
+        onOpenChange={(open) => !open && handleCloseModal()}
+      >
+        <BiometricTerminalForm
+          terminal={editingTerminal}
+          onClose={handleCloseModal}
+        />
       </Dialog>
 
       {/* Delete Confirmation Dialog */}
@@ -151,12 +170,17 @@ export default function BiometricTerminalManagementPage() {
       </AlertDialog>
 
       {/* Bulk Delete Confirmation Dialog */}
-      <AlertDialog open={showBulkDeleteConfirm} onOpenChange={setShowBulkDeleteConfirm}>
+      <AlertDialog
+        open={showBulkDeleteConfirm}
+        onOpenChange={setShowBulkDeleteConfirm}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>{t("common.confirmDelete")}</AlertDialogTitle>
             <AlertDialogDescription>
-              {t("common.confirmBulkDeleteDescription", { count: selected.length })}
+              {t("common.confirmBulkDeleteDescription", {
+                count: selected.length,
+              })}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
