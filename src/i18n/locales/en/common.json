@@ -33,6 +33,7 @@
   "reset": "Reset",
   "confirm": "Confirm",
   "select": "Select",
+  "pickDate": "Pick Date",
   "selectAll": "Select All",
   "selectedCount": "{count} selected",
   "deleteSelected": "Delete Selected",

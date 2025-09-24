@@ -1,5 +1,5 @@
 import DashboardFadeInAnimation from "@/components/common/animations/dashboardFadeInAnimation";
-// import ChatBotDemo from "@/components/common/dashboard/chatbot/ChatbotDemo";
+import ChatBotDemo from "@/components/common/dashboard/chatbot/ChatbotDemo";
 import Navbar from "@/components/common/Navbar";
 import AppSidebar from "@/components/common/navbar/AppSidebar";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -18,12 +18,12 @@ export default function DashboardLayout({
         <SidebarInset>
           <Navbar />
           <DashboardFadeInAnimation>
-            <ScrollArea className="flex-1 w-full h-[90vh] py-2">
+            <ScrollArea className="flex-1 w-full max-h-[calc(100vh-var(--navbar-height))]">
               <div className="p-2">{children}</div>
             </ScrollArea>
           </DashboardFadeInAnimation>
         </SidebarInset>
-        {/* <ChatBotDemo /> */}
+        <ChatBotDemo />
       </SidebarProvider>
     </CustomQueryClientProvider>
   );
