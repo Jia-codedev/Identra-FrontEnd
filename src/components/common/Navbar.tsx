@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "@/hooks/use-translations";
 import { useNavigation } from "@/hooks/use-navigation";
@@ -16,6 +16,26 @@ const Navbar = () => {
   const { NAV_LINKS } = useNavigation();
   const [activeMenuId, setActiveMenuId] = useState<string>("");
   const storeActiveId = useUserNavBar((s) => s.activeMenuId);
+  const headerRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    const setNavbarHeightVar = () => {
+      const height = headerRef.current?.getBoundingClientRect().height;
+      if (typeof height === "number") {
+        document.documentElement.style.setProperty(
+          "--navbar-height",
+          `${Math.ceil(height)}px`
+        );
+      }
+    };
+
+    // Set initially
+    setNavbarHeightVar();
+
+    // Update on resize
+    window.addEventListener("resize", setNavbarHeightVar);
+    return () => window.removeEventListener("resize", setNavbarHeightVar);
+  }, []);
 
   React.useEffect(() => {
     if (storeActiveId) {
@@ -53,7 +73,8 @@ const Navbar = () => {
   };
 
   return (
-    <header className="w-full z-20 top-0 border-b bg-sidebar backdrop-blur-sm">
+    <header ref={headerRef}
+      className="w-full z-20 top-0 border-b bg-sidebar backdrop-blur-sm">
       <div className="w-full max-w-[1920px] mx-auto px-4 py-2 grid grid-cols-12 items-center gap-2 group">
         <div className="col-span-10 max-xl:col-span-9 min-w-0 overflow-hidden">
           <DesktopNav />

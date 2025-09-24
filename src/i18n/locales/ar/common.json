@@ -33,6 +33,7 @@
   "reset": "إعادة تعيين",
   "confirm": "تأكيد",
   "select": "اختيار",
+  "pickDate": "اختر تاريخ",
   "selectAll": "اختيار الكل",
   "selectedCount": "{count} مختار",
   "deleteSelected": "حذف المحدد",

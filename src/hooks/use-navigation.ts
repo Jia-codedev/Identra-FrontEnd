@@ -319,11 +319,15 @@ export const useNavigation = () => {
       g.id === "workforce-analytics"
         ? getRouteFromKey("mainMenu.workforceAnalytics.myInsights")
         : undefined,
-      secondary: g.items
+    secondary: g.items
       .map((it) => {
         const finalLabel = getItemLabel(it.labelKey);
         const keyForRoute = it.routeKey ?? it.labelKey;
-        return { label: finalLabel, labelKey: it.labelKey, href: getRouteFromKey(keyForRoute) };
+        return {
+          label: finalLabel,
+          labelKey: it.labelKey,
+          href: getRouteFromKey(keyForRoute),
+        };
       })
       .filter((s) => !!s.label),
   }));
@@ -335,7 +339,11 @@ export const useNavigation = () => {
       .map((it) => {
         const finalLabel = getItemLabel(it.labelKey);
         const keyForRoute = it.routeKey ?? it.labelKey;
-        return { label: finalLabel, labelKey: it.labelKey, href: getRouteFromKey(keyForRoute) };
+        return {
+          label: finalLabel,
+          labelKey: it.labelKey,
+          href: getRouteFromKey(keyForRoute),
+        };
       })
       .filter((s) => !!s.label),
   }));
@@ -348,7 +356,11 @@ export const useNavigation = () => {
       .map((it) => {
         const finalLabel = getItemLabel(it.labelKey);
         const keyForRoute = it.routeKey ?? it.labelKey;
-        return { label: finalLabel, labelKey: it.labelKey, href: getRouteFromKey(keyForRoute) };
+        return {
+          label: finalLabel,
+          labelKey: it.labelKey,
+          href: getRouteFromKey(keyForRoute),
+        };
       })
       .filter((s) => !!s.label),
   }));
@@ -363,7 +375,7 @@ export const useNavigation = () => {
       href: "/theme-layout",
     },
     { label: t("settings.updatePassword"), href: "/updated-password" },
-    { label: t("common.logout"), href: "/", className: "text-red-600" },
+    { label: t("common.logout"), href: "/logout", className: "text-red-600" },
   ];
 
   return {

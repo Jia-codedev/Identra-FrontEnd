@@ -35,7 +35,7 @@ export const useSchedules = () => {
       if (state.search || state.filters.code || state.filters.organization_name) {
         return schedulesApi
           .searchSchedules({
-            code: state.filters.code || state.search,
+            search: state.search,
             organization: state.filters.organization_name,
             limit: state.pageSize,
             offset: state.page,

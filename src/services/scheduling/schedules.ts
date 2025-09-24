@@ -1,11 +1,11 @@
-import { CreateScheduleRequest, UpdateScheduleRequest } from "@/modules/scheduling/scheduletypes/types";
+import {
+  CreateScheduleRequest,
+  UpdateScheduleRequest,
+} from "@/modules/scheduling/scheduletypes/types";
 import apiClient from "@/configs/api/Axios";
 
 class SchedulesApi {
-  getSchedules(params?: {
-    limit?: number;
-    offset?: number;
-  }) {
+  getSchedules(params?: { limit?: number; offset?: number }) {
     return apiClient.get("/schedule/all", { params });
   }
 
@@ -17,7 +17,7 @@ class SchedulesApi {
   }
 
   searchSchedules(params?: {
-    code?: string;
+    search?: string;
     organization?: string;
     limit?: number;
     offset?: number;
@@ -26,7 +26,7 @@ class SchedulesApi {
   }
 
   getScheduleById(id: number) {
-    return apiClient.get(`/schedule/get${id}`);
+    return apiClient.get(`/schedule/get/${id}`);
   }
 
   getSchedulesByOrganization(organizationId: number) {
