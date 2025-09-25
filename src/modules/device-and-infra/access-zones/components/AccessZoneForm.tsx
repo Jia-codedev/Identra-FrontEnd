@@ -4,8 +4,19 @@ import React, { useState, useEffect } from "react";
 import { useTranslations } from "@/hooks/use-translations";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/Input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import useAccessZoneMutations from "../hooks/useAccessZoneMutations";
 import { AccessZone } from "@/services/device-and-infra/accessZonesApi";
 
@@ -41,6 +52,16 @@ export default function AccessZoneForm({ zone, onClose }: AccessZoneFormProps) {
         floor_level: zone.floor_level,
         capacity_limit: zone.capacity_limit,
       });
+    } else {
+      setFormData({
+        zone_name: "",
+        zone_description: "",
+        zone_status: true,
+        zone_type: "both",
+        building_id: undefined,
+        floor_level: undefined,
+        capacity_limit: undefined,
+      });
     }
   }, [zone]);
 
@@ -63,7 +84,7 @@ export default function AccessZoneForm({ zone, onClose }: AccessZoneFormProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
 
     try {
@@ -82,9 +103,9 @@ export default function AccessZoneForm({ zone, onClose }: AccessZoneFormProps) {
   };
 
   const handleChange = (field: string, value: any) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
     if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: "" }));
+      setErrors((prev) => ({ ...prev, [field]: "" }));
     }
   };
 
@@ -95,11 +116,12 @@ export default function AccessZoneForm({ zone, onClose }: AccessZoneFormProps) {
           {zone ? t("accessZones.editZone") : t("accessZones.addZone")}
         </DialogTitle>
       </DialogHeader>
-      
+
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">
           <label htmlFor="zone_name" className="text-sm font-medium">
-            {t("accessZones.zoneName")} <span className="text-destructive">*</span>
+            {t("accessZones.zoneName")}{" "}
+            <span className="text-destructive">*</span>
           </label>
           <Input
             id="zone_name"
@@ -120,11 +142,15 @@ export default function AccessZoneForm({ zone, onClose }: AccessZoneFormProps) {
           <Input
             id="zone_description"
             value={formData.zone_description}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange("zone_description", e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              handleChange("zone_description", e.target.value)
+            }
             placeholder={t("accessZones.enterDescription")}
           />
           {errors.zone_description && (
-            <span className="text-red-500 text-sm">{errors.zone_description}</span>
+            <span className="text-red-500 text-sm">
+              {errors.zone_description}
+            </span>
           )}
         </div>
 
@@ -136,13 +162,21 @@ export default function AccessZoneForm({ zone, onClose }: AccessZoneFormProps) {
             value={formData.zone_type}
             onValueChange={(value) => handleChange("zone_type", value)}
           >
-            <SelectTrigger className={errors.zone_type ? "border-destructive" : ""}>
+            <SelectTrigger
+              className={errors.zone_type ? "border-destructive" : ""}
+            >
               <SelectValue placeholder={t("accessZones.selectZoneType")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="entry">{t("accessZones.types.entry")}</SelectItem>
-              <SelectItem value="exit">{t("accessZones.types.exit")}</SelectItem>
-              <SelectItem value="both">{t("accessZones.types.both")}</SelectItem>
+              <SelectItem value="entry">
+                {t("accessZones.types.entry")}
+              </SelectItem>
+              <SelectItem value="exit">
+                {t("accessZones.types.exit")}
+              </SelectItem>
+              <SelectItem value="both">
+                {t("accessZones.types.both")}
+              </SelectItem>
             </SelectContent>
           </Select>
           {errors.zone_type && (
@@ -159,7 +193,12 @@ export default function AccessZoneForm({ zone, onClose }: AccessZoneFormProps) {
               id="floor_level"
               type="number"
               value={formData.floor_level || ""}
-              onChange={(e) => handleChange("floor_level", e.target.value ? parseInt(e.target.value) : undefined)}
+              onChange={(e) =>
+                handleChange(
+                  "floor_level",
+                  e.target.value ? parseInt(e.target.value) : undefined
+                )
+              }
               placeholder={t("accessZones.enterFloor")}
             />
           </div>
@@ -172,12 +211,19 @@ export default function AccessZoneForm({ zone, onClose }: AccessZoneFormProps) {
               id="capacity_limit"
               type="number"
               value={formData.capacity_limit || ""}
-              onChange={(e) => handleChange("capacity_limit", e.target.value ? parseInt(e.target.value) : undefined)}
+              onChange={(e) =>
+                handleChange(
+                  "capacity_limit",
+                  e.target.value ? parseInt(e.target.value) : undefined
+                )
+              }
               placeholder={t("accessZones.enterCapacity")}
               className={errors.capacity_limit ? "border-destructive" : ""}
             />
             {errors.capacity_limit && (
-              <p className="text-sm text-destructive">{errors.capacity_limit}</p>
+              <p className="text-sm text-destructive">
+                {errors.capacity_limit}
+              </p>
             )}
           </div>
         </div>
@@ -188,7 +234,9 @@ export default function AccessZoneForm({ zone, onClose }: AccessZoneFormProps) {
           </label>
           <Select
             value={formData.zone_status.toString()}
-            onValueChange={(value) => handleChange("zone_status", value === "true")}
+            onValueChange={(value) =>
+              handleChange("zone_status", value === "true")
+            }
           >
             <SelectTrigger>
               <SelectValue placeholder={t("common.selectStatus")} />
@@ -205,20 +253,26 @@ export default function AccessZoneForm({ zone, onClose }: AccessZoneFormProps) {
             type="button"
             variant="outline"
             onClick={() => onClose(false)}
-            disabled={mutations.createAccessZone.isPending || mutations.updateAccessZone.isPending}
+            disabled={
+              mutations.createAccessZone.isPending ||
+              mutations.updateAccessZone.isPending
+            }
           >
             {t("common.cancel")}
           </Button>
           <Button
             type="submit"
-            disabled={mutations.createAccessZone.isPending || mutations.updateAccessZone.isPending}
+            disabled={
+              mutations.createAccessZone.isPending ||
+              mutations.updateAccessZone.isPending
+            }
           >
-            {mutations.createAccessZone.isPending || mutations.updateAccessZone.isPending
+            {mutations.createAccessZone.isPending ||
+            mutations.updateAccessZone.isPending
               ? t("common.saving")
               : zone
               ? t("common.update")
-              : t("common.create")
-            }
+              : t("common.create")}
           </Button>
         </DialogFooter>
       </form>

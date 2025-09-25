@@ -4,8 +4,19 @@ import React, { useState, useEffect } from "react";
 import { useTranslations } from "@/hooks/use-translations";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/Input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import useBiometricTerminalMutations from "../hooks/useBiometricTerminalMutations";
 import { BiometricTerminal } from "@/services/biometric-terminals/biometricTerminalsApi";
 
@@ -14,7 +25,10 @@ interface BiometricTerminalFormProps {
   onClose: (refresh?: boolean) => void;
 }
 
-export default function BiometricTerminalForm({ terminal, onClose }: BiometricTerminalFormProps) {
+export default function BiometricTerminalForm({
+  terminal,
+  onClose,
+}: BiometricTerminalFormProps) {
   const { t } = useTranslations();
   const mutations = useBiometricTerminalMutations();
 
@@ -32,6 +46,12 @@ export default function BiometricTerminalForm({ terminal, onClose }: BiometricTe
         device_no: terminal.device_no || "",
         device_name: terminal.device_name || "",
         device_status: terminal.device_status ?? true,
+      });
+    } else {
+      setFormData({
+        device_no: "",
+        device_name: "",
+        device_status: true,
       });
     }
   }, [terminal]);
@@ -52,7 +72,7 @@ export default function BiometricTerminalForm({ terminal, onClose }: BiometricTe
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
 
     try {
@@ -71,9 +91,9 @@ export default function BiometricTerminalForm({ terminal, onClose }: BiometricTe
   };
 
   const handleChange = (field: string, value: any) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
     if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: "" }));
+      setErrors((prev) => ({ ...prev, [field]: "" }));
     }
   };
 
@@ -81,14 +101,17 @@ export default function BiometricTerminalForm({ terminal, onClose }: BiometricTe
     <DialogContent className="sm:max-w-md">
       <DialogHeader>
         <DialogTitle>
-          {terminal ? t("biometricTerminals.editTerminal") : t("biometricTerminals.addTerminal")}
+          {terminal
+            ? t("biometricTerminals.editTerminal")
+            : t("biometricTerminals.addTerminal")}
         </DialogTitle>
       </DialogHeader>
-      
+
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">
           <label htmlFor="device_no" className="text-sm font-medium">
-            {t("biometricTerminals.terminalNumber")} <span className="text-destructive">*</span>
+            {t("biometricTerminals.terminalNumber")}{" "}
+            <span className="text-destructive">*</span>
           </label>
           <Input
             id="device_no"
@@ -104,7 +127,8 @@ export default function BiometricTerminalForm({ terminal, onClose }: BiometricTe
 
         <div className="space-y-2">
           <label htmlFor="device_name" className="text-sm font-medium">
-            {t("biometricTerminals.terminalName")} <span className="text-destructive">*</span>
+            {t("biometricTerminals.terminalName")}{" "}
+            <span className="text-destructive">*</span>
           </label>
           <Input
             id="device_name"
@@ -124,7 +148,9 @@ export default function BiometricTerminalForm({ terminal, onClose }: BiometricTe
           </label>
           <Select
             value={formData.device_status.toString()}
-            onValueChange={(value) => handleChange("device_status", value === "true")}
+            onValueChange={(value) =>
+              handleChange("device_status", value === "true")
+            }
           >
             <SelectTrigger>
               <SelectValue placeholder={t("common.selectStatus")} />
@@ -141,20 +167,26 @@ export default function BiometricTerminalForm({ terminal, onClose }: BiometricTe
             type="button"
             variant="outline"
             onClick={() => onClose(false)}
-            disabled={mutations.createBiometricTerminal.isPending || mutations.updateBiometricTerminal.isPending}
+            disabled={
+              mutations.createBiometricTerminal.isPending ||
+              mutations.updateBiometricTerminal.isPending
+            }
           >
             {t("common.cancel")}
           </Button>
           <Button
             type="submit"
-            disabled={mutations.createBiometricTerminal.isPending || mutations.updateBiometricTerminal.isPending}
+            disabled={
+              mutations.createBiometricTerminal.isPending ||
+              mutations.updateBiometricTerminal.isPending
+            }
           >
-            {mutations.createBiometricTerminal.isPending || mutations.updateBiometricTerminal.isPending
+            {mutations.createBiometricTerminal.isPending ||
+            mutations.updateBiometricTerminal.isPending
               ? t("common.saving")
               : terminal
               ? t("common.update")
-              : t("common.create")
-            }
+              : t("common.create")}
           </Button>
         </DialogFooter>
       </form>

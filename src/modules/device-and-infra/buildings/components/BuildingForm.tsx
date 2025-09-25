@@ -2,8 +2,19 @@ import React, { useState, useEffect } from "react";
 import { useTranslations } from "@/hooks/use-translations";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/Input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import useBuildingMutations from "../hooks/useBuildingMutations";
 import { Building } from "@/services/device-and-infra/buildingsApi";
 
@@ -60,7 +71,6 @@ const BuildingForm: React.FC<BuildingFormProps> = ({ building, onClose }) => {
   });
 
   const [errors, setErrors] = useState<FormErrors>({});
-
   useEffect(() => {
     if (building) {
       setFormData({
@@ -79,6 +89,23 @@ const BuildingForm: React.FC<BuildingFormProps> = ({ building, onClose }) => {
         postal_code: building.postal_code || "",
         building_status: building.building_status,
       });
+    } else {
+      setFormData({
+        building_name: "",
+        building_code: "",
+        building_address: "",
+        building_description: "",
+        building_type: "office",
+        total_floors: "",
+        total_area: "",
+        contact_person: "",
+        contact_phone: "",
+        contact_email: "",
+        city: "",
+        country: "",
+        postal_code: "",
+        building_status: true,
+      });
     }
   }, [building]);
 
@@ -86,9 +113,9 @@ const BuildingForm: React.FC<BuildingFormProps> = ({ building, onClose }) => {
     field: keyof FormData,
     value: string | number | boolean
   ) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
     if (errors[field as keyof FormErrors]) {
-      setErrors(prev => ({ ...prev, [field]: undefined }));
+      setErrors((prev) => ({ ...prev, [field]: undefined }));
     }
   };
 
@@ -115,7 +142,10 @@ const BuildingForm: React.FC<BuildingFormProps> = ({ building, onClose }) => {
       newErrors.total_floors = t("validation.required");
     }
 
-    if (formData.contact_email && !/\S+@\S+\.\S+/.test(formData.contact_email)) {
+    if (
+      formData.contact_email &&
+      !/\S+@\S+\.\S+/.test(formData.contact_email)
+    ) {
       newErrors.contact_email = t("validation.email");
     }
 
@@ -149,10 +179,42 @@ const BuildingForm: React.FC<BuildingFormProps> = ({ building, onClose }) => {
         { id: building.id, data: submitData },
         {
           onSuccess: () => {
+            setFormData({
+              building_name: "",
+              building_code: "",
+              building_address: "",
+              building_description: "",
+              building_type: "office",
+              total_floors: "",
+              total_area: "",
+              contact_person: "",
+              contact_phone: "",
+              contact_email: "",
+              city: "",
+              country: "",
+              postal_code: "",
+              building_status: true,
+            });
             onClose();
           },
         }
       );
+      setFormData({
+        building_name: "",
+        building_code: "",
+        building_address: "",
+        building_description: "",
+        building_type: "office",
+        total_floors: "",
+        total_area: "",
+        contact_person: "",
+        contact_phone: "",
+        contact_email: "",
+        city: "",
+        country: "",
+        postal_code: "",
+        building_status: true,
+      });
     } else {
       createBuilding.mutate(submitData, {
         onSuccess: () => {
@@ -169,18 +231,21 @@ const BuildingForm: React.FC<BuildingFormProps> = ({ building, onClose }) => {
           {building ? t("buildings.editBuilding") : t("buildings.addBuilding")}
         </DialogTitle>
       </DialogHeader>
-      
+
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Basic Information */}
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
             <label htmlFor="building_name" className="text-sm font-medium">
-              {t("buildings.buildingName")} <span className="text-destructive">*</span>
+              {t("buildings.buildingName")}{" "}
+              <span className="text-destructive">*</span>
             </label>
             <Input
               id="building_name"
               value={formData.building_name}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange("building_name", e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                handleChange("building_name", e.target.value)
+              }
               placeholder={t("buildings.enterBuildingName")}
               className={errors.building_name ? "border-destructive" : ""}
             />
@@ -191,12 +256,15 @@ const BuildingForm: React.FC<BuildingFormProps> = ({ building, onClose }) => {
 
           <div className="space-y-2">
             <label htmlFor="building_code" className="text-sm font-medium">
-              {t("buildings.buildingCode")} <span className="text-destructive">*</span>
+              {t("buildings.buildingCode")}{" "}
+              <span className="text-destructive">*</span>
             </label>
             <Input
               id="building_code"
               value={formData.building_code}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange("building_code", e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                handleChange("building_code", e.target.value)
+              }
               placeholder={t("buildings.enterBuildingCode")}
               className={errors.building_code ? "border-destructive" : ""}
             />
@@ -213,12 +281,16 @@ const BuildingForm: React.FC<BuildingFormProps> = ({ building, onClose }) => {
           <Input
             id="building_address"
             value={formData.building_address}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange("building_address", e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              handleChange("building_address", e.target.value)
+            }
             placeholder={t("buildings.enterAddress")}
             className={errors.building_address ? "border-destructive" : ""}
           />
           {errors.building_address && (
-            <p className="text-sm text-destructive">{errors.building_address}</p>
+            <p className="text-sm text-destructive">
+              {errors.building_address}
+            </p>
           )}
         </div>
 
@@ -229,7 +301,9 @@ const BuildingForm: React.FC<BuildingFormProps> = ({ building, onClose }) => {
           <Input
             id="building_description"
             value={formData.building_description}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange("building_description", e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              handleChange("building_description", e.target.value)
+            }
             placeholder={t("buildings.enterDescription")}
           />
         </div>
@@ -244,15 +318,27 @@ const BuildingForm: React.FC<BuildingFormProps> = ({ building, onClose }) => {
               value={formData.building_type}
               onValueChange={(value) => handleChange("building_type", value)}
             >
-              <SelectTrigger className={errors.building_type ? "border-destructive" : ""}>
+              <SelectTrigger
+                className={errors.building_type ? "border-destructive" : ""}
+              >
                 <SelectValue placeholder={t("buildings.selectBuildingType")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="office">{t("buildings.types.office")}</SelectItem>
-                <SelectItem value="warehouse">{t("buildings.types.warehouse")}</SelectItem>
-                <SelectItem value="factory">{t("buildings.types.factory")}</SelectItem>
-                <SelectItem value="residential">{t("buildings.types.residential")}</SelectItem>
-                <SelectItem value="mixed">{t("buildings.types.mixed")}</SelectItem>
+                <SelectItem value="office">
+                  {t("buildings.types.office")}
+                </SelectItem>
+                <SelectItem value="warehouse">
+                  {t("buildings.types.warehouse")}
+                </SelectItem>
+                <SelectItem value="factory">
+                  {t("buildings.types.factory")}
+                </SelectItem>
+                <SelectItem value="residential">
+                  {t("buildings.types.residential")}
+                </SelectItem>
+                <SelectItem value="mixed">
+                  {t("buildings.types.mixed")}
+                </SelectItem>
               </SelectContent>
             </Select>
             {errors.building_type && (
@@ -262,14 +348,20 @@ const BuildingForm: React.FC<BuildingFormProps> = ({ building, onClose }) => {
 
           <div className="space-y-2">
             <label htmlFor="total_floors" className="text-sm font-medium">
-              {t("buildings.floors")} <span className="text-destructive">*</span>
+              {t("buildings.floors")}{" "}
+              <span className="text-destructive">*</span>
             </label>
             <Input
               id="total_floors"
               type="number"
               min="1"
               value={formData.total_floors || ""}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange("total_floors", e.target.value ? parseInt(e.target.value) : "")}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                handleChange(
+                  "total_floors",
+                  e.target.value ? parseInt(e.target.value) : ""
+                )
+              }
               placeholder={t("buildings.enterFloors")}
               className={errors.total_floors ? "border-destructive" : ""}
             />
@@ -288,15 +380,22 @@ const BuildingForm: React.FC<BuildingFormProps> = ({ building, onClose }) => {
             type="number"
             min="0"
             value={formData.total_area || ""}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange("total_area", e.target.value ? parseInt(e.target.value) : "")}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              handleChange(
+                "total_area",
+                e.target.value ? parseInt(e.target.value) : ""
+              )
+            }
             placeholder={t("buildings.enterArea")}
           />
         </div>
 
         {/* Contact Information */}
         <div className="space-y-4">
-          <h3 className="text-lg font-medium">{t("buildings.contactInformation")}</h3>
-          
+          <h3 className="text-lg font-medium">
+            {t("buildings.contactInformation")}
+          </h3>
+
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <label htmlFor="contact_person" className="text-sm font-medium">
@@ -305,7 +404,9 @@ const BuildingForm: React.FC<BuildingFormProps> = ({ building, onClose }) => {
               <Input
                 id="contact_person"
                 value={formData.contact_person}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange("contact_person", e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  handleChange("contact_person", e.target.value)
+                }
                 placeholder={t("buildings.enterContactPerson")}
               />
             </div>
@@ -317,7 +418,9 @@ const BuildingForm: React.FC<BuildingFormProps> = ({ building, onClose }) => {
               <Input
                 id="contact_phone"
                 value={formData.contact_phone}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange("contact_phone", e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  handleChange("contact_phone", e.target.value)
+                }
                 placeholder={t("buildings.enterContactPhone")}
               />
             </div>
@@ -331,7 +434,9 @@ const BuildingForm: React.FC<BuildingFormProps> = ({ building, onClose }) => {
               id="contact_email"
               type="email"
               value={formData.contact_email}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange("contact_email", e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                handleChange("contact_email", e.target.value)
+              }
               placeholder={t("buildings.enterContactEmail")}
               className={errors.contact_email ? "border-destructive" : ""}
             />
@@ -343,8 +448,10 @@ const BuildingForm: React.FC<BuildingFormProps> = ({ building, onClose }) => {
 
         {/* Location Information */}
         <div className="space-y-4">
-          <h3 className="text-lg font-medium">{t("buildings.locationInformation")}</h3>
-          
+          <h3 className="text-lg font-medium">
+            {t("buildings.locationInformation")}
+          </h3>
+
           <div className="grid grid-cols-3 gap-4">
             <div className="space-y-2">
               <label htmlFor="city" className="text-sm font-medium">
@@ -353,7 +460,9 @@ const BuildingForm: React.FC<BuildingFormProps> = ({ building, onClose }) => {
               <Input
                 id="city"
                 value={formData.city}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange("city", e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  handleChange("city", e.target.value)
+                }
                 placeholder={t("buildings.enterCity")}
               />
             </div>
@@ -365,7 +474,9 @@ const BuildingForm: React.FC<BuildingFormProps> = ({ building, onClose }) => {
               <Input
                 id="country"
                 value={formData.country}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange("country", e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  handleChange("country", e.target.value)
+                }
                 placeholder={t("buildings.enterCountry")}
               />
             </div>
@@ -377,7 +488,9 @@ const BuildingForm: React.FC<BuildingFormProps> = ({ building, onClose }) => {
               <Input
                 id="postal_code"
                 value={formData.postal_code}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange("postal_code", e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  handleChange("postal_code", e.target.value)
+                }
                 placeholder={t("buildings.enterPostalCode")}
               />
             </div>
@@ -390,7 +503,9 @@ const BuildingForm: React.FC<BuildingFormProps> = ({ building, onClose }) => {
           </label>
           <Select
             value={formData.building_status.toString()}
-            onValueChange={(value) => handleChange("building_status", value === "true")}
+            onValueChange={(value) =>
+              handleChange("building_status", value === "true")
+            }
           >
             <SelectTrigger>
               <SelectValue placeholder={t("common.selectStatus")} />
@@ -406,16 +521,15 @@ const BuildingForm: React.FC<BuildingFormProps> = ({ building, onClose }) => {
           <Button type="button" variant="outline" onClick={onClose}>
             {t("common.cancel")}
           </Button>
-          <Button 
-            type="submit" 
+          <Button
+            type="submit"
             disabled={createBuilding.isPending || updateBuilding.isPending}
           >
-            {(createBuilding.isPending || updateBuilding.isPending) 
-              ? t("common.saving") 
-              : building 
-                ? t("common.update") 
-                : t("common.create")
-            }
+            {createBuilding.isPending || updateBuilding.isPending
+              ? t("common.saving")
+              : building
+              ? t("common.update")
+              : t("common.create")}
           </Button>
         </DialogFooter>
       </form>

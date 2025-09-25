@@ -31,6 +31,9 @@ interface AccessZonesListProps {
   onSelectItem: (id: number) => void;
   onSelectAll: () => void;
   onEditItem: (zone: AccessZone) => void;
+  onPageChange: (page: number) => void;
+  onPageSizeChange: (size: number) => void;
+
   onDeleteItem: (id: number) => void;
 }
 
@@ -42,6 +45,8 @@ export default function AccessZonesList({
   onSelectItem,
   onSelectAll,
   onEditItem,
+  onPageChange,
+  onPageSizeChange,
   onDeleteItem,
 }: AccessZonesListProps) {
   const { t } = useTranslations();
@@ -49,14 +54,14 @@ export default function AccessZonesList({
 
   const getZoneTypeBadgeVariant = (type: string) => {
     switch (type) {
-      case 'entry':
-        return 'default';
-      case 'exit':
-        return 'secondary';
-      case 'both':
-        return 'outline';
+      case "entry":
+        return "default";
+      case "exit":
+        return "secondary";
+      case "both":
+        return "outline";
       default:
-        return 'secondary';
+        return "secondary";
     }
   };
 
@@ -92,7 +97,8 @@ export default function AccessZonesList({
     {
       key: "floor_level",
       header: t("accessZones.floor"),
-      accessor: (item) => item.floor_level ? `Floor ${item.floor_level}` : "-",
+      accessor: (item) =>
+        item.floor_level ? `Floor ${item.floor_level}` : "-",
       width: "10%",
     },
     {
@@ -117,15 +123,17 @@ export default function AccessZonesList({
         pageSize={10}
         allChecked={allChecked}
         getItemId={(item: AccessZone) => item.id}
-        getItemDisplayName={(item: AccessZone) => `${item.zone_name} (${item.building_name})`}
+        getItemDisplayName={(item: AccessZone) =>
+          `${item.zone_name} (${item.building_name})`
+        }
         onSelectItem={onSelectItem}
         onSelectAll={onSelectAll}
         onEditItem={onEditItem}
         onDeleteItem={onDeleteItem}
         noDataMessage={t("accessZones.noZonesFound")}
         isLoading={isLoading}
-        onPageChange={() => {}}
-        onPageSizeChange={() => {}}
+        onPageChange={onPageChange}
+        onPageSizeChange={onPageSizeChange}
         showActions={true}
       />
     </div>

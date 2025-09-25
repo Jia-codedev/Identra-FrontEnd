@@ -60,8 +60,10 @@ class BiometricTerminalsApi {
     
     if (params.limit) queryParams.set("limit", params.limit.toString());
     if (params.offset !== undefined) queryParams.set("offset", (Number(params.offset) + 1).toString());
-    if (params.device_no) queryParams.set("device_no", params.device_no);
-    if (params.device_name) queryParams.set("device_name", params.device_name);
+    // if (params.device_no) queryParams.set("device_no", params.device_no);
+    // if (params.device_name) queryParams.set("device_name", params.device_name);
+
+    if(params.device_name && params.device_no) queryParams.set("search", params.device_name);
     if (params.device_status !== undefined) queryParams.set("device_status", params.device_status.toString());
     // if (params.delete_flag !== undefined) queryParams.set("delete_flag", params.delete_flag.toString());
     const response = await apiClient.get(`${this.baseUrl}/all?${queryParams.toString()}`);

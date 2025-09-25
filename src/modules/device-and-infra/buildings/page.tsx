@@ -1,14 +1,14 @@
 "use client";
 
-import React, { useState } from 'react';
-import { Dialog } from '@/components/ui/dialog';
-import { CustomPagination } from '@/components/common/dashboard/Pagination';
-import BuildingsHeader from '@/modules/device-and-infra/buildings/components/BuildingsHeader';
-import BuildingsList from '@/modules/device-and-infra/buildings/components/BuildingsList';
-import BuildingForm from '@/modules/device-and-infra/buildings/components/BuildingForm';
-import { useBuildings } from '@/modules/device-and-infra/buildings/hooks/useBuildings';
-import useBuildingMutations from '@/modules/device-and-infra/buildings/hooks/useBuildingMutations';
-import { Building } from '@/services/device-and-infra/buildingsApi';
+import React, { useState } from "react";
+import { Dialog } from "@/components/ui/dialog";
+import { CustomPagination } from "@/components/common/dashboard/Pagination";
+import BuildingsHeader from "@/modules/device-and-infra/buildings/components/BuildingsHeader";
+import BuildingsList from "@/modules/device-and-infra/buildings/components/BuildingsList";
+import BuildingForm from "@/modules/device-and-infra/buildings/components/BuildingForm";
+import { useBuildings } from "@/modules/device-and-infra/buildings/hooks/useBuildings";
+import useBuildingMutations from "@/modules/device-and-infra/buildings/hooks/useBuildingMutations";
+import { Building } from "@/services/device-and-infra/buildingsApi";
 
 export default function BuildingsPage() {
   const [showForm, setShowForm] = useState(false);
@@ -109,7 +109,7 @@ export default function BuildingsPage() {
         onAddNew={handleAddBuilding}
         onDeleteSelected={handleBulkDeleteBuildings}
       />
-      
+
       <BuildingsList
         buildings={buildings}
         selected={selected}
@@ -137,10 +137,7 @@ export default function BuildingsPage() {
       )}
 
       <Dialog open={showForm} onOpenChange={setShowForm}>
-        <BuildingForm
-          building={editingBuilding}
-          onClose={handleCloseForm}
-        />
+        <BuildingForm building={editingBuilding} onClose={handleCloseForm} />
       </Dialog>
     </div>
   );

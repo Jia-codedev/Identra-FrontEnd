@@ -8,11 +8,13 @@ import AccessZoneForm from "@/modules/device-and-infra/access-zones/components/A
 import { useAccessZones } from "@/modules/device-and-infra/access-zones/hooks/useAccessZones";
 import { AccessZone } from "@/services/device-and-infra/accessZonesApi";
 import { CustomPagination } from "@/components/common/dashboard/Pagination";
+import { useAccessZoneMutations } from "@/modules/device-and-infra/access-zones/hooks/useAccessZoneMutations";
 
 export default function AccessZonesPage() {
   const [showForm, setShowForm] = useState(false);
   const [editingZone, setEditingZone] = useState<AccessZone | null>(null);
 
+  const { deleteAccessZone, bulkDeleteAccessZones } = useAccessZoneMutations();
   const {
     accessZones,
     search,
@@ -67,7 +69,17 @@ export default function AccessZonesPage() {
   };
 
   const handleDeleteZone = (zoneId: number) => {
-    console.log("Delete zone:", zoneId);
+    deleteAccessZone.mutate(zoneId);
+  };
+
+  const handleBulkDeleteAccessZones = () => {
+    if (selected?.length > 0) {
+      bulkDeleteAccessZones.mutate(selected, {
+        onSuccess: () => {
+          clearSelection();
+        },
+      });
+    }
   };
 
   const handleCloseForm = () => {
@@ -86,10 +98,7 @@ export default function AccessZonesPage() {
         onStatusFilterChange={handleStatusFilterChange}
         onTypeFilterChange={handleTypeFilterChange}
         onAddNew={handleAddZone}
-        onDeleteSelected={() => {
-          console.log("Delete selected zones:", selected);
-          clearSelection();
-        }}
+        onDeleteSelected={handleBulkDeleteAccessZones}
       />
 
       <AccessZonesList
@@ -101,15 +110,19 @@ export default function AccessZonesPage() {
         onSelectAll={handleSelectAll}
         onEditItem={handleEditZone}
         onDeleteItem={handleDeleteZone}
-      />
-      <CustomPagination
-        currentPage={page}
-        totalPages={pageCount}
-        pageSize={pageSize}
-        pageSizeOptions={pageSizeOptions}
         onPageChange={setPage}
         onPageSizeChange={setPageSize}
       />
+      {accessZones.length > 0 && (
+        <CustomPagination
+          currentPage={page}
+          totalPages={pageCount}
+          pageSize={pageSize}
+          pageSizeOptions={pageSizeOptions}
+          onPageChange={setPage}
+          onPageSizeChange={setPageSize}
+        />
+      )}
       <Dialog open={showForm} onOpenChange={setShowForm}>
         <AccessZoneForm zone={editingZone} onClose={handleCloseForm} />
       </Dialog>

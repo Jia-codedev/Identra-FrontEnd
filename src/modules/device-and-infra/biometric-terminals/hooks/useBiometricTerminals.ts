@@ -2,7 +2,9 @@
 
 import { useState, useMemo, useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
-import biometricTerminalsApi, { ListBiometricTerminalsRequest } from "@/services/biometric-terminals/biometricTerminalsApi";
+import biometricTerminalsApi, {
+  ListBiometricTerminalsRequest,
+} from "@/services/biometric-terminals/biometricTerminalsApi";
 
 const DEFAULT_PAGE_SIZE = 10;
 const PAGE_SIZE_OPTIONS = [5, 10, 20, 50];
@@ -14,16 +16,19 @@ export const useBiometricTerminals = () => {
   const [selected, setSelected] = useState<number[]>([]);
   const [statusFilter, setStatusFilter] = useState<boolean | undefined>();
 
-  const params: ListBiometricTerminalsRequest = useMemo(() => ({
-    limit: pageSize,
-    offset: (page - 1) * pageSize,
-    ...(search ? { 
-      device_name: search,
-      device_no: search 
-    } : {}),
-    ...(statusFilter !== undefined ? { device_status: statusFilter } : {}),
-    delete_flag: false,
-  }), [page, pageSize, search, statusFilter]);
+  const params: ListBiometricTerminalsRequest = useMemo(
+    () => ({
+      ...(search
+        ? {
+            device_name: search,
+            device_no: search,
+          }
+        : { limit: pageSize, offset: (page - 1) * pageSize }),
+      ...(statusFilter !== undefined ? { device_status: statusFilter } : {}),
+      delete_flag: false,
+    }),
+    [page, pageSize, search, statusFilter]
+  );
 
   const { data, isLoading, refetch } = useQuery({
     queryKey: ["biometric-terminals", params],
@@ -32,7 +37,7 @@ export const useBiometricTerminals = () => {
 
   const biometricTerminals = useMemo(() => {
     const items = Array.isArray(data?.data) ? data.data : [];
-    return items.map(item => ({
+    return items.map((item) => ({
       id: item.device_id,
       device_id: item.device_id,
       device_no: item.device_no || "",
@@ -59,10 +64,8 @@ export const useBiometricTerminals = () => {
   }, [data?.hasNext]);
 
   const selectItem = useCallback((id: number) => {
-    setSelected(prev => 
-      prev.includes(id) 
-        ? prev.filter(item => item !== id)
-        : [...prev, id]
+    setSelected((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
   }, []);
 
@@ -70,7 +73,7 @@ export const useBiometricTerminals = () => {
     if (allChecked) {
       setSelected([]);
     } else {
-      setSelected(biometricTerminals.map(terminal => terminal.id));
+      setSelected(biometricTerminals.map((terminal) => terminal.id));
     }
   }, [biometricTerminals]);
 
@@ -79,7 +82,10 @@ export const useBiometricTerminals = () => {
   }, []);
 
   const allChecked = useMemo(() => {
-    return biometricTerminals.length > 0 && selected.length === biometricTerminals.length;
+    return (
+      biometricTerminals.length > 0 &&
+      selected.length === biometricTerminals.length
+    );
   }, [biometricTerminals.length, selected.length]);
 
   return {
