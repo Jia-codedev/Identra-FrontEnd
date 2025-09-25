@@ -97,7 +97,6 @@ export default function BiometricTerminalForm({
     }
   };
 
-  console.log(!!terminal);
   return (
     <DialogContent className="sm:max-w-md">
       <DialogHeader>

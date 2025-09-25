@@ -61,170 +61,71 @@ export interface AccessZoneResponse {
   data: AccessZone;
 }
 
-export interface CreateAccessZoneResponse {
+export interface CreateAccessZoneResponse extends AccessZoneResponse {
   message: string;
   data: AccessZone;
 }
 
+export interface UpdateAccessZoneResponse extends Partial<AccessZoneResponse> {}
+
 class AccessZonesApi {
   private baseUrl = "/access-zones";
 
-  async list(params: ListAccessZonesRequest = {}): Promise<AccessZonesListResponse> {
-    const mockData: AccessZone[] = [
-      {
-        zone_id: 1,
-        zone_name: "Main Entrance",
-        zone_description: "Primary building entrance access zone",
-        zone_status: true,
-        zone_type: "both",
-        building_id: 1,
-        building_name: "Main Building",
-        floor_level: 1,
-        capacity_limit: 100,
-        delete_flag: false,
-        created_id: 1,
-        created_date: "2024-01-15T08:00:00Z",
-        last_updated_id: 1,
-        last_updated_date: "2024-01-15T08:00:00Z"
-      },
-      {
-        zone_id: 2,
-        zone_name: "Executive Floor",
-        zone_description: "Restricted access zone for executives",
-        zone_status: true,
-        zone_type: "entry",
-        building_id: 1,
-        building_name: "Main Building",
-        floor_level: 5,
-        capacity_limit: 25,
-        delete_flag: false,
-        created_id: 1,
-        created_date: "2024-01-16T09:00:00Z",
-        last_updated_id: 1,
-        last_updated_date: "2024-01-16T09:00:00Z"
-      },
-      {
-        zone_id: 3,
-        zone_name: "Server Room",
-        zone_description: "High security zone for IT infrastructure",
-        zone_status: true,
-        zone_type: "both",
-        building_id: 2,
-        building_name: "IT Building",
-        floor_level: 2,
-        capacity_limit: 5,
-        delete_flag: false,
-        created_id: 1,
-        created_date: "2024-01-17T10:00:00Z",
-        last_updated_id: 1,
-        last_updated_date: "2024-01-17T10:00:00Z"
-      }
-    ];
-
-    let filteredData = mockData.filter(zone => !zone.delete_flag);
-    
-    if (params.zone_name) {
-      filteredData = filteredData.filter(zone => 
-        zone.zone_name.toLowerCase().includes(params.zone_name!.toLowerCase())
-      );
-    }
-    
-    if (params.zone_status !== undefined) {
-      filteredData = filteredData.filter(zone => zone.zone_status === params.zone_status);
-    }
-    
-    if (params.zone_type) {
-      filteredData = filteredData.filter(zone => zone.zone_type === params.zone_type);
-    }
-
-    const limit = params.limit || 10;
-    const offset = params.offset || 0;
-    const paginatedData = filteredData.slice(offset, offset + limit);
-
-    return {
-      success: true,
-      data: paginatedData,
-      hasNext: offset + limit < filteredData.length,
-      total: filteredData.length
-    };
+  async list(
+    params: ListAccessZonesRequest = {}
+  ): Promise<AccessZonesListResponse> {
+    const queryParams = new URLSearchParams();
+    if (params.limit) queryParams.set("limit", params.limit.toString());
+    if (params.offset !== undefined)
+      queryParams.set("offset", (Number(params.offset) + 1).toString());
+    if (params.zone_name) queryParams.set("zone_name", params.zone_name);
+    if (params.zone_type) queryParams.set("zone_type", params.zone_type);
+    if (params.zone_status !== undefined)
+      queryParams.set("zone_status", params.zone_status.toString());
+    if (params.building_id)
+      queryParams.set("building_id", params.building_id.toString());
+    if (params.delete_flag !== undefined)
+      queryParams.set("delete_flag", params.delete_flag.toString());
+    const response = await apiClient.get(
+      `${this.baseUrl}/all?${queryParams.toString()}`
+    );
+    return response.data;
   }
 
   async getById(id: number): Promise<AccessZoneResponse> {
-    const mockZone: AccessZone = {
-      zone_id: id,
-      zone_name: "Mock Zone",
-      zone_description: "Mock access zone",
-      zone_status: true,
-      zone_type: "both",
-      building_id: 1,
-      building_name: "Main Building",
-      floor_level: 1,
-      capacity_limit: 50,
-      delete_flag: false,
-      created_id: 1,
-      created_date: "2024-01-15T08:00:00Z",
-      last_updated_id: 1,
-      last_updated_date: "2024-01-15T08:00:00Z"
-    };
-
-    return {
-      success: true,
-      data: mockZone
-    };
+    const response = await apiClient.post(`${this.baseUrl}/get/${id}`);
+    return response.data;
   }
 
-  async create(data: CreateAccessZoneRequest): Promise<CreateAccessZoneResponse> {
-    const mockZone: AccessZone = {
-      zone_id: Math.floor(Math.random() * 1000),
-      zone_name: data.zone_name,
-      zone_description: data.zone_description || "",
-      zone_status: data.zone_status ?? true,
-      zone_type: data.zone_type,
-      building_id: data.building_id,
-      building_name: "Mock Building",
-      floor_level: data.floor_level,
-      capacity_limit: data.capacity_limit,
-      delete_flag: false,
-      created_id: 1,
-      created_date: new Date().toISOString(),
-      last_updated_id: 1,
-      last_updated_date: new Date().toISOString()
-    };
-
-    return {
-      message: "Access zone created successfully",
-      data: mockZone
-    };
+  async create(
+    data: CreateAccessZoneRequest
+  ): Promise<CreateAccessZoneResponse> {
+    const response = await apiClient.post(`${this.baseUrl}/add`, data);
+    return response.data;
   }
 
-  async update(id: number, data: UpdateAccessZoneRequest): Promise<CreateAccessZoneResponse> {
-    const mockZone: AccessZone = {
-      zone_id: id,
-      zone_name: data.zone_name || "Updated Zone",
-      zone_description: data.zone_description || "",
-      zone_status: data.zone_status ?? true,
-      zone_type: data.zone_type || "both",
-      building_id: data.building_id,
-      building_name: "Mock Building",
-      floor_level: data.floor_level,
-      capacity_limit: data.capacity_limit,
-      delete_flag: false,
-      created_id: 1,
-      created_date: "2024-01-15T08:00:00Z",
-      last_updated_id: 1,
-      last_updated_date: new Date().toISOString()
-    };
-
-    return {
-      message: "Access zone updated successfully",
-      data: mockZone
-    };
+  async update(
+    id: number,
+    data: UpdateAccessZoneRequest
+  ): Promise<UpdateAccessZoneResponse> {
+    const response = await apiClient.put(`${this.baseUrl}/edit/${id}`, data);
+    return response?.data;
   }
 
   async delete(id: number): Promise<{ message: string }> {
-    return {
-      message: "Access zone deleted successfully"
-    };
+    const response = await apiClient.delete(`${this.baseUrl}/delete/${id}`);
+    return response.data;
+  }
+
+  async bulkDelete(ids: number[]): Promise<{
+    message: string;
+    count: number;
+    data: { deleted_count: number; requested_count: number };
+  }> {
+    const response = await apiClient.delete(`${this.baseUrl}/delete`, {
+      data: { ids },
+    });
+    return response.data;
   }
 }
 
