@@ -58,6 +58,7 @@
   "description": "الوصف",
   "code": "الرمز",
   "type": "النوع",
+  "editable": "قابل للتعديل",
   "category": "الفئة",
   "priority": "الأولوية",
   "created": "تم الإنشاء",

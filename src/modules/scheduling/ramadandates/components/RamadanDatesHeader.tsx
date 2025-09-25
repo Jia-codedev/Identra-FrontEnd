@@ -1,10 +1,11 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Search, Filter, Calendar, CalendarDays } from "lucide-react";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "@/hooks/use-translations";
+import useDebouncedCallback from "@/hooks/useDebouncedCallback";
 import { useLanguage } from "@/providers/language-provider";
 import {
   Select,
@@ -36,6 +37,18 @@ const RamadanDatesHeader: React.FC<RamadanDatesHeaderProps> = ({
 }) => {
   const { t } = useTranslations();
   const { isRTL } = useLanguage();
+  const debouncedOnSearch = useDebouncedCallback((val: string) => {
+    onSearchChange(val);
+  }, 400);
+
+  // Local state for immediate typing responsiveness
+  const [localSearch, setLocalSearch] = useState<string>(search || "");
+
+  // Sync incoming `search` prop to local state when it changes externally
+  useEffect(() => {
+    if (search !== localSearch) setLocalSearch(search || "");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [search]);
 
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 5 }, (_, i) => currentYear - 2 + i);
@@ -109,8 +122,22 @@ const RamadanDatesHeader: React.FC<RamadanDatesHeaderProps> = ({
             </span>
             <Input
               placeholder={t("scheduling.ramadanDates.searchPlaceholder")}
-              value={search}
-              onChange={(e) => onSearchChange(e.target.value)}
+              value={localSearch}
+              onChange={(e) => {
+                const v = e.target.value;
+                setLocalSearch(v);
+                debouncedOnSearch(v);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  // trigger immediate search
+                  onSearchChange(localSearch);
+                }
+              }}
+              onBlur={() => {
+                // ensure search is applied on blur
+                onSearchChange(localSearch);
+              }}
               className="border-0 bg-transparent shadow-none focus-visible:ring-0 text-sm sm:text-base placeholder:text-muted-foreground/70"
             />
             <div className="flex flex-col sm:flex-row gap-2">

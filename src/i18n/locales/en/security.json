@@ -1,0 +1,16 @@
+{
+  "roles": {
+    "title": "Roles Management",
+    "searchPlaceholder": "Search roles...",
+    "roleName": "Role Name",
+    "roleId": "Role ID",
+    "status": "Status",
+    "editable": "Editable",
+    "readOnly": "Read Only",
+    "createdDate": "Created Date",
+    "addRole": "Add Role",
+    "editRole": "Edit Role",
+    "enterRoleName": "Enter role name",
+    "noRolesFound": "No roles found"
+  }
+}

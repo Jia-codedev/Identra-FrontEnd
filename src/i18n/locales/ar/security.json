@@ -1,0 +1,16 @@
+{
+  "roles": {
+    "title": "إدارة الأدوار",
+    "searchPlaceholder": "ابحث عن الأدوار...",
+    "roleName": "اسم الدور",
+    "roleId": "معرف الدور",
+    "status": "الحالة",
+    "editable": "قابل للتعديل",
+    "readOnly": "للقراءة فقط",
+    "createdDate": "تاريخ الإنشاء",
+    "addRole": "إضافة دور",
+    "editRole": "تعديل الدور",
+    "enterRoleName": "أدخل اسم الدور",
+    "noRolesFound": "لم يتم العثور على أدوار"
+  }
+}

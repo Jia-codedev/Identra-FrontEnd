@@ -58,6 +58,7 @@
   "description": "Description",
   "code": "Code",
   "type": "Type",
+  "editable": "Editable",
   "category": "Category",
   "priority": "Priority",
   "created": "Created",

@@ -24,6 +24,7 @@ const fileToNamespace = new Map([
   ['biometric-terminals.json', 'biometricTerminals'],
   ['access-zones.json', 'accessZones'],
   ['buildings.json', 'buildings'],
+  ['security.json', 'security'],
 ]);
 
 function readJsonSafe(filePath) {
