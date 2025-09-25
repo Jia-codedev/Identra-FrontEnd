@@ -2,7 +2,10 @@
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import accessZonesApi, { CreateAccessZoneRequest, UpdateAccessZoneRequest } from "@/services/device-and-infra/accessZonesApi";
+import accessZonesApi, {
+  CreateAccessZoneRequest,
+  UpdateAccessZoneRequest,
+} from "@/services/device-and-infra/accessZonesApi";
 import { useTranslations } from "@/hooks/use-translations";
 
 export const useAccessZoneMutations = () => {
@@ -16,20 +19,22 @@ export const useAccessZoneMutations = () => {
       toast.success(t("accessZones.success.created"));
     },
     onError: (error: any) => {
-      const message = error?.response?.data?.message || t("accessZones.error.create");
+      const message =
+        error?.response?.data?.message || t("accessZones.error.create");
       toast.error(message);
     },
   });
 
   const updateAccessZone = useMutation({
-    mutationFn: ({ id, data }: { id: number; data: UpdateAccessZoneRequest }) => 
+    mutationFn: ({ id, data }: { id: number; data: UpdateAccessZoneRequest }) =>
       accessZonesApi.update(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["access-zones"] });
       toast.success(t("accessZones.success.updated"));
     },
     onError: (error: any) => {
-      const message = error?.response?.data?.message || t("accessZones.error.update");
+      const message =
+        error?.response?.data?.message || t("accessZones.error.update");
       toast.error(message);
     },
   });
@@ -41,7 +46,21 @@ export const useAccessZoneMutations = () => {
       toast.success(t("accessZones.success.deleted"));
     },
     onError: (error: any) => {
-      const message = error?.response?.data?.message || t("accessZones.error.delete");
+      const message =
+        error?.response?.data?.message || t("accessZones.error.delete");
+      toast.error(message);
+    },
+  });
+
+  const bulkDeleteAccessZones = useMutation({
+    mutationFn: (ids: number[]) => accessZonesApi.bulkDelete(ids),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["access-zones"] });
+      toast.success(t("accessZones.success.bulkDeleted"));
+    },
+    onError: (error: any) => {
+      const message =
+        error?.response?.data?.message || t("accessZones.error.bulkDelete");
       toast.error(message);
     },
   });
@@ -50,6 +69,7 @@ export const useAccessZoneMutations = () => {
     createAccessZone,
     updateAccessZone,
     deleteAccessZone,
+    bulkDeleteAccessZones,
   };
 };
 
