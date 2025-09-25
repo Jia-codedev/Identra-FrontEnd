@@ -59,6 +59,7 @@
     "description": "الوصف",
     "code": "الرمز",
     "type": "النوع",
+    "editable": "قابل للتعديل",
     "category": "الفئة",
     "priority": "الأولوية",
     "created": "تم الإنشاء",
@@ -1260,6 +1261,22 @@
       "create": "فشل في إنشاء المبنى",
       "update": "فشل في تحديث المبنى",
       "delete": "فشل في حذف المبنى"
+    }
+  },
+  "security": {
+    "roles": {
+      "title": "إدارة الأدوار",
+      "searchPlaceholder": "ابحث عن الأدوار...",
+      "roleName": "اسم الدور",
+      "roleId": "معرف الدور",
+      "status": "الحالة",
+      "editable": "قابل للتعديل",
+      "readOnly": "للقراءة فقط",
+      "createdDate": "تاريخ الإنشاء",
+      "addRole": "إضافة دور",
+      "editRole": "تعديل الدور",
+      "enterRoleName": "أدخل اسم الدور",
+      "noRolesFound": "لم يتم العثور على أدوار"
     }
   }
 }

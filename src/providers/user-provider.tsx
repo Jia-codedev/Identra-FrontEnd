@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import userService from "@/services/userService";
+import Loading from "@/components/common/animations/Loading";
 
 interface UserProviderProps {
   children: React.ReactNode;
@@ -24,7 +25,7 @@ export function UserProvider({ children }: UserProviderProps) {
     initializeUser();
   }, []);
   if (!isInitialized) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   return <>{children}</>;
