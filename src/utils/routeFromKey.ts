@@ -19,7 +19,7 @@ const GROUP_PREFIXES: Record<string, string> = {
   jobLevels: '/master-data',
   jobTitles: '/master-data',
   citizenshipInfo: '/master-data',
-  departmentAdmins: '/master-data',
+  departmentAdmins: '/organization',
   organizationTypes: '/organization',
   organization: '/organization',
   orgChart: '/organization',
@@ -107,6 +107,7 @@ const OVERRIDES: Record<string, string> = {
   accessZones: 'access-zones',
   appConfiguration: 'configuration',
   appSettings: '',
+  deptAdmins: 'dept-admins',
 };
 
 

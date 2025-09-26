@@ -24,7 +24,8 @@
       "items": {
         "organizationType": "Organization Type",
         "orgChart": "Org Chart",
-        "organizations": "Organizations"
+        "organizations": "Organizations",
+        "deptAdmins": "Department Admins"
       }
     },
     "employeeManagement": {

@@ -1,13 +1,13 @@
 "use client";
 
-import React from 'react';
-import { useTranslations } from '@/hooks/use-translations';
-import { useLanguage } from '@/providers/language-provider';
-import { Calendar, RefreshCw, Globe } from 'lucide-react';
-import { IHoliday } from '../types';
-import { Badge } from '@/components/ui/badge';
-import { format } from 'date-fns';
-import { GenericTable, TableColumn } from '@/components/common/GenericTable';
+import React from "react";
+import { useTranslations } from "@/hooks/use-translations";
+import { useLanguage } from "@/providers/language-provider";
+import { Calendar, RefreshCw, Globe } from "lucide-react";
+import { IHoliday } from "../types";
+import { Badge } from "@/components/ui/badge";
+import { format } from "date-fns";
+import { GenericTable, TableColumn } from "@/components/common/GenericTable";
 
 interface HolidaysTableProps {
   holidays: IHoliday[];
@@ -43,7 +43,7 @@ export const HolidaysTable: React.FC<HolidaysTableProps> = ({
 
   const formatDate = (dateString: string) => {
     try {
-      return format(new Date(dateString), 'MMM dd, yyyy');
+      return format(new Date(dateString), "MMM dd, yyyy");
     } catch {
       return dateString;
     }
@@ -61,9 +61,9 @@ export const HolidaysTable: React.FC<HolidaysTableProps> = ({
 
   const columns: TableColumn<IHoliday>[] = [
     {
-      key: 'name',
-      header: t('scheduling.holidays.holidayName'),
-      width: 'min-w-[200px]',
+      key: "name",
+      header: t("scheduling.holidays.holidayName"),
+      width: "min-w-[200px]",
       accessor: (holiday: IHoliday, isRTL: boolean) => (
         <div className="font-medium">
           {isRTL ? holiday.holiday_arb : holiday.holiday_eng}
@@ -71,70 +71,47 @@ export const HolidaysTable: React.FC<HolidaysTableProps> = ({
       ),
     },
     {
-      key: 'dates',
-      header: t('scheduling.holidays.dateRange'),
-      width: 'min-w-[150px]',
+      key: "dates",
+      header: t("scheduling.holidays.dateRange"),
+      width: "min-w-[150px]",
       accessor: (holiday: IHoliday) => (
         <div className="flex items-center gap-1 text-sm">
           <Calendar size={14} className="text-muted-foreground" />
           <span>
             {isDateRange(holiday.from_date, holiday.to_date)
-              ? `${formatDate(holiday.from_date)} - ${formatDate(holiday.to_date)}`
-              : formatDate(holiday.from_date)
-            }
+              ? `${formatDate(holiday.from_date)} - ${formatDate(
+                  holiday.to_date
+                )}`
+              : formatDate(holiday.from_date)}
           </span>
         </div>
       ),
     },
     {
-      key: 'type',
-      header: t('scheduling.holidays.type'),
-      width: 'min-w-[120px]',
-      accessor: (holiday: IHoliday) => (
-        <Badge variant={holiday.public_holiday_flag ? "default" : "secondary"} className="w-fit">
-          {holiday.public_holiday_flag && <Globe size={12} className="mr-1" />}
-          {holiday.public_holiday_flag 
-            ? t('scheduling.holidays.public')
-            : t('scheduling.holidays.private')
-          }
-        </Badge>
-      ),
-    },
-    {
-      key: 'recurring',
-      header: t('scheduling.holidays.recurring'),
-      width: 'min-w-[100px]',
+      key: "recurring",
+      header: t("scheduling.holidays.recurring"),
+      width: "min-w-[100px]",
       accessor: (holiday: IHoliday) => (
         <Badge
           variant={holiday.recurring_flag ? "default" : "outline"}
           className="w-fit"
         >
           {holiday.recurring_flag && <RefreshCw size={12} className="mr-1" />}
-          {holiday.recurring_flag ? t('common.yes') : t('common.no')}
+          {holiday.recurring_flag ? t("common.yes") : t("common.no")}
         </Badge>
       ),
     },
     {
-      key: 'publicHoliday',
-      header: t('scheduling.holidays.publicHoliday'),
-      width: 'min-w-[120px]',
+      key: "publicHoliday",
+      header: t("scheduling.holidays.publicHoliday"),
+      width: "min-w-[120px]",
       accessor: (holiday: IHoliday) => (
         <Badge
           variant={holiday.public_holiday_flag ? "default" : "secondary"}
           className="w-fit"
         >
-          {holiday.public_holiday_flag ? t('common.yes') : t('common.no')}
+          {holiday.public_holiday_flag ? t("common.yes") : t("common.no")}
         </Badge>
-      ),
-    },
-    {
-      key: 'remarks',
-      header: t('common.remarks'),
-      width: 'min-w-[200px]',
-      accessor: (holiday: IHoliday) => (
-        <div className="text-sm text-muted-foreground max-w-[200px] truncate">
-          {holiday.remarks || '-'}
-        </div>
       ),
     },
   ];
@@ -148,14 +125,16 @@ export const HolidaysTable: React.FC<HolidaysTableProps> = ({
       pageSize={pageSize}
       allChecked={allChecked}
       getItemId={(holiday) => holiday.holiday_id}
-      getItemDisplayName={(holiday, isRTL) => isRTL ? holiday.holiday_arb : holiday.holiday_eng}
+      getItemDisplayName={(holiday, isRTL) =>
+        isRTL ? holiday.holiday_arb : holiday.holiday_eng
+      }
       onSelectItem={onSelectHoliday}
       onSelectAll={onSelectAll}
       onEditItem={onEditHoliday}
       onDeleteItem={onDeleteHoliday}
-  onPageChange={onPageChange}
-  onPageSizeChange={onPageSizeChange}
-      noDataMessage={t('scheduling.holidays.noHolidays')}
+      onPageChange={onPageChange}
+      onPageSizeChange={onPageSizeChange}
+      noDataMessage={t("scheduling.holidays.noHolidays")}
       isLoading={isLoading}
     />
   );

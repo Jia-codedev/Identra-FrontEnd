@@ -135,6 +135,8 @@
       "dateRange": "نطاق التاريخ",
       "fromDate": "من تاريخ",
       "toDate": "إلى تاريخ",
+      "dateFrom": "من تاريخ",
+      "dateTo": "إلى تاريخ",
       "duration": "المدة",
       "remarks": "الملاحظات"
     },
@@ -152,7 +154,8 @@
     "editSchedule": "تعديل جدول",
     "scheduleCode": "رمز الجدول",
     "enterScheduleCode": "أدخل رمز الجدول",
-    "scheduleColor": "لون الجدول",
+  "scheduleColor": "لون الجدول",
+  "color": "اللون",
     "selectOrganization": "اختر المؤسسة",
     "selectLocation": "اختر الموقع",
     "basicInfo": "المعلومات الأساسية",

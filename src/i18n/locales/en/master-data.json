@@ -34,40 +34,40 @@
     "enterCurrency": "Enter currency (e.g., USD)"
   },
   "grade": {
-    "title": "Grade Management",
-    "searchPlaceholder": "Search grades...",
-    "addGrade": "Add Grade",
-    "editGrade": "Edit Grade",
-    "gradeName": "Grade Name",
-    "gradeCode": "Grade Code",
-    "enterGradeName": "Enter grade name",
-    "enterGradeNameArabic": "Enter grade name in Arabic",
-    "enterGradeCode": "Enter grade code",
-    "noGradesFound": "No grades found."
+    "title": "Job Levels",
+    "searchPlaceholder": "Search job levels...",
+    "addGrade": "Add Job Level",
+    "editGrade": "Edit Job Level",
+    "gradeName": "Job Level Name",
+    "gradeCode": "Job Level Code",
+    "enterGradeName": "Enter job level name",
+    "enterGradeNameArabic": "Enter job level name in Arabic",
+    "enterGradeCode": "Enter job level code",
+    "noGradesFound": "No job levels found."
   },
   "designations": {
-    "title": "Designation Management",
-    "searchPlaceholder": "Search designations...",
-    "addDesignation": "Add Designation",
-    "editDesignation": "Edit Designation",
-    "designationName": "Designation Name",
-    "designationCode": "Designation Code",
-    "enterDesignationName": "Enter designation name",
-    "enterDesignationNameArabic": "Enter designation name in Arabic",
-    "enterDesignationCode": "Enter designation code",
-    "noDesignationsFound": "No designations found."
+    "title": "Job Titles",
+    "searchPlaceholder": "Search job titles...",
+    "addDesignation": "Add Job Title",
+    "editDesignation": "Edit Job Title",
+    "designationName": "Job Title",
+    "designationCode": "Job Title Code",
+    "enterDesignationName": "Enter job title",
+    "enterDesignationNameArabic": "Enter job title in Arabic",
+    "enterDesignationCode": "Enter job title code",
+    "noDesignationsFound": "No job titles found."
   },
   "nationalities": {
-    "title": "Nationality Management",
-    "searchPlaceholder": "Search nationalities...",
-    "addNationality": "Add Nationality",
-    "editNationality": "Edit Nationality",
-    "nationalityName": "Nationality Name",
-    "nationalityCode": "Nationality Code",
-    "enterNationalityName": "Enter nationality name",
-    "enterNationalityNameArabic": "Enter nationality name in Arabic",
-    "enterNationalityCode": "Enter nationality code",
-    "noNationalitiesFound": "No nationalities found."
+    "title": "Citizenship Info",
+    "searchPlaceholder": "Search citizenship info...",
+    "addNationality": "Add Citizenship",
+    "editNationality": "Edit Citizenship",
+    "nationalityName": "Citizenship Name",
+    "nationalityCode": "Citizenship Code",
+    "enterNationalityName": "Enter citizenship name",
+    "enterNationalityNameArabic": "Enter citizenship name in Arabic",
+    "enterNationalityCode": "Enter citizenship code",
+    "noNationalitiesFound": "No citizenship info found."
   },
   "organizations": {
     "title": "Organization Management",
@@ -119,6 +119,21 @@
     "enterDeptAdminNameArabic": "Enter department admin name in Arabic",
     "enterDeptAdminCode": "Enter department admin code",
     "noDeptAdminsFound": "No department admins found."
+  }
+  ,
+  "deptAdmins": {
+    "title": "Department Admins",
+    "description": "Manage department admins for your organization.",
+    "searchPlaceholder": "Search department admins...",
+    "add": "Add Department Admin",
+    "edit": "Edit Department Admin",
+    "employeeId": "Employee ID",
+    "from": "From",
+    "to": "To",
+    "level": "Level",
+    "active": "Active",
+    "remarks": "Remarks",
+    "noData": "No department admins found"
   }
   
 }

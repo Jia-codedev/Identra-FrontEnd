@@ -34,6 +34,7 @@
   "confirm": "تأكيد",
   "select": "اختيار",
   "pickDate": "اختر تاريخ",
+  "selectDate": "اختر تاريخ",
   "selectAll": "اختيار الكل",
   "selectedCount": "{count} مختار",
   "deleteSelected": "حذف المحدد",

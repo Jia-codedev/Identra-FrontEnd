@@ -23,8 +23,9 @@
       "title": "المنظمة",
       "items": {
         "organizationType": "نوع المنظمة",
-        "orgChart": "الهيكل التنظيمي",
-        "organizations": "المنظمات"
+            "orgChart": "الهيكل التنظيمي",
+            "deptAdmins": "مسؤولو الأقسام",
+            "organizations": "المنظمات"
       }
     },
     "employeeManagement": {

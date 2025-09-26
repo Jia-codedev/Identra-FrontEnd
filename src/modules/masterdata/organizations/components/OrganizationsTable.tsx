@@ -38,14 +38,21 @@ export const OrganizationsTable: React.FC<OrganizationsTableProps> = ({
 
   const columns: TableColumn<IOrganization>[] = [
     {
-      key: "name",
-      header: t("masterData.organizations.organizationName"),
-      accessor: (item, isRTL) => isRTL ? (item.organization_arb || "") : (item.organization_eng || ""),
-    },
-    {
       key: "code",
       header: t("masterData.organizations.organizationCode"),
       accessor: (item) => item.organization_code || "",
+    },
+    {
+      key: "name",
+      header: t("masterData.organizations.organizationName"),
+      accessor: (item, isRTL) =>
+        isRTL ? item.organization_arb || "" : item.organization_eng || "",
+    },
+    {
+      key: "parent",
+      header: t("masterData.organizations.parentOrganization"),
+      accessor: (item, isRTL) =>
+        isRTL ? item.organizations?.organization_arb || "" : item.organizations?.organization_eng || "",
     },
   ];
 
@@ -58,13 +65,15 @@ export const OrganizationsTable: React.FC<OrganizationsTableProps> = ({
       pageSize={pageSize}
       allChecked={allChecked}
       getItemId={(item) => item.organization_id}
-      getItemDisplayName={(item, isRTL) => isRTL ? (item.organization_arb || "") : (item.organization_eng || "")}
+      getItemDisplayName={(item, isRTL) =>
+        isRTL ? item.organization_arb || "" : item.organization_eng || ""
+      }
       onSelectItem={onSelectOrganization}
       onSelectAll={onSelectAll}
       onEditItem={onEditOrganization}
       onDeleteItem={onDeleteOrganization}
-  onPageChange={onPageChange}
-  onPageSizeChange={onPageSizeChange}
+      onPageChange={onPageChange}
+      onPageSizeChange={onPageSizeChange}
       noDataMessage={t("masterData.organizations.noOrganizationsFound")}
       isLoading={isLoading}
     />

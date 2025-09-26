@@ -5,6 +5,7 @@ import { useTranslations } from "@/hooks/use-translations";
 import { GenericTable, TableColumn } from "@/components/common/GenericTable";
 import { IEmployee } from "../types";
 import { BanIcon, CheckIcon } from "lucide-react";
+import designationsApi from "@/services/masterdata/designation";
 
 interface EmployeesTableProps {
   employee: IEmployee[];
@@ -36,6 +37,39 @@ export const EmployeesTable: React.FC<EmployeesTableProps> = ({
   onPageSizeChange,
 }) => {
   const { t } = useTranslations();
+  const [designationMap, setDesignationMap] = React.useState<
+    Record<number, { eng: string; arb: string }>
+  >({});
+
+  React.useEffect(() => {
+    let mounted = true;
+    async function loadDesignations() {
+      const ids = Array.from(
+        new Set(employee.map((e) => e.designation_id).filter(Boolean))
+      ) as number[];
+      if (ids.length === 0) return;
+      const map: Record<number, { eng: string; arb: string }> = {};
+      await Promise.all(
+        ids.map(async (id) => {
+          try {
+            const res = await designationsApi.getDesignationById(id);
+            if (res && res.data) {
+              map[id] = {
+                eng: res.data.designation_name_eng || "",
+                arb: res.data.designation_name_arb || "",
+              };
+            }
+          } catch (e) {
+          }
+        })
+      );
+      if (mounted) setDesignationMap(map);
+    }
+    loadDesignations();
+    return () => {
+      mounted = false;
+    };
+  }, [employee]);
 
   const columns: TableColumn<IEmployee>[] = [
     {
@@ -52,6 +86,37 @@ export const EmployeesTable: React.FC<EmployeesTableProps> = ({
           : item.firstname_eng + " " + item.lastname_eng,
     },
     {
+      key: "Email",
+      header: t("employeeMaster.employee.email"),
+      accessor: (item) => item.email || "",
+    },
+    {
+      key: "JoinDate",
+      header: t("employeeMaster.employee.joinDate"),
+      accessor: (item) =>
+        item.join_date
+          ? typeof item.join_date === "string"
+            ? item.join_date
+            : item.join_date.toLocaleDateString()
+          : "",
+    },
+    {
+      key: "Designation",
+      header: t("employeeMaster.employee.designation"),
+      accessor: (item, isRTL) => {
+        const id = item.designation_id;
+        if (!id) return "";
+        const d = designationMap[id];
+        if (!d) return "";
+        return isRTL ? d.arb : d.eng;
+      },
+    },
+    {
+      key: "Organization",
+      header: t("employeeMaster.employee.organization"),
+      accessor: (item) => item.organization_id || "",
+    },
+    {
       key: "Manager",
       header: t("employeeMaster.employee.manager"),
       accessor: (item) =>
@@ -61,36 +126,31 @@ export const EmployeesTable: React.FC<EmployeesTableProps> = ({
           <BanIcon size={16} className="text-destructive" />
         ),
     },
-    {
-      key: "actions",
-      header: t("common.actions"),
-      accessor: () => null,
-    },
   ];
 
   return (
-  <GenericTable<IEmployee>
-    data={employee}
-    columns={columns}
-    selected={selected}
-    page={page}
-    pageSize={pageSize}
-    allChecked={allChecked}
-    getItemId={(item) => item.employee_id!}
-    getItemDisplayName={(item, isRTL) =>
-      isRTL
-        ? item.firstname_arb + " " + item.lastname_arb
-        : item.firstname_eng + " " + item.lastname_eng
-    }
-    onSelectItem={onSelectEmployee}
-    onSelectAll={onSelectAll}
-    onEditItem={onEditEmployee}
-    onDeleteItem={onDeleteEmployee}
-    onPageChange={onPageChange}
-    onPageSizeChange={onPageSizeChange}
-    noDataMessage={t("employeeMaster.employee.noEmployeesFound")}
-    isLoading={isLoading}
-    showActions={true}
-  />
+    <GenericTable<IEmployee>
+      data={employee}
+      columns={columns}
+      selected={selected}
+      page={page}
+      pageSize={pageSize}
+      allChecked={allChecked}
+      getItemId={(item) => item.employee_id!}
+      getItemDisplayName={(item, isRTL) =>
+        isRTL
+          ? item.firstname_arb + " " + item.lastname_arb
+          : item.firstname_eng + " " + item.lastname_eng
+      }
+      onSelectItem={onSelectEmployee}
+      onSelectAll={onSelectAll}
+      onEditItem={onEditEmployee}
+      onDeleteItem={onDeleteEmployee}
+      onPageChange={onPageChange}
+      onPageSizeChange={onPageSizeChange}
+      noDataMessage={t("employeeMaster.employee.noEmployeesFound")}
+      isLoading={isLoading}
+      showActions={true}
+    />
   );
 };

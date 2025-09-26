@@ -234,7 +234,7 @@ export const HolidaysHeader: React.FC<HolidaysHeaderProps> = ({
                   </SelectContent>
                 </Select>
               </div>
-
+              {/* 
               <div className="flex items-center gap-1">
                 <Clock
                   size={14}
@@ -307,7 +307,7 @@ export const HolidaysHeader: React.FC<HolidaysHeaderProps> = ({
                     </SelectItem>
                   </SelectContent>
                 </Select>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

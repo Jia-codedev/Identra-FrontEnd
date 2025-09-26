@@ -61,7 +61,7 @@ export const SchedulesHeader: React.FC<SchedulesHeaderProps> = ({
   const activeFiltersCount =
     Object.values(filters).filter(
       (value) => value !== undefined && value !== "" && value !== null
-    ).length - 1; 
+    ).length - 1;
 
   const clearFilters = () => {
     onFiltersChange({
@@ -147,161 +147,12 @@ export const SchedulesHeader: React.FC<SchedulesHeaderProps> = ({
                 className="gap-2 text-xs sm:text-sm h-8 sm:h-9"
               >
                 <Plus size={14} />
-                <span className="hidden sm:inline">
-                  {t("common.add")}
-                </span>
+                <span className="hidden sm:inline">{t("common.add")}</span>
                 <span className="sm:hidden">{t("common.add")}</span>
               </Button>
             </div>
           </div>
         </div>
-
-        {/* Filters Row */}
-        <div className="flex flex-col gap-4">
-          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
-            <div className="flex flex-wrap gap-2">
-              {/* Schedule Code */}
-              <div className="flex items-center gap-1">
-                <Input
-                  placeholder={t("scheduling.schedules.filterByCode")}
-                  value={filters.code || ""}
-                  onChange={(e) =>
-                    onFiltersChange({ code: e.target.value || undefined })
-                  }
-                  className="h-8"
-                />
-              </div>
-
-              {/* Organization */}
-              <div className="flex items-center gap-1">
-                <Building2
-                  size={14}
-                  className="text-muted-foreground hidden sm:block"
-                />
-                <Input
-                  placeholder={t("scheduling.schedules.filterByOrganization")}
-                  value={filters.organization_name || ""}
-                  onChange={(e) =>
-                    onFiltersChange({
-                      organization_name: e.target.value || undefined,
-                    })
-                  }
-                  className="h-8"
-                />
-              </div>
-
-              {/* Status */}
-              <div className="flex items-center gap-1">
-                <Select
-                  value={
-                    filters.status_flag === undefined
-                      ? "all"
-                      : filters.status_flag
-                      ? "active"
-                      : "inactive"
-                  }
-                  onValueChange={handleStatusFilter}
-                >
-                  <SelectTrigger className="w-[120px] h-8">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">{t("common.all")}</SelectItem>
-                    <SelectItem value="active">{t("common.active")}</SelectItem>
-                    <SelectItem value="inactive">
-                      {t("common.inactive")}
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Shift Type */}
-              <div className="flex items-center gap-1">
-                <Select
-                  value={
-                    filters.open_shift_flag === undefined &&
-                    filters.night_shift_flag === undefined
-                      ? "all"
-                      : filters.open_shift_flag === true
-                      ? "open"
-                      : filters.night_shift_flag === true
-                      ? "night"
-                      : "regular"
-                  }
-                  onValueChange={handleShiftTypeFilter}
-                >
-                  <SelectTrigger className="w-[140px] h-8">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">{t("common.all")}</SelectItem>
-                    <SelectItem value="open">
-                      {t("scheduling.schedules.openShift")}
-                    </SelectItem>
-                    <SelectItem value="night">
-                      {t("scheduling.schedules.nightShift")}
-                    </SelectItem>
-                    <SelectItem value="regular">
-                      {t("scheduling.schedules.regularShift")}
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Ramadan Checkbox */}
-              <div className="flex items-center">
-                <DropdownMenu open={showFilters} onOpenChange={setShowFilters}>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="outline" className="relative">
-                      <Filter className="h-4 w-4 mr-2" />
-                      {t("common.filters")}
-                      {activeFiltersCount > 0 && (
-                        <Badge
-                          variant="secondary"
-                          className="ml-2 h-5 min-w-5 text-xs px-1.5"
-                        >
-                          {activeFiltersCount}
-                        </Badge>
-                      )}
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className="w-80" align="start">
-                    <DropdownMenuLabel>{t("common.filters")}</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuCheckboxItem
-                      checked={filters.ramadan_flag === true}
-                      onCheckedChange={(checked) =>
-                        onFiltersChange({
-                          ramadan_flag: checked ? true : undefined,
-                        })
-                      }
-                    >
-                      <Calendar className="h-4 w-4 mr-2" />
-                      {t("scheduling.schedules.ramadan")}
-                    </DropdownMenuCheckboxItem>
-                    {activeFiltersCount > 0 && (
-                      <>
-                        <DropdownMenuSeparator />
-                        <div className="p-2">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={clearFilters}
-                            className="w-full"
-                          >
-                            {t("common.clearFilters")}
-                          </Button>
-                        </div>
-                      </>
-                    )}
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Active Filters Display */}
         {activeFiltersCount > 0 && (
           <div className="flex flex-wrap gap-2 items-center">
             <span className="text-sm text-muted-foreground">
