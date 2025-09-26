@@ -93,25 +93,16 @@ export const MonthlyRosterTable: React.FC<MonthlyRosterTableProps> = ({
         return scheduleId ? (
           <span className="inline-flex items-center gap-1">
             {color && <span className="inline-block w-2 h-2 rounded-full" style={{ backgroundColor: color }} />}
-            <span>{code || scheduleId}</span>
+            <span>{code.slice(0, 2) || scheduleId}</span>
           </span>
         ) : '';
       },
-      width: "min-w-10",
+      width: "w-20",
       className: "text-center",
     }));
 
     return [...baseColumns, ...dayColumns];
   }, [dayKeys, scheduleMap, isRTL, t]);
-
-  const actions = (row: MonthlyRosterRow) => (
-    <div className="flex gap-1">
-      {onEdit && <Button size="sm" variant="outline" onClick={() => onEdit(row)}>{t('common.edit') || 'Edit'}</Button>}
-      {onFinalize && <Button size="sm" variant="secondary" onClick={() => onFinalize(row)} disabled={!!row.finalize_flag}>{t('scheduling.monthlyRoster.table.finalize') || 'Finalize'}</Button>}
-      {onDelete && <Button size="sm" variant="destructive" onClick={() => onDelete(row)}>{t('common.delete') || 'Delete'}</Button>}
-    </div>
-  );
-
   const noDataMessage = t('scheduling.monthlyRoster.table.noData') || 'No monthly roster data found';
 
   return (
@@ -131,12 +122,11 @@ export const MonthlyRosterTable: React.FC<MonthlyRosterTableProps> = ({
         const row = data.find(r => r.schedule_roster_id === id);
         if (row && onDelete) onDelete(row);
       }}
-      actions={actions}
       noDataMessage={noDataMessage}
       isLoading={isLoading}
       onPageChange={() => {}}
       onPageSizeChange={() => {}}
-      showActions={true}
+      showActions={false}
     />
   );
 };

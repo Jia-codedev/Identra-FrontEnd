@@ -38,14 +38,17 @@ export const OrganizationTypesTable: React.FC<OrganizationTypesTableProps> = ({
 
   const columns: TableColumn<IOrganizationType>[] = [
     {
-      key: "name",
-      header: t("masterData.organizationTypes.organizationTypeName"),
-      accessor: (item, isRTL) => isRTL ? (item.organization_type_arb || "") : (item.organization_type_eng || ""),
-    },
-    {
       key: "level",
       header: t("masterData.organizationTypes.level"),
       accessor: (item) => item.org_type_level || "",
+    },
+    {
+      key: "name",
+      header: t("masterData.organizationTypes.organizationTypeName"),
+      accessor: (item, isRTL) =>
+        isRTL
+          ? item.organization_type_arb || ""
+          : item.organization_type_eng || "",
     },
   ];
   console.log("OrganizationTypesTable rendered with data:", organizationTypes);
@@ -58,13 +61,17 @@ export const OrganizationTypesTable: React.FC<OrganizationTypesTableProps> = ({
       pageSize={pageSize}
       allChecked={allChecked}
       getItemId={(item) => item.organization_type_id}
-      getItemDisplayName={(item, isRTL) => isRTL ? (item.organization_type_arb || "") : (item.organization_type_eng || "")}
+      getItemDisplayName={(item, isRTL) =>
+        isRTL
+          ? item.organization_type_arb || ""
+          : item.organization_type_eng || ""
+      }
       onSelectItem={onSelectOrganizationType}
       onSelectAll={onSelectAll}
       onEditItem={onEditOrganizationType}
       onDeleteItem={onDeleteOrganizationType}
-  onPageChange={onPageChange}
-  onPageSizeChange={onPageSizeChange}
+      onPageChange={onPageChange}
+      onPageSizeChange={onPageSizeChange}
       noDataMessage={t("masterData.organizationTypes.noOrganizationTypesFound")}
       isLoading={isLoading}
     />

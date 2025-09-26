@@ -33,13 +33,16 @@
     "selectFromDate": "Select From Date",
     "selectToDate": "Select To Date",
     "reportingPerson": "Reporting Person",
-    "searchReportingPerson": "Search Reporting Person"
+    "searchReportingPerson": "Search Reporting Person",
+    "employeeGroupStartDate": "Group Start Date",
+    "employeeGroupEndDate": "Group End Date",
+    "employeeGroupReporting": "Reporting Group"
   },
   "employee": {
     "title": "Employee Management",
     "searchPlaceholder": "Search employees...",
-    "addEmployee":"Add Employee",
-    "editEmployee":"Edit Employee",
+    "addEmployee": "Add Employee",
+    "editEmployee": "Edit Employee",
     "filterManager": "Filter by manager",
     "manager": "Manager",
     "nonManager": "Non-manager",

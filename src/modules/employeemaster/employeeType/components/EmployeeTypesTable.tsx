@@ -38,14 +38,15 @@ export const EmployeeTypesTable: React.FC<EmployeeTypesTableProps> = ({
 
   const columns: TableColumn<IEmployeeType>[] = [
     {
-      key: "name",
-      header: t("employeeMaster.employeeTypes.employeeTypeName"),
-      accessor: (item, isRTL) => isRTL ? item.employee_type_arb : item.employee_type_eng,
-    },
-    {
       key: "code",
       header: t("employeeMaster.employeeTypes.employeeTypeCode"),
       accessor: (item) => item.employee_type_code,
+    },
+    {
+      key: "name",
+      header: t("employeeMaster.employeeTypes.employeeTypeName"),
+      accessor: (item, isRTL) =>
+        isRTL ? item.employee_type_arb : item.employee_type_eng,
     },
   ];
 
@@ -58,13 +59,17 @@ export const EmployeeTypesTable: React.FC<EmployeeTypesTableProps> = ({
       pageSize={pageSize}
       allChecked={allChecked}
       getItemId={(item) => item.employee_type_id}
-      getItemDisplayName={(item, isRTL) => isRTL ? item.employee_type_arb || item.employee_type_eng || "" : item.employee_type_eng || item.employee_type_arb || ""}
+      getItemDisplayName={(item, isRTL) =>
+        isRTL
+          ? item.employee_type_arb || item.employee_type_eng || ""
+          : item.employee_type_eng || item.employee_type_arb || ""
+      }
       onSelectItem={onSelectEmployeeType}
       onSelectAll={onSelectAll}
       onEditItem={onEditEmployeeType}
       onDeleteItem={onDeleteEmployeeType}
-  onPageChange={onPageChange}
-  onPageSizeChange={onPageSizeChange}
+      onPageChange={onPageChange}
+      onPageSizeChange={onPageSizeChange}
       noDataMessage={t("employeeMaster.employeeTypes.noEmployeeTypesFound")}
       isLoading={isLoading}
     />

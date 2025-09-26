@@ -79,9 +79,6 @@ export default function DeptAdminsPage() {
 
   return (
     <div className="p-4">
-      <h1 className="text-xl font-bold mb-4">
-        {t("masterData.deptAdmins.title") || "Dept Admins"}
-      </h1>
       <DeptAdminsHeader
         search={search}
         setSearch={setSearch}

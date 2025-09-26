@@ -1,4 +1,3 @@
-
 export interface IOrganization {
   organization_id: number;
   organization_type_id: number;
@@ -8,6 +7,7 @@ export interface IOrganization {
   parent_id?: number;
   position_in_grid?: number;
   location_id?: number;
+  organizations: IOrganization | null;
 }
 
 export interface IOrganizationType {

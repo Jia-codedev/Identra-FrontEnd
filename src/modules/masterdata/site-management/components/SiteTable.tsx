@@ -45,16 +45,6 @@ export const SitesTable: React.FC<SitesTableProps> = ({
         isRTL ? item.location_arb || "" : item.location_eng || "",
     },
     {
-      key: "city",
-      header: t("masterData.sites.city") || "City",
-      accessor: (item) => item.city || "",
-    },
-    {
-      key: "country_code",
-      header: t("masterData.sites.countryCode") || "Country",
-      accessor: (item) => item.country_code || "",
-    },
-    {
       key: "geolocation",
       header: t("masterData.sites.geolocation") || "Geolocation",
       accessor: (item) => {

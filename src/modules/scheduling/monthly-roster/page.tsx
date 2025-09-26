@@ -27,7 +27,7 @@ import schedulesApi from "@/services/scheduling/schedules";
 import { Moon, Clock, Star } from "lucide-react";
 import { CustomPagination } from "@/components/common/dashboard/Pagination";
 import { useUserId } from "@/store/userStore";
-import { useTranslations } from '@/hooks/use-translations';
+import { useTranslations } from "@/hooks/use-translations";
 
 export default function MonthlyRosterPage() {
   const { t } = useTranslations();
@@ -204,14 +204,14 @@ export default function MonthlyRosterPage() {
       };
 
       let resp: any;
-  if (filters.month && filters.year) {
+      if (filters.month && filters.year) {
         const params = {
           ...baseParams,
           month: filters.month,
           year: filters.year,
         };
         resp = await employeeMonthlyRosterApi.filter({ ...params });
-  } else {
+      } else {
         resp = await employeeMonthlyRosterApi.getAll(baseParams);
       }
       const payload = resp?.data ?? resp;
@@ -229,7 +229,7 @@ export default function MonthlyRosterPage() {
         console.warn("Unexpected monthly roster response shape:", payload);
       }
 
-  if (items) {
+      if (items) {
         setData(items);
         setTotal(
           typeof totalCount === "number" ? totalCount : items.length || 0
@@ -267,22 +267,27 @@ export default function MonthlyRosterPage() {
   const handleFinalize = async (row: any) => {
     try {
       await finalizeMutation.mutateAsync(row.schedule_roster_id);
-      toast.success(t('scheduling.monthlyRoster.table.finalized') || 'Finalized');
+      toast.success(
+        t("scheduling.monthlyRoster.table.finalized") || "Finalized"
+      );
       setPage(1);
       await fetchData();
     } catch (e) {
-      toast.error(t('scheduling.monthlyRoster.table.finalizeFailed') || 'Failed to finalize');
+      toast.error(
+        t("scheduling.monthlyRoster.table.finalizeFailed") ||
+          "Failed to finalize"
+      );
     }
   };
 
   const handleDelete = async (row: any) => {
     try {
       await deleteMutation.mutateAsync(row.schedule_roster_id);
-      toast.success(t('messages.success.deleted') || 'Deleted');
+      toast.success(t("messages.success.deleted") || "Deleted");
       setPage(1);
       await fetchData();
     } catch (e) {
-      toast.error(t('messages.error.delete') || 'Failed to delete');
+      toast.error(t("messages.error.delete") || "Failed to delete");
     }
   };
 
@@ -295,20 +300,13 @@ export default function MonthlyRosterPage() {
     {
       key: "employee_name",
       header: "Name",
-      accessor: (row: any, isRTL: boolean) =>
-        isRTL
-          ? row.employee_name_arb || row.employee_name
-          : row.employee_name || row.employee_name_arb,
-    },
-    {
-      key: "from_date",
-      header: "From",
-      accessor: (row: any) => row.from_date?.slice(0, 10),
-    },
-    {
-      key: "to_date",
-      header: "To",
-      accessor: (row: any) => row.to_date?.slice(0, 10),
+      accessor: (row: any, isRTL: boolean) => (
+        <p className="whitespace-nowrap overflow-hidden w-32 text-ellipsis">
+          {isRTL
+            ? row.employee_name_arb || row.employee_name
+            : row.employee_name || row.employee_name_arb}
+        </p>
+      ),
     },
     {
       key: "version_no",
@@ -378,13 +376,13 @@ export default function MonthlyRosterPage() {
         return (
           <div className="w-full h-8 flex items-center justify-center border-dashed border-muted/30 bg-muted/10">
             <button
-              className="text-[12px] px-2 py-0.5 rounded bg-transparent text-primary"
+              className="text-[12px] aspect-square px-3 py-0.5 rounded bg-transparent text-primary"
               onClick={() =>
                 setEditCell({ rowId: row.schedule_roster_id, day: i + 1 })
               }
               type="button"
             >
-              + Assign
+              +
             </button>
           </div>
         );
@@ -443,7 +441,10 @@ export default function MonthlyRosterPage() {
           const row = data.find((r) => r.schedule_roster_id === rowId);
           if (row) handleDelete(row);
         }}
-  noDataMessage={t('scheduling.monthlyRoster.table.noData') || 'No monthly roster data found'}
+        noDataMessage={
+          t("scheduling.monthlyRoster.table.noData") ||
+          "No monthly roster data found"
+        }
         isLoading={isLoading}
         onPageChange={setPage}
         onPageSizeChange={setPageSize}
@@ -458,7 +459,9 @@ export default function MonthlyRosterPage() {
       >
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{t('scheduling.monthlyRoster.assign.title') || 'Assign Schedule'}</DialogTitle>
+            <DialogTitle>
+              {t("scheduling.monthlyRoster.assign.title") || "Assign Schedule"}
+            </DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <Select
@@ -467,7 +470,12 @@ export default function MonthlyRosterPage() {
               value={assignSelection}
             >
               <SelectTrigger className="w-full">
-                <SelectValue placeholder={t('scheduling.monthlyRoster.assign.selectSchedule') || 'Select schedule'} />
+                <SelectValue
+                  placeholder={
+                    t("scheduling.monthlyRoster.assign.selectSchedule") ||
+                    "Select schedule"
+                  }
+                />
               </SelectTrigger>
               <SelectContent>
                 {allSchedules.map((sch) => (
@@ -495,7 +503,7 @@ export default function MonthlyRosterPage() {
                 ))}
               </SelectContent>
             </Select>
-              <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2">
               <Button
                 variant="outline"
                 onClick={() => {
@@ -504,7 +512,7 @@ export default function MonthlyRosterPage() {
                 }}
                 disabled={assigning}
               >
-                {t('common.cancel')}
+                {t("common.cancel")}
               </Button>
               <Button
                 onClick={() => {
@@ -514,7 +522,10 @@ export default function MonthlyRosterPage() {
                 }}
                 disabled={assigning || !assignSelection}
               >
-                {assigning ? t('scheduling.monthlyRoster.assign.assigning') || 'Assigning...' : t('scheduling.monthlyRoster.assign.assign') || 'Assign'}
+                {assigning
+                  ? t("scheduling.monthlyRoster.assign.assigning") ||
+                    "Assigning..."
+                  : t("scheduling.monthlyRoster.assign.assign") || "Assign"}
               </Button>
             </div>
           </div>

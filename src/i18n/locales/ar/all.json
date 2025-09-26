@@ -35,6 +35,7 @@
     "confirm": "تأكيد",
     "select": "اختيار",
     "pickDate": "اختر تاريخ",
+    "selectDate": "اختر تاريخ",
     "selectAll": "اختيار الكل",
     "selectedCount": "{count} مختار",
     "deleteSelected": "حذف المحدد",
@@ -211,40 +212,40 @@
       "enterCurrency": "أدخل العملة (مثال: USD)"
     },
     "grade": {
-      "title": "إدارة الدرجات",
-      "searchPlaceholder": "ابحث عن الدرجات...",
-      "addGrade": "إضافة درجة",
-      "editGrade": "تعديل درجة",
-      "gradeName": "اسم الدرجة",
-      "gradeCode": "رمز الدرجة",
-      "enterGradeName": "أدخل اسم الدرجة",
-      "enterGradeNameArabic": "أدخل اسم الدرجة بالعربية",
-      "enterGradeCode": "أدخل رمز الدرجة",
-      "noGradesFound": "لم يتم العثور على درجات."
+      "title": "المستويات الوظيفية",
+      "searchPlaceholder": "ابحث عن المستويات الوظيفية...",
+      "addGrade": "إضافة مستوى وظيفي",
+      "editGrade": "تعديل مستوى وظيفي",
+      "gradeName": "اسم المستوى الوظيفي",
+      "gradeCode": "رمز المستوى الوظيفي",
+      "enterGradeName": "أدخل اسم المستوى الوظيفي",
+      "enterGradeNameArabic": "أدخل اسم المستوى الوظيفي بالعربية",
+      "enterGradeCode": "أدخل رمز المستوى الوظيفي",
+      "noGradesFound": "لم يتم العثور على مستويات وظيفية."
     },
     "designations": {
-      "title": "إدارة المسميات الوظيفية",
+      "title": "المسميات الوظيفية",
       "searchPlaceholder": "ابحث عن المسميات الوظيفية...",
       "addDesignation": "إضافة مسمى وظيفي",
       "editDesignation": "تعديل مسمى وظيفي",
-      "designationName": "اسم المسمى الوظيفي",
+      "designationName": "المسمى الوظيفي",
       "designationCode": "رمز المسمى الوظيفي",
-      "enterDesignationName": "أدخل اسم المسمى الوظيفي",
-      "enterDesignationNameArabic": "أدخل اسم المسمى الوظيفي بالعربية",
+      "enterDesignationName": "أدخل المسمى الوظيفي",
+      "enterDesignationNameArabic": "أدخل المسمى الوظيفي بالعربية",
       "enterDesignationCode": "أدخل رمز المسمى الوظيفي",
       "noDesignationsFound": "لم يتم العثور على مسميات وظيفية."
     },
     "nationalities": {
-      "title": "إدارة الجنسيات",
-      "searchPlaceholder": "ابحث عن الجنسيات...",
-      "addNationality": "إضافة جنسية",
-      "editNationality": "تعديل جنسية",
-      "nationalityName": "اسم الجنسية",
-      "nationalityCode": "رمز الجنسية",
-      "enterNationalityName": "أدخل اسم الجنسية",
-      "enterNationalityNameArabic": "أدخل اسم الجنسية بالعربية",
-      "enterNationalityCode": "أدخل رمز الجنسية",
-      "noNationalitiesFound": "لم يتم العثور على جنسيات."
+      "title": "معلومات المواطنة",
+      "searchPlaceholder": "ابحث عن معلومات المواطنة...",
+      "addNationality": "إضافة مواطنة",
+      "editNationality": "تعديل مواطنة",
+      "nationalityName": "اسم المواطنة",
+      "nationalityCode": "رمز المواطنة",
+      "enterNationalityName": "أدخل اسم المواطنة",
+      "enterNationalityNameArabic": "أدخل اسم المواطنة بالعربية",
+      "enterNationalityCode": "أدخل رمز المواطنة",
+      "noNationalitiesFound": "لم يتم العثور على معلومات مواطنة."
     },
     "organizations": {
       "title": "إدارة المؤسسات",
@@ -296,6 +297,20 @@
       "enterDeptAdminNameArabic": "أدخل اسم مسؤول القسم بالعربية",
       "enterDeptAdminCode": "أدخل رمز مسؤول القسم",
       "noDeptAdminsFound": "لم يتم العثور على مسؤولي الأقسام."
+    },
+    "deptAdmins": {
+      "title": "مسؤولو الأقسام",
+      "description": "إدارة مسؤولي الأقسام في مؤسستك.",
+      "searchPlaceholder": "ابحث عن مسؤولي الأقسام...",
+      "add": "إضافة مسؤول قسم",
+      "edit": "تعديل مسؤول قسم",
+      "employeeId": "معرف الموظف",
+      "from": "من",
+      "to": "إلى",
+      "level": "المستوى",
+      "active": "نشط",
+      "remarks": "ملاحظات",
+      "noData": "لم يتم العثور على مسؤولي الأقسام"
     }
   },
   "employeeMaster": {
@@ -333,7 +348,10 @@
       "selectFromDate": "اختر من تاريخ",
       "selectToDate": "اختر إلى تاريخ",
       "reportingPerson": "الشخص المسؤول عن التقارير",
-      "searchReportingPerson": "البحث عن الشخص المسؤول عن التقارير"
+      "searchReportingPerson": "البحث عن الشخص المسؤول عن التقارير",
+      "employeeGroupStartDate": "من تاريخ المجموعة",
+      "employeeGroupEndDate": "إلى تاريخ المجموعة",
+      "employeeGroupReporting": "مجموعة التقارير"
     },
     "employee": {
       "title": "إدارة الموظفين",
@@ -594,6 +612,8 @@
         "dateRange": "نطاق التاريخ",
         "fromDate": "من تاريخ",
         "toDate": "إلى تاريخ",
+        "dateFrom": "من تاريخ",
+        "dateTo": "إلى تاريخ",
         "duration": "المدة",
         "remarks": "الملاحظات"
       },
@@ -612,6 +632,7 @@
       "scheduleCode": "رمز الجدول",
       "enterScheduleCode": "أدخل رمز الجدول",
       "scheduleColor": "لون الجدول",
+      "color": "اللون",
       "selectOrganization": "اختر المؤسسة",
       "selectLocation": "اختر الموقع",
       "basicInfo": "المعلومات الأساسية",
@@ -1050,6 +1071,7 @@
         "items": {
           "organizationType": "نوع المنظمة",
           "orgChart": "الهيكل التنظيمي",
+          "deptAdmins": "مسؤولو الأقسام",
           "organizations": "المنظمات"
         }
       },

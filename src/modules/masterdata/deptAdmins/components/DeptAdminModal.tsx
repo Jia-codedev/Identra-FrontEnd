@@ -199,7 +199,7 @@ export const DeptAdminModal: React.FC<DeptAdminModalProps> = ({
                   <PopoverTrigger asChild>
                     <button
                       type="button"
-                      className={`w-full text-left px-3 py-2 mt-1 flex items-center justify-between ${
+                      className={`w-full text-left border rounded-md px-3 py-2 mt-1 flex items-center justify-between ${
                         !fromDateObj ? "text-muted-foreground" : ""
                       }`}
                     >
@@ -235,7 +235,7 @@ export const DeptAdminModal: React.FC<DeptAdminModalProps> = ({
                   <PopoverTrigger asChild>
                     <button
                       type="button"
-                      className={`w-full text-left px-3 py-2 mt-1 flex items-center justify-between ${
+                      className={`w-full text-left border rounded-md px-3 py-2 mt-1 flex items-center justify-between ${
                         !toDateObj ? "text-muted-foreground" : ""
                       }`}
                     >

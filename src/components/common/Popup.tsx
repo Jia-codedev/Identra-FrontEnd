@@ -30,9 +30,6 @@ function Popup({
             >
               <Card>
                 <CardHeader>{header}</CardHeader>
-                {description && (
-                  <CardDescription>{description}</CardDescription>
-                )}
                 <CardContent>{children}</CardContent>
               </Card>
             </motion.div>

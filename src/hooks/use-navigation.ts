@@ -90,6 +90,10 @@ export const useNavigation = () => {
           labelKey: "mainMenu.organization.items.organizations",
           routeKey: "mainMenu.organization.items.organizations",
         },
+        {
+          labelKey: "mainMenu.organization.items.deptAdmins",
+          routeKey: "mainMenu.organization.deptAdmins",
+        },
       ],
       icon: FiMapPin,
     },

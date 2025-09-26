@@ -38,14 +38,15 @@ export const DesignationsTable: React.FC<DesignationsTableProps> = ({
 
   const columns: TableColumn<IDesignation>[] = [
     {
-      key: "name",
-      header: t("masterData.designations.designationName"),
-      accessor: (item, isRTL) => isRTL ? item.designation_arb : item.designation_eng,
-    },
-    {
       key: "code",
       header: t("masterData.designations.designationCode"),
       accessor: (item) => item.designation_code,
+    },
+    {
+      key: "name",
+      header: t("masterData.designations.designationName"),
+      accessor: (item, isRTL) =>
+        isRTL ? item.designation_arb : item.designation_eng,
     },
   ];
 
@@ -58,13 +59,17 @@ export const DesignationsTable: React.FC<DesignationsTableProps> = ({
       pageSize={pageSize}
       allChecked={allChecked}
       getItemId={(item) => item.designation_id}
-      getItemDisplayName={(item, isRTL) => isRTL ? item.designation_arb || item.designation_eng || "" : item.designation_eng || item.designation_arb || ""}
+      getItemDisplayName={(item, isRTL) =>
+        isRTL
+          ? item.designation_arb || item.designation_eng || ""
+          : item.designation_eng || item.designation_arb || ""
+      }
       onSelectItem={onSelectDesignation}
       onSelectAll={onSelectAll}
       onEditItem={onEditDesignation}
       onDeleteItem={onDeleteDesignation}
-  onPageChange={onPageChange}
-  onPageSizeChange={onPageSizeChange}
+      onPageChange={onPageChange}
+      onPageSizeChange={onPageSizeChange}
       noDataMessage={t("masterData.designations.noDesignationsFound")}
       isLoading={isLoading}
     />

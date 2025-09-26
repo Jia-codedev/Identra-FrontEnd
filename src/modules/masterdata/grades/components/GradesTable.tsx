@@ -38,14 +38,14 @@ export const GradesTable: React.FC<GradesTableProps> = ({
 
   const columns: TableColumn<IGrade>[] = [
     {
-      key: "name",
-      header: t("masterData.grade.gradeName"),
-      accessor: (item, isRTL) => isRTL ? item.grade_arb : item.grade_eng,
-    },
-    {
       key: "code",
       header: t("masterData.grade.gradeCode"),
       accessor: (item) => item.grade_code,
+    },
+    {
+      key: "name",
+      header: t("masterData.grade.gradeName"),
+      accessor: (item, isRTL) => isRTL ? item.grade_arb : item.grade_eng,
     },
   ];
 
