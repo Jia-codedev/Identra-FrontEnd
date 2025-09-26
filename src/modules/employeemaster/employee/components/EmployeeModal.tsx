@@ -659,20 +659,18 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
 
           {/* Form Content */}
           <div className="flex flex-col h-full">
-            <div className="flex-1">
-              <div className="py-6 max-h-[50vh] gap-0 ">
-                <div className="space-y-1 mb-8 px-6 ">
-                  <h3 className="text-xl font-semibold text-foreground">
-                    {steps[currentStep]?.title}
-                  </h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    {steps[currentStep]?.description}
-                  </p>
-                </div>
-                <ScrollArea className="h-[360px] py-4 w-full px-6">
-                  {renderStepContent()}
-                </ScrollArea>
+            <div className="pt-4 max-h-[50vh] grid grid-cols-1 grid-rows-10 gap-0 ">
+              <div className="space-y-1 px-6 row-span-2 ">
+                <h3 className="text-xl font-semibold text-foreground">
+                  {steps[currentStep]?.title}
+                </h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  {steps[currentStep]?.description}
+                </p>
               </div>
+              <ScrollArea className="w-full px-6 row-span-9 py-1">
+                {renderStepContent()}
+              </ScrollArea>
             </div>
 
             {/* Footer */}
