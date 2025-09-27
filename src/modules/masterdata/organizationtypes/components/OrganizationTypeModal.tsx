@@ -71,7 +71,7 @@ export const OrganizationTypeModal: React.FC<OrganizationTypeModalProps> = ({
        
       )) ;
 
-  console.log(disableSubmit);
+
 
   const handleInputChange = (
     field: keyof OrganizationTypeFormFields,

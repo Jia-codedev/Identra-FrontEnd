@@ -119,6 +119,10 @@
     "november": "November",
     "december": "December"
   },
+  "messages": {
+    "confirmDeleteMultipleDescription": "Are you sure you want to delete these {count} {deleteType}? This action cannot be undone.",
+    "confirmDeleteSingleDescription": "Are you sure you want to delete this {deleteType}? This action cannot be undone."
+  },
   "navigation": {
     "departmentAdmins": "Department Admins",
     "selfStatistics": "My Insights",

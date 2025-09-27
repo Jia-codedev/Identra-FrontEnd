@@ -20,39 +20,37 @@ export const useCreateRamadanDate = () => {
     onMutate: async (variables: CreateRamadanDateRequest) => {
       await queryClient.cancelQueries({ queryKey: ["ramadanDates"] });
 
-      const previousData = queryClient.getQueriesData({ queryKey: ["ramadanDates"] });
+      const previousData = queryClient.getQueriesData({
+        queryKey: ["ramadanDates"],
+      });
 
-      queryClient.setQueriesData(
-        { queryKey: ["ramadanDates"] },
-        (old: any) => {
-          if (!old || !old.success || !Array.isArray(old.data)) return old;
-          
-          const optimisticRamadanDate: IRamadanDate = {
-            ramadan_id: Date.now(),
-            ramadan_name_eng: variables.ramadan_name_eng,
-            ramadan_name_arb: variables.ramadan_name_arb,
-            remarks: variables.remarks,
-            from_date: variables.from_date,
-            to_date: variables.to_date,
-            created_date: new Date().toISOString(),
-          };
+      queryClient.setQueriesData({ queryKey: ["ramadanDates"] }, (old: any) => {
+        if (!old || !old.success || !Array.isArray(old.data)) return old;
 
-          return {
-            ...old,
-            data: [optimisticRamadanDate, ...old.data],
-          };
-        }
-      );
+        const optimisticRamadanDate: IRamadanDate = {
+          ramadan_id: Date.now(),
+          ramadan_name_eng: variables.ramadan_name_eng,
+          ramadan_name_arb: variables.ramadan_name_arb,
+          remarks: variables.remarks,
+          from_date: variables.from_date,
+          to_date: variables.to_date,
+          created_date: new Date().toISOString(),
+        };
+
+        return {
+          ...old,
+          data: [optimisticRamadanDate, ...old.data],
+        };
+      });
 
       return { previousData };
     },
     onSuccess: (response: any, variables: CreateRamadanDateRequest) => {
-      queryClient.setQueriesData(
-        { queryKey: ["ramadanDates"] },
-        (old: any) => {
-          if (!old || !old.success || !Array.isArray(old.data)) return old;
-          
-          const realRamadanDate: IRamadanDate = response?.data?.data || response?.data || {
+      queryClient.setQueriesData({ queryKey: ["ramadanDates"] }, (old: any) => {
+        if (!old || !old.success || !Array.isArray(old.data)) return old;
+
+        const realRamadanDate: IRamadanDate = response?.data?.data ||
+          response?.data || {
             ramadan_id: response?.data?.ramadan_id || Date.now(),
             ramadan_name_eng: variables.ramadan_name_eng,
             ramadan_name_arb: variables.ramadan_name_arb,
@@ -62,27 +60,31 @@ export const useCreateRamadanDate = () => {
             created_date: new Date().toISOString(),
           };
 
-          const updatedData = old.data.map((item: IRamadanDate, index: number) => 
-            index === 0 ? realRamadanDate : item
-          );
+        const updatedData = old.data.map((item: IRamadanDate, index: number) =>
+          index === 0 ? realRamadanDate : item
+        );
 
-          return {
-            ...old,
-            data: updatedData,
-          };
-        }
-      );
+        return {
+          ...old,
+          data: updatedData,
+        };
+      });
 
-      toast.success(t("scheduling.ramadanDates.created"));
+      toast.success(t("toast.success.ramadanDateAdded"));
     },
-    onError: (error: any, variables: CreateRamadanDateRequest, context: any) => {
+    onError: (
+      error: any,
+      variables: CreateRamadanDateRequest,
+      context: any
+    ) => {
       if (context?.previousData) {
         context.previousData.forEach(([queryKey, data]: [any, any]) => {
           queryClient.setQueryData(queryKey, data);
         });
       }
 
-      const errorMessage = error?.response?.data?.message || t("common.error");
+      const errorMessage =
+        error?.response?.data?.message || t("toast.error.ramadanDateAddError");
       toast.error(errorMessage);
     },
     onSettled: () => {
@@ -97,41 +99,51 @@ export const useUpdateRamadanDate = () => {
 
   return useMutation({
     mutationKey: ["updateRamadanDate"],
-    mutationFn: ({ id, data }: { id: number; data: UpdateRamadanDateRequest }) =>
-      ramadanDatesApi.updateRamadanDate(id, data),
-    onMutate: async ({ id, data }: { id: number; data: UpdateRamadanDateRequest }) => {
+    mutationFn: ({
+      id,
+      data,
+    }: {
+      id: number;
+      data: UpdateRamadanDateRequest;
+    }) => ramadanDatesApi.updateRamadanDate(id, data),
+    onMutate: async ({
+      id,
+      data,
+    }: {
+      id: number;
+      data: UpdateRamadanDateRequest;
+    }) => {
       await queryClient.cancelQueries({ queryKey: ["ramadanDates"] });
 
-      const previousData = queryClient.getQueriesData({ queryKey: ["ramadanDates"] });
+      const previousData = queryClient.getQueriesData({
+        queryKey: ["ramadanDates"],
+      });
 
-      queryClient.setQueriesData(
-        { queryKey: ["ramadanDates"] },
-        (old: any) => {
-          if (!old || !old.success || !Array.isArray(old.data)) return old;
-          
-          return {
-            ...old,
-            data: old.data.map((item: IRamadanDate) => 
-              item.ramadan_id === id
-                ? {
-                    ...item,
-                    ramadan_name_eng: data.ramadan_name_eng,
-                    ramadan_name_arb: data.ramadan_name_arb,
-                    remarks: data.remarks,
-                    from_date: data.from_date,
-                    to_date: data.to_date,
-                    updated_date: new Date().toISOString(),
-                  }
-                : item
-            ),
-          };
-        }
-      );
+      queryClient.setQueriesData({ queryKey: ["ramadanDates"] }, (old: any) => {
+        if (!old || !old.success || !Array.isArray(old.data)) return old;
+
+        return {
+          ...old,
+          data: old.data.map((item: IRamadanDate) =>
+            item.ramadan_id === id
+              ? {
+                  ...item,
+                  ramadan_name_eng: data.ramadan_name_eng,
+                  ramadan_name_arb: data.ramadan_name_arb,
+                  remarks: data.remarks,
+                  from_date: data.from_date,
+                  to_date: data.to_date,
+                  updated_date: new Date().toISOString(),
+                }
+              : item
+          ),
+        };
+      });
 
       return { previousData };
     },
     onSuccess: () => {
-      toast.success(t("scheduling.ramadanDates.updated"));
+      toast.success(t("toast.success.ramadanDateUpdated"));
     },
     onError: (error: any, variables: any, context: any) => {
       if (context?.previousData) {
@@ -140,7 +152,9 @@ export const useUpdateRamadanDate = () => {
         });
       }
 
-      const errorMessage = error?.response?.data?.message || t("common.error");
+      const errorMessage =
+        error?.response?.data?.message ||
+        t("toast.error.ramadanDateUpdateError");
       toast.error(errorMessage);
     },
     onSettled: () => {
@@ -155,29 +169,27 @@ export const useDeleteRamadanDate = () => {
 
   return useMutation({
     mutationKey: ["deleteRamadanDate"],
-    mutationFn: (id: number) =>
-      ramadanDatesApi.deleteRamadanDate(id),
+    mutationFn: (id: number) => ramadanDatesApi.deleteRamadanDate(id),
     onMutate: async (id: number) => {
       await queryClient.cancelQueries({ queryKey: ["ramadanDates"] });
 
-      const previousData = queryClient.getQueriesData({ queryKey: ["ramadanDates"] });
+      const previousData = queryClient.getQueriesData({
+        queryKey: ["ramadanDates"],
+      });
 
-      queryClient.setQueriesData(
-        { queryKey: ["ramadanDates"] },
-        (old: any) => {
-          if (!old || !old.success || !Array.isArray(old.data)) return old;
-          
-          return {
-            ...old,
-            data: old.data.filter((item: IRamadanDate) => item.ramadan_id !== id),
-          };
-        }
-      );
+      queryClient.setQueriesData({ queryKey: ["ramadanDates"] }, (old: any) => {
+        if (!old || !old.success || !Array.isArray(old.data)) return old;
+
+        return {
+          ...old,
+          data: old.data.filter((item: IRamadanDate) => item.ramadan_id !== id),
+        };
+      });
 
       return { previousData };
     },
     onSuccess: () => {
-      toast.success(t("scheduling.ramadanDates.deleted"));
+      toast.success(t("toast.success.ramadanDateDeleted"));
     },
     onError: (error: any, variables: any, context: any) => {
       if (context?.previousData) {
@@ -186,7 +198,9 @@ export const useDeleteRamadanDate = () => {
         });
       }
 
-      const errorMessage = error?.response?.data?.message || t("common.error");
+      const errorMessage =
+        error?.response?.data?.message ||
+        t("scheduling.toast.error.ramadanDateDeleteError");
       toast.error(errorMessage);
     },
     onSettled: () => {

@@ -29,11 +29,11 @@ export const useHolidayMutations = () => {
       holidaysApi.addHoliday(holidayData),
     onSuccess: (data, { onClose }) => {
       queryClient.invalidateQueries({ queryKey: ["holidays"] });
-      toast.success(t("messages.success.create"));
+      toast.success(t("toast.success.holidayAdded"));
       onClose?.();
     },
     onError: (error: any) => {
-      const message = error?.response?.data?.message || t("messages.error.create");
+      const message = error?.response?.data?.message || t("toast.error.holidayAddError");
       toast.error(message);
     },
   });
@@ -43,11 +43,11 @@ export const useHolidayMutations = () => {
       holidaysApi.updateHoliday(id, holidayData),
     onSuccess: (data, { onClose }) => {
       queryClient.invalidateQueries({ queryKey: ["holidays"] });
-      toast.success(t("messages.success.update"));
+      toast.success(t("toast.success.holidayUpdated"));
       onClose?.();
     },
     onError: (error: any) => {
-      const message = error?.response?.data?.message || t("messages.error.update");
+      const message = error?.response?.data?.message || t("toast.error.holidayUpdateError");
       toast.error(message);
     },
   });
@@ -56,10 +56,10 @@ export const useHolidayMutations = () => {
     mutationFn: (id: number) => holidaysApi.deleteHoliday(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["holidays"] });
-      toast.success(t("messages.success.delete"));
+      toast.success(t("toast.success.holidayDeleted"));
     },
     onError: (error: any) => {
-      const message = error?.response?.data?.message || t("messages.error.delete");
+      const message = error?.response?.data?.message || t("toast.error.holidayDeleteError");
       toast.error(message);
     },
   });

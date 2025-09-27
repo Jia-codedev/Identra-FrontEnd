@@ -142,8 +142,13 @@ const OrganizationTypesPage = () => {
         title={t("common.confirmDelete")}
         description={
           !!selected?.length
-            ? t("masterData.organizationTypes.confirmMultipleDeleteDescription")
-            : t("masterData.organizationTypes.confirmDeleteDescription")
+            ? t("common.messages.confirmDeleteMultipleDescription", {
+                count: selected?.length,
+                deleteType: "Organization types",
+              })
+            : t("common.messages.confirmDeleteSingleDescription", {
+                deleteType: "Organization type",
+              })
         }
       />
     </div>

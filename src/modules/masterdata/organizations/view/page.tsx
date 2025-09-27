@@ -181,10 +181,13 @@ export default function OrganizationsPage() {
             </DialogTitle>
             <div className="bg-black/5 p-4 rounded-lg dark:bg-white/5">
               <DialogDescription>
-                {deleteDialog.type === "single" || selected?.length === 1
-                  ? t("masterData.organizations.confirmDeleteSingle")
-                  : t("masterData.organizations.confirmDeleteMultiple", {
-                      count: selected.length,
+                {selected?.length === 1 || deleteDialog.type === "single"
+                  ? t("common.messages.confirmDeleteSingleDescription", {
+                      deleteType: "Organization",
+                    })
+                  : t("common.messages.confirmDeleteMultipleDescription", {
+                      count: selected?.length,
+                      deleteType: "Organizations",
                     })}
               </DialogDescription>
               <div className="flex justify-end space-x-2 mt-4">

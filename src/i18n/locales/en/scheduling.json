@@ -29,6 +29,7 @@
     "enterEngName": "Enter Holiday Name in English",
     "enterRemarks": "Enter Remarks",
     "recurring": "Recurring",
+    "recurringDesc": "Mark this as a recurring holiday that affects all employees.",
     "publicHoliday": "Public Holiday",
     "publicHolidayDesc": "Mark this as a public holiday that affects all employees.",
     "searchPlaceholder": "Search holidays...",

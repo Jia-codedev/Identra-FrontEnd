@@ -23,8 +23,7 @@ export function useOrganizationMutations() {
       const data = await organizationsApi.addOrganization(organizationData);
       if (data.status !== 201) {
         toast.error(
-          data.data?.message ||
-            t("masterData.organizations.toast.error.organizationAddError")
+          data.data?.message || t("toast.error.organizationAddError")
         );
         return null;
       }
@@ -41,9 +40,7 @@ export function useOrganizationMutations() {
     },
     onSuccess: (data) => {
       if (!data) return;
-      toast.success(
-        t("masterData.organizations.toast.success.organizationAdded")
-      );
+      toast.success(t("toast.success.organizationAdded"));
       console.log("Organization created:", data);
       queryClient.setQueryData(
         ["organizations", data.search ?? "", data.pageSize ?? 5],
@@ -88,8 +85,7 @@ export function useOrganizationMutations() {
       );
       if (data.status !== 200) {
         toast.error(
-          data.data?.message ||
-            t("masterData.organizations.toast.error.organizationUpdateError")
+          data.data?.message || t("toast.error.organizationUpdateError")
         );
         return null;
       }
@@ -106,9 +102,7 @@ export function useOrganizationMutations() {
     },
     onSuccess: (data) => {
       if (!data) return;
-      toast.success(
-        t("masterData.organizations.toast.success.organizationUpdated")
-      );
+      toast.success(t("toast.success.organizationUpdated"));
       console.log("Organization updated:", data);
       queryClient.setQueryData(
         ["organizations", data.search ?? "", data.pageSize ?? 5],
@@ -142,15 +136,13 @@ export function useOrganizationMutations() {
       const response = await organizationsApi.deleteOrganization(id);
       if (response?.status === 409) {
         toast.error(
-          response.data?.message ||
-            t("masterData.organizations.toast.error.organizationDeleteError")
+          response.data?.message || t("toast.error.organizationDeleteError")
         );
         return null;
       }
       if (response?.status !== 200) {
         toast.error(
-          response.data?.message ||
-            t("masterData.organizations.toast.error.organizationDeleteError")
+          response.data?.message || t("toast.error.organizationDeleteError")
         );
         return null;
       }
@@ -158,15 +150,11 @@ export function useOrganizationMutations() {
     },
     onSuccess: (data) => {
       if (!data) return;
-      toast.success(
-        t("masterData.organizations.toast.success.organizationDeleted")
-      );
+      toast.success(t("toast.success.organizationDeleted"));
       queryClient.invalidateQueries({ queryKey: ["organizations"] });
     },
     onError: (error) => {
-      toast.error(
-        t("masterData.organizations.toast.error.organizationDeleteError")
-      );
+      toast.error(t("toast.error.organizationDeleteError"));
       console.error("Error deleting organization:", error);
     },
   });
@@ -176,18 +164,14 @@ export function useOrganizationMutations() {
       if (response?.status === 409) {
         toast.error(
           response.data?.message ||
-            t(
-              "masterData.organizations.toast.error.organizationMultipleDeleteError"
-            )
+            t("toast.error.organizationMultipleDeleteError")
         );
         return null;
       }
       if (response?.status !== 200) {
         toast.error(
           response.data?.message ||
-            t(
-              "masterData.organizations.toast.error.organizationMultipleDeleteError"
-            )
+            t("toast.error.organizationMultipleDeleteError")
         );
         return null;
       }
@@ -197,22 +181,15 @@ export function useOrganizationMutations() {
       if (!data) return;
       toast.success(
         data?.data?.length > 1
-          ? t(
-              "masterData.organizations.toast.success.organizationMultipleDelete",
-              {
-                count: data?.data?.length,
-              }
-            )
-          : t("masterData.organizations.toast.success.organizationDeleted")
+          ? t("toast.success.organizationMultipleDelete", {
+              count: data?.data?.length,
+            })
+          : t("toast.success.organizationDeleted")
       );
       queryClient.invalidateQueries({ queryKey: ["organizations"] });
     },
     onError: (error) => {
-      toast.error(
-        t(
-          "masterData.organizations.toast.error.organizationMultipleDeleteError"
-        )
-      );
+      toast.error(t("toast.error.organizationMultipleDeleteError"));
       console.error("Error deleting organizations:", error);
     },
   });

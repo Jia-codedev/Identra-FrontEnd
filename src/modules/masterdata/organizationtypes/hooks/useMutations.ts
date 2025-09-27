@@ -50,7 +50,7 @@ export function useOrganizationTypeMutations() {
     onSuccess: (data) => {
       if (!data) return;
       toast.success(
-        t("masterData.organizationTypes.toast.success.organizationTypeAdded")
+        t("toast.success.organizationTypeAdded")
       );
       queryClient.setQueryData(
         ["organizationtypes", data.search ?? "", data.pageSize ?? 5],
@@ -74,7 +74,7 @@ export function useOrganizationTypeMutations() {
     },
     onError: (error) => {
       toast.error(
-        t("masterData.organizationTypes.toast.error.organizationTypeAddError")
+        t("toast.error.organizationTypeAddError")
       );
       console.error("Error creating organization type:", error);
     },
@@ -116,7 +116,7 @@ export function useOrganizationTypeMutations() {
     onSuccess: (data) => {
       if (!data) return;
       toast.success(
-        t("masterData.organizationTypes.toast.success.organizationTypeUpdated")
+        t(".toast.success.organizationTypeUpdated")
       );
       queryClient.setQueryData(
         ["organizationtypes", data.search ?? "", data.pageSize ?? 5],
@@ -147,7 +147,7 @@ export function useOrganizationTypeMutations() {
     onError: (error) => {
       toast.error(
         t(
-          "masterData.organizationTypes.toast.error.organizationTypeUpdateError"
+          "toast.error.organizationTypeUpdateError"
         )
       );
       console.error("Error updating organization type:", error);
@@ -161,7 +161,7 @@ export function useOrganizationTypeMutations() {
     },
     onSuccess: ({ id }) => {
       toast.success(
-        t("masterData.organizationTypes.toast.success.organizationTypeDeleted")
+        t("toast.success.organizationTypeDeleted")
       );
       queryClient.setQueriesData(
         { queryKey: ["organizationtypes"] },
@@ -186,7 +186,7 @@ export function useOrganizationTypeMutations() {
     onError: (error) => {
       toast.error(
         t(
-          "masterData.organizationTypes.toast.error.organizationTypeDeleteError"
+          "toast.error.organizationTypeDeleteError"
         )
       );
       console.error("Error deleting organization type:", error);
@@ -199,7 +199,7 @@ export function useOrganizationTypeMutations() {
       if (data.status === 409) {
         toast.error(
           t(
-            "masterData.organizationTypes.toast.error.organizationTypeDeleteError"
+            "toast.error.organizationTypeDeleteError"
           )
         );
         return null;
@@ -217,7 +217,7 @@ export function useOrganizationTypeMutations() {
       const { ids } = data;
       toast.success(
         t(
-          "masterData.organizationTypes.toast.success.organizationTypeMultipleDelete"
+          "toast.success.organizationTypeMultipleDelete"
         )
       );
       queryClient.setQueriesData(
@@ -243,7 +243,7 @@ export function useOrganizationTypeMutations() {
     onError: (error) => {
       toast.error(
         t(
-          "masterData.organizationTypes.toast.error.organizationTypeMultipleDeleteError"
+          "toast.error.organizationTypeMultipleDeleteError"
         )
       );
       console.error("Error deleting selected organization types:", error);

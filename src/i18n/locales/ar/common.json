@@ -105,6 +105,10 @@
   "overtime": "العمل الإضافي",
   "device": "الجهاز",
   "org": "المؤسسة",
+  "messages": {
+    "confirmDeleteMultipleDescription": "هل أنت متأكد من أنك تريد حذف {count} {deleteType}؟ ",
+    "confirmDeleteSingleDescription": "هل أنت متأكد من أنك تريد حذف هذا {deleteType}؟ "
+  },
   "months": {
     "january": "يناير",
     "february": "فبراير",

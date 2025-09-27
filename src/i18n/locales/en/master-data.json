@@ -97,13 +97,13 @@
     "searchPlaceholder": "Search organization types...",
     "addOrganizationType": "Add Organization Type",
     "editOrganizationType": "Edit Organization Type",
-    "organizationTypeName": "Organization Type Name",
+    "organizationTypeName": "Organization Types",
     "organizationTypeCode": "Organization Type Code",
     "enterOrganizationTypeName": "Enter organization type name",
     "enterOrganizationTypeNameArabic": "Enter organization type name in Arabic",
     "enterOrganizationTypeCode": "Enter organization type code",
     "noOrganizationTypesFound": "No organization types found.",
-    "level": "Level",
+    "level": "Hierarchy",
     "organizationTypeNameEnglish": "Organization Type Name in English",
     "enterOrganizationTypeNameEnglish": "Enter organization type name in English",
     "organizationTypeNameArabic": "Organization Type Name in Arabic"
@@ -119,8 +119,7 @@
     "enterDeptAdminNameArabic": "Enter department admin name in Arabic",
     "enterDeptAdminCode": "Enter department admin code",
     "noDeptAdminsFound": "No department admins found."
-  }
-  ,
+  },
   "deptAdmins": {
     "title": "Department Admins",
     "description": "Manage department admins for your organization.",
@@ -135,5 +134,4 @@
     "remarks": "Remarks",
     "noData": "No department admins found"
   }
-  
 }
