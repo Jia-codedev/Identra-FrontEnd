@@ -284,7 +284,23 @@
       "level": "المستوى",
       "organizationTypeNameEnglish": "اسم نوع المؤسسة بالإنجليزية",
       "enterOrganizationTypeNameEnglish": "أدخل اسم نوع المؤسسة بالإنجليزية",
-      "organizationTypeNameArabic": "اسم نوع المؤسسة بالعربية"
+      "organizationTypeNameArabic": "اسم نوع المؤسسة بالعربية",
+      "confirmMultipleDeleteDescription": "Are you sure you want to delete all of these items? This action cannot be undone.",
+      "confirmDeleteDescription": "Are you sure you want to delete this item? This action cannot be undone.",
+      "toast": {
+        "success": {
+          "organizationTypeAdded": "Organization type added successfully!",
+          "organizationTypeUpdated": "Organization type updated successfully!",
+          "organizationTypeDeleted": "Organization type deleted successfully!",
+          "organizationTypeMultipleDelete": "Multiple Organization Types deleted successfully!"
+        },
+        "error": {
+          "organizationTypeAddError": "Failed to add organization type",
+          "organizationTypeUpdateError": "Failed to update organization type",
+          "organizationTypeDeleteError": "Failed to delete organization type",
+          "organizationTypeMultipleDeleteError": "Some organization types cannot be deleted as they are associated with other records."
+        }
+      }
     },
     "deptAdmin": {
       "title": "إدارة مسؤولي الأقسام",

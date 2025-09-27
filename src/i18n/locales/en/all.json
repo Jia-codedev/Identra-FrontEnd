@@ -300,26 +300,43 @@
       },
       "organizationType": "Organization Type",
       "selectOrganizationType": "Select organization type",
-      "parentOrganization": "Parent Organization",
+      "parentOrganization": "Parent",
       "root": "Root",
       "location": "Location",
       "selectLocation": "Select location"
     },
     "organizationTypes": {
-      "title": "Organization Type Management",
+      "title": "Organization Types",
       "searchPlaceholder": "Search organization types...",
       "addOrganizationType": "Add Organization Type",
       "editOrganizationType": "Edit Organization Type",
-      "organizationTypeName": "Organization Type Name",
+      "organizationTypeName": "Organization Types",
       "organizationTypeCode": "Organization Type Code",
       "enterOrganizationTypeName": "Enter organization type name",
       "enterOrganizationTypeNameArabic": "Enter organization type name in Arabic",
       "enterOrganizationTypeCode": "Enter organization type code",
       "noOrganizationTypesFound": "No organization types found.",
-      "level": "Level",
+      "level": "Hierarchy",
       "organizationTypeNameEnglish": "Organization Type Name in English",
       "enterOrganizationTypeNameEnglish": "Enter organization type name in English",
-      "organizationTypeNameArabic": "Organization Type Name in Arabic"
+      "organizationTypeNameArabic": "Organization Type Name in Arabic",
+      "confirmMultipleDeleteDescription": "Are you sure you want to delete all of these items? This action cannot be undone.",
+      "confirmDeleteDescription": "Are you sure you want to delete this item? This action cannot be undone.",
+
+      "toast": {
+        "success": {
+          "organizationTypeAdded": "Organization type added successfully!",
+          "organizationTypeUpdated": "Organization type updated successfully!",
+          "organizationTypeDeleted": "Organization type deleted successfully!",
+          "organizationTypeMultipleDelete": "Multiple Organization Types deleted successfully!"
+        },
+        "error": {
+          "organizationTypeAddError": "Failed to add organization type",
+          "organizationTypeUpdateError": "Failed to update organization type",
+          "organizationTypeDeleteError": "Failed to delete organization type",
+          "organizationTypeMultipleDeleteError": "Some organization types cannot be deleted as they are associated with other records."
+        }
+      }
     },
     "deptAdmin": {
       "title": "Department Admin Management",
@@ -759,7 +776,9 @@
   "toast": {
     "success": {
       "general": "Operation completed successfully",
-      "saved": "Data saved successfully"
+      "saved": "Data saved successfully",
+      "deleted": "Data deleted successfully",
+      "updated": "Data updated successfully"
     },
     "error": {
       "general": "An error occurred. Please try again.",
@@ -855,7 +874,8 @@
         "deleteError": "Failed to delete permission",
         "createError": "Failed to create permission",
         "updateError": "Failed to update permission"
-      }
+      },
+      "toast": {}
     },
     "attendance": {
       "errorLoading": "Error loading event transactions",
