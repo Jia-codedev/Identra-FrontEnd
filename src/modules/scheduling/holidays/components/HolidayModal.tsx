@@ -138,7 +138,15 @@ export const HolidayModal: React.FC<HolidayModalProps> = ({
       remarks: data.remarks || "",
     };
 
-    onSave(formattedData);
+    const updatedFormData =
+      mode === "edit"
+        ? {
+            holiday_id: holiday?.holiday_id,
+            ...formattedData,
+          }
+        : formattedData;
+
+    onSave(updatedFormData);
   };
 
   const handleClose = () => {

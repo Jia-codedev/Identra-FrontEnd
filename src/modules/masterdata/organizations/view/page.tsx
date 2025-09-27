@@ -181,9 +181,9 @@ export default function OrganizationsPage() {
             </DialogTitle>
             <div className="bg-black/5 p-4 rounded-lg dark:bg-white/5">
               <DialogDescription>
-                {deleteDialog.type === "single"
-                  ? t("leaveManagement.permissions.confirmDeleteSingle")
-                  : t("leaveManagement.permissions.confirmDeleteMultiple", {
+                {deleteDialog.type === "single" || selected?.length === 1
+                  ? t("masterData.organizations.confirmDeleteSingle")
+                  : t("masterData.organizations.confirmDeleteMultiple", {
                       count: selected.length,
                     })}
               </DialogDescription>

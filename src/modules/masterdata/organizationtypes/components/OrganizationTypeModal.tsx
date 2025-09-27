@@ -60,11 +60,16 @@ export const OrganizationTypeModal: React.FC<OrganizationTypeModalProps> = ({
   }, [organizationType, mode, isOpen]);
 
   const disableSubmit =
-    organizationType?.organization_type_eng ===
+    ((organizationType?.organization_type_eng ===
       formData.organization_type_eng &&
     organizationType?.organization_type_arb ===
       formData.organization_type_arb &&
-    organizationType?.org_type_level === formData.org_type_level;
+    organizationType?.org_type_level === formData.org_type_level) ||
+      (
+        !formData.organization_type_eng &&
+        !formData.organization_type_arb 
+       
+      )) ;
 
   console.log(disableSubmit);
 

@@ -261,6 +261,21 @@
       "structure": {
         "title": "هيكل الرسم البياني"
       },
+
+      "toast": {
+        "success": {
+          "organizationTypeAdded": "نوع المنظمة أضيفت بنجاح!",
+          "organizationTypeUpdated": "نوع المنظمة تحديث بنجاح!",
+          "organizationTypeDeleted": "تم حذف نوع المنظمة بنجاح!",
+          "organizationTypeMultipleDelete": "تم حذف أنواع المنظمات المتعددة بنجاح!"
+        },
+        "error": {
+          "organizationTypeAddError": "فشل في إضافة نوع المنظمة",
+          "organizationTypeUpdateError": "فشل في تحديث نوع المؤسسة",
+          "organizationTypeDeleteError": "فشل في حذف نوع المنظمة",
+          "organizationTypeMultipleDeleteError": "لا يمكن حذف بعض أنواع المؤسسات لأنها مرتبطة بالسجلات الأخرى."
+        }
+      },
       "organizationNameEnglish": "اسم المؤسسة (بالإنجليزية)",
       "enterOrganizationNameEnglish": "أدخل اسم المؤسسة بالإنجليزية",
       "organizationType": "نوع المؤسسة",
@@ -285,20 +300,21 @@
       "organizationTypeNameEnglish": "اسم نوع المؤسسة بالإنجليزية",
       "enterOrganizationTypeNameEnglish": "أدخل اسم نوع المؤسسة بالإنجليزية",
       "organizationTypeNameArabic": "اسم نوع المؤسسة بالعربية",
-      "confirmMultipleDeleteDescription": "Are you sure you want to delete all of these items? This action cannot be undone.",
-      "confirmDeleteDescription": "Are you sure you want to delete this item? This action cannot be undone.",
+
+      "confirmMultipleDeleteDescription": "هل أنت متأكد من أنك تريد حذف كل هذه العناصر؟ ",
+      "confirmDeleteDescription": "هل أنت متأكد أنك تريد حذف هذا العنصر؟ ",
       "toast": {
         "success": {
-          "organizationTypeAdded": "Organization type added successfully!",
-          "organizationTypeUpdated": "Organization type updated successfully!",
-          "organizationTypeDeleted": "Organization type deleted successfully!",
-          "organizationTypeMultipleDelete": "Multiple Organization Types deleted successfully!"
+          "organizationTypeAdded": "نوع المنظمة أضيفت بنجاح!",
+          "organizationTypeUpdated": "نوع المنظمة تحديث بنجاح!",
+          "organizationTypeDeleted": "تم حذف نوع المنظمة بنجاح!",
+          "organizationTypeMultipleDelete": "تم حذف أنواع المنظمات المتعددة بنجاح!"
         },
         "error": {
-          "organizationTypeAddError": "Failed to add organization type",
-          "organizationTypeUpdateError": "Failed to update organization type",
-          "organizationTypeDeleteError": "Failed to delete organization type",
-          "organizationTypeMultipleDeleteError": "Some organization types cannot be deleted as they are associated with other records."
+          "organizationTypeAddError": "فشل في إضافة نوع المنظمة",
+          "organizationTypeUpdateError": "فشل في تحديث نوع المؤسسة",
+          "organizationTypeDeleteError": "فشل في حذف نوع المنظمة",
+          "organizationTypeMultipleDeleteError": "لا يمكن حذف بعض أنواع المؤسسات لأنها مرتبطة بالسجلات الأخرى."
         }
       }
     },
@@ -522,6 +538,7 @@
       "enterEngName": "أدخل اسم العطلة بالإنجليزية",
       "enterRemarks": "أدخل الملاحظات",
       "recurring": "متكرر",
+      "recurringDesc": "حدد هذه العطلة على أنها متكررة وكررها كل عام.",
       "publicHoliday": "عطلة عامة",
       "publicHolidayDesc": "حدد هذا كعطلة عامة تؤثر على جميع الموظفين.",
       "searchPlaceholder": "البحث عن العطلات...",

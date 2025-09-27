@@ -303,7 +303,23 @@
       "parentOrganization": "Parent",
       "root": "Root",
       "location": "Location",
-      "selectLocation": "Select location"
+      "selectLocation": "Select location",
+      "confirmDeleteSingle":"Are you sure you want to delete this organization? This action cannot be undone.",
+      "confirmDeleteMultiple":"Are you sure you want to delete {count} organizations? This action cannot be undone.",
+      "toast": {
+        "success": {
+          "organizationAdded": "Organization added successfully!",
+          "organizationUpdated": "Organization updated successfully!",
+          "organizationDeleted": "Organization deleted successfully!",
+          "organizationMultipleDelete": "{count} organizations deleted successfully!"
+        },
+        "error": {
+          "organizationAddError": "Failed to add organization",
+          "organizationUpdateError": "Failed to update organization",
+          "organizationDeleteError": "Failed to delete organization",
+          "organizationMultipleDeleteError": "Some organizations cannot be deleted as they are associated with other records."
+        }
+      }
     },
     "organizationTypes": {
       "title": "Organization Types",
@@ -558,6 +574,7 @@
       "enterEngName": "Enter Holiday Name in English",
       "enterRemarks": "Enter Remarks",
       "recurring": "Recurring",
+      "recurringDesc":"Mark this holiday as recurring and repeat it every year.",
       "publicHoliday": "Public Holiday",
       "publicHolidayDesc": "Mark this as a public holiday that affects all employees.",
       "searchPlaceholder": "Search holidays...",
