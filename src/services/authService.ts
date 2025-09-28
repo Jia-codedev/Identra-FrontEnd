@@ -26,8 +26,14 @@ class AuthService {
   async adlogin() {
     try {
       console.log("Starting Azure AD login...");
-      const envBase = typeof process !== "undefined" && process.env && process.env.NEXT_PUBLIC_IDENTRA_BE_URI;
-      const baseURL = (envBase as string) || apiClient?.defaults?.baseURL || "http://localhost:8000";
+      const envBase =
+        typeof process !== "undefined" &&
+        process.env &&
+        process.env.NEXT_PUBLIC_IDENTRA_BE_URI;
+      const baseURL =
+        (envBase as string) ||
+        apiClient?.defaults?.baseURL ||
+        "http://localhost:8000";
       console.log("Using backend base URL for AD login:", baseURL);
       if (typeof window === "undefined") {
         console.error("adlogin() must run in a browser environment");
@@ -45,7 +51,10 @@ class AuthService {
       console.info("Redirecting browser to Azure login endpoint:", loginUrl);
       window.location.assign(loginUrl);
 
-      return { status: 302, data: { message: "Redirecting to Azure AD login", url: loginUrl } };
+      return {
+        status: 302,
+        data: { message: "Redirecting to Azure AD login", url: loginUrl },
+      };
     } catch (error) {
       console.error("AD Login error:", error);
       throw error;
@@ -123,6 +132,21 @@ class AuthService {
     }
     return false;
   }
+  changePassword = async (data: {
+    old_password: string;
+    new_password: string;
+  }) => {
+    try {
+      const response = await apiClient.patch("/auth/change-password", {
+        oldPassword: data.old_password,
+        newPassword: data.new_password,
+      });
+      return response;
+    } catch (error) {
+      console.error("Change password error:", error);
+      throw error;
+    }
+  };
 }
 
 const authService = new AuthService();
