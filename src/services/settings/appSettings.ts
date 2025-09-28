@@ -33,24 +33,24 @@ class AppSettingsApi {
     });
   }
 
-  getAppSettingById(id: number) {
-    return apiClient.get(`/appSetting/get/${id}`);
+  getAppSettingById(versionName: string) {
+    return apiClient.get(`/appSetting/get/${encodeURIComponent(versionName)}`);
   }
 
   createAppSetting(data: CreateAppSettingRequest) {
     return apiClient.post("/appSetting/add", data);
   }
 
-  updateAppSetting(id: number, data: Partial<CreateAppSettingRequest>) {
-    return apiClient.put(`/appSetting/edit/${id}`, data);
+  updateAppSetting(versionName: string, data: Partial<CreateAppSettingRequest>) {
+    return apiClient.put(`/appSetting/edit/${encodeURIComponent(versionName)}`, data);
   }
 
-  deleteAppSetting(id: number) {
-    return apiClient.delete(`/appSetting/delete/${id}`);
+  deleteAppSetting(versionName: string) {
+    return apiClient.delete(`/appSetting/delete/${encodeURIComponent(versionName)}`);
   }
 
-  deleteAppSettings(ids: number[]) {
-    return apiClient.delete("/appSetting/delete", { data: { ids } });
+  deleteAppSettings(versionNames: string[]) {
+    return apiClient.delete("/appSetting/delete", { data: { version_names: versionNames } });
   }
 }
 
