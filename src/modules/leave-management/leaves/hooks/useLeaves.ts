@@ -6,7 +6,7 @@ import employeeLeavesApi, { ListLeavesRequest } from "@/services/leaveManagement
 
 const DEFAULT_PAGE_SIZE = 10;
 
-export const useLeaves = () => {
+export const useLeaves = (initialFilters: Partial<ListLeavesRequest> = {}) => {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
@@ -16,11 +16,19 @@ export const useLeaves = () => {
     limit: pageSize,
     offset: page,
     ...(search ? { employee_id: search } : {}),
-  }), [page, pageSize, search]);
+    ...initialFilters,
+  }), [page, pageSize, search, initialFilters]);
 
   const { data, isLoading, refetch } = useQuery({
     queryKey: ["leaves", params],
-    queryFn: () => employeeLeavesApi.myleavesRequests(params).then(res => res.data),
+    queryFn: () => {
+      // Use /all endpoint if manager_id is provided (for approvals), otherwise use myleavesRequests
+      if (initialFilters.manager_id) {
+        return employeeLeavesApi.list(params).then(res => res.data);
+      } else {
+        return employeeLeavesApi.myleavesRequests(params).then(res => res.data);
+      }
+    },
   });
 
   const leaves = useMemo(() => {
