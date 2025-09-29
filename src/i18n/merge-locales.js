@@ -1,35 +1,36 @@
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
 const root = __dirname;
-const localesDir = path.join(root, 'locales');
+const localesDir = path.join(root, "locales");
 
 const fileToNamespace = new Map([
-  ['common.json', 'common'],
-  ['auth.json', 'auth'],
-  ['dashboard.json', 'dashboard'],
-  ['master-data.json', 'masterData'],
-  ['employee.json', 'employee'],
-  ['employee-master.json', 'employeeMaster'],
-  ['scheduling.json', 'scheduling'],
-  ['settings.json', 'settings'],
-  ['validation.json', 'validation'],
-  ['chatbot.json', 'chatbot'],
-  ['toast.json', 'toast'],
-  ['workflow.json', 'workflow'],
-  ['leave-management.json', 'leaveManagement'],
-  ['translator.json', 'translator'],
-  ['main-menu.json', 'mainMenu'],
-  ['pagination.json', 'pagination'],
-  ['biometric-terminals.json', 'biometricTerminals'],
-  ['access-zones.json', 'accessZones'],
-  ['buildings.json', 'buildings'],
-  ['security.json', 'security'],
+  ["common.json", "common"],
+  ["auth.json", "auth"],
+  ["dashboard.json", "dashboard"],
+  ["master-data.json", "masterData"],
+  ["employee.json", "employee"],
+  ["employee-master.json", "employeeMaster"],
+  ["scheduling.json", "scheduling"],
+  ["settings.json", "settings"],
+  ["validation.json", "validation"],
+  ["chatbot.json", "chatbot"],
+  ["toast.json", "toast"],
+  ["workflow.json", "workflow"],
+  ["leave-management.json", "leaveManagement"],
+  ["translator.json", "translator"],
+  ["main-menu.json", "mainMenu"],
+  ["pagination.json", "pagination"],
+  ["biometric-terminals.json", "biometricTerminals"],
+  ["access-zones.json", "accessZones"],
+  ["buildings.json", "buildings"],
+  ["security.json", "security"],
+  ["app-settings.json", "appSettings"],
 ]);
 
 function readJsonSafe(filePath) {
   try {
-    const content = fs.readFileSync(filePath, 'utf8');
+    const content = fs.readFileSync(filePath, "utf8");
     return JSON.parse(content);
   } catch (err) {
     return undefined;
@@ -50,23 +51,25 @@ function mergeLocale(locale) {
     }
   }
 
-  const outPath = path.join(localeDir, 'all.json');
-  fs.writeFileSync(outPath, JSON.stringify(output, null, 2) + '\n', 'utf8');
+  const outPath = path.join(localeDir, "all.json");
+  fs.writeFileSync(outPath, JSON.stringify(output, null, 2) + "\n", "utf8");
   return { outPath, keys: Object.keys(output) };
 }
 
 function main() {
   const locales = fs.readdirSync(localesDir).filter((entry) => {
     const p = path.join(localesDir, entry);
-    return fs.statSync(p).isDirectory() && ['en', 'ar'].includes(entry);
+    return fs.statSync(p).isDirectory() && ["en", "ar"].includes(entry);
   });
 
   const results = locales.map((l) => ({ locale: l, ...mergeLocale(l) }));
   for (const r of results) {
-    console.log(`[i18n] ${r.locale} -> ${r.outPath} (${r.keys.length} namespaces: ${r.keys.join(', ')})`);
+    console.log(
+      `[i18n] ${r.locale} -> ${r.outPath} (${
+        r.keys.length
+      } namespaces: ${r.keys.join(", ")})`
+    );
   }
 }
 
 main();
-
-

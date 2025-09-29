@@ -29,16 +29,16 @@ export interface TableColumn<T> {
 interface GenericTableProps<T> {
   data: T[];
   columns: TableColumn<T>[];
-  selected: number[];
+  selected: (number | string)[];
   page: number;
   pageSize: number;
   allChecked: boolean;
-  getItemId: (item: T) => number;
+  getItemId: (item: T) => number | string;
   getItemDisplayName: (item: T, isRTL: boolean) => string;
-  onSelectItem: (id: number) => void;
+  onSelectItem: (id: number | string) => void;
   onSelectAll: () => void;
   onEditItem?: (item: T) => void;
-  onDeleteItem?: (id: number) => void;
+  onDeleteItem?: (id: number | string) => void;
   actions?: (item: T) => React.ReactNode;
   noDataMessage: string;
   isLoading?: boolean;
