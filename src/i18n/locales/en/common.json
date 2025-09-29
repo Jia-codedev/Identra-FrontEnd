@@ -2,6 +2,8 @@
   "dashboard": "Workforce Analytics",
   "masterData": "Master Data",
   "scheduling": "Scheduling",
+  "startDate": "Start Date",
+  "endDate": "End Date",
   "workforce": "Workforce",
   "settings": "Settings",
   "profile": "Profile",

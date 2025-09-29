@@ -283,11 +283,13 @@ export default function MonthlyRosterPage() {
   const handleDelete = async (row: any) => {
     try {
       await deleteMutation.mutateAsync(row.schedule_roster_id);
-      toast.success(t("messages.success.deleted") || "Deleted");
+      toast.success(t("toast.success.monthlyRoasterDeleted") || "Deleted");
       setPage(1);
       await fetchData();
     } catch (e) {
-      toast.error(t("messages.error.delete") || "Failed to delete");
+      toast.error(
+        t("toast.error.monthlyRoasterDeleteError") || "Failed to delete"
+      );
     }
   };
 

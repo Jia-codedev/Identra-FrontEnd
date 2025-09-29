@@ -3,6 +3,8 @@
     "dashboard": "Workforce Analytics",
     "masterData": "Master Data",
     "scheduling": "Scheduling",
+    "startDate": "Start Date",
+    "endDate": "End Date",
     "workforce": "Workforce",
     "settings": "Settings",
     "profile": "Profile",
@@ -787,7 +789,11 @@
       "scheduleCreated": "Schedule created successfully",
       "scheduleUpdated": "Schedule updated successfully",
       "scheduleDeleted": "Schedule deleted successfully",
-      "schedulesDeleted": "Schedules deleted successfully"
+      "schedulesDeleted": "Schedules deleted successfully",
+      "monthlyRoasterDeleted": "Monthly roaster deleted successfully",
+      "weeklyRoasterAdded": "Weekly roaster added successfully",
+      "weeklyRoasterUpdated": "Weekly roaster updated successfully",
+      "weeklyRoasterDeleted": "Weekly roaster deleted successfully"
     },
     "error": {
       "general": "An error occurred. Please try again.",
@@ -814,7 +820,11 @@
       "scheduleCreateError": "Failed to create schedule",
       "scheduleUpdateError": "Failed to update schedule",
       "scheduleDeleteError": "Failed to delete schedule",
-      "schedulesDeleteError": "Failed to delete schedules"
+      "schedulesDeleteError": "Failed to delete schedules",
+      "monthlyRoasterDeleteError": "Failed to delete monthly roaster",
+      "weeklyRoasterAddError": "Failed to add weekly roaster",
+      "weeklyRoasterUpdateError": "Failed to update weekly roaster",
+      "weeklyRoasterDeleteError": "Failed to delete weekly roaster"
     }
   },
   "workflow": {
