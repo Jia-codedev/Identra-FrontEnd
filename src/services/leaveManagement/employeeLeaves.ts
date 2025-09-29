@@ -5,6 +5,7 @@ export type ListLeavesRequest = {
   offset?: number;
   employee_id?: number | string;
   leave_type_id?: number;
+  manager_id?: number;
   leave_status?: string;
   from_date?: string;
   to_date?: string;

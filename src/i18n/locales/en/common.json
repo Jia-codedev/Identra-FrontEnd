@@ -76,6 +76,7 @@
   "step": "Step",
   "of": "of",
   "saving": "Saving...",
+  "deleting": "Deleting...",
   "saveError": "Failed to save",
   "errorLoading": "Error loading data",
   "confirmDelete": "Confirm Delete",
