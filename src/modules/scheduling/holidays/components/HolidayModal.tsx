@@ -345,7 +345,7 @@ export const HolidayModal: React.FC<HolidayModalProps> = ({
                         {t("scheduling.holidays.recurring")}
                       </FormLabel>
                       <div className="text-xs sm:text-sm text-muted-foreground">
-                        {t("scheduling.holidays.recurringDesc")}
+                        {t("scheduling.holidays.recurringOnly")}
                       </div>
                     </div>
                     <FormControl>

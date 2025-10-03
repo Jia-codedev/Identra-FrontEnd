@@ -3,12 +3,41 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useTranslations } from "@/hooks/use-translations";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { Plus, Key, Shield, Search, Edit, Trash2, MoreHorizontal, CheckCircle, XCircle, Filter } from "lucide-react";
+import {
+  Plus,
+  Key,
+  Shield,
+  Search,
+  Edit,
+  Trash2,
+  MoreHorizontal,
+  CheckCircle,
+  XCircle,
+  Filter,
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -41,23 +70,23 @@ const PERMISSION_MODULES: PermissionModule[] = [
   {
     id: "user-management",
     name: "User Management",
-    permissions: ["view", "create", "edit", "delete", "export"]
+    permissions: ["view", "create", "edit", "delete", "export"],
   },
   {
     id: "attendance",
     name: "Attendance Management",
-    permissions: ["view", "edit", "approve", "export", "reports"]
+    permissions: ["view", "edit", "approve", "export", "reports"],
   },
   {
     id: "leave",
     name: "Leave Management",
-    permissions: ["view", "apply", "approve", "reject", "edit"]
+    permissions: ["view", "apply", "approve", "reject", "edit"],
   },
   {
     id: "security",
     name: "Security Settings",
-    permissions: ["view", "edit", "manage-roles", "audit-logs"]
-  }
+    permissions: ["view", "edit", "manage-roles", "audit-logs"],
+  },
 ];
 
 const MOCK_PERMISSIONS: Permission[] = [
@@ -71,7 +100,7 @@ const MOCK_PERMISSIONS: Permission[] = [
     status: "active",
     assignedRoles: 5,
     createdAt: "2024-01-15",
-    users: 5
+    users: 5,
   },
   {
     id: "2",
@@ -83,7 +112,7 @@ const MOCK_PERMISSIONS: Permission[] = [
     status: "active",
     assignedRoles: 12,
     createdAt: "2024-01-10",
-    users: 12
+    users: 12,
   },
   {
     id: "3",
@@ -95,7 +124,7 @@ const MOCK_PERMISSIONS: Permission[] = [
     status: "active",
     assignedRoles: 45,
     createdAt: "2024-01-05",
-    users: 45
+    users: 45,
   },
   {
     id: "4",
@@ -107,18 +136,114 @@ const MOCK_PERMISSIONS: Permission[] = [
     status: "inactive",
     assignedRoles: 2,
     createdAt: "2024-01-01",
-    users: 2
-  }
+    users: 2,
+  },
 ];
 
 export default function AccessPermissionsPage() {
   const { t } = useTranslations();
-  
-  const [permissions, setPermissions] = useState<Permission[]>(MOCK_PERMISSIONS);
+
+  const locale = localStorage.getItem("preferred-language");
+  const PERMISSION_MODULES: PermissionModule[] = [
+    {
+      id: "user-management",
+      name: locale === "ar" ? "إدارة المستخدم" : "User Management",
+      permissions: ["view", "create", "edit", "delete", "export"],
+    },
+    {
+      id: "attendance",
+      name: locale === "ar" ? "إدارة الحضور" : "Attendance Management",
+      permissions: ["view", "edit", "approve", "export", "reports"],
+    },
+    {
+      id: "leave",
+      name: locale === "ar" ? "ترك الإدارة" : "Leave Management",
+      permissions: ["view", "apply", "approve", "reject", "edit"],
+    },
+    {
+      id: "security",
+      name: locale === "ar" ? "إعدادات الأمن" : "Security Settings",
+      permissions: ["view", "edit", "manage-roles", "audit-logs"],
+    },
+  ];
+
+  const MOCK_PERMISSIONS: Permission[] = [
+    {
+      id: "1",
+      name: locale === "ar" ? "مدير الموارد البشرية" : "HR Manager",
+      description:
+        locale === "ar"
+          ? "الوصول كاملا لعمليات الموارد البشرية"
+          : "Full access to HR operations",
+      module: "user-management",
+      action: "read",
+      permissions:
+        locale === "ar"
+          ? ["منظر", "يخلق", "يحرر", "يمسح"]
+          : ["view", "create", "edit", "delete"],
+      status: "active",
+      assignedRoles: 5,
+      createdAt: "2024-01-15",
+      users: 5,
+    },
+    {
+      id: "2",
+      name: locale === "ar" ? "مدير فريق" : "Team Lead",
+      description:
+        locale === "ar"
+          ? "الادارة والتحكم في الحضور"
+          : "Team management and attendance oversight",
+      module: "attendance",
+      action: "read",
+      permissions:
+        locale === "ar"
+          ? ["منظر", "يحرر", "يقبل"]
+          : ["view", "edit", "approve"],
+      status: "active",
+      assignedRoles: 12,
+      createdAt: "2024-01-10",
+      users: 12,
+    },
+    {
+      id: "3",
+      name: locale === "ar" ? "موظف" : "Employee",
+      description:
+        locale === "ar" ? "وصول الموظف الاساسي" : "Basic employee access",
+      module: "leave",
+      action: "read",
+      permissions: locale === "ar" ? ["منظر", "يقدم"] : ["view", "apply"],
+      status: "active",
+      assignedRoles: 45,
+      createdAt: "2024-01-05",
+      users: 45,
+    },
+    {
+      id: "4",
+      name: locale === "ar" ? "مدير الأمن" : "Security Admin",
+      description:
+        locale === "ar"
+          ? "الأمن والادارة النظام"
+          : "Security and system administration",
+      module: "security",
+      action: "read",
+      permissions:
+        locale === "ar"
+          ? ["منظر", "يحرر", "يقدم"]
+          : ["view", "edit", "manage-roles"],
+      status: "inactive",
+      assignedRoles: 2,
+      createdAt: "2024-01-01",
+      users: 2,
+    },
+  ];
+
+  const [permissions, setPermissions] =
+    useState<Permission[]>(MOCK_PERMISSIONS);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedModule, setSelectedModule] = useState<string>("all");
   const [selectedStatus, setSelectedStatus] = useState<string>("all");
-  const [selectedPermission, setSelectedPermission] = useState<Permission | null>(null);
+  const [selectedPermission, setSelectedPermission] =
+    useState<Permission | null>(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
@@ -129,11 +254,14 @@ export default function AccessPermissionsPage() {
   const [allChecked, setAllChecked] = useState(false);
 
   const filteredPermissions = permissions.filter((permission) => {
-    const matchesSearch = permission.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         permission.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesModule = selectedModule === "all" || permission.module === selectedModule;
-    const matchesStatus = selectedStatus === "all" || permission.status === selectedStatus;
-    
+    const matchesSearch =
+      permission.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      permission.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesModule =
+      selectedModule === "all" || permission.module === selectedModule;
+    const matchesStatus =
+      selectedStatus === "all" || permission.status === selectedStatus;
+
     return matchesSearch && matchesModule && matchesStatus;
   });
 
@@ -144,7 +272,7 @@ export default function AccessPermissionsPage() {
         ...formData,
         assignedRoles: 0,
         users: 0,
-        createdAt: new Date().toISOString().split('T')[0]
+        createdAt: new Date().toISOString().split("T")[0],
       };
       setPermissions([...permissions, newPermission]);
       toast.success("Permission created successfully");
@@ -161,11 +289,13 @@ export default function AccessPermissionsPage() {
 
   const handleUpdatePermission = async (formData: any) => {
     if (!selectedPermission) return;
-    
+
     try {
-      setPermissions(permissions.map(p => 
-        p.id === selectedPermission.id ? { ...p, ...formData } : p
-      ));
+      setPermissions(
+        permissions.map((p) =>
+          p.id === selectedPermission.id ? { ...p, ...formData } : p
+        )
+      );
       toast.success("Permission updated successfully");
       setIsEditModalOpen(false);
     } catch (error) {
@@ -175,15 +305,19 @@ export default function AccessPermissionsPage() {
 
   const handleDeletePermission = async (permissionId: string) => {
     try {
-      setPermissions(permissions.filter(p => p.id !== permissionId));
+      setPermissions(permissions.filter((p) => p.id !== permissionId));
       toast.success("Permission deleted successfully");
     } catch (error) {
       toast.error("Failed to delete permission");
     }
   };
 
-  const PermissionForm = ({ permission, isEdit = false, onSubmit }: { 
-    permission?: Permission; 
+  const PermissionForm = ({
+    permission,
+    isEdit = false,
+    onSubmit,
+  }: {
+    permission?: Permission;
     isEdit?: boolean;
     onSubmit: (data: any) => void;
   }) => {
@@ -192,7 +326,7 @@ export default function AccessPermissionsPage() {
       description: permission?.description || "",
       module: permission?.module || "",
       permissions: permission?.permissions || [],
-      status: permission?.status || "active"
+      status: permission?.status || "active",
     });
 
     const [selectedPermissions, setSelectedPermissions] = useState<string[]>(
@@ -200,16 +334,18 @@ export default function AccessPermissionsPage() {
     );
 
     const handlePermissionToggle = (permissionName: string) => {
-      setSelectedPermissions(prev => {
+      setSelectedPermissions((prev) => {
         const updated = prev.includes(permissionName)
-          ? prev.filter(p => p !== permissionName)
+          ? prev.filter((p) => p !== permissionName)
           : [...prev, permissionName];
         setFormData({ ...formData, permissions: updated });
         return updated;
       });
     };
 
-    const selectedModuleData = PERMISSION_MODULES.find(m => m.id === formData.module);
+    const selectedModuleData = PERMISSION_MODULES.find(
+      (m) => m.id === formData.module
+    );
 
     const handleSubmit = (e: React.FormEvent) => {
       e.preventDefault();
@@ -219,34 +355,47 @@ export default function AccessPermissionsPage() {
     return (
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <Label htmlFor="name">Permission Name</Label>
+          <Label htmlFor="name">
+            {t("security.accessPermissions.permissionName")}
+          </Label>
           <input
             id="name"
             className="w-full p-2-md mt-1"
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            placeholder="Enter permission name"
-            required
-          />
-        </div>
-        
-        <div>
-          <Label htmlFor="description">Description</Label>
-          <input
-            id="description"
-            className="w-full p-2-md mt-1"
-            value={formData.description}
-            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-            placeholder="Enter description"
+            placeholder={t("security.accessPermissions.enterPermissionName")}
             required
           />
         </div>
 
         <div>
-          <Label htmlFor="module">Module</Label>
-          <Select value={formData.module} onValueChange={(value) => setFormData({ ...formData, module: value })}>
+          <Label htmlFor="description">{t("common.description")}</Label>
+          <input
+            id="description"
+            className="w-full p-2-md mt-1"
+            value={formData.description}
+            onChange={(e) =>
+              setFormData({ ...formData, description: e.target.value })
+            }
+            placeholder={t("security.accessPermissions.enterDescription")}
+            required
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="module">
+            {t("security.accessPermissions.module")}
+          </Label>
+          <Select
+            value={formData.module}
+            onValueChange={(value) =>
+              setFormData({ ...formData, module: value })
+            }
+          >
             <SelectTrigger className="mt-1">
-              <SelectValue placeholder="Select module" />
+              <SelectValue
+                placeholder={t("security.accessPermissions.selectModule")}
+              />
             </SelectTrigger>
             <SelectContent>
               {PERMISSION_MODULES.map((module) => (
@@ -260,7 +409,7 @@ export default function AccessPermissionsPage() {
 
         {selectedModuleData && (
           <div>
-            <Label>Permissions</Label>
+            <Label>{t("security.accessPermissions.permission")}</Label>
             <div className="grid grid-cols-2 gap-2 mt-2">
               {selectedModuleData.permissions.map((permission) => (
                 <div key={permission} className="flex items-center space-x-2">
@@ -281,28 +430,39 @@ export default function AccessPermissionsPage() {
         )}
 
         <div>
-          <Label htmlFor="status">Status</Label>
-          <Select value={formData.status} onValueChange={(value) => setFormData({ ...formData, status: value as "active" | "inactive" })}>
+          <Label htmlFor="status">{t("common.status")}</Label>
+          <Select
+            value={formData.status}
+            onValueChange={(value) =>
+              setFormData({
+                ...formData,
+                status: value as "active" | "inactive",
+              })
+            }
+          >
             <SelectTrigger className="mt-1">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="active">Active</SelectItem>
-              <SelectItem value="inactive">Inactive</SelectItem>
+              <SelectItem value="active">{t("common.active")}</SelectItem>
+              <SelectItem value="inactive">{t("common.inactive")}</SelectItem>
             </SelectContent>
           </Select>
         </div>
 
         <div className="flex justify-end space-x-2 pt-4">
-          <Button 
-            type="button" 
-            variant="outline" 
-            onClick={() => isEdit ? setIsEditModalOpen(false) : setIsCreateModalOpen(false)}
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() =>
+              isEdit ? setIsEditModalOpen(false) : setIsCreateModalOpen(false)
+            }
           >
-            Cancel
+            {t("common.cancel")}
           </Button>
           <Button type="submit">
-            {isEdit ? "Update" : "Create"} Permission
+            {isEdit ? t("common.update") : t("common.create")}{" "}
+            {t("security.accessPermissions.permission")}
           </Button>
         </div>
       </form>
@@ -312,14 +472,17 @@ export default function AccessPermissionsPage() {
   const getPermissionId = useCallback((permission: Permission): number => {
     return parseInt(permission.id);
   }, []);
-  
-  const getPermissionDisplayName = useCallback((permission: Permission, isRTL: boolean): string => {
-    return permission.name;
-  }, []);
+
+  const getPermissionDisplayName = useCallback(
+    (permission: Permission, isRTL: boolean): string => {
+      return permission.name;
+    },
+    []
+  );
 
   const handleSelectPermission = (id: number) => {
-    setSelectedTableRows(prev => 
-      prev.includes(id) ? prev.filter(pid => pid !== id) : [...prev, id]
+    setSelectedTableRows((prev) =>
+      prev.includes(id) ? prev.filter((pid) => pid !== id) : [...prev, id]
     );
   };
 
@@ -328,7 +491,7 @@ export default function AccessPermissionsPage() {
       setSelectedTableRows([]);
       setAllChecked(false);
     } else {
-      setSelectedTableRows(filteredPermissions.map(p => parseInt(p.id)));
+      setSelectedTableRows(filteredPermissions.map((p) => parseInt(p.id)));
       setAllChecked(true);
     }
   };
@@ -336,32 +499,34 @@ export default function AccessPermissionsPage() {
   const tableColumns = [
     {
       key: "name",
-      header: "Permission Name",
+      header: t("security.accessPermissions.permissionName"),
       accessor: (item: unknown) => {
         const permission = item as Permission;
         return (
           <div>
             <div className="font-medium">{permission.name}</div>
-            <div className="text-sm text-gray-500">{permission.description}</div>
+            <div className="text-sm text-gray-500">
+              {permission.description}
+            </div>
           </div>
         );
-      }
+      },
     },
     {
       key: "module",
-      header: "Module",
+      header: t("security.accessPermissions.module"),
       accessor: (item: unknown) => {
         const permission = item as Permission;
         return (
           <span className="capitalize">
-            {PERMISSION_MODULES.find(m => m.id === permission.module)?.name}
+            {PERMISSION_MODULES.find((m) => m.id === permission.module)?.name}
           </span>
         );
-      }
+      },
     },
     {
       key: "permissions",
-      header: "Permissions",
+      header: t("security.accessPermissions.permissions"),
       accessor: (item: unknown) => {
         const permission = item as Permission;
         return (
@@ -378,36 +543,40 @@ export default function AccessPermissionsPage() {
             )}
           </div>
         );
-      }
+      },
     },
     {
       key: "status",
-      header: "Status",
+      header: t("common.status"),
       accessor: (item: unknown) => {
         const permission = item as Permission;
         return (
-          <Badge variant={permission.status === "active" ? "default" : "secondary"}>
-            {permission.status}
+          <Badge
+            variant={permission.status === "active" ? "default" : "secondary"}
+          >
+            {t(`common.${permission.status}`)}
           </Badge>
         );
-      }
+      },
     },
     {
       key: "assignedRoles",
-      header: "Assigned Roles",
+      header: t("security.accessPermissions.assignedRoles"),
       accessor: (item: unknown) => {
         const permission = item as Permission;
         return <span>{permission.assignedRoles}</span>;
-      }
+      },
     },
     {
       key: "createdAt",
-      header: "Created",
+      header: t("common.createdAt"),
       accessor: (item: unknown) => {
         const permission = item as Permission;
-        return <span className="text-sm text-gray-500">{permission.createdAt}</span>;
-      }
-    }
+        return (
+          <span className="text-sm text-gray-500">{permission.createdAt}</span>
+        );
+      },
+    },
   ];
 
   return (
@@ -416,20 +585,26 @@ export default function AccessPermissionsPage() {
         <div className="flex items-center space-x-3">
           <Key className="h-8 w-8 text-primary" />
           <div>
-            <h1 className="text-3xl font-bold">Access Permissions</h1>
-            <p className="text-muted-foreground">Manage user permissions and access controls</p>
+            <h1 className="text-3xl font-bold">
+              {t("security.accessPermissions.title")}
+            </h1>
+            <p className="text-muted-foreground">
+              {t("security.accessPermissions.description")}
+            </p>
           </div>
         </div>
         <Dialog open={isCreateModalOpen} onOpenChange={setIsCreateModalOpen}>
           <DialogTrigger asChild>
             <Button>
               <Plus className="h-4 w-4 mr-2" />
-              Create Permission
+              {t("security.accessPermissions.createPermission")}
             </Button>
           </DialogTrigger>
           <DialogContent className="max-w-2xl">
             <DialogHeader>
-              <DialogTitle>Create New Permission</DialogTitle>
+              <DialogTitle>
+                {t("security.accessPermissions.createNewPermission")}
+              </DialogTitle>
             </DialogHeader>
             <PermissionForm onSubmit={handleCreatePermission} />
           </DialogContent>
@@ -443,7 +618,9 @@ export default function AccessPermissionsPage() {
             <div className="flex items-center">
               <Shield className="h-8 w-8 text-blue-600" />
               <div className="ml-4">
-                <p className="text-sm font-medium text-muted-foreground">Total Permissions</p>
+                <p className="text-sm font-medium text-muted-foreground">
+                  {t("security.accessPermissions.totalPermissions")}
+                </p>
                 <p className="text-2xl font-bold">{permissions.length}</p>
               </div>
             </div>
@@ -456,8 +633,15 @@ export default function AccessPermissionsPage() {
                 <div className="h-4 w-4 rounded-full bg-green-600"></div>
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-muted-foreground">Active</p>
-                <p className="text-2xl font-bold">{permissions.filter((p: Permission) => p.status === "active").length}</p>
+                <p className="text-sm font-medium text-muted-foreground">
+                  {t("common.active")}
+                </p>
+                <p className="text-2xl font-bold">
+                  {
+                    permissions.filter((p: Permission) => p.status === "active")
+                      .length
+                  }
+                </p>
               </div>
             </div>
           </CardContent>
@@ -469,8 +653,16 @@ export default function AccessPermissionsPage() {
                 <div className="h-4 w-4 rounded-full bg-gray-600"></div>
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-muted-foreground">Inactive</p>
-                <p className="text-2xl font-bold">{permissions.filter((p: Permission) => p.status === "inactive").length}</p>
+                <p className="text-sm font-medium text-muted-foreground">
+                  {t("common.inactive")}
+                </p>
+                <p className="text-2xl font-bold">
+                  {
+                    permissions.filter(
+                      (p: Permission) => p.status === "inactive"
+                    ).length
+                  }
+                </p>
               </div>
             </div>
           </CardContent>
@@ -482,8 +674,15 @@ export default function AccessPermissionsPage() {
                 <div className="h-4 w-4 rounded-full bg-blue-600"></div>
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-muted-foreground">Total Users</p>
-                <p className="text-2xl font-bold">{permissions.reduce((sum: number, p: Permission) => sum + p.users, 0)}</p>
+                <p className="text-sm font-medium text-muted-foreground">
+                  {t("security.accessPermissions.totalUsers")}
+                </p>
+                <p className="text-2xl font-bold">
+                  {permissions.reduce(
+                    (sum: number, p: Permission) => sum + p.users,
+                    0
+                  )}
+                </p>
               </div>
             </div>
           </CardContent>
@@ -498,7 +697,9 @@ export default function AccessPermissionsPage() {
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
                 <input
-                  placeholder="Search permissions..."
+                  placeholder={t(
+                    "security.accessPermissions.searchPlaceholder"
+                  )}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="w-full pl-10 p-2-md"
@@ -512,7 +713,9 @@ export default function AccessPermissionsPage() {
                   <SelectValue placeholder="Module" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Modules</SelectItem>
+                  <SelectItem value="all">
+                    {t("security.accessPermissions.allModules")}
+                  </SelectItem>
                   {PERMISSION_MODULES.map((module) => (
                     <SelectItem key={module.id} value={module.id}>
                       {module.name}
@@ -525,9 +728,11 @@ export default function AccessPermissionsPage() {
                   <SelectValue placeholder="Status" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Status</SelectItem>
-                  <SelectItem value="active">Active</SelectItem>
-                  <SelectItem value="inactive">Inactive</SelectItem>
+                  <SelectItem value="all">{t("common.allStatus")}</SelectItem>
+                  <SelectItem value="active">{t("common.active")}</SelectItem>
+                  <SelectItem value="inactive">
+                    {t("common.inactive")}
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -552,12 +757,14 @@ export default function AccessPermissionsPage() {
           setIsEditModalOpen(true);
         }}
         onDeleteItem={(permissionId: number) => {
-          const permission = filteredPermissions.find(p => parseInt(p.id) === permissionId);
+          const permission = filteredPermissions.find(
+            (p) => parseInt(p.id) === permissionId
+          );
           if (permission) {
             handleDeletePermission(permission.id);
           }
         }}
-        noDataMessage="No permissions found"
+        noDataMessage={t("security.accessPermissions.noPermissionsFound")}
         isLoading={isLoading}
         onPageChange={setCurrentPage}
         onPageSizeChange={setPageSize}
@@ -568,34 +775,56 @@ export default function AccessPermissionsPage() {
       <Dialog open={isViewModalOpen} onOpenChange={setIsViewModalOpen}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Permission Details</DialogTitle>
+            <DialogTitle>
+              {t("security.accessPermissions.permissionDetails")}
+            </DialogTitle>
           </DialogHeader>
           {selectedPermission && (
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label className="font-medium">Permission Name</Label>
-                  <p className="text-sm text-muted-foreground">{selectedPermission.name}</p>
+                  <Label className="font-medium">
+                    {t("security.accessPermissions.permissionName")}
+                  </Label>
+                  <p className="text-sm text-muted-foreground">
+                    {selectedPermission.name}
+                  </p>
                 </div>
                 <div>
-                  <Label className="font-medium">Status</Label>
-                  <Badge variant={selectedPermission.status === "active" ? "default" : "secondary"}>
+                  <Label className="font-medium">{t("common.status")}</Label>
+                  <Badge
+                    variant={
+                      selectedPermission.status === "active"
+                        ? "default"
+                        : "secondary"
+                    }
+                  >
                     {selectedPermission.status}
                   </Badge>
                 </div>
               </div>
               <div>
-                <Label className="font-medium">Description</Label>
-                <p className="text-sm text-muted-foreground">{selectedPermission.description}</p>
-              </div>
-              <div>
-                <Label className="font-medium">Module</Label>
-                <p className="text-sm text-muted-foreground capitalize">
-                  {PERMISSION_MODULES.find(m => m.id === selectedPermission.module)?.name}
+                <Label className="font-medium">{t("common.description")}</Label>
+                <p className="text-sm text-muted-foreground">
+                  {selectedPermission.description}
                 </p>
               </div>
               <div>
-                <Label className="font-medium">Permissions</Label>
+                <Label className="font-medium">
+                  {t("security.accessPermissions.module")}
+                </Label>
+                <p className="text-sm text-muted-foreground capitalize">
+                  {
+                    PERMISSION_MODULES.find(
+                      (m) => m.id === selectedPermission.module
+                    )?.name
+                  }
+                </p>
+              </div>
+              <div>
+                <Label className="font-medium">
+                  {t("security.accessPermissions.permissions")}
+                </Label>
                 <div className="flex flex-wrap gap-2 mt-2">
                   {selectedPermission.permissions.map((perm) => (
                     <Badge key={perm} variant="outline">
@@ -606,12 +835,18 @@ export default function AccessPermissionsPage() {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label className="font-medium">Users Assigned</Label>
-                  <p className="text-sm text-muted-foreground">{selectedPermission.users}</p>
+                  <Label className="font-medium">
+                    {t("security.accessPermissions.usersAssigned")}
+                  </Label>
+                  <p className="text-sm text-muted-foreground">
+                    {selectedPermission.users}
+                  </p>
                 </div>
                 <div>
-                  <Label className="font-medium">Created Date</Label>
-                  <p className="text-sm text-muted-foreground">{selectedPermission.createdAt}</p>
+                  <Label className="font-medium">{t("common.createdAt")}</Label>
+                  <p className="text-sm text-muted-foreground">
+                    {selectedPermission.createdAt}
+                  </p>
                 </div>
               </div>
             </div>
@@ -623,11 +858,13 @@ export default function AccessPermissionsPage() {
       <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Edit Permission</DialogTitle>
+            <DialogTitle>
+              {t("security.accessPermissions.editPermission")}
+            </DialogTitle>
           </DialogHeader>
-          <PermissionForm 
-            permission={selectedPermission!} 
-            isEdit={true} 
+          <PermissionForm
+            permission={selectedPermission!}
+            isEdit={true}
             onSubmit={handleUpdatePermission}
           />
         </DialogContent>
