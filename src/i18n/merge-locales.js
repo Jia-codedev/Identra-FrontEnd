@@ -17,6 +17,7 @@ const fileToNamespace = new Map([
   ["chatbot.json", "chatbot"],
   ["toast.json", "toast"],
   ["workflow.json", "workflow"],
+  ["workforce.json", "workforce"],
   ["leave-management.json", "leaveManagement"],
   ["translator.json", "translator"],
   ["main-menu.json", "mainMenu"],

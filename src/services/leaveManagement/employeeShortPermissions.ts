@@ -5,6 +5,7 @@ export type ListPermissionsRequest = {
   offset?: number;
   employee_number?: string;
   employee_name?: string;
+  manager_id?: number;
   status?: number;
   from_date?: string;
   to_date?: string;
