@@ -46,7 +46,7 @@ class SchedulesApi {
   }
 
   deleteMultipleSchedules(ids: number[]) {
-    return apiClient.delete("/schedule/delete-many", { data: { ids } });
+    return apiClient.delete("/schedule/delete", { data: { ids } });
   }
 }
 

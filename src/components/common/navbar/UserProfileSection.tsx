@@ -14,7 +14,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { ModeToggle } from "@/components/ui/ThemeToggle";
 import { LanguageSwitcher } from "@/components/common/LanguageSwitcher";
 import { LogoutConfirmation } from "@/components/common/LogoutConfirmation";
-import { useNavigation } from "@/hooks/use-navigation";
+import { useNavigationState } from "@/hooks/useNavigationState";
 
 interface UserProfileSectionProps {
   user: {
@@ -29,7 +29,7 @@ interface UserProfileSectionProps {
 export const UserProfileSection: React.FC<UserProfileSectionProps> = ({
   user,
 }) => {
-  const { PROFILE_LINKS } = useNavigation();
+  const { PROFILE_LINKS } = useNavigationState();
   const [showLogoutDialog, setShowLogoutDialog] = useState(false);
 
   const handleMenuClick = (href: string) => {
