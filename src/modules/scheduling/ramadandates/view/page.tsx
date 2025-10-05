@@ -7,19 +7,44 @@ import RamadanDatesHeader from "../components/RamadanDatesHeader";
 import { RamadanDatesTable } from "../components/RamadanDatesTable";
 import RamadanDateModal from "../components/RamadanDateModal";
 import { useRamadanDates } from "../hooks/useRamadanDates";
-import { useCreateRamadanDate, useUpdateRamadanDate, useDeleteRamadanDate } from "../hooks/useMutations";
-import { IRamadanDate, CreateRamadanDateRequest, UpdateRamadanDateRequest } from "../types";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { CommonDeleteModal } from "@/components/common/CommonDeleteModal";
+import { Button } from "@/components/ui/button";
+import {
+  useCreateRamadanDate,
+  useUpdateRamadanDate,
+  useDeleteRamadanDate,
+} from "../hooks/useMutations";
+import {
+  IRamadanDate,
+  CreateRamadanDateRequest,
+  UpdateRamadanDateRequest,
+} from "../types";
 
 const RamadanDatesPage: React.FC = () => {
   const { t } = useTranslations();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedRamadanDate, setSelectedRamadanDate] = useState<IRamadanDate | null>(null);
+  const [deleteDialog, setDeleteDialog] = useState<{
+    open: boolean;
+    type: "single" | "bulk" | null;
+    id?: number;
+  }>({ open: false, type: null });
+  const [selectedRamadanDate, setSelectedRamadanDate] =
+    useState<IRamadanDate | null>(null);
 
   const {
     ramadanDates,
     selected,
     search,
     page,
+    setPage,
+    setPageSize,
     pageSize,
     filters,
     allChecked,
@@ -46,17 +71,9 @@ const RamadanDatesPage: React.FC = () => {
     setIsModalOpen(true);
   };
 
-  const handleDelete = async (id: number) => {
-    if (window.confirm(t("scheduling.ramadanDates.confirmDelete"))) {
-      try {
-        await deleteMutation.mutateAsync(id);
-      } catch (error) {
-        console.error("Error deleting Ramadan date:", error);
-      }
-    }
-  };
-
-  const handleModalSubmit = async (data: CreateRamadanDateRequest | UpdateRamadanDateRequest) => {
+  const handleModalSubmit = async (
+    data: CreateRamadanDateRequest | UpdateRamadanDateRequest
+  ) => {
     try {
       if (selectedRamadanDate) {
         await updateMutation.mutateAsync({
@@ -78,7 +95,32 @@ const RamadanDatesPage: React.FC = () => {
     setSelectedRamadanDate(null);
   };
 
-  const isMutating = createMutation.isPending || updateMutation.isPending || deleteMutation.isPending;
+  const handleDeleteSelected = () => {
+    setDeleteDialog({ open: true, type: "bulk" });
+  };
+
+  const handleConfirmDelete = () => {
+    try {
+      console.log("selected", selected);
+      if (deleteDialog.type === "single" && deleteDialog.id !== undefined) {
+        deleteMutation.mutateAsync(deleteDialog.id);
+      } else if (deleteDialog.type === "bulk" && selected.length > 0) {
+        selected.forEach((id) => deleteMutation.mutateAsync(id));
+      }
+    } catch (error) {
+      console.error("Error deleting Ramadan date:", error);
+    } finally {
+      setDeleteDialog({ open: false, type: null });
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setDeleteDialog({ open: false, type: null });
+  };
+  const isMutating =
+    createMutation.isPending ||
+    updateMutation.isPending ||
+    deleteMutation.isPending;
 
   if (error) {
     return (
@@ -109,6 +151,7 @@ const RamadanDatesPage: React.FC = () => {
         onAddNew={handleAddNew}
         selectedCount={selected.length}
         filters={filters}
+        onDeleteSelected={handleDeleteSelected}
         onFiltersChange={setFilters}
       />
 
@@ -122,9 +165,11 @@ const RamadanDatesPage: React.FC = () => {
         onSelectAll={selectAll}
         isLoading={isLoading}
         onEditRamadanDate={handleEdit}
-        onDeleteRamadanDate={handleDelete}
-  onPageChange={() => {}}
-  onPageSizeChange={() => {}}
+        onDeleteRamadanDate={(id: number) => {
+          setDeleteDialog({ open: true, type: "single", id });
+        }}
+        onPageChange={setPage}
+        onPageSizeChange={setPageSize}
       />
 
       <RamadanDateModal
@@ -133,6 +178,56 @@ const RamadanDatesPage: React.FC = () => {
         onSubmit={handleModalSubmit}
         ramadanDate={selectedRamadanDate}
         isLoading={isMutating}
+      />
+
+      {/* <Dialog
+        open={deleteDialog.open}
+        onOpenChange={(open) => !open && handleCancelDelete()}
+      >
+        <DialogContent className="p-0">
+          <DialogHeader className="p-2">
+            <DialogTitle className="mb-1 p-2">
+              {t("common.confirmDelete")}
+            </DialogTitle>
+            <div className="bg-black/5 p-4 rounded-lg dark:bg-white/5">
+              <DialogDescription>
+                {deleteDialog.type === "single" || selected.length === 1
+                  ? t("scheduling.holidays.confirmDeleteSingle", {
+                      id: deleteDialog.id,
+                    })
+                  : t("scheduling.holidays.confirmDeleteMulitple", {
+                      count: selected.length,
+                    })}
+              </DialogDescription>
+              <div className="flex justify-end space-x-2 mt-4">
+                <Button variant="outline" onClick={handleCancelDelete}>
+                  {t("common.cancel")}
+                </Button>
+                <Button variant="destructive" onClick={handleConfirmDelete}>
+                  {t("common.delete")}
+                </Button>
+              </div>
+            </div>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog> */}
+      <CommonDeleteModal
+        open={deleteDialog.open}
+        dialogTitle={t("common.confirmDelete")}
+        dialogDescription={
+          deleteDialog.type === "single" || selected.length === 1
+            ? t("messages.confirmDeleteSingleDescription", {
+                deleteType: "ramadan date",
+              })
+            : t("messages.confirmDeleteMultipleDescription", {
+                count: selected.length,
+                deleteType: "ramadan dates",
+              })
+        }
+        cancelText={t("common.cancel")}
+        confirmText={t("common.delete")}
+        handleCancelDelete={handleCancelDelete}
+        handleConfirmDelete={handleConfirmDelete}
       />
     </div>
   );

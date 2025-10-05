@@ -12,24 +12,20 @@ import { Button } from "@/components/ui/button";
 import { useSchedules } from "../hooks/useSchedules";
 import { ISchedule, CreateScheduleRequest } from "../types";
 import { useScheduleMutations } from "../hooks/useMutations";
-import {
-  SchedulesTable,
-  ScheduleModal,
-  SchedulesHeader
-} from "../index";
+import { SchedulesTable, ScheduleModal, SchedulesHeader } from "../index";
 import { CustomPagination } from "@/components/common/dashboard/Pagination";
 
 export default function ScheduleTypesPage() {
   const { t } = useTranslations();
-  const { 
-    createSchedule, 
-    updateSchedule, 
-    deleteSchedule, 
+  const {
+    createSchedule,
+    updateSchedule,
+    deleteSchedule,
     deleteMultipleSchedules,
     isCreating,
     isUpdating,
     isDeleting,
-    isDeletingMultiple 
+    isDeletingMultiple,
   } = useScheduleMutations();
   const {
     schedules,
@@ -91,19 +87,23 @@ export default function ScheduleTypesPage() {
   };
 
   const handleSaveSchedule = (data: CreateScheduleRequest) => {
-    
     if (modalState.mode === "add") {
-      createSchedule({ scheduleData: data, onClose: handleCloseModal, search, pageSize });
+      createSchedule({
+        scheduleData: data,
+        onClose: handleCloseModal,
+        search,
+        pageSize,
+      });
     } else if (modalState.mode === "edit" && modalState.schedule) {
-      updateSchedule({ 
-        id: modalState.schedule.schedule_id, 
-        scheduleData: data, 
-        onClose: handleCloseModal, 
-        search, 
-        pageSize 
+      updateSchedule({
+        id: modalState.schedule.schedule_id,
+        scheduleData: data,
+        onClose: handleCloseModal,
+        search,
+        pageSize,
       });
     } else {
-      console.error('Invalid modal state for save:', modalState);
+      console.error("Invalid modal state for save:", modalState);
     }
   };
 
@@ -174,10 +174,13 @@ export default function ScheduleTypesPage() {
         onSave={handleSaveSchedule}
         schedule={modalState.schedule}
         mode={modalState.mode}
-        isLoading={modalState.mode === 'add' ? isCreating : isUpdating}
+        isLoading={modalState.mode === "add" ? isCreating : isUpdating}
       />
-      
-      <Dialog open={deleteDialog.open} onOpenChange={open => !open && handleCancelDelete()}>
+
+      <Dialog
+        open={deleteDialog.open}
+        onOpenChange={(open) => !open && handleCancelDelete()}
+      >
         <DialogContent className="p-0">
           <DialogHeader className="p-2">
             <DialogTitle className="mb-1 p-2">
@@ -186,8 +189,13 @@ export default function ScheduleTypesPage() {
             <div className="bg-black/5 p-4 rounded-lg dark:bg-white/5">
               <DialogDescription>
                 {deleteDialog.type === "single"
-                  ? t("messages.confirm.delete")
-                  : t("messages.confirm.deleteMultiple", { count: selected.length })}
+                  ? t("messages.confirmDeleteSingleDescription", {
+                      deleteType: "Schedule",
+                    })
+                  : t("messages.confirmDeleteMultipleDescription", {
+                      count: selected.length,
+                      deleteType: "Schedules",
+                    })}
               </DialogDescription>
               <div className="flex justify-end space-x-2 mt-4">
                 <Button variant="outline" onClick={handleCancelDelete}>

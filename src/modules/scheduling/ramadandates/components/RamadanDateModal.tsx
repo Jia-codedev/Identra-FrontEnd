@@ -133,7 +133,14 @@ const RamadanDateModal: React.FC<RamadanDateModalProps> = ({
       remarks: data.remarks,
     };
 
-    onSubmit(formattedData);
+    const updatedFormData = !!ramadanDate?.ramadan_id
+      ? {
+          ramadan_id: ramadanDate?.ramadan_id,
+          ...formattedData,
+        }
+      : formattedData;
+
+    onSubmit(updatedFormData);
   };
 
   const handleClose = () => {

@@ -1,14 +1,14 @@
 "use client";
-import React, { useState } from 'react';
-import { useOrganizationTypes } from '@/modules/masterdata/organizationtypes/hooks/useOrganizationTypes';
-import { OrganizationTypesHeader } from '@/modules/masterdata/organizationtypes/components/OrganizationTypesHeader';
-import { OrganizationTypesTable } from '@/modules/masterdata/organizationtypes/components/OrganizationTypesTable';
-import { OrganizationTypeModal } from '@/modules/masterdata/organizationtypes/components/OrganizationTypeModal';
-import { IOrganizationType } from '@/modules/masterdata/organizationtypes/types';
-import { useTranslations } from '@/hooks/use-translations';
-import { ConfirmDialog } from '@/components/ui/confirm-dialog';
-import { CustomPagination } from '@/components/common/dashboard/Pagination';
-import { useOrganizationTypeMutations } from './hooks/useMutations';
+import React, { useState } from "react";
+import { useOrganizationTypes } from "@/modules/masterdata/organizationtypes/hooks/useOrganizationTypes";
+import { OrganizationTypesHeader } from "@/modules/masterdata/organizationtypes/components/OrganizationTypesHeader";
+import { OrganizationTypesTable } from "@/modules/masterdata/organizationtypes/components/OrganizationTypesTable";
+import { OrganizationTypeModal } from "@/modules/masterdata/organizationtypes/components/OrganizationTypeModal";
+import { IOrganizationType } from "@/modules/masterdata/organizationtypes/types";
+import { useTranslations } from "@/hooks/use-translations";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { CustomPagination } from "@/components/common/dashboard/Pagination";
+import { useOrganizationTypeMutations } from "./hooks/useMutations";
 
 const OrganizationTypesPage = () => {
   const { t } = useTranslations();
@@ -37,19 +37,20 @@ const OrganizationTypesPage = () => {
   } = useOrganizationTypeMutations();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalMode, setModalMode] = useState<'add' | 'edit'>('add');
-  const [currentOrganizationType, setCurrentOrganizationType] = useState<IOrganizationType | null>(null);
+  const [modalMode, setModalMode] = useState<"add" | "edit">("add");
+  const [currentOrganizationType, setCurrentOrganizationType] =
+    useState<IOrganizationType | null>(null);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<number | null>(null);
 
   const handleAdd = () => {
-    setModalMode('add');
+    setModalMode("add");
     setCurrentOrganizationType(null);
     setIsModalOpen(true);
   };
 
   const handleEdit = (organizationType: IOrganizationType) => {
-    setModalMode('edit');
+    setModalMode("edit");
     setCurrentOrganizationType(organizationType);
     setIsModalOpen(true);
   };
@@ -76,10 +77,21 @@ const OrganizationTypesPage = () => {
 
   const handleSave = (data: IOrganizationType) => {
     const handleClose = () => setIsModalOpen(false);
-    if (modalMode === 'add') {
-      createOrganizationType({ organizationTypeData: data, onClose: handleClose, search, pageSize });
+    if (modalMode === "add") {
+      createOrganizationType({
+        organizationTypeData: data,
+        onClose: handleClose,
+        search,
+        pageSize,
+      });
     } else if (currentOrganizationType) {
-      updateOrganizationType({ id: currentOrganizationType.organization_type_id, organizationTypeData: data, onClose: handleClose, search, pageSize });
+      updateOrganizationType({
+        id: currentOrganizationType.organization_type_id,
+        organizationTypeData: data,
+        onClose: handleClose,
+        search,
+        pageSize,
+      });
     }
   };
 
@@ -127,8 +139,17 @@ const OrganizationTypesPage = () => {
         isOpen={isConfirmOpen}
         onClose={() => setIsConfirmOpen(false)}
         onConfirm={confirmDelete}
-        title={t('common.confirmDelete')}
-        description={t('common.confirmDeleteDescription')}
+        title={t("common.confirmDelete")}
+        description={
+          !!selected?.length
+            ? t("common.messages.confirmDeleteMultipleDescription", {
+                count: selected?.length,
+                deleteType: "Organization types",
+              })
+            : t("common.messages.confirmDeleteSingleDescription", {
+                deleteType: "Organization type",
+              })
+        }
       />
     </div>
   );

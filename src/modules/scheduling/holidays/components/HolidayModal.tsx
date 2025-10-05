@@ -138,7 +138,15 @@ export const HolidayModal: React.FC<HolidayModalProps> = ({
       remarks: data.remarks || "",
     };
 
-    onSave(formattedData);
+    const updatedFormData =
+      mode === "edit"
+        ? {
+            holiday_id: holiday?.holiday_id,
+            ...formattedData,
+          }
+        : formattedData;
+
+    onSave(updatedFormData);
   };
 
   const handleClose = () => {
@@ -337,7 +345,7 @@ export const HolidayModal: React.FC<HolidayModalProps> = ({
                         {t("scheduling.holidays.recurring")}
                       </FormLabel>
                       <div className="text-xs sm:text-sm text-muted-foreground">
-                        {t("scheduling.holidays.recurringDesc")}
+                        {t("scheduling.holidays.recurringOnly")}
                       </div>
                     </div>
                     <FormControl>

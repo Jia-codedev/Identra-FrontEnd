@@ -51,7 +51,7 @@ export const OrganizationTypesTable: React.FC<OrganizationTypesTableProps> = ({
           : item.organization_type_eng || "",
     },
   ];
-  console.log("OrganizationTypesTable rendered with data:", organizationTypes);
+  // console.log("OrganizationTypesTable rendered with data:", organizationTypes);
   return (
     <GenericTable
       data={organizationTypes}

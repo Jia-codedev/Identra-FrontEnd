@@ -3,5 +3,7 @@
   "noRecordsDesc": "No attendance records match your current filters.",
   "addNew": "Add New Punch",
   "checkIn": "Check In",
-  "checkOut": "Check Out"
+  "checkOut": "Check Out",
+  "noTeamMembers": "No team members found",
+  "noTeamMembersDesc": "You don't have any team members assigned to you."
 }

@@ -39,6 +39,7 @@ export interface HolidayFilters {
 }
 
 export interface CreateHolidayRequest {
+  holiday_id?: number;
   holiday_eng: string;
   holiday_arb: string;
   remarks?: string;

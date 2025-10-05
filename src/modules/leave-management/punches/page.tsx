@@ -65,7 +65,7 @@ export default function PunchesPage() {
           <div className="py-4 border-border bg-background/90 p-4">
             <div className="text-center py-16">
               <h3 className="text-lg font-medium text-destructive">
-                {t('attendance.errorLoading') || t('common.errorLoading') || 'Error loading event transactions'}
+                {t('leaveManagement.attendance.errorLoading') || t('common.errorLoading') || 'Error loading event transactions'}
               </h3>
               <p className="text-sm text-muted-foreground mt-1">{error.message}</p>
             </div>
@@ -167,10 +167,10 @@ export default function PunchesPage() {
                   <div className="text-center py-16">
                     <Users className="mx-auto h-12 w-12 text-muted-foreground" />
                     <h3 className="mt-2 text-sm font-medium text-foreground">
-                      {t('attendance.noTeamMembers') || 'No team members found'}
+                      {t('leaveManagement.attendance.noTeamMembers') || 'No team members found'}
                     </h3>
                     <p className="mt-1 text-sm text-muted-foreground">
-                      {t('attendance.noTeamMembersDesc') || 'You don\'t have any team members assigned to you.'}
+                      {t('leaveManagement.attendance.noTeamMembersDesc') || 'You don\'t have any team members assigned to you.'}
                     </p>
                   </div>
                 ) : (
