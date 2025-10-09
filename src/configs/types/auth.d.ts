@@ -5,6 +5,8 @@ declare global {
     rememberMe: boolean;
   }
   interface IUser {
+    userId: number;
+    roleId: number;
     employeename: {
       firsteng: string;
       lasteng: string;

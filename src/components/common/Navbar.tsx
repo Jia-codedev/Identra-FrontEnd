@@ -2,20 +2,22 @@
 import React, { useState, useRef, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "@/hooks/use-translations";
-import { useNavigation } from "@/hooks/use-navigation";
+import { useNavigationState } from "@/hooks/useNavigationState";
 import { DesktopNav, UserProfileSection, SecondaryNav } from "./navbar/index";
 import { useUserStore } from "@/store/userStore";
 import { useLanguage } from "@/providers/language-provider";
-import { useUserNavBar } from "@/store/userNavBar";
+import { useAuthNavigationSync } from "@/hooks/useAuthNavigation";
 
 const Navbar = () => {
   const { user } = useUserStore();
   const { isRTL } = useLanguage();
   const pathname = usePathname();
   const { t } = useTranslations();
-  const { NAV_LINKS } = useNavigation();
+  const { NAV_LINKS, activeMenuId: storeActiveId, setActiveMenu } = useNavigationState();
+  
+  // Auto-sync navigation with authentication
+  useAuthNavigationSync();
   const [activeMenuId, setActiveMenuId] = useState<string>("");
-  const storeActiveId = useUserNavBar((s) => s.activeMenuId);
   const headerRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {

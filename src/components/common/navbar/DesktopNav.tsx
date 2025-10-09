@@ -2,18 +2,16 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { useNavigation } from "@/hooks/use-navigation";
+import { useNavigationState } from "@/hooks/useNavigationState";
 import { useRouter } from "next/navigation";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { useUserNavBar } from "@/store/userNavBar";
 
 export const DesktopNav: React.FC = () => {
-  const { NAV_LINKS } = useNavigation();
-  const activeMenuId = useUserNavBar((s) => s.activeMenuId);
+  const { NAV_LINKS, activeMenuId, setActiveMenu } = useNavigationState();
   const router = useRouter();
 
   const setActiveFromStore = (id: string | null, links?: any[]) => {
-    useUserNavBar.getState().setActiveMenu(id, links || []);
+    setActiveMenu(id, links || []);
   };
 
   return (
@@ -23,6 +21,14 @@ export const DesktopNav: React.FC = () => {
           const Icon = menu.icon;
           const isActive = activeMenuId === menu.id;
           const key = menu.id || menu.label || `nav-${menuIndex}`;
+
+          if (!Icon) {
+            console.warn(
+              `⚠️ Navigation item "${menu.label}" has undefined icon, skipping render`
+            );
+            return null;
+          }
+
           return (
             <div
               key={key}
@@ -34,10 +40,6 @@ export const DesktopNav: React.FC = () => {
                   isActive ? "bg-primary/80 text-white" : "hover:bg-muted"
                 )}
                 onClick={() => {
-                  if (menu.href) {
-                    router.push(menu.href);
-                    return;
-                  }
                   setActiveFromStore(menu.id, menu.secondary || []);
                 }}
               >

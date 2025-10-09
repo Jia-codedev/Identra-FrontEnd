@@ -1,27 +1,37 @@
 import { useEffect, useCallback, useRef } from "react";
-import { useUserStore, useIsRefreshing, useRefreshUser, useIsLoggedIn } from "@/store/userStore";
+import {
+  useUserStore,
+  useIsRefreshing,
+  useRefreshUser,
+  useIsLoggedIn,
+} from "@/store/userStore";
+import { useUserNavBar } from "@/store/userNavBar";
 
 export const useUserRefresh = () => {
   const refreshUser = useRefreshUser();
   const isRefreshing = useIsRefreshing();
   const isLoggedIn = useIsLoggedIn();
+  const { loadUserNavigation } = useUserNavBar();
 
   const refreshUserData = useCallback(async () => {
     if (isRefreshing) return false;
-    
+
     try {
       const success = await refreshUser();
       if (success) {
-        console.log("User data refreshed successfully");
+        const updatedUser = useUserStore.getState().user;
+        if (updatedUser?.roleId) {
+          await loadUserNavigation(updatedUser.roleId);
+        }
       } else {
-        console.log("Failed to refresh user data");
+        console.log("❌ Failed to refresh user data");
       }
       return success;
     } catch (error) {
-      console.error("Error during user refresh:", error);
+      console.error("❌ Error during user refresh:", error);
       return false;
     }
-  }, [refreshUser, isRefreshing]);
+  }, [refreshUser, isRefreshing, loadUserNavigation]);
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -38,18 +48,27 @@ export const useUserRefresh = () => {
 export const useManualUserRefresh = () => {
   const refreshUser = useRefreshUser();
   const isRefreshing = useIsRefreshing();
+  const { loadUserNavigation } = useUserNavBar();
 
   const manualRefresh = useCallback(async () => {
     if (isRefreshing) return false;
-    
+
     try {
       const success = await refreshUser();
+
+      if (success) {
+        const updatedUser = useUserStore.getState().user;
+        if (updatedUser?.roleId) {
+          await loadUserNavigation(updatedUser.roleId);
+        }
+      }
+
       return success;
     } catch (error) {
-      console.error("Manual refresh error:", error);
+      console.error("❌ Manual refresh error:", error);
       return false;
     }
-  }, [refreshUser, isRefreshing]);
+  }, [refreshUser, isRefreshing, loadUserNavigation]);
 
   return {
     manualRefresh,
@@ -61,31 +80,38 @@ export const useUserRefreshOnFocus = (enabled: boolean = true) => {
   const refreshUser = useRefreshUser();
   const isLoggedIn = useIsLoggedIn();
   const isRefreshing = useIsRefreshing();
+  const { loadUserNavigation } = useUserNavBar();
   const lastRefreshTime = useRef<number>(0);
 
   const refreshOnFocus = useCallback(async () => {
     if (!enabled || !isLoggedIn || isRefreshing) return;
-    
+
     const now = Date.now();
     if (now - lastRefreshTime.current < 30000) return;
-    
+
     lastRefreshTime.current = now;
-    
+
     try {
-      await refreshUser();
-      console.log("User data refreshed on window focus");
+      const success = await refreshUser();
+
+      if (success) {
+        const updatedUser = useUserStore.getState().user;
+        if (updatedUser?.roleId) {
+          await loadUserNavigation(updatedUser.roleId);
+        }
+      }
     } catch (error) {
-      console.error("Error refreshing user data on focus:", error);
+      console.error("❌ Error refreshing user data on focus:", error);
     }
-  }, [enabled, isLoggedIn, isRefreshing, refreshUser]);
+  }, [enabled, isLoggedIn, isRefreshing, refreshUser, loadUserNavigation]);
 
   useEffect(() => {
     if (!enabled) return;
 
-    window.addEventListener('focus', refreshOnFocus);
-    
+    window.addEventListener("focus", refreshOnFocus);
+
     return () => {
-      window.removeEventListener('focus', refreshOnFocus);
+      window.removeEventListener("focus", refreshOnFocus);
     };
   }, [refreshOnFocus, enabled]);
 

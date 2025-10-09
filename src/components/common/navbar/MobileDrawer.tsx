@@ -9,7 +9,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { LanguageSwitcher } from "@/components/common/LanguageSwitcher";
 import { LogoutConfirmation } from "@/components/common/LogoutConfirmation";
 import { usePathname } from "next/navigation";
-import { useNavigation } from "@/hooks/use-navigation";
+import { useNavigationState } from "@/hooks/useNavigationState";
 import { useLanguage } from "@/providers/language-provider";
 
 interface MobileDrawerProps {
@@ -35,7 +35,7 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({
 }) => {
   const pathname = usePathname();
   const { isRTL } = useLanguage();
-  const { NAV_LINKS, PROFILE_LINKS } = useNavigation();
+  const { NAV_LINKS, PROFILE_LINKS, setActiveMenu } = useNavigationState();
   const [showLogoutDialog, setShowLogoutDialog] = useState(false);
 
   const handleLinkClick = (href: string) => {
@@ -94,6 +94,13 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({
                   (menu.id && String(menu.id)) ||
                   (menu.label && String(menu.label)) ||
                   `nav-${menuIndex}`;
+                
+                // Skip rendering if icon is undefined
+                if (!Icon) {
+                  console.warn(`⚠️ Mobile nav item "${menu.label}" has undefined icon, skipping render`);
+                  return null;
+                }
+                
                 return (
                   <div key={key}>
                     <button

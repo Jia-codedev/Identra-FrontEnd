@@ -12,6 +12,8 @@ class UserService {
         const userData = response.data.data;
         const employeeData = userData.employee_master;
         const user: IUser = {
+          roleId: userData.role_id,
+          userId: userData.user_id,
           employeename: {
             firsteng: employeeData?.firstname_eng || "",
             lasteng: employeeData?.lastname_eng || "",
@@ -19,7 +21,8 @@ class UserService {
             lastarb: employeeData?.lastname_arb || "",
           },
           employeenumber: employeeData?.employee_id,
-          scheduledgeocoordinates: employeeData?.scheduled_geo_coordinates || null,
+          scheduledgeocoordinates:
+            employeeData?.scheduled_geo_coordinates || null,
           radius: employeeData?.radius || 0,
           email: employeeData?.email || "",
           isGeofence: employeeData?.geofence_flag || false,
@@ -42,24 +45,27 @@ class UserService {
         return false;
       }
 
-      let response = await apiClient.get(`/secuser/get-by-emp-id/${currentUser.employeenumber}`, { 
-        withCredentials: true 
+      let response = await apiClient.post(`/auth/me`, {
+        userId: currentUser.userId,
       });
-      
 
       if (response.status === 200 && response.data.success) {
         const userData = response.data.data;
         const employeeData = userData.employee_master;
-        
+
         const updatedUser: IUser = {
+          roleId: userData.role_id,
+          userId: userData.user_id,
           employeename: {
             firsteng: employeeData?.firstname_eng || "",
             lasteng: employeeData?.lastname_eng || "",
             firstarb: employeeData?.firstname_arb || "",
             lastarb: employeeData?.lastname_arb || "",
           },
-          employeenumber: employeeData?.employee_id || currentUser.employeenumber,
-          scheduledgeocoordinates: employeeData?.scheduled_geo_coordinates || null,
+          employeenumber:
+            employeeData?.employee_id || currentUser.employeenumber,
+          scheduledgeocoordinates:
+            employeeData?.scheduled_geo_coordinates || null,
           radius: employeeData?.radius || 0,
           email: employeeData?.email || "",
           isGeofence: employeeData?.geofence_flag || false,
@@ -79,7 +85,7 @@ class UserService {
 
   async initializeUser(): Promise<void> {
     const existingUser = useUserStore.getState().user;
-    
+
     if (existingUser) {
       await this.refreshUserData();
       return;
@@ -93,21 +99,21 @@ class UserService {
       let token = null;
       if (typeof window !== "undefined") {
         token = localStorage.getItem("token");
-        
+
         if (!token) {
-          token = CookieUtils.getCookie('token');
+          token = CookieUtils.getCookie("token");
           if (token) {
             localStorage.setItem("token", token);
           }
         }
       }
-      
+
       if (!token) {
         return;
       }
-      
+
       const response = await authService.getProfile();
-      
+
       if (response.status === 200 && response.data.user) {
         const user = response.data.user;
         useUserStore.getState().setUser(user);

@@ -3,7 +3,7 @@ import React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { useUserNavBar } from "@/store/userNavBar";
+import { useNavigationState } from "@/hooks/useNavigationState";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "@/hooks/use-translations";
 
@@ -25,7 +25,7 @@ export const SecondaryNav: React.FC<SecondaryNavProps> = ({
 }) => {
   const { t } = useTranslations();
   const pathname = usePathname();
-  const storeSecondary = useUserNavBar((s) => s.secondaryLinks);
+  const { secondaryLinks: storeSecondary } = useNavigationState();
 
   const secondaryLinks =
     storeSecondary && storeSecondary.length > 0

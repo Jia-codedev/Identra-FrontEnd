@@ -8,9 +8,9 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { useNavigation } from "@/hooks/use-navigation";
+import { useNavigationState } from "@/hooks/useNavigationState";
 import React, { useEffect } from "react";
-import { useUserNavBar } from "@/store/userNavBar";
+import { useAuthNavigationSync } from "@/hooks/useAuthNavigation";
 import { LogoIcon } from "../svg/icons";
 import { useLanguage } from "@/providers/language-provider";
 import Link from "next/link";
@@ -29,9 +29,12 @@ function AppSidebar({ ...props }) {
   useEffect(() => {
     setOpen(false);
   }, [setOpen]);
-  const { SIDEBAR_LINKS, FOOTER_LINKS } = useNavigation();
+  const { SIDEBAR_LINKS, FOOTER_LINKS, isLoading, error } = useNavigationState();
   const { isRTL } = useLanguage();
   const pathname = usePathname();
+  
+  // Auto-sync navigation with authentication
+  useAuthNavigationSync();
   return (
     <Sidebar
       className="border-r-white/10 bg-primary text-white"
@@ -55,6 +58,13 @@ function AppSidebar({ ...props }) {
             const isActive = !!(link.secondary || []).find(
               (s) => s.href && pathname?.startsWith(s.href)
             );
+            
+            // Skip rendering if icon is undefined
+            if (!Icon) {
+              console.warn(`⚠️ Sidebar item "${link.label}" has undefined icon, skipping render`);
+              return null;
+            }
+            
             return (
               <SidebarMenuButton
                 key={key}
@@ -65,9 +75,7 @@ function AppSidebar({ ...props }) {
                     : "bg-white/10 hover:bg-white/20 text-white"
                 }
                 onClick={() => {
-                  useUserNavBar
-                    .getState()
-                    .setActiveMenu(link.id, link.secondary || []);
+                  // Navigation click handled by Link component
                 }}
               >
                 <Icon className="text-lg mr-2" />
@@ -84,6 +92,13 @@ function AppSidebar({ ...props }) {
             const isActive = !!(link.secondary || []).find(
               (s) => s.href && pathname?.startsWith(s.href)
             );
+            
+            // Skip rendering if icon is undefined
+            if (!Icon) {
+              console.warn(`⚠️ Footer item "${link.label}" has undefined icon, skipping render`);
+              return null;
+            }
+            
             return (
               <DropdownMenu key={key}>
                 <DropdownMenuTrigger asChild>
