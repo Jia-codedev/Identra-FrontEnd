@@ -14,7 +14,9 @@ import { getRouteFromKey } from "@/utils/routeFromKey";
 import { CookieDebugger } from "@/utils/cookieDebugger";
 import { Button } from "@/components/ui/button";
 import { BiLogoMicrosoft } from "react-icons/bi";
-import apiClient from "@/configs/api/Axios";
+import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
+
+import Link from "next/link";
 function AuthComponent() {
   const { t } = useTranslations();
   const { isRTL } = useLanguage();
@@ -53,7 +55,9 @@ function AuthComponent() {
         }, 500);
 
         setTimeout(() => {
-          router.push(getRouteFromKey("mainMenu.workforceAnalytics.myInsights"));
+          router.push(
+            getRouteFromKey("mainMenu.workforceAnalytics.myInsights")
+          );
         }, 2000);
         reset();
       }
@@ -72,35 +76,23 @@ function AuthComponent() {
   };
   return (
     <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-background opacity-50">
-        <div className="h-full w-full bg-gradient-to-br from-transparent via-background to-background z-20 absolute" />
-        <Image
-          src="/background.png"
-          alt="Background Image"
-          layout="fill"
-          objectFit="cover"
-          className="object-cover relative z-0"
-          priority
-        />
-      </div>
-      {/* Card */}
+     
       <motion.div
         initial={{ y: 40, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ type: "spring", stiffness: 120, damping: 16 }}
-        className="w-full max-w-md bg-card border border-border shadow-2xl rounded px-8 py-10 flex flex-col items-center backdrop-blur-lg"
+        className="w-full max-w-md bg-card border border-border shadow-lg rounded-2xl px-6 py-8 flex flex-col items-center gap-4 backdrop-blur-lg"
       >
-        {/* Logo */}
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ delay: 0.2, type: "spring" }}
         >
           <Image
-            src="/logo1.png"
+            src="/logo-full.svg"
             alt="Chronologix Logo"
-            width={98}
-            height={48}
+            width={100}
+            height={30}
             className="mb-6"
           />
         </motion.div>
@@ -121,16 +113,15 @@ function AuthComponent() {
         >
           {t("auth.signInToAccount")}
         </motion.p>
-        {/* Error message */}
         <AnimatePresence>
           {error && (
             <motion.div
-              initial={{ opacity: 0, y: -10 }}
+              initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.25 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.2 }}
               className={cn(
-                "w-full mb-4 p-3 rounded-lg border text-center",
+                "w-full mb-2 p-3 rounded-lg border text-center",
                 "bg-red-100 border-red-300 text-red-700",
                 "dark:bg-red-950 dark:border-red-800 dark:text-red-300"
               )}
@@ -140,206 +131,186 @@ function AuthComponent() {
           )}
         </AnimatePresence>
 
-        {/* Animated form/success wrapper */}
-        <div className="relative w-full min-h-[270px]">
-          <AnimatePresence mode="wait">
-            {!submitted && (
-              <motion.form
-                key="form"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ type: "spring", duration: 0.4 }}
-                className="w-full space-y-5 absolute left-0 top-0"
-                style={{ minHeight: 270 }}
-                onSubmit={handleSubmit(onSubmit)}
-                noValidate
-              >
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-1">
-                    {t("auth.login")}
-                  </label>
+        <AnimatePresence mode="wait">
+          {!submitted ? (
+            <motion.form
+              key="form"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ type: "spring", duration: 0.35 }}
+              className="w-full space-y-4"
+              onSubmit={handleSubmit(onSubmit)}
+              noValidate
+            >
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-1">
+                  {t("auth.login")}
+                </label>
+                <input
+                  id="login"
+                  type="text"
+                  placeholder={t("auth.enterLogin")}
+                  autoComplete="username"
+                  className={cn(
+                    "w-full p-3 border border-border rounded-lg text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 transition",
+                    errors.login ? "border-red-500" : ""
+                  )}
+                  {...register("login")}
+                  aria-invalid={!!errors.login}
+                  aria-describedby={errors.login ? "login-error" : undefined}
+                  disabled={submitted}
+                />
+                {errors.login && (
+                  <div id="login-error" className="text-red-500 text-xs mt-1">
+                    {errors.login.message}
+                  </div>
+                )}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-1">
+                  {t("auth.password")}
+                </label>
+                <div className="relative">
                   <input
-                    type="text"
-                    placeholder={t("auth.enterLogin")}
-                    className={`w-full p-3 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 transition ${
-                      errors.login ? "border-red-500" : ""
-                    }`}
-                    {...register("login")}
-                    aria-invalid={!!errors.login}
-                    aria-describedby={errors.login ? "login-error" : undefined}
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder={t("auth.enterPassword")}
+                    autoComplete="current-password"
+                    className={cn(
+                      "w-full p-3 border border-border rounded-lg text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 transition",
+                      errors.password ? "border-red-500" : "",
+                      isRTL ? "pl-10" : "pr-10"
+                    )}
+                    {...register("password")}
+                    aria-invalid={!!errors.password}
+                    aria-describedby={
+                      errors.password ? "password-error" : undefined
+                    }
+                    disabled={submitted}
                   />
-                  {errors.login && (
-                    <div id="login-error" className="text-red-500 text-xs mt-1">
-                      {errors.login.message}
-                    </div>
-                  )}
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-1">
-                    {t("auth.password")}
-                  </label>
-                  <div className="relative">
-                    <input
-                      type={showPassword ? "text" : "password"}
-                      placeholder={t("auth.enterPassword")}
-                      className={cn(
-                        `w-full p-3 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 transition ${
-                          errors.password ? "border-red-500" : ""
-                        }`,
-                        isRTL ? "pl-10 p-3" : "pr-10 p-3"
-                      )}
-                      {...register("password")}
-                      aria-invalid={!!errors.password}
-                      aria-describedby={
-                        errors.password ? "password-error" : undefined
-                      }
-                    />
-                    <button
-                      type="button"
-                      tabIndex={-1}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition"
-                      onClick={() => setShowPassword((v) => !v)}
-                      aria-label={
-                        showPassword
-                          ? t("auth.hidePassword")
-                          : t("auth.showPassword")
-                      }
-                    >
-                      {showPassword ? (
-                        <svg
-                          width="20"
-                          height="20"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          viewBox="0 0 24 24"
-                        >
-                          <path d="M13.875 18.825A10.05 10.05 0 0 1 12 19c-5 0-9-4-9-7s4-7 9-7c1.13 0 2.21.19 3.22.54M17 17l4 4m0 0l-4-4m4 4l-4-4" />
-                          <path d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                        </svg>
-                      ) : (
-                        <svg
-                          width="20"
-                          height="20"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          viewBox="0 0 24 24"
-                        >
-                          <path d="M1 1l22 22M17.94 17.94A10.05 10.05 0 0 1 12 19c-5 0-9-4-9-7a9.77 9.77 0 0 1 5.06-7.94M9.53 9.53A3 3 0 0 0 12 15a3 3 0 0 0 2.47-5.47" />
-                          <path d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                        </svg>
-                      )}
-                    </button>
-                  </div>
-                  {errors.password && (
-                    <div
-                      id="password-error"
-                      className="text-red-500 text-xs mt-1"
-                    >
-                      {errors.password.message}
-                    </div>
-                  )}
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      id="remember"
-                      className="accent-primary"
-                    />
-                    <label
-                      htmlFor="remember"
-                      className="text-sm text-muted-foreground"
-                    >
-                      {t("auth.rememberMe")}
-                    </label>
-                  </div>
-                  <a
-                    href="#"
-                    className="text-primary text-sm font-medium hover:underline"
+                  <button
+                    type="button"
+                    tabIndex={-1}
+                    className={cn(
+                      "absolute top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition",
+                      isRTL ? "left-3" : "right-3"
+                    )}
+                    onClick={() => setShowPassword((v) => !v)}
+                    aria-label={
+                      showPassword
+                        ? t("auth.hidePassword")
+                        : t("auth.showPassword")
+                    }
                   >
-                    {t("auth.forgotPassword")}
-                  </a>
+                    {showPassword ? (
+                      <FaRegEye size={20} />
+                    ) : (
+                      <FaRegEyeSlash size={20} />
+                    )}
+                  </button>
                 </div>
+                {errors.password && (
+                  <div
+                    id="password-error"
+                    className="text-red-500 text-xs mt-1"
+                  >
+                    {errors.password.message}
+                  </div>
+                )}
+              </div>
 
-                <motion.button
-                  whileTap={{ scale: 0.97 }}
-                  whileHover={{ scale: 1.02 }}
-                  type="submit"
-                  className="w-full bg-primary text-primary-foreground py-3 rounded-lg font-semibold hover:bg-primary/90 transition"
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="remember"
+                    className="accent-primary"
+                  />
+                  <label
+                    htmlFor="remember"
+                    className="text-sm text-muted-foreground"
+                  >
+                    {t("auth.rememberMe")}
+                  </label>
+                </div>
+                <Link
+                  href={"/forgot-password"}
+                  className="text-primary text-xs font-medium hover:underline"
                 >
-                  {t("auth.signIn")}
-                </motion.button>
-              </motion.form>
-            )}
-            {submitted && (
-              <motion.div
-                key="success"
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.4 }}
-                className="w-full flex flex-col items-center justify-center py-10 absolute left-0 top-0"
-                style={{ minHeight: 270 }}
+                  {t("auth.forgotPassword")}
+                </Link>
+              </div>
+              <Button
+                type="submit"
+                className="w-full bg-primary text-primary-foreground py-3 rounded-lg font-semibold hover:bg-primary/90 transition"
+                disabled={submitted}
               >
-                <svg
-                  className="mb-4"
-                  width={48}
-                  height={48}
-                  viewBox="0 0 24 24"
-                  fill="none"
-                >
-                  <motion.circle
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="#22c55e"
-                    strokeWidth="2"
-                    initial={{ pathLength: 0 }}
-                    animate={{ pathLength: 1 }}
-                    transition={{ duration: 0.5 }}
-                  />
-                  <motion.path
-                    d="M8 12l2.5 2.5L16 9"
-                    stroke="#22c55e"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    initial={{ pathLength: 0 }}
-                    animate={{ pathLength: 1 }}
-                    transition={{ duration: 0.5, delay: 0.3 }}
-                  />
-                </svg>
-                <div className="text-lg font-semibold text-primary mb-1">
-                  {t("auth.signedIn")}
-                </div>
-                <div className="text-muted-foreground text-sm">
-                  {t("auth.redirecting")}
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-        <div className="pt-6 w-full">
-          <div className="h-1 w-full border-b border-muted-foreground relative">
+                {t("auth.signIn")}
+              </Button>
+            </motion.form>
+          ) : (
+            <motion.div
+              key="success"
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.98 }}
+              transition={{ duration: 0.3 }}
+              className="w-full flex flex-col items-center justify-center py-6"
+            >
+              <svg
+                className="mb-4"
+                width={48}
+                height={48}
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <motion.circle
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="#22c55e"
+                  strokeWidth="2"
+                  initial={{ pathLength: 0 }}
+                  animate={{ pathLength: 1 }}
+                  transition={{ duration: 0.5 }}
+                />
+                <motion.path
+                  d="M8 12l2.5 2.5L16 9"
+                  stroke="#22c55e"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  initial={{ pathLength: 0 }}
+                  animate={{ pathLength: 1 }}
+                  transition={{ duration: 0.45, delay: 0.25 }}
+                />
+              </svg>
+              <div className="text-lg font-semibold text-primary mb-1">
+                {t("auth.signedIn")}
+              </div>
+              <div className="text-muted-foreground text-sm">
+                {t("auth.redirecting")}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+        <div className="pt-1 w-full">
+          <div className="h-1 w-full border-b border-muted-foreground/30 relative">
             <p className="absolute -top-2 left-1/2 -translate-x-1/2 bg-card px-2 text-sm text-muted-foreground">
               or
             </p>
           </div>
-          <Button className="w-full mt-6 bg-primary hover:bg-primary/90 text-white flex items-center justify-center">
+          <Button
+            type="button"
+            variant={"outline"}
+            className="w-full mt-6 bg-transparent hover:bg-secondary/5 text-foreground flex items-center justify-center py-3"
+            onClick={onAdLogin}
+          >
             <BiLogoMicrosoft className="w-6 h-6 mr-2" />
             <span>{t("auth.signInWithAzure")}</span>
           </Button>
         </div>
-        <p className="mt-8 text-sm text-muted-foreground text-center">
-          {t("auth.dontHaveAccount")}{" "}
-          <a href="#" className="text-primary font-medium hover:underline">
-            {t("auth.signUp")}
-          </a>
-        </p>
       </motion.div>
     </div>
   );

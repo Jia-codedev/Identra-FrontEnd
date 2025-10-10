@@ -192,6 +192,26 @@
     "passwordMinLength": "Password must be at least 8 characters",
     "passwordsDoNotMatch": "Passwords do not match",
     "loginFailed": "Login failed. Please check your credentials."
+    ,
+    "forgotPasswordDescription": "Please enter your Login Id to receive a password reset link.",
+    "sendPasswordResetLink": "Send Password Reset Link",
+    "sendingResetLink": "Sending reset link...",
+    "enterLoginRequired": "Please enter your Login Id.",
+    "resetLinkSent": "Password reset link sent to your email.",
+    "resetLinkFailed": "Failed to send reset link. Please try again.",
+    "resetLinkError": "An error occurred. Please try again.",
+    "resetLinkSentRedirecting": "A reset link has been sent to your email. Redirecting in {seconds}s...",
+    "checkingResetLink": "Checking reset link...",
+    "resetPasswordFor": "Reset password for {login}",
+    "resetLinkInvalid": "This reset link is invalid or has expired.",
+    "newPasswordPlaceholder": "New password",
+    "confirmNewPasswordPlaceholder": "Confirm new password",
+    "resetting": "Resetting...",
+    "resetSuccessRedirecting": "Password reset successfully. Redirecting...",
+    "resetFailed": "Failed to reset password.",
+    "requestNewResetLink": "Request new reset link"
+    ,
+    "yourAccount": "your account"
   },
   "dashboard": {
     "welcome": "Welcome",

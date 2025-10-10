@@ -11,6 +11,8 @@ export function middleware(request: NextRequest) {
     path.startsWith("/globals.css") ||
     path.startsWith("/language/") ||
     path.startsWith("/public/") ||
+    path.startsWith("/forgot-password") ||
+    path.startsWith("/reset-password") ||
     PUBLIC_FILE.test(path);
   if (isPublicAsset) {
     return NextResponse.next();
@@ -29,5 +31,6 @@ export function middleware(request: NextRequest) {
   return NextResponse.next();
 }
 export const config = {
-  matcher: ["/((?!_next/static|favicon.ico|swc.js|api).*)"],
+  // exclude API, _next static files and the reset-password page from middleware
+  matcher: ["/((?!_next/static|favicon.ico|swc.js|api|reset-password).*)"],
 };

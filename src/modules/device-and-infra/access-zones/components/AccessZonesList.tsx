@@ -126,10 +126,10 @@ export default function AccessZonesList({
         getItemDisplayName={(item: AccessZone) =>
           `${item.zone_name} (${item.building_name})`
         }
-        onSelectItem={onSelectItem}
+        onSelectItem={(id) => onSelectItem(Number(id))}
         onSelectAll={onSelectAll}
         onEditItem={onEditItem}
-        onDeleteItem={onDeleteItem}
+        onDeleteItem={(id) => onDeleteItem(Number(id))}
         noDataMessage={t("accessZones.noZonesFound")}
         isLoading={isLoading}
         onPageChange={onPageChange}
