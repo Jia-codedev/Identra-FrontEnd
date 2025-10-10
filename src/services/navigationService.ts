@@ -50,19 +50,56 @@ export interface NavigationResponse {
 }
 
 class NavigationService {
+  private lastRequestTime: number = 0;
+  private lastRoleId: number | null = null;
+  private pendingRequest: Promise<NavigationResponse> | null = null;
+  private readonly MIN_REQUEST_INTERVAL = 1000; // 1 second minimum between requests
+
   async getNavigationByRole(roleId: number): Promise<NavigationResponse> {
     try {
-      console.log(`Fetching navigation for roleId: ${roleId}`);
-      const response = await apiClient.get(
-        `/secRolePrivilege?roleId=${roleId}`
-      );
-      console.log("Raw axios response:", response);
-      console.log("Response data:", response.data);
-      console.log("Response data type:", typeof response.data);
-      console.log("Is response.data an array?", Array.isArray(response.data));
+      const now = Date.now();
+      
+      // If this is the same roleId and we've made a request recently, return pending request or wait
+      if (this.lastRoleId === roleId && (now - this.lastRequestTime) < this.MIN_REQUEST_INTERVAL) {
+        if (this.pendingRequest) {
+          console.log(`⏳ Returning existing request for roleId: ${roleId}`);
+          return await this.pendingRequest;
+        }
+        
+        const waitTime = this.MIN_REQUEST_INTERVAL - (now - this.lastRequestTime);
+        console.log(`⏰ Rate limiting: waiting ${waitTime}ms before next request for roleId: ${roleId}`);
+        await new Promise(resolve => setTimeout(resolve, waitTime));
+      }
 
-      return response.data;
+      // If there's already a pending request for this roleId, return it
+      if (this.pendingRequest && this.lastRoleId === roleId) {
+        console.log(`🔄 Reusing existing request for roleId: ${roleId}`);
+        return await this.pendingRequest;
+      }
+
+      console.log(`🚀 Fetching navigation for roleId: ${roleId}`);
+      this.lastRequestTime = Date.now();
+      this.lastRoleId = roleId;
+
+      // Create the request promise
+      this.pendingRequest = apiClient.get(`/secRolePrivilege?roleId=${roleId}`)
+        .then((response) => {
+          console.log("Raw axios response:", response);
+          console.log("Response data:", response.data);
+          console.log("Response data type:", typeof response.data);
+          console.log("Is response.data an array?", Array.isArray(response.data));
+          return response.data;
+        })
+        .finally(() => {
+          // Clear the pending request after completion
+          this.pendingRequest = null;
+        });
+
+      return await this.pendingRequest;
     } catch (error) {
+      // Clear pending request on error
+      this.pendingRequest = null;
+      
       console.error("Error fetching navigation by role:", error);
       if (error instanceof Error) {
         console.error("Error message:", error.message);

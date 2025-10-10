@@ -13,6 +13,8 @@ interface AppSettingsHeaderProps {
   onAddAppSetting: () => void;
   selectedCount: number;
   onDeleteSelected?: () => void;
+  title?: string;
+  subtitle?: string;
 }
 
 export const AppSettingsHeader: React.FC<AppSettingsHeaderProps> = ({
@@ -21,6 +23,8 @@ export const AppSettingsHeader: React.FC<AppSettingsHeaderProps> = ({
   onAddAppSetting,
   selectedCount,
   onDeleteSelected,
+  title,
+  subtitle,
 }) => {
   const { t } = useTranslations();
   const { isRTL } = useLanguage();
@@ -30,11 +34,8 @@ export const AppSettingsHeader: React.FC<AppSettingsHeaderProps> = ({
       <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
         <div className="flex-1">
           <h1 className="text-3xl md:text-4xl font-bold text-primary tracking-tight leading-tight mb-1">
-            {t("appSettings.title") || "App Settings"}
+            {title || t("appSettings.title") || "App Settings"}
           </h1>
-          <p className="text-muted-foreground">
-            {t("appSettings.subtitle") || "Manage application settings and configurations"}
-          </p>
         </div>
         <div className="w-full sm:w-auto flex flex-col sm:flex-row gap-2 items-center">
           <div
