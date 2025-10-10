@@ -31,7 +31,7 @@ export const useUserRefresh = () => {
       console.error("❌ Error during user refresh:", error);
       return false;
     }
-  }, [refreshUser, isRefreshing, loadUserNavigation]);
+  }, [refreshUser, isRefreshing]); // Remove loadUserNavigation from dependencies
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -68,7 +68,7 @@ export const useManualUserRefresh = () => {
       console.error("❌ Manual refresh error:", error);
       return false;
     }
-  }, [refreshUser, isRefreshing, loadUserNavigation]);
+  }, [refreshUser, isRefreshing]); // Remove loadUserNavigation from dependencies
 
   return {
     manualRefresh,
@@ -103,7 +103,7 @@ export const useUserRefreshOnFocus = (enabled: boolean = true) => {
     } catch (error) {
       console.error("❌ Error refreshing user data on focus:", error);
     }
-  }, [enabled, isLoggedIn, isRefreshing, refreshUser, loadUserNavigation]);
+  }, [enabled, isLoggedIn, isRefreshing, refreshUser]); // Remove loadUserNavigation from dependencies
 
   useEffect(() => {
     if (!enabled) return;

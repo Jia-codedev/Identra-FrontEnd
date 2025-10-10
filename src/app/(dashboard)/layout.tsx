@@ -1,5 +1,5 @@
 import DashboardFadeInAnimation from "@/components/common/animations/dashboardFadeInAnimation";
-import ChatBotDemo from "@/components/common/dashboard/chatbot/ChatbotDemo";
+// import ChatBotDemo from "@/components/common/dashboard/chatbot/ChatbotDemo";
 import Navbar from "@/components/common/Navbar";
 import AppSidebar from "@/components/common/navbar/AppSidebar";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -25,7 +25,7 @@ export default function DashboardLayout({
               </ScrollArea>
             </DashboardFadeInAnimation>
           </SidebarInset>
-          <ChatBotDemo />
+          {/* <ChatBotDemo /> */}
         </SidebarProvider>
       </NavigationSyncProvider>
     </CustomQueryClientProvider>
