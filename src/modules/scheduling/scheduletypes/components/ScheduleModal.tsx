@@ -229,7 +229,7 @@ export const ScheduleModal: React.FC<ScheduleModalProps> = ({
     }
   }, [isOpen]);
 
-  const onSubmit = (rawData: any) => {
+    const onSubmit = (rawData: any) => {
     const hasObjectValues =
       typeof rawData.sch_parent_id === "object" ||
       typeof rawData.schedule_location === "object";

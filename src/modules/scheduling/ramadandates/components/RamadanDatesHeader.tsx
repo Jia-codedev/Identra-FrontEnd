@@ -141,7 +141,7 @@ const RamadanDatesHeader: React.FC<RamadanDatesHeaderProps> = ({
               className="border-0 bg-transparent shadow-none focus-visible:ring-0 text-sm sm:text-base placeholder:text-muted-foreground/70"
             />
             <div className="flex flex-col sm:flex-row gap-2">
-              {selectedCount > 0 && onDeleteSelected && (
+              {selectedCount > 0  && (
                 <Button
                   variant="destructive"
                   size="sm"
