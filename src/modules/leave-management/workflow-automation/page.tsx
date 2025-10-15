@@ -35,7 +35,7 @@ export default function WorkflowAutomationPage() {
   const totalPages = Math.ceil(total / limit);
 
   const handleAddNew = () => {
-    router.push("/leave-management/workflow-automation/add");
+    router.push("/workflow-automation/add");
   };
 
   const handleEdit = (workflow: any) => {};

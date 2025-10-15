@@ -21,7 +21,7 @@ export default function DashboardLayout({
             <Navbar />
             <DashboardFadeInAnimation>
               <ScrollArea className="flex-1 w-full max-h-[calc(100vh-var(--navbar-height))]">
-                <div className="p-2">{children}</div>
+                <div className="p-8 py-2">{children}</div>
               </ScrollArea>
             </DashboardFadeInAnimation>
           </SidebarInset>
