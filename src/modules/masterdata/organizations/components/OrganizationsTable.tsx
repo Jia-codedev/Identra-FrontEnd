@@ -52,7 +52,9 @@ export const OrganizationsTable: React.FC<OrganizationsTableProps> = ({
       key: "parent",
       header: t("masterData.organizations.parentOrganization"),
       accessor: (item, isRTL) =>
-        isRTL ? item.organizations?.organization_arb || "" : item.organizations?.organization_eng || "",
+        isRTL
+          ? item.organizations?.organization_arb || ""
+          : item.organizations?.organization_eng || "",
     },
   ];
 
@@ -68,10 +70,10 @@ export const OrganizationsTable: React.FC<OrganizationsTableProps> = ({
       getItemDisplayName={(item, isRTL) =>
         isRTL ? item.organization_arb || "" : item.organization_eng || ""
       }
-      onSelectItem={onSelectOrganization}
+      onSelectItem={(id) => onSelectOrganization(Number(id))}
       onSelectAll={onSelectAll}
       onEditItem={onEditOrganization}
-      onDeleteItem={onDeleteOrganization}
+      onDeleteItem={(id) => onDeleteOrganization(Number(id))}
       onPageChange={onPageChange}
       onPageSizeChange={onPageSizeChange}
       noDataMessage={t("masterData.organizations.noOrganizationsFound")}

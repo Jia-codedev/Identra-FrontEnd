@@ -208,7 +208,7 @@ export default function PunchesList({
         allChecked={allChecked}
         getItemId={getItemId}
         getItemDisplayName={getItemDisplayName}
-        onSelectItem={onSelectItem || (() => {})}
+        onSelectItem={(id) => onSelectItem && onSelectItem(Number(id))}
         onSelectAll={onSelectAll || (() => {})}
         noDataMessage={t('attendance.noRecords') || t('common.noResults') || 'No punches found'}
         isLoading={isLoading}

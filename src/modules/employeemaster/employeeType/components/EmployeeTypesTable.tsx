@@ -13,10 +13,10 @@ interface EmployeeTypesTableProps {
   allChecked: boolean;
   onPageChange: (page: number) => void;
   onPageSizeChange: (size: number) => void;
-  onSelectEmployeeType: (id: number) => void;
+  onSelectEmployeeType: (id: string | number) => void;
   onSelectAll: () => void;
   onEditEmployeeType: (employeeType: IEmployeeType) => void;
-  onDeleteEmployeeType: (id: number) => void;
+  onDeleteEmployeeType: (id: string | number) => void;
   isLoading?: boolean;
 }
 

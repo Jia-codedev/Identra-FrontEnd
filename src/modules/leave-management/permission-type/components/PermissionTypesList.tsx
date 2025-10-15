@@ -10,7 +10,7 @@ type Props = {
   permissionTypes: PermissionType[];
   loading?: boolean;
   selected: number[];
-  onSelectItem: (id: number) => void;
+  onSelectItem: (id: string | number) => void;
   onSelectAll: () => void;
   allChecked: boolean;
   page: number;
@@ -18,7 +18,7 @@ type Props = {
   onPageChange: (page: number) => void;
   onPageSizeChange: (size: number) => void;
   onEditItem?: (item: PermissionType) => void;
-  onDeleteItem?: (id: number) => void;
+  onDeleteItem?: (id: string | number) => void;
 };
 
 const formatDateTime = (dt?: string) => {
@@ -30,9 +30,9 @@ const formatDateTime = (dt?: string) => {
   }
 };
 
-const PermissionTypesList: React.FC<Props> = ({ 
-  permissionTypes, 
-  loading, 
+const PermissionTypesList: React.FC<Props> = ({
+  permissionTypes,
+  loading,
   selected,
   onSelectItem,
   onSelectAll,
@@ -42,36 +42,60 @@ const PermissionTypesList: React.FC<Props> = ({
   onPageChange,
   onPageSizeChange,
   onEditItem,
-  onDeleteItem
+  onDeleteItem,
 }) => {
   const { t } = useTranslations();
 
   const columns: TableColumn<PermissionType>[] = [
     {
       key: "code",
-      header: t('leaveManagement.permissionTypes.columns.code') || 'Code',
-      accessor: (item) => item.code || '-',
+      header: t("leaveManagement.permissionTypes.columns.code") || "Code",
+      accessor: (item) => item.code || "-",
     },
     {
       key: "name",
-      header: t('leaveManagement.permissionTypes.columns.name') || 'Name',
-      accessor: (item) => item.permission_type || '-',
+      header: t("leaveManagement.permissionTypes.columns.name") || "Name",
+      accessor: (item) => item.permission_type || "-",
     },
     {
       key: "status",
-      header: t('leaveManagement.permissionTypes.columns.status') || 'Status',
+      header: t("leaveManagement.permissionTypes.columns.status") || "Status",
       accessor: (item) => (
-        <Badge className={(item.status ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-700') + ' px-2 py-1 rounded text-xs font-medium'} variant="outline">
-          {item.status ? (t('common.active') || 'Active') : (t('common.inactive') || 'Inactive')}
+        <Badge
+          className={
+            (item.status
+              ? "bg-green-100 text-green-800"
+              : "bg-gray-100 text-gray-700") +
+            " px-2 py-1 rounded text-xs font-medium"
+          }
+          variant="outline"
+        >
+          {item.status
+            ? t("common.active") || "Active"
+            : t("common.inactive") || "Inactive"}
         </Badge>
       ),
     },
     {
       key: "created",
-      header: t('leaveManagement.permissionTypes.columns.created') || 'Created',
+      header: t("leaveManagement.permissionTypes.columns.created") || "Created",
       accessor: (item) => formatDateTime(item.created_date),
     },
   ];
+
+  const handleSelectItem = (id: string | number) => {
+    if (typeof id === "string") {
+      id = parseInt(id, 10);
+    }
+    onSelectItem(id);
+  };
+
+  const handleDeleteItem = (id: string | number) => {
+    if (typeof id === "string") {
+      id = parseInt(id, 10);
+    }
+    onDeleteItem?.(id);
+  };
 
   return (
     <GenericTable
@@ -83,11 +107,13 @@ const PermissionTypesList: React.FC<Props> = ({
       allChecked={allChecked}
       getItemId={(item) => item.id}
       getItemDisplayName={(item) => item.permission_type}
-      onSelectItem={onSelectItem}
+      onSelectItem={handleSelectItem}
       onSelectAll={onSelectAll}
       onEditItem={onEditItem}
-      onDeleteItem={onDeleteItem}
-      noDataMessage={t('leaveManagement.permissionTypes.noData') || 'No items found'}
+      onDeleteItem={handleDeleteItem}
+      noDataMessage={
+        t("leaveManagement.permissionTypes.noData") || "No items found"
+      }
       isLoading={loading}
       onPageChange={onPageChange}
       onPageSizeChange={onPageSizeChange}

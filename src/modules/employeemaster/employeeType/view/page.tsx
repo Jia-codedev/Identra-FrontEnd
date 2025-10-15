@@ -15,13 +15,18 @@ import { useEmployeeTypeMutations } from "../hooks/useMutations";
 import {
   EmployeeTypesTable,
   EmployeeTypeModal,
-  EmployeeTypesHeader
+  EmployeeTypesHeader,
 } from "../index";
 import { CustomPagination } from "@/components/common/dashboard/Pagination";
 
 export default function EmployeeTypesPage() {
   const { t } = useTranslations();
-  const { createEmployeeType, updateEmployeeType, deleteEmployeeType, deleteEmployeeTypes } = useEmployeeTypeMutations();
+  const {
+    createEmployeeType,
+    updateEmployeeType,
+    deleteEmployeeType,
+    deleteEmployeeTypes,
+  } = useEmployeeTypeMutations();
   const {
     employeeTypes,
     selected,
@@ -81,14 +86,25 @@ export default function EmployeeTypesPage() {
 
   const handleSaveEmployeeType = (data: IEmployeeType) => {
     if (modalState.mode === "add") {
-      createEmployeeType({ employeeTypeData: data, onClose: handleCloseModal, search, pageSize });
+      createEmployeeType({
+        employeeTypeData: data,
+        onClose: handleCloseModal,
+        search,
+        pageSize,
+      });
     } else if (modalState.mode === "edit" && modalState.employeeType) {
-      updateEmployeeType({ id: modalState.employeeType.employee_type_id, employeeTypeData: data, onClose: handleCloseModal, search, pageSize });
+      updateEmployeeType({
+        id: modalState.employeeType.employee_type_id,
+        employeeTypeData: data,
+        onClose: handleCloseModal,
+        search,
+        pageSize,
+      });
     }
   };
 
-  const handleDeleteEmployeeType = (id: number) => {
-    setDeleteDialog({ open: true, type: "single", id });
+  const handleDeleteEmployeeType = (id: string | number) => {
+    setDeleteDialog({ open: true, type: "single", id: Number(id) });
   };
 
   const handleDeleteSelected = () => {
@@ -106,6 +122,10 @@ export default function EmployeeTypesPage() {
 
   const handleCancelDelete = () => {
     setDeleteDialog({ open: false, type: null });
+  };
+
+  const handleSelectEmployeeType = (id: string | number) => {
+    selectEmployeeType(Number(id));
   };
 
   return (
@@ -126,7 +146,7 @@ export default function EmployeeTypesPage() {
             page={page}
             pageSize={pageSize}
             allChecked={allChecked}
-            onSelectEmployeeType={selectEmployeeType}
+            onSelectEmployeeType={handleSelectEmployeeType}
             onSelectAll={selectAll}
             isLoading={isLoading}
             onEditEmployeeType={handleEditEmployeeType}
@@ -153,25 +173,30 @@ export default function EmployeeTypesPage() {
         employeeType={modalState.employeeType}
         mode={modalState.mode}
       />
-      <Dialog open={deleteDialog.open} onOpenChange={open => !open && handleCancelDelete()}>
-        <DialogContent
-          className="p-0"
-        >
-          <DialogHeader
-            className="p-2"
-          >
-            <DialogTitle
-              className="mb-1 p-2"
-            >{t("common.confirmDelete")}</DialogTitle>
+      <Dialog
+        open={deleteDialog.open}
+        onOpenChange={(open) => !open && handleCancelDelete()}
+      >
+        <DialogContent className="p-0">
+          <DialogHeader className="p-2">
+            <DialogTitle className="mb-1 p-2">
+              {t("common.confirmDelete")}
+            </DialogTitle>
             <div className="bg-black/5 p-4 rounded-lg dark:bg-white/5">
               <DialogDescription>
                 {deleteDialog.type === "single"
                   ? t("messages.confirm.delete")
-                  : t("messages.confirm.deleteMultiple", { count: selected.length })}
+                  : t("messages.confirm.deleteMultiple", {
+                      count: selected.length,
+                    })}
               </DialogDescription>
               <div className="flex justify-end space-x-2 mt-4">
-                <Button variant="outline" onClick={handleCancelDelete}>{t("common.cancel")}</Button>
-                <Button variant="destructive" onClick={handleConfirmDelete}>{t("common.delete")}</Button>
+                <Button variant="outline" onClick={handleCancelDelete}>
+                  {t("common.cancel")}
+                </Button>
+                <Button variant="destructive" onClick={handleConfirmDelete}>
+                  {t("common.delete")}
+                </Button>
               </div>
             </div>
           </DialogHeader>

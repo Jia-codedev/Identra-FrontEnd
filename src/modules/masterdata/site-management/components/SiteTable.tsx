@@ -80,10 +80,10 @@ export const SitesTable: React.FC<SitesTableProps> = ({
       getItemDisplayName={(item, isRTL) =>
         isRTL ? item.location_arb || "" : item.location_eng || ""
       }
-      onSelectItem={onSelectSite}
+      onSelectItem={(id) => onSelectSite(Number(id))}
       onSelectAll={onSelectAll}
       onEditItem={onEditSite}
-      onDeleteItem={onDeleteSite}
+      onDeleteItem={(id) => onDeleteSite(Number(id))}
       onPageChange={(newPage) => {
         if (newPage > 0 && newPage <= Math.ceil(sites.length / pageSize)) {
         }

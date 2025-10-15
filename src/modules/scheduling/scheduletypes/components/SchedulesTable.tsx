@@ -158,10 +158,10 @@ export const SchedulesTable: React.FC<SchedulesTableProps> = ({
       allChecked={allChecked}
       getItemId={(schedule) => schedule.schedule_id}
       getItemDisplayName={(schedule) => schedule.schedule_code}
-      onSelectItem={onSelectSchedule}
+      onSelectItem={(id) => onSelectSchedule(Number(id))}
       onSelectAll={onSelectAll}
       onEditItem={onEditSchedule}
-      onDeleteItem={onDeleteSchedule}
+      onDeleteItem={(id) => onDeleteSchedule(Number(id))}
       onPageChange={onPageChange}
       onPageSizeChange={onPageSizeChange}
       noDataMessage={t("scheduling.schedules.noSchedules")}

@@ -61,8 +61,8 @@ export default function BuildingsPage() {
     selectAll();
   };
 
-  const handleSelectBuilding = (buildingId: number) => {
-    selectItem(buildingId);
+  const handleSelectBuilding = (buildingId: string | number) => {
+    selectItem(Number(buildingId));
   };
 
   const handleAddBuilding = () => {
@@ -75,8 +75,8 @@ export default function BuildingsPage() {
     setShowForm(true);
   };
 
-  const handleDeleteBuilding = (buildingId: number) => {
-    deleteBuilding.mutate(buildingId);
+  const handleDeleteBuilding = (buildingId: string | number) => {
+    deleteBuilding.mutate(Number(buildingId));
   };
 
   const handleBulkDeleteBuildings = () => {

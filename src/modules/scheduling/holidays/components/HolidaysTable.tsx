@@ -128,10 +128,10 @@ export const HolidaysTable: React.FC<HolidaysTableProps> = ({
       getItemDisplayName={(holiday, isRTL) =>
         isRTL ? holiday.holiday_arb : holiday.holiday_eng
       }
-      onSelectItem={onSelectHoliday}
+      onSelectItem={(id) => onSelectHoliday(Number(id))}
       onSelectAll={onSelectAll}
       onEditItem={onEditHoliday}
-      onDeleteItem={onDeleteHoliday}
+      onDeleteItem={(id) => onDeleteHoliday(Number(id))}
       onPageChange={onPageChange}
       onPageSizeChange={onPageSizeChange}
       noDataMessage={t("scheduling.holidays.noHolidays")}

@@ -10,7 +10,7 @@ type Props = {
   leaves: Leave[];
   loading?: boolean;
   selected: number[];
-  onSelectItem: (id: number) => void;
+  onSelectItem: (id: string | number) => void;
   onSelectAll: () => void;
   allChecked: boolean;
   page: number;
@@ -18,7 +18,7 @@ type Props = {
   onPageChange: (page: number) => void;
   onPageSizeChange: (size: number) => void;
   onEditItem?: (item: Leave) => void;
-  onDeleteItem?: (id: number) => void;
+  onDeleteItem?: (id: string | number) => void;
 };
 
 const statusMap: Record<string, { label: string; color: string }> = {
@@ -36,9 +36,9 @@ const formatDateTime = (dt?: string) => {
   }
 };
 
-const LeavesList: React.FC<Props> = ({ 
-  leaves, 
-  loading, 
+const LeavesList: React.FC<Props> = ({
+  leaves,
+  loading,
   selected,
   onSelectItem,
   onSelectAll,
@@ -48,33 +48,41 @@ const LeavesList: React.FC<Props> = ({
   onPageChange,
   onPageSizeChange,
   onEditItem,
-  onDeleteItem
+  onDeleteItem,
 }) => {
   const { t } = useTranslations();
 
   const columns: TableColumn<Leave>[] = [
     {
       key: "code",
-      header: t('leaveManagement.leaveTypes.columns.code') || 'Code',
-      accessor: (leave) => leave.code || '-',
+      header: t("leaveManagement.leaveTypes.columns.code") || "Code",
+      accessor: (leave) => leave.code || "-",
     },
     {
       key: "name",
-      header: t('leaveManagement.leaveTypes.columns.name') || 'Name',
-      accessor: (leave) => leave.leave_type || '-',
+      header: t("leaveManagement.leaveTypes.columns.name") || "Name",
+      accessor: (leave) => leave.leave_type || "-",
     },
     {
       key: "status",
-      header: t('leaveManagement.leaveTypes.columns.status') || 'Status',
+      header: t("leaveManagement.leaveTypes.columns.status") || "Status",
       accessor: (leave) => (
-        <Badge className={(leave.status ? 'bg-card text-green-800' : 'bg-destructive') + ' px-2 py-0.5 rounded text-xs font-medium'} variant="outline">
-          {leave.status ? (t('common.active') || 'Active') : (t('common.inactive') || 'Inactive')}
+        <Badge
+          className={
+            (leave.status ? "bg-card text-green-800" : "bg-destructive") +
+            " px-2 py-0.5 rounded text-xs font-medium"
+          }
+          variant="outline"
+        >
+          {leave.status
+            ? t("common.active") || "Active"
+            : t("common.inactive") || "Inactive"}
         </Badge>
       ),
     },
     {
       key: "created",
-      header: t('leaveManagement.leaveTypes.columns.created') || 'Created',
+      header: t("leaveManagement.leaveTypes.columns.created") || "Created",
       accessor: (leave) => formatDateTime(leave.created_date),
     },
   ];
@@ -88,12 +96,14 @@ const LeavesList: React.FC<Props> = ({
       pageSize={pageSize}
       allChecked={allChecked}
       getItemId={(item) => item.id || item.employee_leave_id}
-      getItemDisplayName={(item) => `${item.leave_type} - ${item.leave_unique_ref_no}`}
+      getItemDisplayName={(item) =>
+        `${item.leave_type} - ${item.leave_unique_ref_no}`
+      }
       onSelectItem={onSelectItem}
       onSelectAll={onSelectAll}
       onEditItem={onEditItem}
       onDeleteItem={onDeleteItem}
-  noDataMessage={t('leaveManagement.leaveTypes.noData') || 'No items found'}
+      noDataMessage={t("leaveManagement.leaveTypes.noData") || "No items found"}
       isLoading={loading}
       onPageChange={onPageChange}
       onPageSizeChange={onPageSizeChange}

@@ -40,7 +40,8 @@ export const NationalitiesTable: React.FC<NationalitiesTableProps> = ({
     {
       key: "name",
       header: t("masterData.nationalities.nationalityName"),
-      accessor: (item, isRTL) => isRTL ? (item.citizenship_arb || "") : (item.citizenship_eng || ""),
+      accessor: (item, isRTL) =>
+        isRTL ? item.citizenship_arb || "" : item.citizenship_eng || "",
     },
     {
       key: "code",
@@ -58,13 +59,15 @@ export const NationalitiesTable: React.FC<NationalitiesTableProps> = ({
       pageSize={pageSize}
       allChecked={allChecked}
       getItemId={(item) => item.citizenship_id}
-      getItemDisplayName={(item, isRTL) => isRTL ? (item.citizenship_arb || "") : (item.citizenship_eng || "")}
-      onSelectItem={onSelectNationality}
+      getItemDisplayName={(item, isRTL) =>
+        isRTL ? item.citizenship_arb || "" : item.citizenship_eng || ""
+      }
+      onSelectItem={(id) => onSelectNationality(Number(id))}
       onSelectAll={onSelectAll}
       onEditItem={onEditNationality}
-      onDeleteItem={onDeleteNationality}
-  onPageChange={onPageChange}
-  onPageSizeChange={onPageSizeChange}
+      onDeleteItem={(id) => onDeleteNationality(Number(id))}
+      onPageChange={onPageChange}
+      onPageSizeChange={onPageSizeChange}
       noDataMessage={t("masterData.nationalities.noNationalitiesFound")}
       isLoading={isLoading}
     />

@@ -45,7 +45,8 @@ export const RolesTable: React.FC<RolesTableProps> = ({
     {
       key: "editable_flag",
       header: t("security.roles.status") || "Status",
-      accessor: (item) => item.editable_flag ? t("common.editable") : t("common.readOnly"),
+      accessor: (item) =>
+        item.editable_flag ? t("common.editable") : t("common.readOnly"),
     },
   ];
 
@@ -59,10 +60,10 @@ export const RolesTable: React.FC<RolesTableProps> = ({
       allChecked={allChecked}
       getItemId={(item) => item.role_id}
       getItemDisplayName={(item) => item.role_name}
-      onSelectItem={onSelectRole}
+      onSelectItem={(id) => onSelectRole(Number(id))}
       onSelectAll={onSelectAll}
       onEditItem={onEditRole}
-      onDeleteItem={onDeleteRole}
+      onDeleteItem={(id) => onDeleteRole(Number(id))}
       onPageChange={onPageChange}
       onPageSizeChange={onPageSizeChange}
       noDataMessage={t("security.roles.noRolesFound") || "No roles found"}

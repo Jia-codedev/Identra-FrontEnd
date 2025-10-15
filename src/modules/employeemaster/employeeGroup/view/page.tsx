@@ -99,8 +99,8 @@ export default function EmployeeGroupsPage() {
     }
   };
 
-  const handleDeleteEmployeeGroup = (id: number) => {
-    setDeleteDialog({ open: true, type: "single", id });
+  const handleDeleteEmployeeGroup = (id: string | number) => {
+    setDeleteDialog({ open: true, type: "single", id: Number(id) });
   };
 
   const handleDeleteSelected = () => {
@@ -118,6 +118,10 @@ export default function EmployeeGroupsPage() {
 
   const handleCancelDelete = () => {
     setDeleteDialog({ open: false, type: null });
+  };
+
+  const handleSelectEmployeeGroup = (id: string | number) => {
+    selectEmployeeGroup(Number(id));
   };
 
   return (
@@ -138,7 +142,7 @@ export default function EmployeeGroupsPage() {
             page={page}
             pageSize={pageSize}
             allChecked={allChecked}
-            onSelectEmployeeGroup={selectEmployeeGroup}
+            onSelectEmployeeGroup={handleSelectEmployeeGroup}
             onSelectAll={selectAll}
             isLoading={isLoading}
             onEditEmployeeGroup={handleEditEmployeeGroup}
@@ -181,7 +185,9 @@ export default function EmployeeGroupsPage() {
               <DialogDescription>
                 {deleteDialog.type === "single"
                   ? t("messages.confirm.delete")
-                  : t("messages.confirm.deleteMultiple", { count: selected.length })}
+                  : t("messages.confirm.deleteMultiple", {
+                      count: selected.length,
+                    })}
               </DialogDescription>
               <div className="flex justify-end space-x-2 mt-4">
                 <Button variant="outline" onClick={handleCancelDelete}>

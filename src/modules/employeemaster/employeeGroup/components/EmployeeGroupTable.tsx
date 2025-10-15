@@ -14,10 +14,10 @@ interface EmployeeGroupTableProps {
   allChecked: boolean;
   onPageChange: (page: number) => void;
   onPageSizeChange: (size: number) => void;
-  onSelectEmployeeGroup: (id: number) => void;
+  onSelectEmployeeGroup: (id: string | number) => void;
   onSelectAll: () => void;
   onEditEmployeeGroup: (employeeGroup: IEmployeeGroup) => void;
-  onDeleteEmployeeGroup: (id: number) => void;
+  onDeleteEmployeeGroup: (id: string | number) => void;
   isLoading?: boolean;
 }
 

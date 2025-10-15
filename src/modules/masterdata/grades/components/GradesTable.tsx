@@ -45,7 +45,7 @@ export const GradesTable: React.FC<GradesTableProps> = ({
     {
       key: "name",
       header: t("masterData.grade.gradeName"),
-      accessor: (item, isRTL) => isRTL ? item.grade_arb : item.grade_eng,
+      accessor: (item, isRTL) => (isRTL ? item.grade_arb : item.grade_eng),
     },
   ];
 
@@ -58,13 +58,17 @@ export const GradesTable: React.FC<GradesTableProps> = ({
       pageSize={pageSize}
       allChecked={allChecked}
       getItemId={(item) => item.grade_id}
-      getItemDisplayName={(item, isRTL) => isRTL ? item.grade_arb || item.grade_eng || "" : item.grade_eng || item.grade_arb || ""}
-      onSelectItem={onSelectGrade}
+      getItemDisplayName={(item, isRTL) =>
+        isRTL
+          ? item.grade_arb || item.grade_eng || ""
+          : item.grade_eng || item.grade_arb || ""
+      }
+      onSelectItem={(id) => onSelectGrade(Number(id))}
       onSelectAll={onSelectAll}
       onEditItem={onEditGrade}
-      onDeleteItem={onDeleteGrade}
-  onPageChange={onPageChange}
-  onPageSizeChange={onPageSizeChange}
+      onDeleteItem={(id) => onDeleteGrade(Number(id))}
+      onPageChange={onPageChange}
+      onPageSizeChange={onPageSizeChange}
       noDataMessage={t("masterData.grade.noGradesFound")}
       isLoading={isLoading}
     />

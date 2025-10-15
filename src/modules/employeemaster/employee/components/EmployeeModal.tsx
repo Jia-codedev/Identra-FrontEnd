@@ -107,6 +107,7 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
       password: "",
       confirm_password: "",
       remarks: "",
+      role_id: null,
     }),
     []
   );
@@ -328,8 +329,8 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
               password: "",
               confirm_password: "",
               remarks: employee.remarks || "",
+              role_id: (employee as any).role_id || null,
             });
-     
           }, 100);
         } else if (mode === "add") {
           setFormData(initialForm);
@@ -446,7 +447,6 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
   };
 
   const handleNext = () => {
-
     if (validateCurrentStep() && currentStep < steps.length - 1) {
       setCurrentStep(currentStep + 1);
     }
@@ -480,7 +480,6 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
       active_date: formData.active_date || undefined,
       inactive_date: formData.inactive_date || undefined,
     };
-
 
     if (!employeeData.emp_no || employeeData.emp_no.toString().trim() === "") {
       console.error("Employee number is missing or empty");

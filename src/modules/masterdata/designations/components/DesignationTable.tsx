@@ -64,10 +64,10 @@ export const DesignationsTable: React.FC<DesignationsTableProps> = ({
           ? item.designation_arb || item.designation_eng || ""
           : item.designation_eng || item.designation_arb || ""
       }
-      onSelectItem={onSelectDesignation}
+      onSelectItem={(id) => onSelectDesignation(Number(id))}
       onSelectAll={onSelectAll}
       onEditItem={onEditDesignation}
-      onDeleteItem={onDeleteDesignation}
+      onDeleteItem={(id) => onDeleteDesignation(Number(id))}
       onPageChange={onPageChange}
       onPageSizeChange={onPageSizeChange}
       noDataMessage={t("masterData.designations.noDesignationsFound")}

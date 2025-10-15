@@ -118,10 +118,10 @@ export const RamadanDatesTable: React.FC<RamadanDatesTableProps> = ({
       getItemDisplayName={(ramadanDate, isRTL) =>
         isRTL ? ramadanDate.ramadan_name_arb : ramadanDate.ramadan_name_eng
       }
-      onSelectItem={onSelectRamadanDate}
+      onSelectItem={(id) => onSelectRamadanDate(Number(id))}
       onSelectAll={onSelectAll}
       onEditItem={onEditRamadanDate}
-      onDeleteItem={onDeleteRamadanDate}
+      onDeleteItem={(id) => onDeleteRamadanDate(Number(id))}
       onPageChange={onPageChange}
       onPageSizeChange={onPageSizeChange}
       noDataMessage={t("scheduling.ramadanDates.noData")}

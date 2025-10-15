@@ -475,7 +475,7 @@ export default function ActivitySummaryPage() {
         allChecked={allChecked}
         getItemId={getActivityId}
         getItemDisplayName={getActivityDisplayName}
-        onSelectItem={handleSelectActivity}
+        onSelectItem={(id) => handleSelectActivity(Number(id))}
         onSelectAll={handleSelectAllActivities}
         onEditItem={(activity: SecurityActivity) => {
           setSelectedActivity(activity);

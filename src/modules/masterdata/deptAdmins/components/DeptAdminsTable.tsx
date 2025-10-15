@@ -60,22 +60,25 @@ export default function DeptAdminsTable({
     {
       key: "from_date",
       header: t("masterData.deptAdmins.from") || "From",
-      accessor: (item) => (item.from_date ? new Date(item.from_date).toLocaleDateString() : ""),
+      accessor: (item) =>
+        item.from_date ? new Date(item.from_date).toLocaleDateString() : "",
     },
     {
       key: "to_date",
       header: t("masterData.deptAdmins.to") || "To",
-      accessor: (item) => (item.to_date ? new Date(item.to_date).toLocaleDateString() : ""),
+      accessor: (item) =>
+        item.to_date ? new Date(item.to_date).toLocaleDateString() : "",
     },
     {
       key: "delegation_level",
       header: t("masterData.deptAdmins.level") || "Level",
-      accessor: (item) => (item.delegation_level ?? ""),
+      accessor: (item) => item.delegation_level ?? "",
     },
     {
       key: "active_status",
       header: t("masterData.deptAdmins.active") || "Active",
-      accessor: (item) => (item.active_status ? t("common.yes") || "Yes" : t("common.no") || "No"),
+      accessor: (item) =>
+        item.active_status ? t("common.yes") || "Yes" : t("common.no") || "No",
     },
     {
       key: "remarks",
@@ -85,7 +88,8 @@ export default function DeptAdminsTable({
   ];
 
   const idFn = getItemId || ((item: DeptAdmin) => item.dept_admin_id);
-  const displayNameFn = getItemDisplayName || ((item: DeptAdmin) => String(item.employee_id || ""));
+  const displayNameFn =
+    getItemDisplayName || ((item: DeptAdmin) => String(item.employee_id || ""));
 
   return (
     <GenericTable
@@ -97,11 +101,13 @@ export default function DeptAdminsTable({
       allChecked={allChecked}
       getItemId={idFn}
       getItemDisplayName={displayNameFn}
-      onSelectItem={onSelectItem}
+      onSelectItem={(id) => onSelectItem && onSelectItem(Number(id))}
       onSelectAll={onSelectAll}
       onEditItem={onEditItem || (() => {})}
-      onDeleteItem={onDeleteItem || (() => {})}
-      noDataMessage={noDataMessage || t("masterData.deptAdmins.noData") || "No records found"}
+      onDeleteItem={(id) => onDeleteItem && onDeleteItem(Number(id))}
+      noDataMessage={
+        noDataMessage || t("masterData.deptAdmins.noData") || "No records found"
+      }
       isLoading={isLoading}
       onPageChange={onPageChange || (() => {})}
       onPageSizeChange={onPageSizeChange || (() => {})}

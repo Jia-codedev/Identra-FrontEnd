@@ -85,8 +85,8 @@ export default function LeavesTypePage() {
     setEditingItem(item.raw);
     setShowDialog(true);
   };
-  const handleDeleteClick = (id: number) => {
-    setDeleteDialog({ open: true, type: "single", id });
+  const handleDeleteClick = (id: string | number) => {
+    setDeleteDialog({ open: true, type: "single", id: Number(id) });
   };
 
   const handleBulkDelete = () => {
@@ -127,13 +127,15 @@ export default function LeavesTypePage() {
           />
 
           <div className="w-full mt-4">
-            <LeavesList 
-              leaves={data} 
-              loading={isLoading} 
+            <LeavesList
+              leaves={data}
+              loading={isLoading}
               selected={selected}
-              onSelectItem={selectItem}
+              onSelectItem={(id: string | number) => selectItem(Number(id))}
               onSelectAll={selectAll}
-              allChecked={selected.length > 0 && selected.length === data.length}
+              allChecked={
+                selected.length > 0 && selected.length === data.length
+              }
               page={page}
               pageSize={pageSize}
               onPageChange={setPage}
@@ -162,7 +164,10 @@ export default function LeavesTypePage() {
         onCancel={() => handleDialogClose(false)}
       />
 
-      <Dialog open={deleteDialog.open} onOpenChange={open => !open && handleCancelDelete()}>
+      <Dialog
+        open={deleteDialog.open}
+        onOpenChange={(open) => !open && handleCancelDelete()}
+      >
         <DialogContent className="p-0">
           <DialogHeader className="p-2">
             <DialogTitle className="mb-1 p-2">
@@ -172,7 +177,9 @@ export default function LeavesTypePage() {
               <DialogDescription>
                 {deleteDialog.type === "single"
                   ? t("messages.confirm.delete")
-                  : t("messages.confirm.deleteMultiple", { count: selected.length })}
+                  : t("messages.confirm.deleteMultiple", {
+                      count: selected.length,
+                    })}
               </DialogDescription>
               <div className="flex justify-end space-x-2 mt-4">
                 <Button variant="outline" onClick={handleCancelDelete}>

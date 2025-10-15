@@ -480,9 +480,12 @@ export default function AccessPermissionsPage() {
     []
   );
 
-  const handleSelectPermission = (id: number) => {
+  const handleSelectPermission = (id: string | number) => {
+    const numericId = typeof id === "string" ? parseInt(id) : id;
     setSelectedTableRows((prev) =>
-      prev.includes(id) ? prev.filter((pid) => pid !== id) : [...prev, id]
+      prev.includes(numericId)
+        ? prev.filter((pid) => pid !== numericId)
+        : [...prev, numericId]
     );
   };
 
@@ -749,16 +752,16 @@ export default function AccessPermissionsPage() {
         pageSize={pageSize}
         allChecked={allChecked}
         getItemId={getPermissionId}
-        getItemDisplayName={getPermissionDisplayName}
-        onSelectItem={handleSelectPermission}
+        getItemDisplayName={(permission: Permission) => permission.name}
+        onSelectItem={(id: string | number) => handleSelectPermission(id)}
         onSelectAll={handleSelectAllPermissions}
         onEditItem={(permission: Permission) => {
           setSelectedPermission(permission);
           setIsEditModalOpen(true);
         }}
-        onDeleteItem={(permissionId: number) => {
+        onDeleteItem={(id: string | number) => {
           const permission = filteredPermissions.find(
-            (p) => parseInt(p.id) === permissionId
+            (p) => p.id === id.toString()
           );
           if (permission) {
             handleDeletePermission(permission.id);

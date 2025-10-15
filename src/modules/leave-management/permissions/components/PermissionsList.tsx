@@ -71,41 +71,52 @@ const PermissionsList: React.FC<Props> = ({
   const columns: TableColumn<Permission>[] = [
     {
       key: "employee",
-      header: t('leaveManagement.permissions.columns.employee') || 'Employee',
+      header: t("leaveManagement.permissions.columns.employee") || "Employee",
       accessor: (permission) => (
         <div>
-          <div className="font-medium">{permission.employee?.employee_name || 'N/A'}</div>
-          <div className="text-sm text-gray-500">{permission.employee?.employee_no || 'N/A'}</div>
+          <div className="font-medium">
+            {permission.employee?.employee_name || "N/A"}
+          </div>
+          <div className="text-sm text-gray-500">
+            {permission.employee?.employee_no || "N/A"}
+          </div>
         </div>
       ),
     },
     {
       key: "type",
-      header: t('leaveManagement.permissions.columns.type') || 'Type',
-      accessor: (permission) => permission.permission_type?.permission_type_eng || permission.permission_type_id || 'N/A',
+      header: t("leaveManagement.permissions.columns.type") || "Type",
+      accessor: (permission) =>
+        permission.permission_type?.permission_type_eng ||
+        permission.permission_type_id ||
+        "N/A",
     },
     {
       key: "fromDate",
-      header: t('leaveManagement.permissions.columns.from') || 'From',
+      header: t("leaveManagement.permissions.columns.from") || "From",
       accessor: (permission) => formatDateTime(permission.from_date),
     },
     {
       key: "toDate",
-      header: t('leaveManagement.permissions.columns.to') || 'To',
+      header: t("leaveManagement.permissions.columns.to") || "To",
       accessor: (permission) => formatDateTime(permission.to_date),
     },
     {
       key: "time",
-      header: t('leaveManagement.permissions.columns.time') || 'Time',
+      header: t("leaveManagement.permissions.columns.time") || "Time",
       accessor: (permission) =>
-        permission.from_time && permission.to_time ?
-          `${formatTime(permission.from_time)} - ${formatTime(permission.to_time)}` : '-',
+        permission.from_time && permission.to_time
+          ? `${formatTime(permission.from_time)} - ${formatTime(
+              permission.to_time
+            )}`
+          : "-",
     },
     {
       key: "status",
-      header: t('leaveManagement.permissions.columns.status') || 'Status',
+      header: t("leaveManagement.permissions.columns.status") || "Status",
       accessor: (permission) => {
-        const status = statusMap[permission.approve_reject_flag] || statusMap[0];
+        const status =
+          statusMap[permission.approve_reject_flag] || statusMap[0];
         return (
           <Badge
             className={status.color + " px-2 py-1 rounded text-xs font-medium"}
@@ -118,10 +129,10 @@ const PermissionsList: React.FC<Props> = ({
     },
     {
       key: "remarks",
-      header: t('leaveManagement.permissions.columns.remarks') || 'Remarks',
+      header: t("leaveManagement.permissions.columns.remarks") || "Remarks",
       accessor: (permission) => (
         <div className="max-w-xs truncate" title={permission.remarks}>
-          {permission.remarks || 'None'}
+          {permission.remarks || "None"}
         </div>
       ),
     },
@@ -136,8 +147,17 @@ const PermissionsList: React.FC<Props> = ({
       pageSize={pageSize}
       allChecked={allChecked}
       getItemId={(item) => item.single_permissions_id || item.id}
-      getItemDisplayName={(item) => `${item.permission_type?.permission_type_eng || 'Permission'} - ${item.employee?.employee_name || 'Unknown'}`}
-      onSelectItem={onSelectItem}
+      getItemDisplayName={(item) =>
+        `${item.permission_type?.permission_type_eng || "Permission"} - ${
+          item.employee?.employee_name || "Unknown"
+        }`
+      }
+      onSelectItem={(id) => {
+        if (typeof id === "string") {
+          id = parseInt(id, 10);
+        }
+        onSelectItem(id);
+      }}
       onSelectAll={onSelectAll}
       onEditItem={onEdit}
       actions={(permission) => (
@@ -147,7 +167,9 @@ const PermissionsList: React.FC<Props> = ({
           onRefresh={onRefresh}
         />
       )}
-      noDataMessage={t('leaveManagement.permissions.noData') || 'No permissions found'}
+      noDataMessage={
+        t("leaveManagement.permissions.noData") || "No permissions found"
+      }
       isLoading={loading}
       onPageChange={onPageChange}
       onPageSizeChange={onPageSizeChange}

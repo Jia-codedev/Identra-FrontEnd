@@ -72,7 +72,10 @@ export default function PermissionTypesPage() {
     setEditingItem(item.raw);
     setShowDialog(true);
   };
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: string | number) => {
+    if (typeof id === "string") {
+      id = parseInt(id, 10);
+    }
     setDeleteDialog({ open: true, type: "single", id });
   };
 
@@ -101,6 +104,13 @@ export default function PermissionTypesPage() {
     if (refresh) refetch();
   };
 
+  const handleSelectItem = (id: string | number) => {
+    if (typeof id === "string") {
+      id = parseInt(id, 10);
+    }
+    selectItem(id);
+  };
+
   return (
     <div className="w-full h-full flex flex-col items-center justify-start">
       <div className="w-full relative">
@@ -114,13 +124,15 @@ export default function PermissionTypesPage() {
           />
 
           <div className="w-full mt-4">
-            <PermissionTypesList 
-              permissionTypes={data} 
-              loading={isLoading} 
+            <PermissionTypesList
+              permissionTypes={data}
+              loading={isLoading}
               selected={selected}
-              onSelectItem={selectItem}
+              onSelectItem={handleSelectItem}
               onSelectAll={selectAll}
-              allChecked={selected.length > 0 && selected.length === data.length}
+              allChecked={
+                selected.length > 0 && selected.length === data.length
+              }
               page={page}
               pageSize={pageSize}
               onPageChange={setPage}
@@ -149,7 +161,10 @@ export default function PermissionTypesPage() {
         onCancel={() => handleDialogClose(false)}
       />
 
-      <Dialog open={deleteDialog.open} onOpenChange={open => !open && handleCancelDelete()}>
+      <Dialog
+        open={deleteDialog.open}
+        onOpenChange={(open) => !open && handleCancelDelete()}
+      >
         <DialogContent className="p-0">
           <DialogHeader className="p-2">
             <DialogTitle className="mb-1 p-2">
@@ -159,7 +174,9 @@ export default function PermissionTypesPage() {
               <DialogDescription>
                 {deleteDialog.type === "single"
                   ? t("messages.confirm.delete")
-                  : t("messages.confirm.deleteMultiple", { count: selected.length })}
+                  : t("messages.confirm.deleteMultiple", {
+                      count: selected.length,
+                    })}
               </DialogDescription>
               <div className="flex justify-end space-x-2 mt-4">
                 <Button variant="outline" onClick={handleCancelDelete}>

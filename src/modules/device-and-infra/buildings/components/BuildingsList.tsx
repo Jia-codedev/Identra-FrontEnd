@@ -37,10 +37,10 @@ interface BuildingsListProps {
   isLoading: boolean;
   page: number;
   pageSize: number;
-  onSelectItem: (id: number) => void;
+  onSelectItem: (id: string | number) => void;
   onSelectAll: () => void;
   onEditItem: (building: Building) => void;
-  onDeleteItem: (id: number) => void;
+  onDeleteItem: (id: string | number) => void;
   onPageChange: (page: number) => void;
   onPageSizeChange: (size: number) => void;
 }
@@ -90,7 +90,9 @@ export default function BuildingsList({
       accessor: (building: Building) => (
         <div className="flex flex-col">
           <span className="font-medium">{building.building_name}</span>
-          <span className="text-sm text-muted-foreground">{building.building_code}</span>
+          <span className="text-sm text-muted-foreground">
+            {building.building_code}
+          </span>
         </div>
       ),
     },
@@ -133,10 +135,10 @@ export default function BuildingsList({
       accessor: (building: Building) => (
         <div className="text-center">
           <span className="font-medium">
-            {building.total_area ? building.total_area.toLocaleString() : '-'}
+            {building.total_area ? building.total_area.toLocaleString() : "-"}
           </span>
           <span className="text-sm text-muted-foreground block">
-            {building.total_area ? 'sq ft' : ''}
+            {building.total_area ? "sq ft" : ""}
           </span>
         </div>
       ),
@@ -146,8 +148,10 @@ export default function BuildingsList({
       header: t("buildings.contact"),
       accessor: (building: Building) => (
         <div className="flex flex-col">
-          <span className="font-medium">{building.contact_person || '-'}</span>
-          <span className="text-sm text-muted-foreground">{building.contact_phone || ''}</span>
+          <span className="font-medium">{building.contact_person || "-"}</span>
+          <span className="text-sm text-muted-foreground">
+            {building.contact_phone || ""}
+          </span>
         </div>
       ),
     },

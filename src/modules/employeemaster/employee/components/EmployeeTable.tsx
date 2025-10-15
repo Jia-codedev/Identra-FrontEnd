@@ -15,10 +15,10 @@ interface EmployeesTableProps {
   allChecked: boolean;
   onPageChange: (page: number) => void;
   onPageSizeChange: (size: number) => void;
-  onSelectEmployee: (id: number) => void;
+  onSelectEmployee: (id: string | number) => void;
   onSelectAll: () => void;
   onEditEmployee: (employee: IEmployee) => void;
-  onDeleteEmployee: (id: number) => void;
+  onDeleteEmployee: (id: string | number) => void;
   isLoading?: boolean;
 }
 
@@ -59,8 +59,7 @@ export const EmployeesTable: React.FC<EmployeesTableProps> = ({
                 arb: res.data.designation_name_arb || "",
               };
             }
-          } catch (e) {
-          }
+          } catch (e) {}
         })
       );
       if (mounted) setDesignationMap(map);

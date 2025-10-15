@@ -86,8 +86,8 @@ export default function EmployeePage() {
     handleCloseModal();
   };
 
-  const handleDeleteEmployee = (id: number) => {
-    setDeleteDialog({ open: true, type: "single", id });
+  const handleDeleteEmployee = (id: string | number) => {
+    setDeleteDialog({ open: true, type: "single", id: Number(id) });
   };
 
   const handleDeleteSelected = () => {
@@ -105,6 +105,10 @@ export default function EmployeePage() {
 
   const handleCancelDelete = () => {
     setDeleteDialog({ open: false, type: null });
+  };
+
+  const handleSelectEmployee = (id: string | number) => {
+    selectEmployee(Number(id));
   };
 
   return (
@@ -131,7 +135,7 @@ export default function EmployeePage() {
             onSelectAll={selectAll}
             isLoading={isLoading}
             onEditEmployee={handleEditEmployee}
-            onSelectEmployee={selectEmployee}
+            onSelectEmployee={handleSelectEmployee}
             onPageChange={setPage}
             onPageSizeChange={setPageSize}
           />

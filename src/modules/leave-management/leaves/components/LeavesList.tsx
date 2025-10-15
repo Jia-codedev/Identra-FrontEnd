@@ -36,9 +36,9 @@ const formatDateTime = (dt?: string) => {
   }
 };
 
-const LeavesList: React.FC<Props> = ({ 
-  leaves, 
-  loading, 
+const LeavesList: React.FC<Props> = ({
+  leaves,
+  loading,
   selected,
   onSelectItem,
   onSelectAll,
@@ -48,37 +48,43 @@ const LeavesList: React.FC<Props> = ({
   onPageChange,
   onPageSizeChange,
   onEditItem,
-  onDeleteItem
+  onDeleteItem,
 }) => {
   const { t } = useTranslations();
 
   const columns: TableColumn<Leave>[] = [
     {
       key: "leave_type",
-      header: t('leaveManagement.leaves.columns.type') || 'Leave Type',
-      accessor: (leave) => leave.leave_type || 'Unknown',
+      header: t("leaveManagement.leaves.columns.type") || "Leave Type",
+      accessor: (leave) => leave.leave_type || "Unknown",
     },
     {
       key: "dates",
-      header: t('leaveManagement.leaves.columns.dates') || 'Dates',
+      header: t("leaveManagement.leaves.columns.dates") || "Dates",
       accessor: (leave) => (
         <div className="text-sm">
-          <div><strong>From:</strong> {formatDateTime(leave.start_date)}</div>
-          <div><strong>To:</strong> {formatDateTime(leave.end_date)}</div>
+          <div>
+            <strong>From:</strong> {formatDateTime(leave.start_date)}
+          </div>
+          <div>
+            <strong>To:</strong> {formatDateTime(leave.end_date)}
+          </div>
         </div>
       ),
     },
     {
       key: "duration",
-      header: t('leaveManagement.leaves.columns.duration') || 'Duration',
-      accessor: (leave) => leave.number_of_leaves ? `${leave.number_of_leaves} days` : '-',
+      header: t("leaveManagement.leaves.columns.duration") || "Duration",
+      accessor: (leave) =>
+        leave.number_of_leaves ? `${leave.number_of_leaves} days` : "-",
     },
     {
       key: "status",
-      header: t('leaveManagement.leaves.columns.status') || 'Status',
+      header: t("leaveManagement.leaves.columns.status") || "Status",
       accessor: (leave) => {
         const statusRaw = leave.status || "pending";
-        const status = statusMap[statusRaw?.toLowerCase?.()] || statusMap["pending"];
+        const status =
+          statusMap[statusRaw?.toLowerCase?.()] || statusMap["pending"];
         return (
           <Badge
             className={status.color + " px-2 py-1 rounded text-xs font-medium"}
@@ -91,19 +97,19 @@ const LeavesList: React.FC<Props> = ({
     },
     {
       key: "remarks",
-      header: t('leaveManagement.leaves.columns.remarks') || 'Remarks',
+      header: t("leaveManagement.leaves.columns.remarks") || "Remarks",
       accessor: (leave) => (
         <div className="max-w-xs truncate" title={leave.employee_remarks}>
-          {leave.employee_remarks || 'None'}
+          {leave.employee_remarks || "None"}
         </div>
       ),
     },
     {
       key: "reference",
-      header: t('leaveManagement.leaves.columns.reference') || 'Reference',
+      header: t("leaveManagement.leaves.columns.reference") || "Reference",
       accessor: (leave) => (
         <div className="text-xs text-gray-500 font-mono">
-          {leave.leave_unique_ref_no || '-'}
+          {leave.leave_unique_ref_no || "-"}
         </div>
       ),
     },
@@ -118,12 +124,16 @@ const LeavesList: React.FC<Props> = ({
       pageSize={pageSize}
       allChecked={allChecked}
       getItemId={(item) => item.id || item.employee_leave_id}
-      getItemDisplayName={(item) => `${item.leave_type} - ${item.leave_unique_ref_no}`}
-      onSelectItem={onSelectItem}
+      getItemDisplayName={(item) =>
+        `${item.leave_type} - ${item.leave_unique_ref_no}`
+      }
+      onSelectItem={(id) => onSelectItem(Number(id))}
       onSelectAll={onSelectAll}
       onEditItem={onEditItem}
-      onDeleteItem={onDeleteItem}
-      noDataMessage={t('leaveManagement.leaves.noData') || 'No leave requests found'}
+      onDeleteItem={(id) => onDeleteItem && onDeleteItem(Number(id))}
+      noDataMessage={
+        t("leaveManagement.leaves.noData") || "No leave requests found"
+      }
       isLoading={loading}
       onPageChange={onPageChange}
       onPageSizeChange={onPageSizeChange}
