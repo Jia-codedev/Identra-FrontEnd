@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-import navigationService, { NavigationItem } from "@/services/navigationService";
+import navigationService, {
+  NavigationItem,
+} from "@/services/navigationService";
 import { useUserStore } from "./userStore";
 type SecondaryLink = {
   label: string;
@@ -13,7 +15,6 @@ type UserNavBarState = {
   secondaryLinks: SecondaryLink[];
   mainNavigation: NavigationItem[];
   sidebarNavigation: NavigationItem[];
-  footerNavigation: NavigationItem[];
   isLoading: boolean;
   error: string | null;
   setActiveMenu: (id: string | null, links?: SecondaryLink[]) => void;
@@ -31,65 +32,63 @@ export const useUserNavBar = create<UserNavBarState>()(
       footerNavigation: [],
       isLoading: false,
       error: null,
-      
       setActiveMenu: (id, links = []) =>
         set(() => ({ activeMenuId: id, secondaryLinks: links })),
 
       loadUserNavigation: async (roleId?: number) => {
-        console.log('🚀 Starting loadUserNavigation...');
         set({ isLoading: true, error: null });
-        
+
         try {
           const finalRoleId = roleId || useUserStore.getState().user?.roleId;
-          console.log('📍 Final roleId:', finalRoleId);
-          
           if (!finalRoleId) {
             throw new Error("No role ID available");
           }
 
-          console.log('🔄 Calling navigationService.getNavigationByRole...');
-          const response = await navigationService.getNavigationByRole(finalRoleId);
-          
+          const response = await navigationService.getNavigationByRole(
+            finalRoleId
+          );
+
           if (response && response.success !== false) {
             let navigationData = response.data || response;
-            
-            const { mainNav, sidebarNav, footerNav } = navigationService.transformNavigationData(navigationData);
-            console.log('📋 Main Navigation Items:', mainNav);
-            
+
+            const { mainNav, sidebarNav, footerNav } =
+              navigationService.transformNavigationData(navigationData);
+
             set({
               mainNavigation: mainNav,
               sidebarNavigation: sidebarNav,
-              footerNavigation: footerNav,
               isLoading: false,
-              error: null
+              error: null,
             });
           } else {
-            console.error('❌ API response indicates failure:', response);
-            throw new Error(response?.message || "Failed to load navigation - API returned unsuccessful response");
+            throw new Error(
+              response?.message ||
+                "Failed to load navigation - API returned unsuccessful response"
+            );
           }
         } catch (error) {
-          console.error("❌ Error loading user navigation:", error);
-          const errorMessage = error instanceof Error ? error.message : "Failed to load navigation";
-          console.error("❌ Error message:", errorMessage);
-          
+          const errorMessage =
+            error instanceof Error
+              ? error.message
+              : "Failed to load navigation";
+
           set({
             isLoading: false,
             error: errorMessage,
             mainNavigation: [],
             sidebarNavigation: [],
-            footerNavigation: []
           });
         }
       },
 
-      clearNavigation: () => set({
-        activeMenuId: null,
-        secondaryLinks: [],
-        mainNavigation: [],
-        sidebarNavigation: [],
-        footerNavigation: [],
-        error: null
-      })
+      clearNavigation: () =>
+        set({
+          activeMenuId: null,
+          secondaryLinks: [],
+          mainNavigation: [],
+          sidebarNavigation: [],
+          error: null,
+        }),
     }),
     {
       name: "user-navbar",
@@ -99,17 +98,18 @@ export const useUserNavBar = create<UserNavBarState>()(
         secondaryLinks: state.secondaryLinks,
         mainNavigation: state.mainNavigation,
         sidebarNavigation: state.sidebarNavigation,
-        footerNavigation: state.footerNavigation
-      })
+      }),
     }
   )
 );
 
-// Selector hooks for easier access
-export const useMainNavigation = () => useUserNavBar((state) => state.mainNavigation);
-export const useSidebarNavigation = () => useUserNavBar((state) => state.sidebarNavigation);
-export const useFooterNavigation = () => useUserNavBar((state) => state.footerNavigation);
-export const useNavigationLoading = () => useUserNavBar((state) => state.isLoading);
+export const useMainNavigation = () =>
+  useUserNavBar((state) => state.mainNavigation);
+export const useSidebarNavigation = () =>
+  useUserNavBar((state) => state.sidebarNavigation);
+export const useNavigationLoading = () =>
+  useUserNavBar((state) => state.isLoading);
 export const useNavigationError = () => useUserNavBar((state) => state.error);
 
 export type { SecondaryLink, NavigationItem };
+

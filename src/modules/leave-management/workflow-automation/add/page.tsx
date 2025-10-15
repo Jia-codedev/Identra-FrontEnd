@@ -83,8 +83,6 @@ export default function AddWorkflowAutomationPage() {
       } else if (Array.isArray(response.data)) {
         rolesData = response.data;
       }
-      
-      console.log('Fetched roles:', rolesData);
       setRoles(rolesData);
     } catch (error) {
       console.error('Error fetching roles:', error);

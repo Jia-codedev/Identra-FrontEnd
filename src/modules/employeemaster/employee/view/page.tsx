@@ -83,7 +83,6 @@ export default function EmployeePage() {
   };
 
   const handleSaveEmployee = (data: IEmployee) => {
-    console.log("Employee saved successfully:", data);
     handleCloseModal();
   };
 

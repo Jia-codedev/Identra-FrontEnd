@@ -301,7 +301,6 @@ function Chatbot({ config = {} }: { config?: ChatBotConfig }) {
     setActiveForm(null);
 
     if (config?.apiEndpoints?.submitRequest) {
-      console.log('Submitting to API:', formData);
     }
   };
 

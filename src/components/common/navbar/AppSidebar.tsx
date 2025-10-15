@@ -16,24 +16,24 @@ import { useLanguage } from "@/providers/language-provider";
 import Link from "next/link";
 import { getRouteFromKey } from "@/utils/routeFromKey";
 import { usePathname } from "next/navigation";
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-} from "@/components/ui/dropdown-menu";
+// import {
+//   DropdownMenu,
+//   DropdownMenuTrigger,
+//   DropdownMenuContent,
+//   DropdownMenuGroup,
+//   DropdownMenuItem,
+// } from "@/components/ui/dropdown-menu";
 
 function AppSidebar({ ...props }) {
   const { setOpen } = useSidebar();
   useEffect(() => {
     setOpen(false);
   }, [setOpen]);
-  const { SIDEBAR_LINKS, FOOTER_LINKS, isLoading, error } = useNavigationState();
+  const { SIDEBAR_LINKS, isLoading, error, setActiveMenu } =
+    useNavigationState();
   const { isRTL } = useLanguage();
   const pathname = usePathname();
-  
-  // Auto-sync navigation with authentication
+
   useAuthNavigationSync();
   return (
     <Sidebar
@@ -58,13 +58,14 @@ function AppSidebar({ ...props }) {
             const isActive = !!(link.secondary || []).find(
               (s) => s.href && pathname?.startsWith(s.href)
             );
-            
-            // Skip rendering if icon is undefined
+
             if (!Icon) {
-              console.warn(`⚠️ Sidebar item "${link.label}" has undefined icon, skipping render`);
+              console.warn(
+                `⚠️ Sidebar item "${link.label}" has undefined icon, skipping render`
+              );
               return null;
             }
-            
+
             return (
               <SidebarMenuButton
                 key={key}
@@ -75,7 +76,8 @@ function AppSidebar({ ...props }) {
                     : "bg-white/10 hover:bg-white/20 text-white"
                 }
                 onClick={() => {
-                  // Navigation click handled by Link component
+                  setOpen(false); // Close the sidebar
+                  setActiveMenu(link.id, link.secondary || []); // Set the active menu and sub-navigation
                 }}
               >
                 <Icon className="text-lg mr-2" />
@@ -85,45 +87,7 @@ function AppSidebar({ ...props }) {
         </SidebarMenuItem>
       </SidebarContent>
       <SidebarFooter>
-        <SidebarMenuItem className="mx-auto space-y-4">
-          {FOOTER_LINKS.map((link, idx) => {
-            const Icon = link.icon;
-            const key = link.id || link.label || `sidebar-footer-${idx}`;
-            const isActive = !!(link.secondary || []).find(
-              (s) => s.href && pathname?.startsWith(s.href)
-            );
-            
-            // Skip rendering if icon is undefined
-            if (!Icon) {
-              console.warn(`⚠️ Footer item "${link.label}" has undefined icon, skipping render`);
-              return null;
-            }
-            
-            return (
-              <DropdownMenu key={key}>
-                <DropdownMenuTrigger asChild>
-                  <SidebarMenuButton
-                    tooltip={link.label}
-                    className={"text-white bg-white/10 hover:bg-white/20"}
-                  >
-                    <Icon className="text-lg mr-2 text-white" />
-                  </SidebarMenuButton>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56" align="start">
-                  <DropdownMenuGroup>
-                    {link.secondary.map((subLink, subIdx) => {
-                      return (
-                        <DropdownMenuItem key={subIdx}>
-                          <Link href={subLink.href}>{subLink.label}</Link>
-                        </DropdownMenuItem>
-                      );
-                    })}
-                  </DropdownMenuGroup>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            );
-          })}
-        </SidebarMenuItem>
+        <SidebarMenuItem className="mx-auto space-y-4"></SidebarMenuItem>
       </SidebarFooter>
     </Sidebar>
   );

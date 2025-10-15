@@ -3,17 +3,27 @@ import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useNavigationState } from "@/hooks/useNavigationState";
-import { useRouter } from "next/navigation";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { useTranslations } from "@/hooks/use-translations";
 
-export const DesktopNav: React.FC = () => {
-  const { NAV_LINKS, activeMenuId, setActiveMenu } = useNavigationState();
-  const router = useRouter();
+interface DesktopNavProps {
+  NAV_LINKS: {
+    id: string;
+    label: string;
+    labelKey?: string;
+    href?: string;
+    secondary?: {
+      label: string;
+      labelKey?: string;
+      href: string;
+    }[];
+    icon?: React.ComponentType<any>;
+  }[];
+}
 
-  const setActiveFromStore = (id: string | null, links?: any[]) => {
-    setActiveMenu(id, links || []);
-  };
-
+export const DesktopNav: React.FC<DesktopNavProps> = ({ NAV_LINKS }) => {
+  const { t } = useTranslations();
+  const { activeMenuId, setActiveMenu } = useNavigationState();
   return (
     <ScrollArea className="w-full overflow-x-auto" type="hover">
       <div className="flex flex-row items-center gap-1 min-w-fit">
@@ -21,7 +31,8 @@ export const DesktopNav: React.FC = () => {
           const Icon = menu.icon;
           const isActive = activeMenuId === menu.id;
           const key = menu.id || menu.label || `nav-${menuIndex}`;
-
+          const label = t(menu.id);
+          console.log(t("navigation.test"));
           if (!Icon) {
             console.warn(
               `⚠️ Navigation item "${menu.label}" has undefined icon, skipping render`
@@ -40,7 +51,7 @@ export const DesktopNav: React.FC = () => {
                   isActive ? "bg-primary/80 text-white" : "hover:bg-muted"
                 )}
                 onClick={() => {
-                  setActiveFromStore(menu.id, menu.secondary || []);
+                  setActiveMenu(menu.id, menu.secondary || []);
                 }}
               >
                 <Icon className="text-lg mr-2" />
@@ -53,7 +64,7 @@ export const DesktopNav: React.FC = () => {
                     transition={{ duration: 0.28, ease: "easeInOut" }}
                     key={`${menu.label || key}-label`}
                   >
-                    {menu.label}
+                    {label}
                   </motion.span>
                 </AnimatePresence>
               </motion.button>

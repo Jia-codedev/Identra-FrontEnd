@@ -51,7 +51,6 @@ export function useNationalityMutations() {
         onSuccess: (data) => {
             if (!data) return;
             toast.success(t('toast.success.created'));
-            console.log("Nationality created:", data);
             queryClient.setQueryData(["nationalities", data.search ?? "", data.pageSize ?? 5], (oldData: any) => {
                 if (!oldData || !data.data) return oldData;
                 if (oldData?.pages) {
@@ -115,7 +114,6 @@ export function useNationalityMutations() {
         onSuccess: (data) => {
             if (!data) return;
             toast.success(t('toast.success.updated'));
-            console.log("Nationality updated:", data);
             queryClient.setQueryData(["nationalities", data.search ?? "", data.pageSize ?? 5], (oldData: any) => {
                 if (!oldData || !data.data) return oldData;
                 if (oldData?.pages) {

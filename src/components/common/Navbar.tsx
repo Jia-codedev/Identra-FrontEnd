@@ -13,13 +13,10 @@ const Navbar = () => {
   const { isRTL } = useLanguage();
   const pathname = usePathname();
   const { t } = useTranslations();
-  const { NAV_LINKS, activeMenuId: storeActiveId, setActiveMenu } = useNavigationState();
-  
-  // Auto-sync navigation with authentication
+  const { NAV_LINKS, activeMenuId: storeActiveId } = useNavigationState();
   useAuthNavigationSync();
   const [activeMenuId, setActiveMenuId] = useState<string>("");
   const headerRef = useRef<HTMLElement | null>(null);
-
   useEffect(() => {
     const setNavbarHeightVar = () => {
       const height = headerRef.current?.getBoundingClientRect().height;
@@ -31,14 +28,11 @@ const Navbar = () => {
       }
     };
 
-    // Set initially
     setNavbarHeightVar();
 
-    // Update on resize
     window.addEventListener("resize", setNavbarHeightVar);
     return () => window.removeEventListener("resize", setNavbarHeightVar);
   }, []);
-
   React.useEffect(() => {
     if (storeActiveId) {
       setActiveMenuId(storeActiveId);
@@ -48,7 +42,7 @@ const Navbar = () => {
       link.secondary?.some((item) => pathname.startsWith(item.href))
     );
     setActiveMenuId(currentLink ? currentLink.id : NAV_LINKS[0]?.id ?? "");
-  }, [pathname, t, storeActiveId, NAV_LINKS]);
+  }, [pathname, t, storeActiveId]);
 
   const activeMenuObj = NAV_LINKS.find((menu) => menu.id === activeMenuId);
 
@@ -73,13 +67,14 @@ const Navbar = () => {
     }
     return "U";
   };
-
   return (
-    <header ref={headerRef}
-      className="w-full z-20 top-0 border-b bg-sidebar backdrop-blur-sm">
+    <header
+      ref={headerRef}
+      className="w-full z-20 top-0 border-b bg-sidebar backdrop-blur-sm"
+    >
       <div className="w-full max-w-[1920px] mx-auto px-4 py-2 grid grid-cols-12 items-center gap-2 group">
         <div className="col-span-10 max-xl:col-span-9 min-w-0 overflow-hidden">
-          <DesktopNav />
+          <DesktopNav NAV_LINKS={NAV_LINKS} />
         </div>
         <div
           className={`col-span-2 max-xl:col-span-3 bg-sidebar flex items-center justify-end  ${

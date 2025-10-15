@@ -40,14 +40,7 @@ export const ApprovalsList: React.FC<Props> = ({
   onPageSizeChange,
   type = "leaves",
 }) => {
-  console.log(
-    "ApprovalsList - Type:",
-    type,
-    "Items:",
-    items,
-    "Length:",
-    items?.length
-  );
+
   const { t } = useTranslations();
 
   const getColumns = (): TableColumn<any>[] => {
@@ -56,7 +49,6 @@ export const ApprovalsList: React.FC<Props> = ({
         key: "employee",
         header: t("workforce.approvals.requesterName") || "Requester",
         accessor: (it) => {
-          console.log("Employee Item:", it);
           if (it.raw?.employee_master) {
             const { firstname_eng, lastname_eng, firstname_arb, lastname_arb } =
               it.raw.employee_master;

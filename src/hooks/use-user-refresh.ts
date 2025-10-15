@@ -24,11 +24,9 @@ export const useUserRefresh = () => {
           await loadUserNavigation(updatedUser.roleId);
         }
       } else {
-        console.log("❌ Failed to refresh user data");
       }
       return success;
     } catch (error) {
-      console.error("❌ Error during user refresh:", error);
       return false;
     }
   }, [refreshUser, isRefreshing]); // Remove loadUserNavigation from dependencies

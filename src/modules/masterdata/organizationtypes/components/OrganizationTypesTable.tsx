@@ -66,10 +66,10 @@ export const OrganizationTypesTable: React.FC<OrganizationTypesTableProps> = ({
           ? item.organization_type_arb || ""
           : item.organization_type_eng || ""
       }
-      onSelectItem={onSelectOrganizationType}
       onSelectAll={onSelectAll}
-      onEditItem={onEditOrganizationType}
+      onSelectItem={onSelectOrganizationType}
       onDeleteItem={onDeleteOrganizationType}
+      onEditItem={onEditOrganizationType}
       onPageChange={onPageChange}
       onPageSizeChange={onPageSizeChange}
       noDataMessage={t("masterData.organizationTypes.noOrganizationTypesFound")}

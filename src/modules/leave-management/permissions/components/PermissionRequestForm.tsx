@@ -36,7 +36,6 @@ const PermissionRequestForm: React.FC<Props> = ({ permission, onClose }) => {
 
   useEffect(() => {
     permissionTypesApi.getActive().then((res: any) => {
-      console.log('Permission types API response:', res);
       let types = [];
       if (Array.isArray(res.data)) {
         types = res.data;
@@ -45,7 +44,6 @@ const PermissionRequestForm: React.FC<Props> = ({ permission, onClose }) => {
       } else if (res.data && Array.isArray(res.data.result)) {
         types = res.data.result;
       }
-      console.log('Processed permission types:', types);
       setPermissionTypes(types);
     });
   }, []);

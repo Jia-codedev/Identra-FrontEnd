@@ -9,7 +9,6 @@ const defaultRequestHeaders = {
 function buildApiClient(headers = {}) {
   const client = axios.create({
     baseURL: frontendSettings.apiBaseUrl,
-    timeout: 10000,
     headers: { ...defaultRequestHeaders, ...headers },
     withCredentials: true,
   });
