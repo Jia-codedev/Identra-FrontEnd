@@ -39,6 +39,7 @@
     "employeeGroupReporting": "Reporting Group"
   },
   "employee": {
+    "employeeName": "Employee Name",
     "title": "Employee Management",
     "searchPlaceholder": "Search employees...",
     "addEmployee": "Add Employee",

@@ -50,7 +50,6 @@ function AuthComponent() {
         setSubmitted(true);
 
         setTimeout(() => {
-          console.log("After login - debugging cookies...");
           CookieDebugger.debugCurrentCookies();
         }, 500);
 
@@ -63,9 +62,7 @@ function AuthComponent() {
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
-        console.log("Login error:", error.message);
       } else {
-        console.log("Login error:", error);
       }
       setError(t("auth.loginFailed"));
       setSubmitted(false);
@@ -76,7 +73,6 @@ function AuthComponent() {
   };
   return (
     <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden">
-     
       <motion.div
         initial={{ y: 40, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}

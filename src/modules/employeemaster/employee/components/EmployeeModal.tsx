@@ -265,19 +265,6 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
         }
 
         if (mode === "edit" && employee) {
-          console.log(
-            "Setting form data for edit mode after dropdown data loaded:",
-            employee
-          );
-          console.log(
-            "Available organizations:",
-            orgRes.data?.data?.map((o: any) => ({
-              id: o.organization_id,
-              name: o.organization_eng,
-            }))
-          );
-          console.log("Employee organization_id:", employee.organization_id);
-
           setTimeout(() => {
             setFormData({
               emp_no: employee.emp_no || "",
@@ -342,21 +329,13 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
               confirm_password: "",
               remarks: employee.remarks || "",
             });
-            console.log("Form data set with values:", {
-              organization_id: employee.organization_id,
-              designation_id: employee.designation_id,
-              employee_type_id: employee.employee_type_id,
-              manager_id: employee.manager_id,
-              citizenship_id: employee.citizenship_id,
-            });
+     
           }, 100);
         } else if (mode === "add") {
-          console.log("Resetting form for add mode");
           setFormData(initialForm);
           setCurrentStep(0);
         }
       } catch (error) {
-        console.error("Failed to fetch dropdown data", error);
         toast.error(t("messages.error.network"));
       } finally {
         setIsLoadingData(false);
@@ -467,12 +446,7 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
   };
 
   const handleNext = () => {
-    console.log(
-      "handleNext called, currentStep:",
-      currentStep,
-      "steps.length:",
-      steps.length
-    );
+
     if (validateCurrentStep() && currentStep < steps.length - 1) {
       setCurrentStep(currentStep + 1);
     }
@@ -485,13 +459,6 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
   };
 
   const handleSubmit = async () => {
-    console.log(
-      "handleSubmit called, currentStep:",
-      currentStep,
-      "mode:",
-      mode
-    );
-
     if (!validateCurrentStep()) {
       return;
     }
@@ -514,8 +481,6 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
       inactive_date: formData.inactive_date || undefined,
     };
 
-    console.log("Form Data before submission:", formData);
-    console.log("Employee Data to be sent:", employeeData);
 
     if (!employeeData.emp_no || employeeData.emp_no.toString().trim() === "") {
       console.error("Employee number is missing or empty");
@@ -534,10 +499,6 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
 
     try {
       if (mode === "add") {
-        console.log("Creating employee with data:", {
-          ...employeeData,
-          login: formData.login_id,
-        });
         const result = await createEmployee({
           ...employeeData,
           login: formData.login_id,
@@ -546,7 +507,6 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
 
         onSave(employeeData as IEmployee);
       } else if (employee?.employee_id) {
-        console.log("Updating employee...");
         await updateEmployee({
           id: employee.employee_id,
           employeeData: employeeData as IEmployee,

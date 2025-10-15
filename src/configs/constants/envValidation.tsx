@@ -11,15 +11,9 @@ class FrontendSettings {
     const envValue = process.env.NEXT_PUBLIC_IDENTRA_BE_URI;
     const socketEnvValue = process.env.NEXT_PUBLIC_IDENTRA_SOCKET_URL;
     if (typeof envValue === "string" && envValue.trim() !== "") {
-      console.log(
-        `✅ Environment variable NEXT_PUBLIC_IDENTRA_BE_URI loaded successfully: ${envValue}`
-      );
       this.apiBaseUrl = envValue;
       this.socketUrl = socketEnvValue || "";
     } else {
-      console.log(
-        `⚠️ Environment variable NEXT_PUBLIC_IDENTRA_BE_URI not found, using fallback: http://localhost:8000`
-      );
       this.apiBaseUrl = "http://localhost:8000";
       this.socketUrl = "";
     }
@@ -34,19 +28,11 @@ class FrontendSettings {
       value = (window as any).__NEXT_DATA__?.env?.[name];
     }
 
-    console.log(`Validating environment variable: ${name} = ${value}`);
-
     if (typeof value === "string" && value.trim() !== "") {
-      console.log(
-        `✅ Environment variable ${name} loaded successfully: ${value}`
-      );
       return value;
     }
 
     if (fallback !== undefined) {
-      console.log(
-        `⚠️ Environment variable ${name} not found, using fallback: ${fallback}`
-      );
       return fallback;
     }
 

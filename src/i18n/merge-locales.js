@@ -27,6 +27,7 @@ const fileToNamespace = new Map([
   ["buildings.json", "buildings"],
   ["security.json", "security"],
   ["app-settings.json", "appSettings"],
+  ["navigation.json", "navigation"],
 ]);
 
 function readJsonSafe(filePath) {

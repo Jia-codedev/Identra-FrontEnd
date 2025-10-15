@@ -13,16 +13,16 @@ export default function WorkflowAutomationPage() {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
 
-  const { 
-    workflowTypes, 
+  const {
+    workflowTypes,
     total,
     page,
     limit,
-    isLoading, 
+    isLoading,
     error,
     handlePageChange,
     handleLimitChange,
-    handleFiltersChange
+    handleFiltersChange,
   } = useWorkflow({
     initialPage: 1,
     initialLimit: 25,
@@ -30,37 +30,25 @@ export default function WorkflowAutomationPage() {
 
   useEffect(() => {
     handleFiltersChange({ search: searchTerm });
-  }, [searchTerm]); 
+  }, [searchTerm]);
 
   const totalPages = Math.ceil(total / limit);
 
   const handleAddNew = () => {
-    router.push('/leave-management/workflow-automation/add');
+    router.push("/leave-management/workflow-automation/add");
   };
 
-  const handleEdit = (workflow: any) => {
-    console.log(t('leaveManagement.workflowAutomation.actions.edit') || "Edit workflow:", workflow);
-  };
+  const handleEdit = (workflow: any) => {};
 
-  const handleDelete = (id: number) => {
-    console.log(t('leaveManagement.workflowAutomation.actions.delete') || "Delete workflow:", id);
-  };
+  const handleDelete = (id: number) => {};
 
-  const handleToggleStatus = (id: number, status: 'ACTIVE' | 'INACTIVE') => {
-    console.log(t('leaveManagement.workflowAutomation.actions.activate') || "Toggle workflow status:", id, status);
-  };
+  const handleToggleStatus = (id: number, status: "ACTIVE" | "INACTIVE") => {};
 
-  const handleExport = () => {
-    console.log(t('common.export') || "Export workflows");
-  };
+  const handleExport = () => {};
 
-  const handleImport = () => {
-    console.log(t('common.import') || "Import workflows");
-  };
+  const handleImport = () => {};
 
-  const handleSettings = () => {
-    console.log(t('common.settings') || "Open workflow settings");
-  };
+  const handleSettings = () => {};
 
   if (error) {
     return (
@@ -69,9 +57,13 @@ export default function WorkflowAutomationPage() {
           <div className="py-4 border-border bg-background/90 p-4">
             <div className="text-center py-16">
               <h3 className="text-lg font-medium text-destructive">
-                {t('leaveManagement.workflowAutomation.errorLoading') || t('common.errorLoading') || 'Error loading workflows'}
+                {t("leaveManagement.workflowAutomation.errorLoading") ||
+                  t("common.errorLoading") ||
+                  "Error loading workflows"}
               </h3>
-              <p className="text-sm text-muted-foreground mt-1">{error.message}</p>
+              <p className="text-sm text-muted-foreground mt-1">
+                {error.message}
+              </p>
             </div>
           </div>
         </div>

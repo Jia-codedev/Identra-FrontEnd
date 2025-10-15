@@ -33,7 +33,6 @@ export const useEmployeePermissions = (
     const arr: any[] = Array.isArray((data as any)?.data)
       ? (data as any).data
       : [];
-    console.log("Permissions raw data:", arr);
     const transformed = arr.map((it) => ({
       id: it.single_permissions_id,
       employee_name:
@@ -46,7 +45,6 @@ export const useEmployeePermissions = (
       created_date: it.created_date,
       raw: it,
     }));
-    console.log("Permissions transformed data:", transformed);
     return transformed;
   }, [data]);
 

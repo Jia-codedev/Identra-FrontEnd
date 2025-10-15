@@ -1,7 +1,8 @@
 {
   "success": {
     "general": "Operation completed successfully",
-    "saved": "Data saved successfully"
+    "saved": "Data saved successfully",
+    "created": "created successfully"
   },
   "error": {
     "general": "An error occurred. Please try again.",

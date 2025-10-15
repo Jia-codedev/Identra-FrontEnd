@@ -48,7 +48,6 @@ const LeaveRequestForm: React.FC<Props> = ({ open, onSuccess, onCancel }) => {
     const fetchLeaveTypes = async () => {
       try {
         const res = await employeeLeavesApi.getLeaveTypes();
-        console.log("Leave types API response:", res);
         setLeaveTypes(Array.isArray(res.data.data) ? res.data.data : []);
       } catch (err) {
         console.error("Error fetching leave types:", err);

@@ -5,8 +5,9 @@ import { useTranslations } from '@/hooks/use-translations';
 import { MonthlyRosterRow } from '../types';
 import { useLanguage } from '@/providers/language-provider';
 import { Button } from '@/components/ui/button';
-import schedulesApi from '@/services/scheduling/schedules';
 import { GenericTable, TableColumn } from '@/components/common/GenericTable';
+import { ScheduleCalendarModal } from './ScheduleCalendarModal';
+import { Calendar } from 'lucide-react';
 
 interface MonthlyRosterTableProps {
   data: MonthlyRosterRow[];
@@ -16,7 +17,7 @@ interface MonthlyRosterTableProps {
   onDelete?: (row: MonthlyRosterRow) => void;
 }
 
-const getDaysInMonth = (year: number, month: number) => new Date(year, month, 0).getDate();
+
 
 export const MonthlyRosterTable: React.FC<MonthlyRosterTableProps> = ({
   data,
@@ -27,47 +28,23 @@ export const MonthlyRosterTable: React.FC<MonthlyRosterTableProps> = ({
 }) => {
   const { isRTL } = useLanguage();
   const { t } = useTranslations();
-  const [scheduleMap, setScheduleMap] = useState<Record<number, { code: string; color?: string }>>({});
+  const [selectedEmployee, setSelectedEmployee] = useState<MonthlyRosterRow | null>(null);
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
-  const sample = data?.[0];
-  const start = sample ? new Date(sample.from_date) : new Date();
-  const year = start.getFullYear();
-  const month = start.getMonth() + 1;
-  const days = getDaysInMonth(year, month);
+  // We'll fetch schedule data when opening the calendar modal instead
+  // No need to pre-calculate day keys since we're not showing day columns
 
-  const dayKeys = useMemo(() => Array.from({ length: days }, (_, i) => `D${i + 1}` as const), [days]);
+  // Schedule data will be fetched inside the calendar modal when needed
 
-  useEffect(() => {
-    const ids = new Set<number>();
-    for (const row of data || []) {
-      for (const key of dayKeys) {
-        const val = (row as any)[key];
-        if (typeof val === 'number' && !scheduleMap[val]) ids.add(val);
-      }
-    }
-    const toFetch = Array.from(ids).slice(0, 200); 
-    if (toFetch.length === 0) return;
+  const handleViewSchedule = (row: MonthlyRosterRow) => {
+    setSelectedEmployee(row);
+    setIsCalendarOpen(true);
+  };
 
-    let mounted = true;
-    (async () => {
-      try {
-        const results = await Promise.allSettled(toFetch.map((id) => schedulesApi.getScheduleById(id)));
-        const next: Record<number, { code: string; color?: string }> = {};
-        results.forEach((res, idx) => {
-          if (res.status === 'fulfilled') {
-            const sch = res.value?.data?.data;
-            if (sch?.schedule_id) {
-              next[sch.schedule_id] = { code: sch.schedule_code, color: sch.sch_color };
-            }
-          }
-        });
-        if (mounted && Object.keys(next).length) {
-          setScheduleMap((prev) => ({ ...prev, ...next }));
-        }
-      } catch {}
-    })();
-    return () => { mounted = false; };
-  }, [data, dayKeys]);
+  const handleCloseCalendar = () => {
+    setIsCalendarOpen(false);
+    setSelectedEmployee(null);
+  };
 
   const columns: TableColumn<MonthlyRosterRow>[] = useMemo(() => {
     const baseColumns: TableColumn<MonthlyRosterRow>[] = [
@@ -81,52 +58,61 @@ export const MonthlyRosterTable: React.FC<MonthlyRosterTableProps> = ({
         header: t('common.name') || 'Name',
         accessor: (row) => isRTL ? row.employee_name_arb || row.employee_name : row.employee_name || row.employee_name_arb,
       },
+      {
+        key: "view_schedule",
+        header: t('scheduling.monthlyRoster.table.viewSchedule') || 'View Schedule',
+        accessor: (row) => (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => handleViewSchedule(row)}
+            className="flex items-center gap-2"
+          >
+            <Calendar size={16} />
+            {t('scheduling.monthlyRoster.table.viewSchedule') || 'View Schedule'}
+          </Button>
+        ),
+        width: "w-32",
+        className: "text-center",
+      },
     ];
 
-    const dayColumns: TableColumn<MonthlyRosterRow>[] = dayKeys.map((key, idx) => ({
-      key,
-      header: `${idx + 1}`,
-      accessor: (row) => {
-        const scheduleId = (row as any)[key] as number | null | undefined;
-        const code = scheduleId ? scheduleMap[scheduleId]?.code : '';
-        const color = scheduleId ? scheduleMap[scheduleId]?.color : undefined;
-        return scheduleId ? (
-          <span className="inline-flex items-center gap-1">
-            {color && <span className="inline-block w-2 h-2 rounded-full" style={{ backgroundColor: color }} />}
-            <span>{code.slice(0, 2) || scheduleId}</span>
-          </span>
-        ) : '';
-      },
-      width: "w-20",
-      className: "text-center",
-    }));
-
-    return [...baseColumns, ...dayColumns];
-  }, [dayKeys, scheduleMap, isRTL, t]);
+    return baseColumns;
+  }, [isRTL, t]);
   const noDataMessage = t('scheduling.monthlyRoster.table.noData') || 'No monthly roster data found';
 
   return (
-    <GenericTable
-      data={data}
-      columns={columns}
-      selected={[]}
-      page={1}
-      pageSize={data.length}
-      allChecked={false}
-      getItemId={(item) => item.schedule_roster_id}
-      getItemDisplayName={(item) => item.employee_name || item.employee_name_arb || 'Unknown'}
-      onSelectItem={() => {}}
-      onSelectAll={() => {}}
-      onEditItem={onEdit}
-      onDeleteItem={(id) => {
-        const row = data.find(r => r.schedule_roster_id === id);
-        if (row && onDelete) onDelete(row);
-      }}
-      noDataMessage={noDataMessage}
-      isLoading={isLoading}
-      onPageChange={() => {}}
-      onPageSizeChange={() => {}}
-      showActions={false}
-    />
+    <>
+      <GenericTable
+        data={data}
+        columns={columns}
+        selected={[]}
+        page={1}
+        pageSize={data.length}
+        allChecked={false}
+        getItemId={(item) => item.schedule_roster_id}
+        getItemDisplayName={(item) => item.employee_name || item.employee_name_arb || 'Unknown'}
+        onSelectItem={() => {}}
+        onSelectAll={() => {}}
+        onEditItem={onEdit}
+        onDeleteItem={(id) => {
+          const row = data.find(r => r.schedule_roster_id === id);
+          if (row && onDelete) onDelete(row);
+        }}
+        noDataMessage={noDataMessage}
+        isLoading={isLoading}
+        onPageChange={() => {}}
+        onPageSizeChange={() => {}}
+        showActions={false}
+      />
+      
+      {selectedEmployee && (
+        <ScheduleCalendarModal
+          isOpen={isCalendarOpen}
+          onClose={handleCloseCalendar}
+          employeeData={selectedEmployee}
+        />
+      )}
+    </>
   );
 };

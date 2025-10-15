@@ -30,7 +30,6 @@ export function useOrganizationMutations() {
         onSuccess: (data) => {
             if (!data) return;
             toast.success(t('toast.success.created'));
-            console.log("Organization created:", data);
             queryClient.setQueryData(["organizations", data.search ?? "", data.pageSize ?? 5], (oldData: any) => {
                 if (!oldData || !data.data) return oldData;
                 if (oldData?.pages) {
@@ -72,7 +71,6 @@ export function useOrganizationMutations() {
         onSuccess: (data) => {
             if (!data) return;
             toast.success(t('toast.success.updated'));
-            console.log("Organization updated:", data);
             queryClient.setQueryData(["organizations", data.search ?? "", data.pageSize ?? 5], (oldData: any) => {
                 if (!oldData || !data.data) return oldData;
                 if (oldData?.pages) {

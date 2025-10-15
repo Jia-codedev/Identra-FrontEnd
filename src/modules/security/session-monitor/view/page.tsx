@@ -3,12 +3,44 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useTranslations } from "@/hooks/use-translations";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { Monitor, Users, Clock, MapPin, Smartphone, Laptop, Tablet, MoreHorizontal, LogOut, Ban, Search, Filter, RefreshCw } from "lucide-react";
+import {
+  Monitor,
+  Users,
+  Clock,
+  MapPin,
+  Smartphone,
+  Laptop,
+  Tablet,
+  MoreHorizontal,
+  LogOut,
+  Ban,
+  Search,
+  Filter,
+  RefreshCw,
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,14 +55,14 @@ interface UserSession {
   userId: string;
   userName: string;
   userEmail: string;
-  deviceType: 'desktop' | 'mobile' | 'tablet';
+  deviceType: "desktop" | "mobile" | "tablet";
   deviceName: string;
   ipAddress: string;
   location: string;
   browser: string;
   loginTime: string;
   lastActivity: string;
-  status: 'active' | 'idle' | 'expired';
+  status: "active" | "idle" | "expired";
   duration: string;
 }
 
@@ -45,7 +77,7 @@ interface SessionSummary {
 
 export default function SessionMonitorPage() {
   const { t } = useTranslations();
-  
+
   const [sessions, setSessions] = useState<UserSession[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -54,7 +86,9 @@ export default function SessionMonitorPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedSession, setSelectedSession] = useState<UserSession | null>(null);
+  const [selectedSession, setSelectedSession] = useState<UserSession | null>(
+    null
+  );
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [selectedSessions, setSelectedSessions] = useState<number[]>([]);
   const [allChecked, setAllChecked] = useState(false);
@@ -135,30 +169,32 @@ export default function SessionMonitorPage() {
     setSessions(mockSessions);
   }, []);
 
-  const filteredSessions = sessions.filter(session => {
-    const matchesSearch = 
+  const filteredSessions = sessions.filter((session) => {
+    const matchesSearch =
       session.userName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       session.userEmail.toLowerCase().includes(searchTerm.toLowerCase()) ||
       session.location.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = statusFilter === "all" || session.status === statusFilter;
-    const matchesDevice = deviceFilter === "all" || session.deviceType === deviceFilter;
+    const matchesStatus =
+      statusFilter === "all" || session.status === statusFilter;
+    const matchesDevice =
+      deviceFilter === "all" || session.deviceType === deviceFilter;
     return matchesSearch && matchesStatus && matchesDevice;
   });
 
   const getDeviceIcon = (deviceType: string) => {
     switch (deviceType) {
-      case 'mobile':
+      case "mobile":
         return <Smartphone className="h-4 w-4" />;
-      case 'tablet':
+      case "tablet":
         return <Tablet className="h-4 w-4" />;
       default:
         return <Laptop className="h-4 w-4" />;
     }
   };
 
-  const handleTerminateSession = async (sessionId: string) => {
+  const handleTerminateSession = async (sessionId: string | number) => {
     try {
-      setSessions(sessions.filter(s => s.id !== sessionId));
+      setSessions(sessions.filter((s) => s.id !== sessionId.toString()));
       toast.success("Session terminated successfully");
     } catch (error) {
       toast.error("Failed to terminate session");
@@ -167,7 +203,6 @@ export default function SessionMonitorPage() {
 
   const handleBanUser = async (userId: string) => {
     try {
-      console.log("Ban user:", userId);
       toast.success("User banned successfully");
     } catch (error) {
       toast.error("Failed to ban user");
@@ -210,7 +245,7 @@ export default function SessionMonitorPage() {
             </div>
           </div>
         );
-      }
+      },
     },
     {
       key: "device",
@@ -226,7 +261,7 @@ export default function SessionMonitorPage() {
             </div>
           </div>
         );
-      }
+      },
     },
     {
       key: "location",
@@ -242,7 +277,7 @@ export default function SessionMonitorPage() {
             </div>
           </div>
         );
-      }
+      },
     },
     {
       key: "status",
@@ -250,15 +285,19 @@ export default function SessionMonitorPage() {
       accessor: (item: unknown) => {
         const session = item as UserSession;
         return (
-          <Badge variant={
-            session.status === 'active' ? 'default' : 
-            session.status === 'idle' ? 'secondary' : 
-            'destructive'
-          }>
+          <Badge
+            variant={
+              session.status === "active"
+                ? "default"
+                : session.status === "idle"
+                ? "secondary"
+                : "destructive"
+            }
+          >
             {session.status.charAt(0).toUpperCase() + session.status.slice(1)}
           </Badge>
         );
-      }
+      },
     },
     {
       key: "duration",
@@ -271,7 +310,7 @@ export default function SessionMonitorPage() {
             <div className="text-sm text-gray-500">Active time</div>
           </div>
         );
-      }
+      },
     },
     {
       key: "lastActivity",
@@ -283,21 +322,27 @@ export default function SessionMonitorPage() {
             {new Date(session.lastActivity).toLocaleString()}
           </div>
         );
-      }
-    }
+      },
+    },
   ];
 
   const getSessionId = useCallback((session: UserSession): number => {
     return parseInt(session.id);
   }, []);
-  
-  const getSessionDisplayName = useCallback((session: UserSession, isRTL: boolean): string => {
-    return session.userName;
-  }, []);
 
-  const handleSelectSession = (id: number) => {
-    setSelectedSessions(prev => 
-      prev.includes(id) ? prev.filter(sid => sid !== id) : [...prev, id]
+  const getSessionDisplayName = useCallback(
+    (session: UserSession, isRTL: boolean): string => {
+      return session.userName;
+    },
+    []
+  );
+
+  const handleSelectSession = (id: string | number) => {
+    const numericId = typeof id === "string" ? parseInt(id) : id;
+    setSelectedSessions((prev) =>
+      prev.includes(numericId)
+        ? prev.filter((sid) => sid !== numericId)
+        : [...prev, numericId]
     );
   };
 
@@ -306,7 +351,7 @@ export default function SessionMonitorPage() {
       setSelectedSessions([]);
       setAllChecked(false);
     } else {
-      setSelectedSessions(filteredSessions.map(s => parseInt(s.id)));
+      setSelectedSessions(filteredSessions.map((s) => parseInt(s.id)));
       setAllChecked(true);
     }
   };
@@ -318,11 +363,16 @@ export default function SessionMonitorPage() {
           <Monitor className="h-8 w-8 text-primary" />
           <div>
             <h1 className="text-3xl font-bold">Session Monitor</h1>
-            <p className="text-muted-foreground">Monitor active user sessions and security activities</p>
+            <p className="text-muted-foreground">
+              Monitor active user sessions and security activities
+            </p>
           </div>
         </div>
         <div className="flex items-center space-x-2">
-          <Select value={refreshInterval.toString()} onValueChange={(value) => setRefreshInterval(Number(value))}>
+          <Select
+            value={refreshInterval.toString()}
+            onValueChange={(value) => setRefreshInterval(Number(value))}
+          >
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Auto refresh" />
             </SelectTrigger>
@@ -333,8 +383,14 @@ export default function SessionMonitorPage() {
               <SelectItem value="60">1 minute</SelectItem>
             </SelectContent>
           </Select>
-          <Button variant="outline" onClick={handleRefresh} disabled={isLoading}>
-            <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
+          <Button
+            variant="outline"
+            onClick={handleRefresh}
+            disabled={isLoading}
+          >
+            <RefreshCw
+              className={`h-4 w-4 mr-2 ${isLoading ? "animate-spin" : ""}`}
+            />
             Refresh Now
           </Button>
         </div>
@@ -347,8 +403,12 @@ export default function SessionMonitorPage() {
             <div className="flex items-center">
               <Users className="h-8 w-8 text-blue-600" />
               <div className="ml-3">
-                <p className="text-sm font-medium text-muted-foreground">Total Sessions</p>
-                <p className="text-2xl font-bold">{sessionSummary.totalSessions}</p>
+                <p className="text-sm font-medium text-muted-foreground">
+                  Total Sessions
+                </p>
+                <p className="text-2xl font-bold">
+                  {sessionSummary.totalSessions}
+                </p>
               </div>
             </div>
           </CardContent>
@@ -360,8 +420,12 @@ export default function SessionMonitorPage() {
                 <div className="h-4 w-4 rounded-full bg-green-600"></div>
               </div>
               <div className="ml-3">
-                <p className="text-sm font-medium text-muted-foreground">Active</p>
-                <p className="text-2xl font-bold text-green-600">{sessionSummary.activeSessions}</p>
+                <p className="text-sm font-medium text-muted-foreground">
+                  Active
+                </p>
+                <p className="text-2xl font-bold text-green-600">
+                  {sessionSummary.activeSessions}
+                </p>
               </div>
             </div>
           </CardContent>
@@ -373,8 +437,12 @@ export default function SessionMonitorPage() {
                 <div className="h-4 w-4 rounded-full bg-yellow-600"></div>
               </div>
               <div className="ml-3">
-                <p className="text-sm font-medium text-muted-foreground">Idle</p>
-                <p className="text-2xl font-bold text-yellow-600">{sessionSummary.idleSessions}</p>
+                <p className="text-sm font-medium text-muted-foreground">
+                  Idle
+                </p>
+                <p className="text-2xl font-bold text-yellow-600">
+                  {sessionSummary.idleSessions}
+                </p>
               </div>
             </div>
           </CardContent>
@@ -386,8 +454,12 @@ export default function SessionMonitorPage() {
                 <div className="h-4 w-4 rounded-full bg-red-600"></div>
               </div>
               <div className="ml-3">
-                <p className="text-sm font-medium text-muted-foreground">Expired</p>
-                <p className="text-2xl font-bold text-red-600">{sessionSummary.expiredSessions}</p>
+                <p className="text-sm font-medium text-muted-foreground">
+                  Expired
+                </p>
+                <p className="text-2xl font-bold text-red-600">
+                  {sessionSummary.expiredSessions}
+                </p>
               </div>
             </div>
           </CardContent>
@@ -397,8 +469,12 @@ export default function SessionMonitorPage() {
             <div className="flex items-center">
               <Monitor className="h-8 w-8 text-purple-600" />
               <div className="ml-3">
-                <p className="text-sm font-medium text-muted-foreground">Unique Users</p>
-                <p className="text-2xl font-bold">{sessionSummary.uniqueUsers}</p>
+                <p className="text-sm font-medium text-muted-foreground">
+                  Unique Users
+                </p>
+                <p className="text-2xl font-bold">
+                  {sessionSummary.uniqueUsers}
+                </p>
               </div>
             </div>
           </CardContent>
@@ -408,8 +484,12 @@ export default function SessionMonitorPage() {
             <div className="flex items-center">
               <Clock className="h-8 w-8 text-indigo-600" />
               <div className="ml-3">
-                <p className="text-sm font-medium text-muted-foreground">Avg Duration</p>
-                <p className="text-2xl font-bold">{sessionSummary.averageDuration}</p>
+                <p className="text-sm font-medium text-muted-foreground">
+                  Avg Duration
+                </p>
+                <p className="text-2xl font-bold">
+                  {sessionSummary.averageDuration}
+                </p>
               </div>
             </div>
           </CardContent>
@@ -476,7 +556,7 @@ export default function SessionMonitorPage() {
           setSelectedSession(session);
           setIsViewModalOpen(true);
         }}
-        onDeleteItem={(id: number) => handleTerminateSession(id.toString())}
+        onDeleteItem={(id: string | number) => handleTerminateSession(id)}
         noDataMessage="No sessions found"
         isLoading={isLoading}
         onPageChange={setCurrentPage}
@@ -489,7 +569,9 @@ export default function SessionMonitorPage() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => handleTerminateSession(session.id)}>
+              <DropdownMenuItem
+                onClick={() => handleTerminateSession(session.id)}
+              >
                 <LogOut className="mr-2 h-4 w-4" />
                 Terminate Session
               </DropdownMenuItem>
@@ -513,31 +595,43 @@ export default function SessionMonitorPage() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label className="font-medium">User Name</Label>
-                  <p className="text-sm text-muted-foreground">{selectedSession.userName}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {selectedSession.userName}
+                  </p>
                 </div>
                 <div>
                   <Label className="font-medium">Email</Label>
-                  <p className="text-sm text-muted-foreground">{selectedSession.userEmail}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {selectedSession.userEmail}
+                  </p>
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label className="font-medium">Device</Label>
-                  <p className="text-sm text-muted-foreground">{selectedSession.deviceName}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {selectedSession.deviceName}
+                  </p>
                 </div>
                 <div>
                   <Label className="font-medium">Browser</Label>
-                  <p className="text-sm text-muted-foreground">{selectedSession.browser}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {selectedSession.browser}
+                  </p>
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label className="font-medium">IP Address</Label>
-                  <p className="text-sm text-muted-foreground">{selectedSession.ipAddress}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {selectedSession.ipAddress}
+                  </p>
                 </div>
                 <div>
                   <Label className="font-medium">Location</Label>
-                  <p className="text-sm text-muted-foreground">{selectedSession.location}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {selectedSession.location}
+                  </p>
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
@@ -557,17 +651,24 @@ export default function SessionMonitorPage() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label className="font-medium">Status</Label>
-                  <Badge variant={
-                    selectedSession.status === 'active' ? 'default' : 
-                    selectedSession.status === 'idle' ? 'secondary' : 
-                    'destructive'
-                  }>
-                    {selectedSession.status.charAt(0).toUpperCase() + selectedSession.status.slice(1)}
+                  <Badge
+                    variant={
+                      selectedSession.status === "active"
+                        ? "default"
+                        : selectedSession.status === "idle"
+                        ? "secondary"
+                        : "destructive"
+                    }
+                  >
+                    {selectedSession.status.charAt(0).toUpperCase() +
+                      selectedSession.status.slice(1)}
                   </Badge>
                 </div>
                 <div>
                   <Label className="font-medium">Duration</Label>
-                  <p className="text-sm text-muted-foreground">{selectedSession.duration}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {selectedSession.duration}
+                  </p>
                 </div>
               </div>
             </div>

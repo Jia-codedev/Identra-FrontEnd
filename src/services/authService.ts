@@ -25,7 +25,6 @@ class AuthService {
   }
   async adlogin() {
     try {
-      console.log("Starting Azure AD login...");
       const envBase =
         typeof process !== "undefined" &&
         process.env &&
@@ -34,7 +33,6 @@ class AuthService {
         (envBase as string) ||
         apiClient?.defaults?.baseURL ||
         "http://localhost:8000";
-      console.log("Using backend base URL for AD login:", baseURL);
       if (typeof window === "undefined") {
         console.error("adlogin() must run in a browser environment");
         throw new Error("adlogin() must be called client-side");

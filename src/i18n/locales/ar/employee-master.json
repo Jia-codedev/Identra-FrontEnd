@@ -40,6 +40,7 @@
     "employeeGroupReporting": "مجموعة التقارير"
   },
   "employee": {
+    "employeeName": "اسم الموظف",
     "title": "إدارة الموظفين",
     "searchPlaceholder": "ابحث عن الموظفين...",
     "addEmployee":"إضافة موظف",

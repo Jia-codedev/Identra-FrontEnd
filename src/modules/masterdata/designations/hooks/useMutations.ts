@@ -39,7 +39,6 @@ export function useDesignationMutations() {
     onSuccess: (data) => {
       if (!data) return;
       toast.success(t('toast.success.created'));
-      console.log("Designation created:", data);
       queryClient.setQueryData(
         ["designations", data.search ?? "", data.pageSize ?? 5],
         (oldData: any) => {
@@ -97,7 +96,6 @@ export function useDesignationMutations() {
     onSuccess: (data) => {
       if (!data) return;
       toast.success(t('toast.success.updated'));
-      console.log("Designation updated:", data);
       queryClient.setQueryData(
         ["designations", data.search ?? "", data.pageSize ?? 5],
         (oldData: any) => {

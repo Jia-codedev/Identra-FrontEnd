@@ -37,12 +37,10 @@ class TokenService {
     }
 
     try {
-      console.log("Verifying token:", token.substring(0, 20) + "...");
       const { payload } = await jwtVerify(token, this.secretKey, {
         algorithms: ["HS256"],
       });
 
-      console.log("JWT Verified:", payload);
 
       if (!payload.id) {
         throw new Error("Token payload is missing 'id' field");

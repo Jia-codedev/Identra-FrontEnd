@@ -29,7 +29,6 @@ export function useGradeMutations() {
         onSuccess: (data) => {
             if (!data) return;
             toast.success(t('toast.success.created'));
-            console.log("Grade created:", data);
             queryClient.setQueryData(["grades", data.search ?? "", data.pageSize ?? 5], (oldData: any) => {
                 if (!oldData || !data.data) return oldData;
                 if (oldData?.pages) {
@@ -71,7 +70,6 @@ export function useGradeMutations() {
         onSuccess: (data) => {
             if (!data) return;
             toast.success(t('toast.success.updated'));
-            console.log("Grade updated:", data);
             queryClient.setQueryData(["grades", data.search ?? "", data.pageSize ?? 5], (oldData: any) => {
                 if (!oldData || !data.data) return oldData;
                 if (oldData?.pages) {
