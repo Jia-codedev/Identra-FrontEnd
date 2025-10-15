@@ -115,7 +115,7 @@ class NavigationService {
     ) {
       Object.entries(backendData).forEach(
         ([moduleName, moduleData]: [string, any]) => {
-          if (!moduleData.allowed) return; // Skip modules not allowed
+          if (!moduleData.allowed) return;
 
           const navItem: NavigationItem = {
             id: `navigation.${moduleName}`,
@@ -123,7 +123,7 @@ class NavigationService {
             icon: this.getIconComponent(this.getModuleIcon(moduleName)),
             href: `/${moduleName.toLowerCase().replace(/\s+/g, "-")}`,
             secondary: moduleData.subModules
-              .filter((sub: any) => sub.allowed) // Only include allowed submodules
+              .filter((sub: any) => sub.allowed)
               .map((sub: any) => ({
                 label: this.formatModuleName(sub.sub_module_name || ""),
                 labelKey: `navigation.${sub.sub_module_name}` || "",
