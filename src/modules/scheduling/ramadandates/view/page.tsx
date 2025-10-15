@@ -101,7 +101,6 @@ const RamadanDatesPage: React.FC = () => {
 
   const handleConfirmDelete = () => {
     try {
-      console.log("selected", selected);
       if (deleteDialog.type === "single" && deleteDialog.id !== undefined) {
         deleteMutation.mutateAsync(deleteDialog.id);
       } else if (deleteDialog.type === "bulk" && selected.length > 0) {

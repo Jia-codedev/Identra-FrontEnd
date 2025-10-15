@@ -23,10 +23,10 @@ interface BiometricTerminalsListProps {
   selected: number[];
   allChecked: boolean;
   isLoading: boolean;
-  onSelectItem: (id: number) => void;
+  onSelectItem: (id: string | number) => void;
   onSelectAll: () => void;
   onEditItem: (terminal: BiometricTerminal) => void;
-  onDeleteItem: (id: number) => void;
+  onDeleteItem: (id: string | number) => void;
 }
 
 export default function BiometricTerminalsList({

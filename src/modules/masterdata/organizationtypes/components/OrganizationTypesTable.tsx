@@ -51,7 +51,6 @@ export const OrganizationTypesTable: React.FC<OrganizationTypesTableProps> = ({
           : item.organization_type_eng || "",
     },
   ];
-  // console.log("OrganizationTypesTable rendered with data:", organizationTypes);
   return (
     <GenericTable
       data={organizationTypes}
@@ -67,8 +66,8 @@ export const OrganizationTypesTable: React.FC<OrganizationTypesTableProps> = ({
           : item.organization_type_eng || ""
       }
       onSelectAll={onSelectAll}
-      onSelectItem={onSelectOrganizationType}
-      onDeleteItem={onDeleteOrganizationType}
+      onSelectItem={(id) => onSelectOrganizationType(Number(id))}
+      onDeleteItem={(id) => onDeleteOrganizationType(Number(id))}
       onEditItem={onEditOrganizationType}
       onPageChange={onPageChange}
       onPageSizeChange={onPageSizeChange}

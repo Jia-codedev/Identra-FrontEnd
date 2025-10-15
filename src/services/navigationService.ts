@@ -136,7 +136,6 @@ class NavigationService {
                       .replace(/\s+/g, "-")}`,
               })),
           };
-          console.log(navItem);
           if (moduleData.is_sidebar) {
             sidebarNav.push(navItem);
           } else {

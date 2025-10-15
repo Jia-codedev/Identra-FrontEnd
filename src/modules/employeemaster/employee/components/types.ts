@@ -63,6 +63,8 @@ export type EmployeeFormFields = {
 
   // Additional
   remarks: string;
+
+  role_id: number | null;
 };
 
 export interface EmployeeStepProps {

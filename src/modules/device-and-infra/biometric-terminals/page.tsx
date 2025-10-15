@@ -98,6 +98,18 @@ export default function BiometricTerminalManagementPage() {
     refetch();
   };
 
+  const handleSelectItem = (id: string | number) => {
+    if (typeof id === "number") {
+      selectItem(id);
+    }
+  };
+
+  const handleDeleteItem = (id: string | number) => {
+    if (typeof id === "number") {
+      handleDelete(id);
+    }
+  };
+
   return (
     <div className="w-full h-full flex flex-col items-center justify-start">
       <div className="w-full relative">
@@ -120,10 +132,10 @@ export default function BiometricTerminalManagementPage() {
             selected={selected}
             allChecked={allChecked}
             isLoading={isLoading}
-            onSelectItem={selectItem}
+            onSelectItem={handleSelectItem}
             onSelectAll={selectAll}
             onEditItem={handleEdit}
-            onDeleteItem={handleDelete}
+            onDeleteItem={handleDeleteItem}
           />
 
           <CustomPagination

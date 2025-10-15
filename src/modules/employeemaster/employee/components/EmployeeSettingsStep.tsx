@@ -36,16 +36,7 @@ export const EmployeeSettingsStep: React.FC<EmployeeStepProps> = ({
                 {t("employeeMaster.employee.localFlag")}
               </Label>
             </div>
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="manager_flag"
-                checked={formData.manager_flag}
-                onCheckedChange={(checked) => onInputChange("manager_flag", checked)}
-              />
-              <Label htmlFor="manager_flag" className="text-sm">
-                {t("employeeMaster.employee.managerFlag")}
-              </Label>
-            </div>
+           
             <div className="flex items-center space-x-2">
               <Checkbox
                 id="inpayroll_flag"
