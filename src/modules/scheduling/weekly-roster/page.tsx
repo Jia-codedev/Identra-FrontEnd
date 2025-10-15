@@ -65,10 +65,10 @@ export default function WeeklyRosterPage() {
   const handleDelete = async (id: number) => {
     try {
       await deleteMutation.mutateAsync(id);
-      toast.success(t('common.deleteSuccess'));
+      toast.success(t('toast.success.weeklyRoasterDeleted'));
       refetch();
     } catch (error) {
-      toast.error(t('common.deleteError'));
+      toast.error(t('toast.error.weeklyRoasterDeleteError'));
     }
   };
 
@@ -94,16 +94,16 @@ export default function WeeklyRosterPage() {
           id: editingSchedule.group_schedule_id!,
           data: data as IUpdateGroupSchedule
         });
-        toast.success(t('common.updateSuccess'));
+        toast.success(t('toast.success.weeklyRoasterUpdated'));
       } else {
         await createMutation.mutateAsync(data as ICreateGroupSchedule);
-        toast.success(t('common.createSuccess'));
+        toast.success(t('toast.success.weeklyRoasterAdded'));
       }
       setIsModalOpen(false);
       setEditingSchedule(null);
       refetch();
     } catch (error) {
-      toast.error(editingSchedule ? t('common.updateError') : t('common.createError'));
+      toast.error(editingSchedule ? t('toast.error.weeklyRoasterUpdateError') : t('toast.error.weeklyRoasterAddError'));
     }
   };
 

@@ -97,13 +97,13 @@
     "searchPlaceholder": "ابحث عن أنواع المؤسسات...",
     "addOrganizationType": "إضافة نوع مؤسسة",
     "editOrganizationType": "تعديل نوع مؤسسة",
-    "organizationTypeName": "اسم نوع المؤسسة",
+    "organizationTypeName": "أنواع المنظمات",
     "organizationTypeCode": "رمز نوع المؤسسة",
     "enterOrganizationTypeName": "أدخل اسم نوع المؤسسة",
     "enterOrganizationTypeNameArabic": "أدخل اسم نوع المؤسسة بالعربية",
     "enterOrganizationTypeCode": "أدخل رمز نوع المؤسسة",
     "noOrganizationTypesFound": "لم يتم العثور على أنواع المؤسسات.",
-    "level": "المستوى",
+    "level": "تَسَلسُل",
     "organizationTypeNameEnglish": "اسم نوع المؤسسة بالإنجليزية",
     "enterOrganizationTypeNameEnglish": "أدخل اسم نوع المؤسسة بالإنجليزية",
     "organizationTypeNameArabic": "اسم نوع المؤسسة بالعربية"
@@ -119,8 +119,7 @@
     "enterDeptAdminNameArabic": "أدخل اسم مسؤول القسم بالعربية",
     "enterDeptAdminCode": "أدخل رمز مسؤول القسم",
     "noDeptAdminsFound": "لم يتم العثور على مسؤولي الأقسام."
-  }
-  ,
+  },
   "deptAdmins": {
     "title": "مسؤولو الأقسام",
     "description": "إدارة مسؤولي الأقسام في مؤسستك.",

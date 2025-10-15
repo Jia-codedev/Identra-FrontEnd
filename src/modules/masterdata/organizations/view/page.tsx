@@ -15,13 +15,18 @@ import { useOrganizationMutations } from "../hooks/useMutations";
 import {
   OrganizationsTable,
   OrganizationModal,
-  OrganizationHeader
+  OrganizationHeader,
 } from "../index";
 import { CustomPagination } from "@/components/common/dashboard/Pagination";
 
 export default function OrganizationsPage() {
   const { t } = useTranslations();
-  const { createOrganization, updateOrganization, deleteOrganization, deleteOrganizations } = useOrganizationMutations();
+  const {
+    createOrganization,
+    updateOrganization,
+    deleteOrganization,
+    deleteOrganizations,
+  } = useOrganizationMutations();
   const {
     organizations,
     selected,
@@ -81,9 +86,20 @@ export default function OrganizationsPage() {
 
   const handleSaveOrganization = async (data: Partial<IOrganization>) => {
     if (modalState.mode === "add") {
-      createOrganization({ organizationData: data as IOrganization, onClose: handleCloseModal, search, pageSize });
+      createOrganization({
+        organizationData: data as IOrganization,
+        onClose: handleCloseModal,
+        search,
+        pageSize,
+      });
     } else if (modalState.mode === "edit" && modalState.organization) {
-      updateOrganization({ id: modalState.organization.organization_id, organizationData: data as IOrganization, onClose: handleCloseModal, search, pageSize });
+      updateOrganization({
+        id: modalState.organization.organization_id,
+        organizationData: data as IOrganization,
+        onClose: handleCloseModal,
+        search,
+        pageSize,
+      });
     }
   };
 
@@ -154,25 +170,33 @@ export default function OrganizationsPage() {
         organization={modalState.organization}
         mode={modalState.mode}
       />
-      <Dialog open={deleteDialog.open} onOpenChange={open => !open && handleCancelDelete()}>
-        <DialogContent
-          className="p-0"
-        >
-          <DialogHeader
-            className="p-2"
-          >
-            <DialogTitle
-              className="mb-1 p-2"
-            >{t("common.confirmDelete")}</DialogTitle>
+      <Dialog
+        open={deleteDialog.open}
+        onOpenChange={(open) => !open && handleCancelDelete()}
+      >
+        <DialogContent className="p-0">
+          <DialogHeader className="p-2">
+            <DialogTitle className="mb-1 p-2">
+              {t("common.confirmDelete")}
+            </DialogTitle>
             <div className="bg-black/5 p-4 rounded-lg dark:bg-white/5">
               <DialogDescription>
-                {deleteDialog.type === "single"
-                  ? t("messages.confirm.delete")
-                  : t("messages.confirm.deleteMultiple", { count: selected.length })}
+                {selected?.length === 1 || deleteDialog.type === "single"
+                  ? t("common.messages.confirmDeleteSingleDescription", {
+                      deleteType: "Organization",
+                    })
+                  : t("common.messages.confirmDeleteMultipleDescription", {
+                      count: selected?.length,
+                      deleteType: "Organizations",
+                    })}
               </DialogDescription>
               <div className="flex justify-end space-x-2 mt-4">
-                <Button variant="outline" onClick={handleCancelDelete}>{t("common.cancel")}</Button>
-                <Button variant="destructive" onClick={handleConfirmDelete}>{t("common.delete")}</Button>
+                <Button variant="outline" onClick={handleCancelDelete}>
+                  {t("common.cancel")}
+                </Button>
+                <Button variant="destructive" onClick={handleConfirmDelete}>
+                  {t("common.delete")}
+                </Button>
               </div>
             </div>
           </DialogHeader>

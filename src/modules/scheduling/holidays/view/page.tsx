@@ -12,11 +12,7 @@ import { Button } from "@/components/ui/button";
 import { useHolidays } from "../hooks/useHolidays";
 import { IHoliday, CreateHolidayRequest } from "../types";
 import { useHolidayMutations } from "../hooks/useMutations";
-import {
-  HolidaysTable,
-  HolidayModal,
-  HolidaysHeader
-} from "../index";
+import { HolidaysTable, HolidayModal, HolidaysHeader } from "../index";
 import HolidaysCalendarView from "../components/HolidaysCalendarView";
 import { CustomPagination } from "@/components/common/dashboard/Pagination";
 
@@ -58,7 +54,7 @@ export default function HolidaysPage() {
     id?: number;
   }>({ open: false, type: null });
 
-  const [viewMode, setViewMode] = useState<'table' | 'calendar'>('table');
+  const [viewMode, setViewMode] = useState<"table" | "calendar">("table");
 
   const handleAddHoliday = () => {
     setModalState({
@@ -86,9 +82,20 @@ export default function HolidaysPage() {
 
   const handleSaveHoliday = (data: CreateHolidayRequest) => {
     if (modalState.mode === "add") {
-      createHoliday({ holidayData: data, onClose: handleCloseModal, search, pageSize });
+      createHoliday({
+        holidayData: data,
+        onClose: handleCloseModal,
+        search,
+        pageSize,
+      });
     } else if (modalState.mode === "edit" && modalState.holiday) {
-      updateHoliday({ id: modalState.holiday.holiday_id, holidayData: data, onClose: handleCloseModal, search, pageSize });
+      updateHoliday({
+        id: modalState.holiday.holiday_id,
+        holidayData: data,
+        onClose: handleCloseModal,
+        search,
+        pageSize,
+      });
     }
   };
 
@@ -104,7 +111,7 @@ export default function HolidaysPage() {
     if (deleteDialog.type === "single" && deleteDialog.id !== undefined) {
       deleteHoliday(deleteDialog.id);
     } else if (deleteDialog.type === "bulk" && selected.length > 0) {
-      selected.forEach(id => deleteHoliday(id));
+      selected.forEach((id) => deleteHoliday(id));
     }
     setDeleteDialog({ open: false, type: null });
   };
@@ -128,7 +135,7 @@ export default function HolidaysPage() {
             viewMode={viewMode}
             onViewModeChange={setViewMode}
           />
-          {viewMode === 'table' ? (
+          {viewMode === "table" ? (
             <HolidaysTable
               holidays={holidays}
               selected={selected}
@@ -165,8 +172,11 @@ export default function HolidaysPage() {
         holiday={modalState.holiday}
         mode={modalState.mode}
       />
-      
-      <Dialog open={deleteDialog.open} onOpenChange={open => !open && handleCancelDelete()}>
+
+      <Dialog
+        open={deleteDialog.open}
+        onOpenChange={(open) => !open && handleCancelDelete()}
+      >
         <DialogContent className="p-0">
           <DialogHeader className="p-2">
             <DialogTitle className="mb-1 p-2">
@@ -174,9 +184,14 @@ export default function HolidaysPage() {
             </DialogTitle>
             <div className="bg-black/5 p-4 rounded-lg dark:bg-white/5">
               <DialogDescription>
-                {deleteDialog.type === "single"
-                  ? t("messages.confirm.delete")
-                  : t("messages.confirm.deleteMultiple", { count: selected.length })}
+                {deleteDialog.type === "single" || selected.length === 1
+                  ? t("messages.confirmDeleteSingleDescription", {
+                      deleteType: "holiday",
+                    })
+                  : t("messages.confirmDeleteMultipleDescription", {
+                      count: selected.length,
+                      deleteType: "holidays",
+                    })}
               </DialogDescription>
               <div className="flex justify-end space-x-2 mt-4">
                 <Button variant="outline" onClick={handleCancelDelete}>
