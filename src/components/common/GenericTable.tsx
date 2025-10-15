@@ -45,6 +45,8 @@ interface GenericTableProps<T> {
   onPageChange: (page: number) => void;
   onPageSizeChange: (size: number) => void;
   showActions?: boolean;
+  canDelete?: boolean;
+  canEdit?: boolean;
 }
 
 export function GenericTable<T>({
@@ -66,6 +68,8 @@ export function GenericTable<T>({
   onPageChange,
   onPageSizeChange,
   showActions = true,
+  canDelete = true,
+  canEdit = true,
 }: GenericTableProps<T>) {
   const { t } = useTranslations();
   const { isRTL } = useLanguage();
@@ -165,6 +169,7 @@ export function GenericTable<T>({
                             <>
                               {onEditItem && (
                                 <Button
+                                  disabled={!canEdit}
                                   size="icon"
                                   variant="outline"
                                   className="p-2 rounded-full group cursor-pointer"
@@ -176,6 +181,7 @@ export function GenericTable<T>({
                               )}
                               {onDeleteItem && (
                                 <Button
+                                  disabled={!canDelete}
                                   size="icon"
                                   variant="destructive"
                                   className="p-2 rounded-full group cursor-pointer"

@@ -16,6 +16,8 @@ interface SitesTableProps {
   onEditSite: (site: ISite) => void;
   onDeleteSite: (id: number) => void;
   isLoading?: boolean;
+  canEdit: boolean;
+  canDelete: boolean;
 }
 
 export const SitesTable: React.FC<SitesTableProps> = ({
@@ -29,6 +31,8 @@ export const SitesTable: React.FC<SitesTableProps> = ({
   onEditSite,
   onDeleteSite,
   isLoading = false,
+  canEdit,
+  canDelete,
 }) => {
   const { t } = useTranslations();
 
@@ -70,6 +74,8 @@ export const SitesTable: React.FC<SitesTableProps> = ({
 
   return (
     <GenericTable
+      canDelete={canDelete}
+      canEdit={canEdit}
       data={sites}
       columns={columns}
       selected={selected}

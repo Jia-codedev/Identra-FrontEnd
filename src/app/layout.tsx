@@ -7,7 +7,6 @@ import { AppThemeProvider } from "@/providers/app-theme-provider";
 import { LanguageProvider } from "@/providers/language-provider";
 import { SocketProvider } from "@/providers/socket-provider";
 import { UserProvider } from "@/providers/user-provider";
-import { UserRefreshProvider } from "@/providers/user-refresh-provider";
 import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
@@ -39,20 +38,18 @@ export default function RootLayout({
           >
             <AppThemeProvider>
               <UserProvider>
-                <UserRefreshProvider>
-                  <SocketProvider
-                    options={{
-                      autoConnect: true,
-                      reconnectOnUserChange: true,
-                      enableLogging: process.env.NODE_ENV === "development",
-                    }}
-                  >
-                    <main className="bg-background">
-                      {children}
-                      <Toaster position="top-right"/>
-                    </main>
-                  </SocketProvider>
-                </UserRefreshProvider>
+                <SocketProvider
+                  options={{
+                    autoConnect: true,
+                    reconnectOnUserChange: true,
+                    enableLogging: process.env.NODE_ENV === "development",
+                  }}
+                >
+                  <main className="bg-background">
+                    {children}
+                    <Toaster position="top-right" />
+                  </main>
+                </SocketProvider>
               </UserProvider>
             </AppThemeProvider>
           </ThemeProvider>

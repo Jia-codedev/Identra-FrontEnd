@@ -16,6 +16,7 @@ import { SiteModal } from "../components/SiteModal";
 import { ISite } from "../types";
 import { useSiteMutations } from "../hooks/useMutations";
 import { CustomPagination } from "@/components/common/dashboard/Pagination";
+import { useSubModulePrivileges } from "@/hooks/security/useSubModulePrivileges";
 
 export default function SitesPage() {
   const { t } = useTranslations();
@@ -52,56 +53,51 @@ export default function SitesPage() {
     open: boolean;
     type: "single" | "bulk" | null;
     id?: number;
-  }>({ open: false, type: null });
+  }>({
+    open: false,
+    type: null,
+  });
+
+  const { canView, canCreate, canEdit, canDelete } = useSubModulePrivileges(
+    "enterprise-settings",
+    "site-management"
+  );
+  console.log("Privileges:", { canView, canCreate, canEdit, canDelete });
+  
+  if (!canView) {
+    console.error("Access Denied: User does not have view privileges.");
+    return <div>{t("common.accessDenied")}</div>;
+  }
 
   const handleAddSite = () => {
-    setModalState({
-      isOpen: true,
-      mode: "add",
-      site: null,
-    });
+    if (!canCreate) {
+      alert(t("common.noPermission"));
+      return;
+    }
+    setModalState({ isOpen: true, mode: "add", site: null });
   };
 
   const handleEditSite = (site: ISite) => {
-    setModalState({
-      isOpen: true,
-      mode: "edit",
-      site,
-    });
-  };
-
-  const handleCloseModal = () => {
-    setModalState({
-      isOpen: false,
-      mode: "add",
-      site: null,
-    });
-  };
-
-  const handleSaveSite = (data: ISite) => {
-    if (modalState.mode === "add") {
-      createSite({
-        siteData: data,
-        onClose: handleCloseModal,
-        search,
-        pageSize,
-      });
-    } else if (modalState.mode === "edit" && modalState.site) {
-      updateSite({
-        id: modalState.site.location_id,
-        siteData: data,
-        onClose: handleCloseModal,
-        search,
-        pageSize,
-      });
+    if (!canEdit) {
+      alert(t("common.noPermission"));
+      return;
     }
+    setModalState({ isOpen: true, mode: "edit", site });
   };
 
   const handleDeleteSite = (id: number) => {
+    if (!canDelete) {
+      alert(t("common.noPermission"));
+      return;
+    }
     setDeleteDialog({ open: true, type: "single", id });
   };
 
   const handleDeleteSelected = () => {
+    if (!canDelete) {
+      alert(t("common.noPermission"));
+      return;
+    }
     setDeleteDialog({ open: true, type: "bulk" });
   };
 
@@ -112,10 +108,7 @@ export default function SitesPage() {
       deleteSites(selected);
     }
     setDeleteDialog({ open: false, type: null });
-    try {
-      selectAll(false);
-    } catch (e) {
-    }
+    selectAll(false);
   };
 
   const handleCancelDelete = () => {
@@ -135,6 +128,8 @@ export default function SitesPage() {
           />
 
           <SitesTable
+            canEdit={canEdit}
+            canDelete={canDelete}
             sites={sites}
             selected={selected}
             page={page}
@@ -160,15 +155,34 @@ export default function SitesPage() {
 
       <SiteModal
         isOpen={modalState.isOpen}
-        onClose={handleCloseModal}
-        onSave={handleSaveSite}
+        onClose={() =>
+          setModalState({ isOpen: false, mode: "add", site: null })
+        }
+        onSave={(data) => {
+          if (modalState.mode === "add") {
+            createSite({
+              siteData: data,
+              onClose: () =>
+                setModalState({ isOpen: false, mode: "add", site: null }),
+              search,
+              pageSize,
+            });
+          } else if (modalState.mode === "edit" && modalState.site) {
+            updateSite({
+              id: modalState.site.location_id!,
+              siteData: data,
+              onClose: () =>
+                setModalState({ isOpen: false, mode: "add", site: null }),
+              search,
+              pageSize,
+            });
+          }
+        }}
         site={modalState.site}
         mode={modalState.mode}
       />
-      <Dialog
-        open={deleteDialog.open}
-        onOpenChange={() => handleCancelDelete()}
-      >
+
+      <Dialog open={deleteDialog.open} onOpenChange={handleCancelDelete}>
         <DialogContent className="p-0">
           <DialogHeader className="p-2">
             <DialogTitle className="mb-1 p-2">
@@ -178,7 +192,9 @@ export default function SitesPage() {
               <DialogDescription>
                 {deleteDialog.type === "single"
                   ? t("messages.confirm.delete")
-                  : t("messages.confirm.deleteMultiple", { count: selected.length })}
+                  : t("messages.confirm.deleteMultiple", {
+                      count: selected.length,
+                    })}
               </DialogDescription>
               <div className="flex justify-end space-x-2 mt-4">
                 <Button variant="outline" onClick={handleCancelDelete}>

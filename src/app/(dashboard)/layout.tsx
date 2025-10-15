@@ -7,6 +7,7 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import CustomQueryClientProvider from "@/providers/QueryClientProvider";
 import NavigationSyncProvider from "@/components/providers/NavigationSyncProvider";
 import React from "react";
+import GardDashboard from "@/components/common/dashboard/GardDashboard";
 export default function DashboardLayout({
   children,
 }: {
@@ -14,7 +15,7 @@ export default function DashboardLayout({
 }) {
   return (
     <CustomQueryClientProvider>
-      <NavigationSyncProvider>
+      <GardDashboard>
         <SidebarProvider>
           <AppSidebar />
           <SidebarInset>
@@ -27,7 +28,7 @@ export default function DashboardLayout({
           </SidebarInset>
           {/* <ChatBotDemo /> */}
         </SidebarProvider>
-      </NavigationSyncProvider>
+      </GardDashboard>
     </CustomQueryClientProvider>
   );
 }
