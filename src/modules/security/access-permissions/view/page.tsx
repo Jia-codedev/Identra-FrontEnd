@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useTranslations } from "@/hooks/use-translations";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,7 +16,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   Select,
@@ -26,26 +25,17 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import {
-  Plus,
-  Key,
-  Shield,
-  Search,
-  Edit,
-  Trash2,
-  MoreHorizontal,
-  CheckCircle,
-  XCircle,
-  Filter,
-} from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/Input";
+
 import { GenericTable } from "@/components/common/GenericTable";
 import { toast } from "sonner";
+
+import rolesApi from "@/services/security/rolesService";
+import securityPermissionsApi from "@/services/security/securityPermissions";
+import securitySubModulesApi from "@/services/security/securitySubModules";
+import apiClient from "@/configs/api/Axios";
+import SubModuleTabsComponent from "@/modules/security/access-permissions/components/SubModuleTabs";
+import Header from "@/modules/security/access-permissions/components/Header";
 
 interface Permission {
   id: string;
@@ -66,249 +56,537 @@ interface PermissionModule {
   permissions: string[];
 }
 
-const PERMISSION_MODULES: PermissionModule[] = [
-  {
-    id: "user-management",
-    name: "User Management",
-    permissions: ["view", "create", "edit", "delete", "export"],
-  },
-  {
-    id: "attendance",
-    name: "Attendance Management",
-    permissions: ["view", "edit", "approve", "export", "reports"],
-  },
-  {
-    id: "leave",
-    name: "Leave Management",
-    permissions: ["view", "apply", "approve", "reject", "edit"],
-  },
-  {
-    id: "security",
-    name: "Security Settings",
-    permissions: ["view", "edit", "manage-roles", "audit-logs"],
-  },
-];
-
-const MOCK_PERMISSIONS: Permission[] = [
-  {
-    id: "1",
-    name: "HR Manager",
-    description: "Full access to HR operations",
-    module: "user-management",
-    action: "read",
-    permissions: ["view", "create", "edit", "delete"],
-    status: "active",
-    assignedRoles: 5,
-    createdAt: "2024-01-15",
-    users: 5,
-  },
-  {
-    id: "2",
-    name: "Team Lead",
-    description: "Team management and attendance oversight",
-    module: "attendance",
-    action: "read",
-    permissions: ["view", "edit", "approve"],
-    status: "active",
-    assignedRoles: 12,
-    createdAt: "2024-01-10",
-    users: 12,
-  },
-  {
-    id: "3",
-    name: "Employee",
-    description: "Basic employee access",
-    module: "leave",
-    action: "read",
-    permissions: ["view", "apply"],
-    status: "active",
-    assignedRoles: 45,
-    createdAt: "2024-01-05",
-    users: 45,
-  },
-  {
-    id: "4",
-    name: "Security Admin",
-    description: "Security and system administration",
-    module: "security",
-    action: "read",
-    permissions: ["view", "edit", "manage-roles"],
-    status: "inactive",
-    assignedRoles: 2,
-    createdAt: "2024-01-01",
-    users: 2,
-  },
-];
-
 export default function AccessPermissionsPage() {
   const { t } = useTranslations();
 
-  const locale = localStorage.getItem("preferred-language");
-  const PERMISSION_MODULES: PermissionModule[] = [
-    {
-      id: "user-management",
-      name: locale === "ar" ? "إدارة المستخدم" : "User Management",
-      permissions: ["view", "create", "edit", "delete", "export"],
-    },
-    {
-      id: "attendance",
-      name: locale === "ar" ? "إدارة الحضور" : "Attendance Management",
-      permissions: ["view", "edit", "approve", "export", "reports"],
-    },
-    {
-      id: "leave",
-      name: locale === "ar" ? "ترك الإدارة" : "Leave Management",
-      permissions: ["view", "apply", "approve", "reject", "edit"],
-    },
-    {
-      id: "security",
-      name: locale === "ar" ? "إعدادات الأمن" : "Security Settings",
-      permissions: ["view", "edit", "manage-roles", "audit-logs"],
-    },
-  ];
-
-  const MOCK_PERMISSIONS: Permission[] = [
-    {
-      id: "1",
-      name: locale === "ar" ? "مدير الموارد البشرية" : "HR Manager",
-      description:
-        locale === "ar"
-          ? "الوصول كاملا لعمليات الموارد البشرية"
-          : "Full access to HR operations",
-      module: "user-management",
-      action: "read",
-      permissions:
-        locale === "ar"
-          ? ["منظر", "يخلق", "يحرر", "يمسح"]
-          : ["view", "create", "edit", "delete"],
-      status: "active",
-      assignedRoles: 5,
-      createdAt: "2024-01-15",
-      users: 5,
-    },
-    {
-      id: "2",
-      name: locale === "ar" ? "مدير فريق" : "Team Lead",
-      description:
-        locale === "ar"
-          ? "الادارة والتحكم في الحضور"
-          : "Team management and attendance oversight",
-      module: "attendance",
-      action: "read",
-      permissions:
-        locale === "ar"
-          ? ["منظر", "يحرر", "يقبل"]
-          : ["view", "edit", "approve"],
-      status: "active",
-      assignedRoles: 12,
-      createdAt: "2024-01-10",
-      users: 12,
-    },
-    {
-      id: "3",
-      name: locale === "ar" ? "موظف" : "Employee",
-      description:
-        locale === "ar" ? "وصول الموظف الاساسي" : "Basic employee access",
-      module: "leave",
-      action: "read",
-      permissions: locale === "ar" ? ["منظر", "يقدم"] : ["view", "apply"],
-      status: "active",
-      assignedRoles: 45,
-      createdAt: "2024-01-05",
-      users: 45,
-    },
-    {
-      id: "4",
-      name: locale === "ar" ? "مدير الأمن" : "Security Admin",
-      description:
-        locale === "ar"
-          ? "الأمن والادارة النظام"
-          : "Security and system administration",
-      module: "security",
-      action: "read",
-      permissions:
-        locale === "ar"
-          ? ["منظر", "يحرر", "يقدم"]
-          : ["view", "edit", "manage-roles"],
-      status: "inactive",
-      assignedRoles: 2,
-      createdAt: "2024-01-01",
-      users: 2,
-    },
-  ];
-
-  const [permissions, setPermissions] =
-    useState<Permission[]>(MOCK_PERMISSIONS);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedModule, setSelectedModule] = useState<string>("all");
-  const [selectedStatus, setSelectedStatus] = useState<string>("all");
-  const [selectedPermission, setSelectedPermission] =
-    useState<Permission | null>(null);
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [roles, setRoles] = useState<any[]>([]);
+  const [selectedRole, setSelectedRole] = useState<number | null>(null);
+  const [modules, setModules] = useState<any[]>([]);
+  const [subModulesByModule, setSubModulesByModule] = useState<
+    Record<string, any[]>
+  >({});
+  const [rolePrivileges, setRolePrivileges] = useState<Record<string, any>>({});
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedTableRows, setSelectedTableRows] = useState<number[]>([]);
-  const [allChecked, setAllChecked] = useState(false);
-
-  const filteredPermissions = permissions.filter((permission) => {
-    const matchesSearch =
-      permission.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      permission.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesModule =
-      selectedModule === "all" || permission.module === selectedModule;
-    const matchesStatus =
-      selectedStatus === "all" || permission.status === selectedStatus;
-
-    return matchesSearch && matchesModule && matchesStatus;
-  });
-
-  const handleCreatePermission = async (formData: any) => {
+  const tabsCacheRef = useRef<Record<number, any[]>>({});
+  const allTabsFetchedRef = useRef<boolean>(false);
+  const fetchAllTabsOnce = useCallback(async () => {
+    if (allTabsFetchedRef.current) return;
     try {
-      const newPermission: Permission = {
-        id: Date.now().toString(),
-        ...formData,
-        assignedRoles: 0,
-        users: 0,
-        createdAt: new Date().toISOString().split("T")[0],
-      };
-      setPermissions([...permissions, newPermission]);
-      toast.success("Permission created successfully");
-      setIsCreateModalOpen(false);
-    } catch (error) {
-      toast.error("Failed to create permission");
+      const res = await apiClient.get(`/secTabs/all`, {
+        params: { limit: 1000, offset: 1 },
+      });
+      const all = res.data?.data || [];
+      const map: Record<number, any[]> = {};
+      all.forEach((t: any) => {
+        const sid = t.sub_module_id;
+        if (!map[sid]) map[sid] = [];
+        map[sid].push(t);
+      });
+      tabsCacheRef.current = map;
+    } catch (err) {
+      console.log(err);
+      tabsCacheRef.current = {};
+    } finally {
+      allTabsFetchedRef.current = true;
     }
+  }, []);
+
+  const getTabs = useCallback(
+    async (subModuleId: number) => {
+      if (tabsCacheRef.current[subModuleId])
+        return tabsCacheRef.current[subModuleId];
+      await fetchAllTabsOnce();
+      return tabsCacheRef.current[subModuleId] || [];
+    },
+    [fetchAllTabsOnce]
+  );
+  useEffect(() => {
+    async function load() {
+      try {
+        setIsLoading(true);
+        const [rolesRes, modulesRes] = await Promise.all([
+          rolesApi.getRoles({ limit: 1000 }),
+          securityPermissionsApi.getModules({ limit: 1000 }),
+        ]);
+
+        setRoles(rolesRes.data.data || []);
+        setModules(modulesRes.data.data || []);
+
+        try {
+          const smResp = await securitySubModulesApi.getSubModules({
+            limit: 1000,
+            offset: 1,
+          });
+          const allSub = smResp.data?.data || [];
+          const subModulesMap: Record<string, any[]> = {};
+          allSub.forEach((s: any) => {
+            const mid = s.module_id;
+            if (!subModulesMap[mid]) subModulesMap[mid] = [];
+            subModulesMap[mid].push(s);
+          });
+          setSubModulesByModule(subModulesMap);
+        } catch (err) {
+          console.error(err);
+          setSubModulesByModule({});
+        }
+      } catch (error) {
+        console.error(error);
+        toast.error("Failed to load roles or modules");
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    load();
+  }, []);
+
+  useEffect(() => {
+    if (!selectedRole) {
+      setRolePrivileges({});
+      return;
+    }
+
+    let mounted = true;
+    async function loadRolePrivilegesTree() {
+      try {
+        setIsLoading(true);
+        const resp = await apiClient.get(`/secRolePrivilege`, {
+          params: { roleId: selectedRole },
+        });
+
+        const tree = resp.data?.data || {};
+        const map: Record<string, any> = {};
+        Object.keys(tree).forEach((moduleName) => {
+          const moduleTreeEntry = tree[moduleName];
+          if (!moduleTreeEntry || !Array.isArray(moduleTreeEntry.subModules))
+            return;
+
+          const moduleObj = modules.find(
+            (m: any) => m.module_name === moduleName
+          );
+          const moduleId = moduleObj?.module_id;
+
+          moduleTreeEntry.subModules.forEach((sub: any) => {
+            let resolvedSubModuleId: number | undefined = undefined;
+            if (moduleId && subModulesByModule[moduleId]) {
+              const found = (subModulesByModule[moduleId] || []).find(
+                (s: any) =>
+                  String(s.sub_module_name).trim().toLowerCase() ===
+                  String(sub.sub_module_name).trim().toLowerCase()
+              );
+              if (found) resolvedSubModuleId = found.sub_module_id;
+            }
+
+            if (!resolvedSubModuleId && sub.sub_module_id) {
+              resolvedSubModuleId = sub.sub_module_id;
+            }
+
+            if (!resolvedSubModuleId) {
+              for (const modKey of Object.keys(subModulesByModule)) {
+                const arr = subModulesByModule[modKey] || [];
+                const found = arr.find(
+                  (s: any) =>
+                    String(s.sub_module_name).trim().toLowerCase() ===
+                    String(sub.sub_module_name).trim().toLowerCase()
+                );
+                if (found) {
+                  resolvedSubModuleId = found.sub_module_id;
+                  break;
+                }
+              }
+            }
+            if (sub.privileges) {
+              Object.keys(sub.privileges).forEach((perm) => {
+                if (sub.privileges[perm]) {
+                  if (resolvedSubModuleId) {
+                    const key =
+                      `sub_${resolvedSubModuleId}_${perm}` +
+                      (selectedRole ? `_role_${selectedRole}` : "");
+                    map[key] = {
+                      sub_module_id: resolvedSubModuleId,
+                      permission: perm,
+                    };
+                  } else {
+                    const nameKey =
+                      `sub_${sub.sub_module_name}_${perm}` +
+                      (selectedRole ? `_role_${selectedRole}` : "");
+                    map[nameKey] = {
+                      sub_module_name: sub.sub_module_name,
+                      permission: perm,
+                    };
+                  }
+                }
+              });
+            }
+            if (Array.isArray(sub.tabs)) {
+              sub.tabs.forEach((tab: any) => {
+                if (tab.privileges) {
+                  Object.keys(tab.privileges).forEach((perm) => {
+                    if (tab.privileges[perm]) {
+                      const subIdPart =
+                        resolvedSubModuleId || sub.sub_module_name;
+                      const key =
+                        `tab_${tab.tab_id}_sub_${subIdPart}_${perm}` +
+                        (selectedRole ? `_role_${selectedRole}` : "");
+                      map[key] = {
+                        tab_id: tab.tab_id,
+                        permission: perm,
+                        sub_module_id: resolvedSubModuleId,
+                      };
+                    }
+                  });
+                }
+              });
+            }
+          });
+        });
+
+        if (mounted) setRolePrivileges(map);
+      } catch (err) {
+        console.error(err);
+        toast.error("Failed to load role privileges");
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    loadRolePrivilegesTree();
+
+    return () => {
+      mounted = false;
+    };
+  }, [selectedRole]);
+
+  const toggleSubModulePermission = (subModuleId: number, perm: string) => {
+    const rolePart = selectedRole ? `_role_${selectedRole}` : "";
+    const key = `sub_${subModuleId}_${perm}${rolePart}`;
+    setRolePrivileges((prev) => {
+      const newMap = { ...prev };
+      if (newMap[key]) delete newMap[key];
+      else newMap[key] = { sub_module_id: subModuleId, permission: perm };
+      return newMap;
+    });
   };
 
-  const handleEditPermission = (permission: Permission) => {
-    setSelectedPermission(permission);
-    setIsEditModalOpen(true);
+  const toggleTabPermission = (
+    tabId: number,
+    subModuleId: number,
+    perm: string
+  ) => {
+    const rolePart = selectedRole ? `_role_${selectedRole}` : "";
+    const key = `tab_${tabId}_sub_${subModuleId}_${perm}${rolePart}`;
+    setRolePrivileges((prev) => {
+      const newMap = { ...prev };
+      if (newMap[key]) delete newMap[key];
+      else
+        newMap[key] = {
+          tab_id: tabId,
+          sub_module_id: subModuleId,
+          permission: perm,
+        };
+      return newMap;
+    });
   };
+  const handleSaveRolePrivileges = async () => {
+    if (!selectedRole) return toast.error("Please select a role first");
+    async function fetchExistingRoleAssignments() {
+      const [rolePrivsResp, roleTabPrivsResp] = await Promise.all([
+        securityPermissionsApi.getRolePrivileges({
+          limit: 1000,
+          role_id: selectedRole!,
+        }),
+        apiClient.get(`/secRoleTabPrivilege/all`, {
+          params: { roleId: selectedRole, limit: 1000 },
+        }),
+      ]);
+      const existingRolePrivs = rolePrivsResp.data?.data || [];
+      const existingRoleTabPrivs = roleTabPrivsResp.data?.data || [];
+      return { existingRolePrivs, existingRoleTabPrivs };
+    }
 
-  const handleUpdatePermission = async (formData: any) => {
-    if (!selectedPermission) return;
+    function parseUiSelections() {
+      const uiRolePrivs: {
+        role_priv_payloads: any[];
+        role_tab_payloads: any[];
+      } = {
+        role_priv_payloads: [],
+        role_tab_payloads: [],
+      };
+
+      Object.keys(rolePrivileges).forEach((key) => {
+        const v = rolePrivileges[key];
+        if (key.startsWith("priv_")) {
+          uiRolePrivs.role_priv_payloads.push({
+            role_id: selectedRole,
+            priv_id: v.priv_id,
+          });
+        }
+        if (key.startsWith("module_")) {
+          // module_<moduleId>_access[_role_<id>]
+          const parts = key.split("_");
+          const moduleId = Number(parts[1]);
+          if (!isNaN(moduleId)) {
+            uiRolePrivs.role_priv_payloads.push({
+              role_id: selectedRole,
+              scope: "MODULE",
+              access_flag: true,
+            });
+          }
+        }
+        if (key.startsWith("sub_")) {
+          // sub module level: key format sub_<subId>_<perm>[_role_<id>] or sub_<name>_...
+          const parts = key.split("_");
+          const subId = Number(parts[1]);
+          const perm = parts[2];
+          if (!isNaN(subId)) {
+            uiRolePrivs.role_priv_payloads.push({
+              role_id: selectedRole,
+              sub_module_id: subId,
+              scope: "SUB_MODULE",
+              view_flag: perm === "view",
+              create_flag: perm === "create",
+              edit_flag: perm === "edit",
+              delete_flag: perm === "delete",
+            });
+          }
+        }
+        if (key.startsWith("tab_")) {
+          const parts = key.split("_");
+          const tabId = Number(parts[1]);
+          const subId = Number(parts[3]);
+          const perm = parts[4];
+          if (!isNaN(tabId)) {
+            uiRolePrivs.role_tab_payloads.push({
+              role_id: selectedRole,
+              tab_id: tabId,
+              sub_module_id: !isNaN(subId) ? subId : undefined,
+              view_flag: perm === "view",
+              create_flag: perm === "create",
+              edit_flag: perm === "edit",
+              delete_flag: perm === "delete",
+            });
+          }
+        }
+      });
+
+      return uiRolePrivs;
+    }
 
     try {
-      setPermissions(
-        permissions.map((p) =>
-          p.id === selectedPermission.id ? { ...p, ...formData } : p
+      setIsLoading(true);
+      const { existingRolePrivs, existingRoleTabPrivs } =
+        await fetchExistingRoleAssignments();
+      const ui = parseUiSelections();
+
+      const existingRolePrivKeys = new Set<string>();
+      existingRolePrivs.forEach((r: any) => {
+        if (r.sub_module_id) existingRolePrivKeys.add(`sub_${r.sub_module_id}`);
+        else if (r.priv_id) existingRolePrivKeys.add(`priv_${r.priv_id}`);
+      });
+
+      const existingTabKeys = new Map<string, any>();
+      existingRoleTabPrivs.forEach((r: any) => {
+        const key = `tab_${r.tab_id}_sub_${r.sub_module_id}`;
+        existingTabKeys.set(key, r);
+      });
+
+      const toCreateRolePrivs: any[] = [];
+      const uiSubModuleFlags: Record<
+        number,
+        {
+          view_flag?: boolean;
+          create_flag?: boolean;
+          edit_flag?: boolean;
+          delete_flag?: boolean;
+        }
+      > = {};
+      ui.role_priv_payloads.forEach((p) => {
+        if (p.sub_module_id) {
+          const id = p.sub_module_id;
+          if (!uiSubModuleFlags[id])
+            uiSubModuleFlags[id] = {
+              view_flag: false,
+              create_flag: false,
+              edit_flag: false,
+              delete_flag: false,
+            };
+          uiSubModuleFlags[id].view_flag =
+            uiSubModuleFlags[id].view_flag || !!p.view_flag;
+          uiSubModuleFlags[id].create_flag =
+            uiSubModuleFlags[id].create_flag || !!p.create_flag;
+          uiSubModuleFlags[id].edit_flag =
+            uiSubModuleFlags[id].edit_flag || !!p.edit_flag;
+          uiSubModuleFlags[id].delete_flag =
+            uiSubModuleFlags[id].delete_flag || !!p.delete_flag;
+        }
+      });
+      ui.role_priv_payloads.forEach((p) => {
+        if (p.priv_id) {
+          if (!existingRolePrivKeys.has(`priv_${p.priv_id}`))
+            toCreateRolePrivs.push({ role_id: p.role_id, priv_id: p.priv_id });
+        } else if (p.sub_module_id) {
+          if (!existingRolePrivKeys.has(`sub_${p.sub_module_id}`))
+            toCreateRolePrivs.push({
+              role_id: p.role_id,
+              sub_module_id: p.sub_module_id,
+              scope: "SUB_MODULE",
+              view_flag: p.view_flag,
+              create_flag: p.create_flag,
+              edit_flag: p.edit_flag,
+              delete_flag: p.delete_flag,
+            });
+        }
+      });
+
+      const toUpdateRolePrivs: Array<{ id: number; data: any }> = [];
+      existingRolePrivs.forEach((r: any) => {
+        const subId = r.sub_module_id;
+        if (subId && uiSubModuleFlags[subId]) {
+          const uiFlags = uiSubModuleFlags[subId];
+          const existingFlags = {
+            view_flag: !!r.view_flag,
+            create_flag: !!r.create_flag,
+            edit_flag: !!r.edit_flag,
+            delete_flag: !!r.delete_flag,
+          };
+          const changed =
+            existingFlags.view_flag !== !!uiFlags.view_flag ||
+            existingFlags.create_flag !== !!uiFlags.create_flag ||
+            existingFlags.edit_flag !== !!uiFlags.edit_flag ||
+            existingFlags.delete_flag !== !!uiFlags.delete_flag;
+          if (changed) {
+            const id = r.role_privilege_id || r.role_priv_id || r.id;
+            if (id) {
+              toUpdateRolePrivs.push({
+                id,
+                data: {
+                  view_flag: uiFlags.view_flag,
+                  create_flag: uiFlags.create_flag,
+                  edit_flag: uiFlags.edit_flag,
+                  delete_flag: uiFlags.delete_flag,
+                },
+              });
+            }
+          }
+        }
+      });
+
+      const toCreateRoleTabPrivs: any[] = [];
+      ui.role_tab_payloads.forEach((p) => {
+        const key = `tab_${p.tab_id}_sub_${p.sub_module_id}`;
+        if (!existingTabKeys.has(key)) toCreateRoleTabPrivs.push(p);
+      });
+
+      const toDeleteRolePrivIds: number[] = [];
+      existingRolePrivs.forEach((r: any) => {
+        if (r.priv_id) {
+          const found = ui.role_priv_payloads.find(
+            (p) => p.priv_id === r.priv_id
+          );
+          if (!found)
+            toDeleteRolePrivIds.push(
+              r.role_privilege_id ||
+                r.role_priv_id ||
+                r.role_priv_id ||
+                r.role_privilege_id
+            );
+        } else if (r.sub_module_id) {
+          const found = ui.role_priv_payloads.find(
+            (p) => p.sub_module_id === r.sub_module_id
+          );
+          if (!found)
+            toDeleteRolePrivIds.push(
+              r.role_privilege_id || r.role_priv_id || r.role_privilege_id
+            );
+        } else if (r.scope === "MODULE") {
+          return;
+        }
+      });
+
+      const toDeleteRoleTabIds: number[] = [];
+      existingRoleTabPrivs.forEach((r: any) => {
+        const key = `tab_${r.tab_id}_sub_${r.sub_module_id}`;
+        const found = ui.role_tab_payloads.find(
+          (p) => p.tab_id === r.tab_id && p.sub_module_id === r.sub_module_id
+        );
+        if (!found)
+          toDeleteRoleTabIds.push(
+            r.role_tab_privilege_id || r.role_tab_privilege_id
+          );
+      });
+
+      console.debug(
+        "[AccessPermissions] existingRolePrivs:",
+        existingRolePrivs
+      );
+      console.debug(
+        "[AccessPermissions] existingRoleTabPrivs:",
+        existingRoleTabPrivs
+      );
+      console.debug(
+        "[AccessPermissions] ui.role_priv_payloads:",
+        ui.role_priv_payloads
+      );
+      console.debug(
+        "[AccessPermissions] ui.role_tab_payloads:",
+        ui.role_tab_payloads
+      );
+      const createPromises: Promise<any>[] = [];
+      toCreateRolePrivs.forEach((p) =>
+        createPromises.push(securityPermissionsApi.createRolePrivilege(p))
+      );
+      toUpdateRolePrivs.forEach((u) =>
+        createPromises.push(
+          apiClient.put(`/secRolePrivilege/edit/${u.id}`, u.data)
         )
       );
-      toast.success("Permission updated successfully");
-      setIsEditModalOpen(false);
-    } catch (error) {
-      toast.error("Failed to update permission");
-    }
-  };
+      toCreateRoleTabPrivs.forEach((p) =>
+        createPromises.push(apiClient.post(`/secRoleTabPrivilege/add`, p))
+      );
+      const deletePromises: Promise<any>[] = [];
+      if (toDeleteRolePrivIds.length > 0) {
+        deletePromises.push(
+          apiClient
+            .delete(`/secRolePrivilege/delete`, {
+              data: { ids: toDeleteRolePrivIds },
+            })
+            .catch(() => {})
+        );
+      }
+      if (toDeleteRoleTabIds.length > 0) {
+        deletePromises.push(
+          apiClient
+            .delete(`/secRoleTabPrivilege/delete`, {
+              data: { ids: toDeleteRoleTabIds },
+            })
+            .catch(() => {})
+        );
+      }
+      console.debug(
+        "[AccessPermissions] toCreateRolePrivs:",
+        toCreateRolePrivs
+      );
+      console.debug(
+        "[AccessPermissions] toCreateRoleTabPrivs:",
+        toCreateRoleTabPrivs
+      );
+      console.debug(
+        "[AccessPermissions] toDeleteRolePrivIds:",
+        toDeleteRolePrivIds
+      );
+      console.debug(
+        "[AccessPermissions] toDeleteRoleTabIds:",
+        toDeleteRoleTabIds
+      );
 
-  const handleDeletePermission = async (permissionId: string) => {
-    try {
-      setPermissions(permissions.filter((p) => p.id !== permissionId));
-      toast.success("Permission deleted successfully");
-    } catch (error) {
-      toast.error("Failed to delete permission");
+      await Promise.all([...createPromises, ...deletePromises]);
+
+      toast.success("Role privileges synchronized");
+    } catch (error: any) {
+      console.error(error);
+      toast.error(error?.message || "Failed to save role privileges");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -342,10 +620,6 @@ export default function AccessPermissionsPage() {
         return updated;
       });
     };
-
-    const selectedModuleData = PERMISSION_MODULES.find(
-      (m) => m.id === formData.module
-    );
 
     const handleSubmit = (e: React.FormEvent) => {
       e.preventDefault();
@@ -386,48 +660,7 @@ export default function AccessPermissionsPage() {
           <Label htmlFor="module">
             {t("security.accessPermissions.module")}
           </Label>
-          <Select
-            value={formData.module}
-            onValueChange={(value) =>
-              setFormData({ ...formData, module: value })
-            }
-          >
-            <SelectTrigger className="mt-1">
-              <SelectValue
-                placeholder={t("security.accessPermissions.selectModule")}
-              />
-            </SelectTrigger>
-            <SelectContent>
-              {PERMISSION_MODULES.map((module) => (
-                <SelectItem key={module.id} value={module.id}>
-                  {module.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
         </div>
-
-        {selectedModuleData && (
-          <div>
-            <Label>{t("security.accessPermissions.permission")}</Label>
-            <div className="grid grid-cols-2 gap-2 mt-2">
-              {selectedModuleData.permissions.map((permission) => (
-                <div key={permission} className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    id={permission}
-                    checked={selectedPermissions.includes(permission)}
-                    onChange={() => handlePermissionToggle(permission)}
-                    className="rounded border-gray-300"
-                  />
-                  <Label htmlFor={permission} className="capitalize">
-                    {permission.replace("-", " ")}
-                  </Label>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
 
         <div>
           <Label htmlFor="status">{t("common.status")}</Label>
@@ -451,15 +684,6 @@ export default function AccessPermissionsPage() {
         </div>
 
         <div className="flex justify-end space-x-2 pt-4">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() =>
-              isEdit ? setIsEditModalOpen(false) : setIsCreateModalOpen(false)
-            }
-          >
-            {t("common.cancel")}
-          </Button>
           <Button type="submit">
             {isEdit ? t("common.update") : t("common.create")}{" "}
             {t("security.accessPermissions.permission")}
@@ -468,433 +692,85 @@ export default function AccessPermissionsPage() {
       </form>
     );
   };
-
-  const getPermissionId = useCallback((permission: Permission): number => {
-    return parseInt(permission.id);
-  }, []);
-
-  const getPermissionDisplayName = useCallback(
-    (permission: Permission, isRTL: boolean): string => {
-      return permission.name;
-    },
-    []
-  );
-
-  const handleSelectPermission = (id: string | number) => {
-    const numericId = typeof id === "string" ? parseInt(id) : id;
-    setSelectedTableRows((prev) =>
-      prev.includes(numericId)
-        ? prev.filter((pid) => pid !== numericId)
-        : [...prev, numericId]
-    );
-  };
-
-  const handleSelectAllPermissions = () => {
-    if (allChecked) {
-      setSelectedTableRows([]);
-      setAllChecked(false);
-    } else {
-      setSelectedTableRows(filteredPermissions.map((p) => parseInt(p.id)));
-      setAllChecked(true);
-    }
-  };
-
-  const tableColumns = [
-    {
-      key: "name",
-      header: t("security.accessPermissions.permissionName"),
-      accessor: (item: unknown) => {
-        const permission = item as Permission;
-        return (
-          <div>
-            <div className="font-medium">{permission.name}</div>
-            <div className="text-sm text-gray-500">
-              {permission.description}
-            </div>
-          </div>
-        );
-      },
-    },
-    {
-      key: "module",
-      header: t("security.accessPermissions.module"),
-      accessor: (item: unknown) => {
-        const permission = item as Permission;
-        return (
-          <span className="capitalize">
-            {PERMISSION_MODULES.find((m) => m.id === permission.module)?.name}
-          </span>
-        );
-      },
-    },
-    {
-      key: "permissions",
-      header: t("security.accessPermissions.permissions"),
-      accessor: (item: unknown) => {
-        const permission = item as Permission;
-        return (
-          <div className="flex flex-wrap gap-1">
-            {permission.permissions.slice(0, 3).map((perm) => (
-              <Badge key={perm} variant="outline" className="text-xs">
-                {perm}
-              </Badge>
-            ))}
-            {permission.permissions.length > 3 && (
-              <Badge variant="outline" className="text-xs">
-                +{permission.permissions.length - 3} more
-              </Badge>
-            )}
-          </div>
-        );
-      },
-    },
-    {
-      key: "status",
-      header: t("common.status"),
-      accessor: (item: unknown) => {
-        const permission = item as Permission;
-        return (
-          <Badge
-            variant={permission.status === "active" ? "default" : "secondary"}
-          >
-            {t(`common.${permission.status}`)}
-          </Badge>
-        );
-      },
-    },
-    {
-      key: "assignedRoles",
-      header: t("security.accessPermissions.assignedRoles"),
-      accessor: (item: unknown) => {
-        const permission = item as Permission;
-        return <span>{permission.assignedRoles}</span>;
-      },
-    },
-    {
-      key: "createdAt",
-      header: t("common.createdAt"),
-      accessor: (item: unknown) => {
-        const permission = item as Permission;
-        return (
-          <span className="text-sm text-gray-500">{permission.createdAt}</span>
-        );
-      },
-    },
-  ];
-
   return (
     <div className="w-full p-6">
-      <div className="flex justify-between items-center mb-6">
-        <div className="flex items-center space-x-3">
-          <Key className="h-8 w-8 text-primary" />
-          <div>
-            <h1 className="text-3xl font-bold">
-              {t("security.accessPermissions.title")}
-            </h1>
-            <p className="text-muted-foreground">
-              {t("security.accessPermissions.description")}
-            </p>
-          </div>
-        </div>
-        <Dialog open={isCreateModalOpen} onOpenChange={setIsCreateModalOpen}>
-          <DialogTrigger asChild>
-            <Button>
-              <Plus className="h-4 w-4 mr-2" />
-              {t("security.accessPermissions.createPermission")}
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-2xl">
-            <DialogHeader>
-              <DialogTitle>
-                {t("security.accessPermissions.createNewPermission")}
-              </DialogTitle>
-            </DialogHeader>
-            <PermissionForm onSubmit={handleCreatePermission} />
-          </DialogContent>
-        </Dialog>
-      </div>
-
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center">
-              <Shield className="h-8 w-8 text-blue-600" />
-              <div className="ml-4">
-                <p className="text-sm font-medium text-muted-foreground">
-                  {t("security.accessPermissions.totalPermissions")}
-                </p>
-                <p className="text-2xl font-bold">{permissions.length}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center">
-              <div className="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center">
-                <div className="h-4 w-4 rounded-full bg-green-600"></div>
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-muted-foreground">
-                  {t("common.active")}
-                </p>
-                <p className="text-2xl font-bold">
-                  {
-                    permissions.filter((p: Permission) => p.status === "active")
-                      .length
-                  }
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center">
-              <div className="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center">
-                <div className="h-4 w-4 rounded-full bg-gray-600"></div>
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-muted-foreground">
-                  {t("common.inactive")}
-                </p>
-                <p className="text-2xl font-bold">
-                  {
-                    permissions.filter(
-                      (p: Permission) => p.status === "inactive"
-                    ).length
-                  }
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center">
-              <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center">
-                <div className="h-4 w-4 rounded-full bg-blue-600"></div>
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-muted-foreground">
-                  {t("security.accessPermissions.totalUsers")}
-                </p>
-                <p className="text-2xl font-bold">
-                  {permissions.reduce(
-                    (sum: number, p: Permission) => sum + p.users,
-                    0
-                  )}
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Filters */}
-      <Card className="mb-6">
-        <CardContent className="p-6">
-          <div className="flex flex-col md:flex-row gap-4">
-            <div className="flex-1">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-                <input
-                  placeholder={t(
-                    "security.accessPermissions.searchPlaceholder"
-                  )}
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 p-2-md"
+      <div className="mb-6 flex items-center justify-between">
+        <Header title={t("security.accessPermissions.title")} />
+        <div className="flex justify-end items-end gap-3">
+          <div className="w-56">
+            <Label>{t("security.accessPermissions.selectRole")}</Label>
+            <Select
+              value={selectedRole ? String(selectedRole) : ""}
+              onValueChange={(v) => setSelectedRole(v ? Number(v) : null)}
+            >
+              <SelectTrigger className="mt-1 w-full">
+                <SelectValue
+                  placeholder={t("security.accessPermissions.selectRole")}
                 />
-              </div>
-            </div>
-            <div className="flex gap-2">
-              <Select value={selectedModule} onValueChange={setSelectedModule}>
-                <SelectTrigger className="w-[200px]">
-                  <Filter className="h-4 w-4 mr-2" />
-                  <SelectValue placeholder="Module" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">
-                    {t("security.accessPermissions.allModules")}
+              </SelectTrigger>
+              <SelectContent>
+                {roles.map((r) => (
+                  <SelectItem key={r.role_id} value={String(r.role_id)}>
+                    {r.role_name}
                   </SelectItem>
-                  {PERMISSION_MODULES.map((module) => (
-                    <SelectItem key={module.id} value={module.id}>
-                      {module.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-                <SelectTrigger className="w-[150px]">
-                  <SelectValue placeholder="Status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">{t("common.allStatus")}</SelectItem>
-                  <SelectItem value="active">{t("common.active")}</SelectItem>
-                  <SelectItem value="inactive">
-                    {t("common.inactive")}
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
-        </CardContent>
-      </Card>
 
-      {/* Permissions Table */}
-      <GenericTable
-        data={filteredPermissions}
-        columns={tableColumns}
-        selected={selectedTableRows}
-        page={currentPage}
-        pageSize={pageSize}
-        allChecked={allChecked}
-        getItemId={getPermissionId}
-        getItemDisplayName={(permission: Permission) => permission.name}
-        onSelectItem={(id: string | number) => handleSelectPermission(id)}
-        onSelectAll={handleSelectAllPermissions}
-        onEditItem={(permission: Permission) => {
-          setSelectedPermission(permission);
-          setIsEditModalOpen(true);
-        }}
-        onDeleteItem={(id: string | number) => {
-          const permission = filteredPermissions.find(
-            (p) => p.id === id.toString()
-          );
-          if (permission) {
-            handleDeletePermission(permission.id);
-          }
-        }}
-        noDataMessage={t("security.accessPermissions.noPermissionsFound")}
-        isLoading={isLoading}
-        onPageChange={setCurrentPage}
-        onPageSizeChange={setPageSize}
-        showActions={true}
-      />
-
-      {/* View Permission Modal */}
-      <Dialog open={isViewModalOpen} onOpenChange={setIsViewModalOpen}>
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>
-              {t("security.accessPermissions.permissionDetails")}
-            </DialogTitle>
-          </DialogHeader>
-          {selectedPermission && (
-            <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label className="font-medium">
-                    {t("security.accessPermissions.permissionName")}
-                  </Label>
-                  <p className="text-sm text-muted-foreground">
-                    {selectedPermission.name}
-                  </p>
-                </div>
-                <div>
-                  <Label className="font-medium">{t("common.status")}</Label>
-                  <Badge
-                    variant={
-                      selectedPermission.status === "active"
-                        ? "default"
-                        : "secondary"
-                    }
-                  >
-                    {selectedPermission.status}
-                  </Badge>
-                </div>
+          <Button
+            variant="secondary"
+            onClick={handleSaveRolePrivileges}
+            disabled={isLoading || !selectedRole}
+          >
+            {t("security.accessPermissions.saveRolePrivileges")}
+          </Button>
+        </div>
+      </div>
+      <div className="grid grid-cols-1 gap-6">
+        <div className="lg:col-span-1">
+          <Card className="mb-4 border-0 bg-background">
+            <CardContent>
+              <div className="space-y-4">
+                {modules.map((mod) => (
+                  <div key={mod.module_id}>
+                    <div className="flex items-center justify-between">
+                      <div className="font-medium">{mod.module_name}</div>
+                    </div>
+                    <div className="mt-3 grid grid-cols-1 gap-4">
+                      <div>
+                        <div className="mt-2 space-y-2">
+                          {(subModulesByModule[mod.module_id] || []).map(
+                            (sub: any) => (
+                              <div
+                                key={sub.sub_module_id}
+                                className="p-2 bg-card border border-border rounded-2xl"
+                              >
+                                <div className="mt-2">
+                                  <SubModuleTabsComponent
+                                    subModule={sub}
+                                    rolePrivileges={rolePrivileges}
+                                    selectedRole={selectedRole}
+                                    getTabs={getTabs}
+                                    toggleSubModulePermission={
+                                      toggleSubModulePermission
+                                    }
+                                    toggleTabPermission={toggleTabPermission}
+                                  />
+                                </div>
+                              </div>
+                            )
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
-              <div>
-                <Label className="font-medium">{t("common.description")}</Label>
-                <p className="text-sm text-muted-foreground">
-                  {selectedPermission.description}
-                </p>
-              </div>
-              <div>
-                <Label className="font-medium">
-                  {t("security.accessPermissions.module")}
-                </Label>
-                <p className="text-sm text-muted-foreground capitalize">
-                  {
-                    PERMISSION_MODULES.find(
-                      (m) => m.id === selectedPermission.module
-                    )?.name
-                  }
-                </p>
-              </div>
-              <div>
-                <Label className="font-medium">
-                  {t("security.accessPermissions.permissions")}
-                </Label>
-                <div className="flex flex-wrap gap-2 mt-2">
-                  {selectedPermission.permissions.map((perm) => (
-                    <Badge key={perm} variant="outline">
-                      {perm}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label className="font-medium">
-                    {t("security.accessPermissions.usersAssigned")}
-                  </Label>
-                  <p className="text-sm text-muted-foreground">
-                    {selectedPermission.users}
-                  </p>
-                </div>
-                <div>
-                  <Label className="font-medium">{t("common.createdAt")}</Label>
-                  <p className="text-sm text-muted-foreground">
-                    {selectedPermission.createdAt}
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
-
-      {/* Edit Permission Modal */}
-      <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>
-              {t("security.accessPermissions.editPermission")}
-            </DialogTitle>
-          </DialogHeader>
-          <PermissionForm
-            permission={selectedPermission!}
-            isEdit={true}
-            onSubmit={handleUpdatePermission}
-          />
-        </DialogContent>
-      </Dialog>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
     </div>
   );
-}
-
-interface Permission {
-  id: string;
-  name: string;
-  description: string;
-  module: string;
-  action: string;
-  permissions: string[];
-  status: "active" | "inactive";
-  assignedRoles: number;
-  createdAt: string;
-  users: number;
-}
-
-interface RolePermission {
-  roleId: string;
-  roleName: string;
-  permissions: {
-    [module: string]: {
-      [permission: string]: boolean;
-    };
-  };
 }

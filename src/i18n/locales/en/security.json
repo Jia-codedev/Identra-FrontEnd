@@ -67,6 +67,15 @@
         "description": "Security and system administration"
       }
     }
+    ,
+    "selectRole": "Select Role",
+    "saveRolePrivileges": "Save Role Privileges",
+    "modulePrivileges": "Module Privileges",
+    "assignPrivilegesByModule": "Assign Privileges by Module",
+    "privileges": "Privileges",
+    "subModules": "Sub Modules",
+    "info": "Info",
+    "modulePrivilegeInfo": "Module privilege controls let you grant or revoke access at the module level."
   },
   "sessionMonitor": {
     "title": "Session Monitor",

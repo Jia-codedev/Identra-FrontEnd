@@ -67,6 +67,15 @@
         "description": "إدارة الأمن وإدارة النظام"
       }
     }
+    ,
+    "selectRole": "حدد دور",
+    "saveRolePrivileges": "حفظ أذونات الدور",
+    "modulePrivileges": "أذونات الوحدة",
+    "assignPrivilegesByModule": "تعيين الأذونات حسب الوحدة",
+    "privileges": "أذونات",
+    "subModules": "الوحدات الفرعية",
+    "info": "معلومات",
+    "modulePrivilegeInfo": "تتيح لك عناصر تحكم أذونات الوحدة منح أو إلغاء الوصول على مستوى الوحدة."
   },
   "sessionMonitor": {
     "title": "شاشة الجلسة",
