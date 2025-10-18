@@ -8,6 +8,7 @@ import { LanguageProvider } from "@/providers/language-provider";
 import { SocketProvider } from "@/providers/socket-provider";
 import { UserProvider } from "@/providers/user-provider";
 import { Toaster } from "@/components/ui/sonner";
+import React from "react";
 
 export const metadata: Metadata = {
   title: "Chronexa",

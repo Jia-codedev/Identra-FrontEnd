@@ -58,7 +58,7 @@ export default function SubModuleTabs({
     };
   }, [subModule.sub_module_id, getTabs]);
 
-  const perms = ["view", "edit", "delete"];
+  const perms = ["view", "create", "edit", "delete"];
 
   return (
     <Accordion

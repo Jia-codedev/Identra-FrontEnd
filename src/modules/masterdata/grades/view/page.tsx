@@ -12,16 +12,14 @@ import { Button } from "@/components/ui/button";
 import { useGrades } from "../hooks/useGrades";
 import { IGrade } from "../types";
 import { useGradeMutations } from "../hooks/useMutations";
-import {
-  GradesTable,
-  GradeModal,
-  GradesHeader
-} from "../index";
+import { GradesTable, GradeModal, GradesHeader } from "../index";
 import { CustomPagination } from "@/components/common/dashboard/Pagination";
+import { useSubModulePrivileges } from "@/hooks/security/useSubModulePrivileges";
 
 export default function GradesPage() {
   const { t } = useTranslations();
-  const { createGrade, updateGrade, deleteGrade, deleteGrades } = useGradeMutations();
+  const { createGrade, updateGrade, deleteGrade, deleteGrades } =
+    useGradeMutations();
   const {
     grades,
     selected,
@@ -38,7 +36,10 @@ export default function GradesPage() {
     selectAll,
     isLoading,
   } = useGrades();
-
+  const { canCreate, canEdit, canDelete } = useSubModulePrivileges(
+    "enterprise-settings",
+    "job-levels"
+  );
   const [modalState, setModalState] = useState<{
     isOpen: boolean;
     mode: "add" | "edit";
@@ -81,21 +82,41 @@ export default function GradesPage() {
 
   const handleSaveGrade = (data: IGrade) => {
     if (modalState.mode === "add") {
-      createGrade({ gradeData: data, onClose: handleCloseModal, search, pageSize });
+      createGrade({
+        gradeData: data,
+        onClose: handleCloseModal,
+        search,
+        pageSize,
+      });
     } else if (modalState.mode === "edit" && modalState.grade) {
-      updateGrade({ id: modalState.grade.grade_id, gradeData: data, onClose: handleCloseModal, search, pageSize });
+      updateGrade({
+        id: modalState.grade.grade_id,
+        gradeData: data,
+        onClose: handleCloseModal,
+        search,
+        pageSize,
+      });
     }
   };
 
   const handleDeleteGrade = (id: number) => {
+    if (!canDelete) {
+      return;
+    }
     setDeleteDialog({ open: true, type: "single", id });
   };
 
   const handleDeleteSelected = () => {
+    if (!canDelete) {
+      return;
+    }
     setDeleteDialog({ open: true, type: "bulk" });
   };
 
   const handleConfirmDelete = () => {
+    if (!canDelete) {
+      return;
+    }
     if (deleteDialog.type === "single" && deleteDialog.id !== undefined) {
       deleteGrade(deleteDialog.id);
     } else if (deleteDialog.type === "bulk" && selected.length > 0) {
@@ -113,6 +134,8 @@ export default function GradesPage() {
       <div className="w-full relative">
         <div className="py-4 border-border bg-background/90">
           <GradesHeader
+            canDelete={canDelete}
+            canCreate={canCreate}
             search={search}
             onSearchChange={setSearch}
             onAddGrade={handleAddGrade}
@@ -121,6 +144,8 @@ export default function GradesPage() {
           />
 
           <GradesTable
+            canEdit={canEdit}
+            canDelete={canDelete}
             grades={grades}
             selected={selected}
             page={page}
@@ -153,25 +178,30 @@ export default function GradesPage() {
         grade={modalState.grade}
         mode={modalState.mode}
       />
-      <Dialog open={deleteDialog.open} onOpenChange={open => !open && handleCancelDelete()}>
-        <DialogContent
-          className="p-0"
-        >
-          <DialogHeader
-            className="p-2"
-          >
-            <DialogTitle
-              className="mb-1 p-2"
-            >{t("common.confirmDelete")}</DialogTitle>
+      <Dialog
+        open={deleteDialog.open}
+        onOpenChange={(open) => !open && handleCancelDelete()}
+      >
+        <DialogContent className="p-0">
+          <DialogHeader className="p-2">
+            <DialogTitle className="mb-1 p-2">
+              {t("common.confirmDelete")}
+            </DialogTitle>
             <div className="bg-black/5 p-4 rounded-lg dark:bg-white/5">
               <DialogDescription>
                 {deleteDialog.type === "single"
                   ? t("messages.confirm.delete")
-                  : t("messages.confirm.deleteMultiple", { count: selected.length })}
+                  : t("messages.confirm.deleteMultiple", {
+                      count: selected.length,
+                    })}
               </DialogDescription>
               <div className="flex justify-end space-x-2 mt-4">
-                <Button variant="outline" onClick={handleCancelDelete}>{t("common.cancel")}</Button>
-                <Button variant="destructive" onClick={handleConfirmDelete}>{t("common.delete")}</Button>
+                <Button variant="outline" onClick={handleCancelDelete}>
+                  {t("common.cancel")}
+                </Button>
+                <Button variant="destructive" onClick={handleConfirmDelete}>
+                  {t("common.delete")}
+                </Button>
               </div>
             </div>
           </DialogHeader>

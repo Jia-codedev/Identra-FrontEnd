@@ -39,6 +39,7 @@ export function setupInterceptors(client: AxiosInstance) {
         originalRequest &&
         !originalRequest._retry
       ) {
+        console.log("401 error intercepted:", error.response);
         const errorData = error.response.data as any;
         if (
           errorData?.requireLogin ||

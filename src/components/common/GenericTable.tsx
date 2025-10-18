@@ -65,11 +65,9 @@ export function GenericTable<T>({
   actions,
   noDataMessage,
   isLoading = false,
-  onPageChange,
-  onPageSizeChange,
   showActions = true,
-  canDelete = true,
-  canEdit = true,
+  canDelete = false,
+  canEdit = false,
 }: GenericTableProps<T>) {
   const { t } = useTranslations();
   const { isRTL } = useLanguage();
@@ -117,7 +115,11 @@ export function GenericTable<T>({
                   {column.header}
                 </TableHead>
               ))}
-              {(onEditItem || onDeleteItem || actions) && (
+              {(onEditItem ||
+                onDeleteItem ||
+                actions ||
+                canEdit ||
+                canDelete) && (
                 <TableHead className="w-32 text-center text-base font-bold text-primary drop-shadow-sm tracking-wide">
                   {t("common.actions")}
                 </TableHead>
@@ -157,7 +159,11 @@ export function GenericTable<T>({
                           {column.accessor(item, isRTL)}
                         </TableCell>
                       ))}
-                      {(onEditItem || onDeleteItem || actions) && (
+                      {(onEditItem ||
+                        onDeleteItem ||
+                        actions ||
+                        canDelete ||
+                        canEdit) && (
                         <TableCell
                           className={`text-center flex ${
                             isRTL ? "flex-row-reverse" : "flex-row"
@@ -173,8 +179,15 @@ export function GenericTable<T>({
                                   size="icon"
                                   variant="outline"
                                   className="p-2 rounded-full group cursor-pointer"
-                                  onClick={() => onEditItem(item)}
+                                  onClick={() => {
+                                    if (canEdit) onEditItem(item);
+                                  }}
                                   aria-label={t("common.edit")}
+                                  title={
+                                    !canEdit
+                                      ? t("common.permissionRequired")
+                                      : t("common.edit")
+                                  }
                                 >
                                   <FiEdit2 className="text-primary group-hover:scale-110 transition-transform" />
                                 </Button>
@@ -187,6 +200,11 @@ export function GenericTable<T>({
                                   className="p-2 rounded-full group cursor-pointer"
                                   onClick={() => onDeleteItem(itemId)}
                                   aria-label={t("common.delete")}
+                                  title={
+                                    !canDelete
+                                      ? t("common.permissionRequired")
+                                      : t("common.delete")
+                                  }
                                 >
                                   <FiTrash2 className="text-white group-hover:scale-110 transition-transform" />
                                 </Button>

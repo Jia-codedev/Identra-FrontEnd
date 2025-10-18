@@ -18,6 +18,8 @@ interface NationalitiesTableProps {
   onEditNationality: (nationality: INationality) => void;
   onDeleteNationality: (id: number) => void;
   isLoading?: boolean;
+  canEdit: boolean;
+  canDelete: boolean;
 }
 
 export const NationalitiesTable: React.FC<NationalitiesTableProps> = ({
@@ -33,6 +35,8 @@ export const NationalitiesTable: React.FC<NationalitiesTableProps> = ({
   isLoading = false,
   onPageChange,
   onPageSizeChange,
+  canEdit,
+  canDelete,
 }) => {
   const { t } = useTranslations();
 
@@ -52,6 +56,8 @@ export const NationalitiesTable: React.FC<NationalitiesTableProps> = ({
 
   return (
     <GenericTable
+      canEdit={canEdit}
+      canDelete={canDelete}
       data={nationalities}
       columns={columns}
       selected={selected}

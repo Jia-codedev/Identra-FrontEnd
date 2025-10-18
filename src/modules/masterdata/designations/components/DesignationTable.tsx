@@ -18,6 +18,8 @@ interface DesignationsTableProps {
   onEditDesignation: (designation: IDesignation) => void;
   onDeleteDesignation: (id: number) => void;
   isLoading?: boolean;
+  canEdit: boolean;
+  canDelete: boolean;
 }
 
 export const DesignationsTable: React.FC<DesignationsTableProps> = ({
@@ -33,6 +35,8 @@ export const DesignationsTable: React.FC<DesignationsTableProps> = ({
   isLoading,
   onPageChange,
   onPageSizeChange,
+  canEdit,
+  canDelete,
 }) => {
   const { t } = useTranslations();
 
@@ -52,6 +56,8 @@ export const DesignationsTable: React.FC<DesignationsTableProps> = ({
 
   return (
     <GenericTable
+      canEdit={canEdit}
+      canDelete={canDelete}
       data={designations}
       columns={columns}
       selected={selected}

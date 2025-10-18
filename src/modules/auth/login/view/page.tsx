@@ -11,7 +11,6 @@ import { useLanguage } from "@/providers/language-provider";
 import authService from "@/services/authService";
 import { useRouter } from "next/navigation";
 import { getRouteFromKey } from "@/utils/routeFromKey";
-import { CookieDebugger } from "@/utils/cookieDebugger";
 import { Button } from "@/components/ui/button";
 import { BiLogoMicrosoft } from "react-icons/bi";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
@@ -35,8 +34,6 @@ function AuthComponent() {
 
   const onSubmit = async (data: LoginForm) => {
     try {
-      CookieDebugger.logEnvironment();
-      CookieDebugger.testCookies();
       const response = await authService.login({
         login: data.login,
         password: data.password,
@@ -48,11 +45,6 @@ function AuthComponent() {
       } else {
         setError(null);
         setSubmitted(true);
-
-        setTimeout(() => {
-          CookieDebugger.debugCurrentCookies();
-        }, 500);
-
         setTimeout(() => {
           router.push(
             getRouteFromKey("mainMenu.workforceAnalytics.myInsights")

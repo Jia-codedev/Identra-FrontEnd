@@ -15,13 +15,23 @@ import { useNationalityMutations } from "../hooks/useMutations";
 import {
   NationalitiesTable,
   NationalityModal,
-  NationalitiesHeader
+  NationalitiesHeader,
 } from "../index";
 import { CustomPagination } from "@/components/common/dashboard/Pagination";
+import { useSubModulePrivileges } from "@/hooks/security/useSubModulePrivileges";
 
 export default function NationalitiesPage() {
+  const { canCreate, canEdit, canDelete } = useSubModulePrivileges(
+    "enterprise-settings",
+    "citizenship-info"
+  );
   const { t } = useTranslations();
-  const { createNationality, updateNationality, deleteNationality, deleteNationalities } = useNationalityMutations();
+  const {
+    createNationality,
+    updateNationality,
+    deleteNationality,
+    deleteNationalities,
+  } = useNationalityMutations();
   const {
     nationalities,
     selected,
@@ -81,9 +91,20 @@ export default function NationalitiesPage() {
 
   const handleSaveNationality = (data: INationality) => {
     if (modalState.mode === "add") {
-      createNationality({ nationalityData: data, onClose: handleCloseModal, search, pageSize });
+      createNationality({
+        nationalityData: data,
+        onClose: handleCloseModal,
+        search,
+        pageSize,
+      });
     } else if (modalState.mode === "edit" && modalState.nationality) {
-      updateNationality({ id: modalState.nationality.citizenship_id, nationalityData: data, onClose: handleCloseModal, search, pageSize });
+      updateNationality({
+        id: modalState.nationality.citizenship_id,
+        nationalityData: data,
+        onClose: handleCloseModal,
+        search,
+        pageSize,
+      });
     }
   };
 
@@ -113,6 +134,8 @@ export default function NationalitiesPage() {
       <div className="w-full relative">
         <div className="py-4 border-border bg-background/90">
           <NationalitiesHeader
+            canCreate={canCreate}
+            canDelete={canDelete}
             search={search}
             onSearchChange={setSearch}
             onAddNationality={handleAddNationality}
@@ -121,6 +144,8 @@ export default function NationalitiesPage() {
           />
 
           <NationalitiesTable
+            canEdit={canEdit}
+            canDelete={canDelete}
             nationalities={nationalities}
             selected={selected}
             page={page}
@@ -153,26 +178,31 @@ export default function NationalitiesPage() {
         nationality={modalState.nationality}
         mode={modalState.mode}
       />
-      
-      <Dialog open={deleteDialog.open} onOpenChange={open => !open && handleCancelDelete()}>
-        <DialogContent
-          className="p-0"
-        >
-          <DialogHeader
-            className="p-2"
-          >
-            <DialogTitle
-              className="mb-1 p-2"
-            >{t("common.confirmDelete")}</DialogTitle>
+
+      <Dialog
+        open={deleteDialog.open}
+        onOpenChange={(open) => !open && handleCancelDelete()}
+      >
+        <DialogContent className="p-0">
+          <DialogHeader className="p-2">
+            <DialogTitle className="mb-1 p-2">
+              {t("common.confirmDelete")}
+            </DialogTitle>
             <div className="bg-black/5 p-4 rounded-lg dark:bg-white/5">
               <DialogDescription>
                 {deleteDialog.type === "single"
                   ? t("messages.confirm.delete")
-                  : t("messages.confirm.deleteMultiple", { count: selected.length })}
+                  : t("messages.confirm.deleteMultiple", {
+                      count: selected.length,
+                    })}
               </DialogDescription>
               <div className="flex justify-end space-x-2 mt-4">
-                <Button variant="outline" onClick={handleCancelDelete}>{t("common.cancel")}</Button>
-                <Button variant="destructive" onClick={handleConfirmDelete}>{t("common.delete")}</Button>
+                <Button variant="outline" onClick={handleCancelDelete}>
+                  {t("common.cancel")}
+                </Button>
+                <Button variant="destructive" onClick={handleConfirmDelete}>
+                  {t("common.delete")}
+                </Button>
               </div>
             </div>
           </DialogHeader>
