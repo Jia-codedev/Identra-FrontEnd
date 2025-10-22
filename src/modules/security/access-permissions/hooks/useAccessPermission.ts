@@ -1,48 +1,11 @@
-"use client";
-
-import React, { useState, useEffect, useCallback, useRef } from "react";
-import { useTranslations } from "@/hooks/use-translations";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Label } from "@/components/ui/label";
-import { toast } from "sonner";
+import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import rolesApi from "@/services/security/rolesService";
 import securityPermissionsApi from "@/services/security/securityPermissions";
 import securitySubModulesApi from "@/services/security/securitySubModules";
 import apiClient from "@/configs/api/Axios";
-import SubModuleTabsComponent from "@/modules/security/access-permissions/components/SubModuleTabs";
-import Header from "@/modules/security/access-permissions/components/Header";
+import { toast } from "sonner";
 
-interface Permission {
-  id: string;
-  name: string;
-  description: string;
-  module: string;
-  action: string;
-  permissions: string[];
-  status: "active" | "inactive";
-  assignedRoles: number;
-  createdAt: string;
-  users: number;
-}
-
-interface PermissionModule {
-  id: string;
-  name: string;
-  permissions: string[];
-}
-
-export default function AccessPermissionsPage() {
-  const { t } = useTranslations();
-
+export function useAccessPermission() {
   const [roles, setRoles] = useState<any[]>([]);
   const [selectedRole, setSelectedRole] = useState<number | null>(null);
   const [modules, setModules] = useState<any[]>([]);
@@ -53,6 +16,8 @@ export default function AccessPermissionsPage() {
   const [isLoading, setIsLoading] = useState(false);
   const tabsCacheRef = useRef<Record<number, any[]>>({});
   const allTabsFetchedRef = useRef<boolean>(false);
+
+  // Fetch all tabs once and cache
   const fetchAllTabsOnce = useCallback(async () => {
     if (allTabsFetchedRef.current) return;
     try {
@@ -68,13 +33,13 @@ export default function AccessPermissionsPage() {
       });
       tabsCacheRef.current = map;
     } catch (err) {
-      console.log(err);
       tabsCacheRef.current = {};
     } finally {
       allTabsFetchedRef.current = true;
     }
   }, []);
 
+  // Get tabs for a submodule (cached)
   const getTabs = useCallback(
     async (subModuleId: number) => {
       if (tabsCacheRef.current[subModuleId])
@@ -84,6 +49,8 @@ export default function AccessPermissionsPage() {
     },
     [fetchAllTabsOnce]
   );
+
+  // Initial load: roles, modules, submodules
   useEffect(() => {
     async function load() {
       try {
@@ -92,11 +59,10 @@ export default function AccessPermissionsPage() {
           rolesApi.getRoles({ limit: 1000 }),
           securityPermissionsApi.getModules({ limit: 1000 }),
         ]);
-
         const loadedRoles = rolesRes.data.data || [];
         setRoles(loadedRoles);
         setModules(modulesRes.data.data || []);
-
+        // Submodules
         try {
           const smResp = await securitySubModulesApi.getSubModules({
             limit: 1000,
@@ -110,30 +76,27 @@ export default function AccessPermissionsPage() {
             subModulesMap[mid].push(s);
           });
           setSubModulesByModule(subModulesMap);
-        } catch (err) {
-          console.error(err);
+        } catch {
           setSubModulesByModule({});
         }
       } catch (error) {
-        console.error(error);
         toast.error("Failed to load roles or modules");
       } finally {
         setIsLoading(false);
       }
     }
-
     load();
   }, []);
 
   // Select first role after roles are loaded
-  React.useEffect(() => {
+  useEffect(() => {
     if (roles.length > 0 && !selectedRole) {
       setSelectedRole(roles[0].role_id);
     }
   }, [roles]);
 
+  // Load privileges for selected role
   useEffect(() => {
-    // Only run if all data is loaded
     if (
       !selectedRole ||
       modules.length === 0 ||
@@ -142,7 +105,6 @@ export default function AccessPermissionsPage() {
       setRolePrivileges({});
       return;
     }
-
     let mounted = true;
     async function loadRolePrivilegesTree() {
       try {
@@ -150,19 +112,16 @@ export default function AccessPermissionsPage() {
         const resp = await apiClient.get(`/secRolePrivilege`, {
           params: { roleId: selectedRole },
         });
-
         const tree = resp.data?.data || {};
         const map: Record<string, any> = {};
         Object.keys(tree).forEach((moduleName) => {
           const moduleTreeEntry = tree[moduleName];
           if (!moduleTreeEntry || !Array.isArray(moduleTreeEntry.subModules))
             return;
-
           const moduleObj = modules.find(
             (m: any) => m.module_name === moduleName
           );
           const moduleId = moduleObj?.module_id;
-
           moduleTreeEntry.subModules.forEach((sub: any) => {
             let resolvedSubModuleId: number | undefined = undefined;
             if (moduleId && subModulesByModule[moduleId]) {
@@ -173,11 +132,9 @@ export default function AccessPermissionsPage() {
               );
               if (found) resolvedSubModuleId = found.sub_module_id;
             }
-
             if (!resolvedSubModuleId && sub.sub_module_id) {
               resolvedSubModuleId = sub.sub_module_id;
             }
-
             if (!resolvedSubModuleId) {
               for (const modKey of Object.keys(subModulesByModule)) {
                 const arr = subModulesByModule[modKey] || [];
@@ -237,54 +194,56 @@ export default function AccessPermissionsPage() {
             }
           });
         });
-
         if (mounted) setRolePrivileges(map);
-      } catch (err) {
-        console.error(err);
+      } catch {
         toast.error("Failed to load role privileges");
       } finally {
         setIsLoading(false);
       }
     }
-
     loadRolePrivilegesTree();
-
     return () => {
       mounted = false;
     };
   }, [selectedRole, modules, subModulesByModule]);
 
-  const toggleSubModulePermission = (subModuleId: number, perm: string) => {
-    const rolePart = selectedRole ? `_role_${selectedRole}` : "";
-    const key = `sub_${subModuleId}_${perm}${rolePart}`;
-    setRolePrivileges((prev) => {
-      const newMap = { ...prev };
-      if (newMap[key]) delete newMap[key];
-      else newMap[key] = { sub_module_id: subModuleId, permission: perm };
-      return newMap;
-    });
-  };
+  // Toggle submodule permission
+  const toggleSubModulePermission = useCallback(
+    (subModuleId: number, perm: string) => {
+      const rolePart = selectedRole ? `_role_${selectedRole}` : "";
+      const key = `sub_${subModuleId}_${perm}${rolePart}`;
+      setRolePrivileges((prev) => {
+        const newMap = { ...prev };
+        if (newMap[key]) delete newMap[key];
+        else newMap[key] = { sub_module_id: subModuleId, permission: perm };
+        return newMap;
+      });
+    },
+    [selectedRole]
+  );
 
-  const toggleTabPermission = (
-    tabId: number,
-    subModuleId: number,
-    perm: string
-  ) => {
-    const rolePart = selectedRole ? `_role_${selectedRole}` : "";
-    const key = `tab_${tabId}_sub_${subModuleId}_${perm}${rolePart}`;
-    setRolePrivileges((prev) => {
-      const newMap = { ...prev };
-      if (newMap[key]) delete newMap[key];
-      else
-        newMap[key] = {
-          tab_id: tabId,
-          sub_module_id: subModuleId,
-          permission: perm,
-        };
-      return newMap;
-    });
-  };
-  const handleSaveRolePrivileges = async () => {
+  // Toggle tab permission
+  const toggleTabPermission = useCallback(
+    (tabId: number, subModuleId: number, perm: string) => {
+      const rolePart = selectedRole ? `_role_${selectedRole}` : "";
+      const key = `tab_${tabId}_sub_${subModuleId}_${perm}${rolePart}`;
+      setRolePrivileges((prev) => {
+        const newMap = { ...prev };
+        if (newMap[key]) delete newMap[key];
+        else
+          newMap[key] = {
+            tab_id: tabId,
+            sub_module_id: subModuleId,
+            permission: perm,
+          };
+        return newMap;
+      });
+    },
+    [selectedRole]
+  );
+
+  // Save role privileges
+  const handleSaveRolePrivileges = useCallback(async () => {
     if (!selectedRole) return toast.error("Please select a role first");
     async function fetchExistingRoleAssignments() {
       const [rolePrivsResp, roleTabPrivsResp] = await Promise.all([
@@ -301,13 +260,6 @@ export default function AccessPermissionsPage() {
       return { existingRolePrivs, existingRoleTabPrivs };
     }
 
-    // Helper to validate scope
-    function validateScope(scope: string) {
-      return (
-        typeof scope === "string" && scope.length >= 1 && scope.length <= 5
-      );
-    }
-
     function parseUiSelections() {
       const uiRolePrivs: {
         role_priv_payloads: any[];
@@ -316,7 +268,6 @@ export default function AccessPermissionsPage() {
         role_priv_payloads: [],
         role_tab_payloads: [],
       };
-
       Object.keys(rolePrivileges).forEach((key) => {
         const v = rolePrivileges[key];
         if (key.startsWith("priv_")) {
@@ -326,11 +277,10 @@ export default function AccessPermissionsPage() {
           });
         }
         if (key.startsWith("module_")) {
-          // module_<moduleId>_access[_role_<id>]
           const parts = key.split("_");
           const moduleId = Number(parts[1]);
           if (!isNaN(moduleId)) {
-            const scopeValue = "MODUL"; // 5 chars
+            const scopeValue = "MODUL";
             uiRolePrivs.role_priv_payloads.push({
               role_id: selectedRole,
               scope: scopeValue,
@@ -339,12 +289,11 @@ export default function AccessPermissionsPage() {
           }
         }
         if (key.startsWith("sub_")) {
-          // sub module level: key format sub_<subId>_<perm>[_role_<id>] or sub_<name>_...
           const parts = key.split("_");
           const subId = Number(parts[1]);
           const perm = parts[2];
           if (!isNaN(subId)) {
-            const scopeValue = "SUBMD"; // 5 chars
+            const scopeValue = "SUBMD";
             uiRolePrivs.role_priv_payloads.push({
               role_id: selectedRole,
               sub_module_id: subId,
@@ -374,7 +323,6 @@ export default function AccessPermissionsPage() {
           }
         }
       });
-
       return uiRolePrivs;
     }
 
@@ -383,19 +331,16 @@ export default function AccessPermissionsPage() {
       const { existingRolePrivs, existingRoleTabPrivs } =
         await fetchExistingRoleAssignments();
       const ui = parseUiSelections();
-
       const existingRolePrivKeys = new Set<string>();
       existingRolePrivs.forEach((r: any) => {
         if (r.sub_module_id) existingRolePrivKeys.add(`sub_${r.sub_module_id}`);
         else if (r.priv_id) existingRolePrivKeys.add(`priv_${r.priv_id}`);
       });
-
       const existingTabKeys = new Map<string, any>();
       existingRoleTabPrivs.forEach((r: any) => {
         const key = `tab_${r.tab_id}_sub_${r.sub_module_id}`;
         existingTabKeys.set(key, r);
       });
-
       const toCreateRolePrivs: any[] = [];
       const uiSubModuleFlags: Record<
         number,
@@ -443,7 +388,6 @@ export default function AccessPermissionsPage() {
             });
         }
       });
-
       // Always update flags for existing sub_module privileges, even if record exists
       const toUpdateRolePrivs: Array<{ id: number; data: any }> = [];
       existingRolePrivs.forEach((r: any) => {
@@ -477,13 +421,11 @@ export default function AccessPermissionsPage() {
           }
         }
       });
-
       const toCreateRoleTabPrivs: any[] = [];
       ui.role_tab_payloads.forEach((p) => {
         const key = `tab_${p.tab_id}_sub_${p.sub_module_id}`;
         if (!existingTabKeys.has(key)) toCreateRoleTabPrivs.push(p);
       });
-
       const toDeleteRolePrivIds: number[] = [];
       existingRolePrivs.forEach((r: any) => {
         if (r.priv_id) {
@@ -509,7 +451,6 @@ export default function AccessPermissionsPage() {
           return;
         }
       });
-
       const toDeleteRoleTabIds: number[] = [];
       existingRoleTabPrivs.forEach((r: any) => {
         const key = `tab_${r.tab_id}_sub_${r.sub_module_id}`;
@@ -521,8 +462,6 @@ export default function AccessPermissionsPage() {
             r.role_tab_privilege_id || r.role_tab_privilege_id
           );
       });
-
-      // ...existing code for debug logs and API calls...
       const createPromises: Promise<any>[] = [];
       toCreateRolePrivs.forEach((p) =>
         createPromises.push(securityPermissionsApi.createRolePrivilege(p))
@@ -536,7 +475,15 @@ export default function AccessPermissionsPage() {
         createPromises.push(apiClient.post(`/secRoleTabPrivilege/add`, p))
       );
       const deletePromises: Promise<any>[] = [];
-
+      if (toDeleteRolePrivIds.length > 0) {
+        deletePromises.push(
+          apiClient
+            .delete(`/secRolePrivilege/delete`, {
+              data: { ids: toDeleteRolePrivIds },
+            })
+            .catch(() => {})
+        );
+      }
       if (toDeleteRoleTabIds.length > 0) {
         deletePromises.push(
           apiClient
@@ -546,199 +493,27 @@ export default function AccessPermissionsPage() {
             .catch(() => {})
         );
       }
-      // ...existing code for debug logs...
       await Promise.all([...createPromises, ...deletePromises]);
-
       toast.success("Role privileges synchronized");
     } catch (error: any) {
-      console.error(error);
       toast.error(error?.message || "Failed to save role privileges");
     } finally {
       setIsLoading(false);
     }
+  }, [selectedRole, rolePrivileges]);
+
+  return {
+    roles,
+    selectedRole,
+    setSelectedRole,
+    modules,
+    subModulesByModule,
+    rolePrivileges,
+    setRolePrivileges,
+    isLoading,
+    getTabs,
+    toggleSubModulePermission,
+    toggleTabPermission,
+    handleSaveRolePrivileges,
   };
-
-  const PermissionForm = ({
-    permission,
-    isEdit = false,
-    onSubmit,
-  }: {
-    permission?: Permission;
-    isEdit?: boolean;
-    onSubmit: (data: any) => void;
-  }) => {
-    const [formData, setFormData] = useState({
-      name: permission?.name || "",
-      description: permission?.description || "",
-      module: permission?.module || "",
-      permissions: permission?.permissions || [],
-      status: permission?.status || "active",
-    });
-
-    const [selectedPermissions, setSelectedPermissions] = useState<string[]>(
-      permission?.permissions || []
-    );
-
-    const handlePermissionToggle = (permissionName: string) => {
-      setSelectedPermissions((prev) => {
-        const updated = prev.includes(permissionName)
-          ? prev.filter((p) => p !== permissionName)
-          : [...prev, permissionName];
-        setFormData({ ...formData, permissions: updated });
-        return updated;
-      });
-    };
-
-    const handleSubmit = (e: React.FormEvent) => {
-      e.preventDefault();
-      onSubmit({ ...formData, permissions: selectedPermissions });
-    };
-
-    return (
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <Label htmlFor="name">
-            {t("security.accessPermissions.permissionName")}
-          </Label>
-          <input
-            id="name"
-            className="w-full p-2-md mt-1"
-            value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            placeholder={t("security.accessPermissions.enterPermissionName")}
-            required
-          />
-        </div>
-
-        <div>
-          <Label htmlFor="description">{t("common.description")}</Label>
-          <input
-            id="description"
-            className="w-full p-2-md mt-1"
-            value={formData.description}
-            onChange={(e) =>
-              setFormData({ ...formData, description: e.target.value })
-            }
-            placeholder={t("security.accessPermissions.enterDescription")}
-            required
-          />
-        </div>
-
-        <div>
-          <Label htmlFor="module">
-            {t("security.accessPermissions.module")}
-          </Label>
-        </div>
-
-        <div>
-          <Label htmlFor="status">{t("common.status")}</Label>
-          <Select
-            value={formData.status}
-            onValueChange={(value) =>
-              setFormData({
-                ...formData,
-                status: value as "active" | "inactive",
-              })
-            }
-          >
-            <SelectTrigger className="mt-1">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="active">{t("common.active")}</SelectItem>
-              <SelectItem value="inactive">{t("common.inactive")}</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div className="flex justify-end space-x-2 pt-4">
-          <Button type="submit">
-            {isEdit ? t("common.update") : t("common.create")}{" "}
-            {t("security.accessPermissions.permission")}
-          </Button>
-        </div>
-      </form>
-    );
-  };
-  return (
-    <div className="w-full p-6">
-      <div className="mb-6 flex items-center justify-between">
-        <Header title={t("security.accessPermissions.title")} />
-        <div className="flex justify-end items-end gap-3">
-          <div className="w-56">
-            <Label>{t("security.accessPermissions.selectRole")}</Label>
-            <Select
-              value={selectedRole ? String(selectedRole) : ""}
-              onValueChange={(v) => setSelectedRole(v ? Number(v) : null)}
-            >
-              <SelectTrigger className="mt-1 w-full">
-                <SelectValue
-                  placeholder={t("security.accessPermissions.selectRole")}
-                />
-              </SelectTrigger>
-              <SelectContent>
-                {roles.map((r) => (
-                  <SelectItem key={r.role_id} value={String(r.role_id)}>
-                    {r.role_name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <Button
-            variant="secondary"
-            onClick={handleSaveRolePrivileges}
-            disabled={isLoading || !selectedRole}
-          >
-            {t("security.accessPermissions.saveRolePrivileges")}
-          </Button>
-        </div>
-      </div>
-      <div className="grid grid-cols-1 gap-6">
-        <div className="lg:col-span-1">
-          <Card className="mb-4 border-0 bg-background">
-            <CardContent>
-              <div className="space-y-4">
-                {modules.map((mod) => (
-                  <div key={mod.module_id}>
-                    <div className="flex items-center justify-between">
-                      <div className="font-medium">{mod.module_name}</div>
-                    </div>
-                    <div className="mt-3 grid grid-cols-1 gap-4">
-                      <div>
-                        <div className="mt-2 space-y-2">
-                          {(subModulesByModule[mod.module_id] || []).map(
-                            (sub: any) => (
-                              <div
-                                key={sub.sub_module_id}
-                                className="p-2 bg-card border border-border rounded-2xl"
-                              >
-                                <div className="mt-2">
-                                  <SubModuleTabsComponent
-                                    subModule={sub}
-                                    rolePrivileges={rolePrivileges}
-                                    selectedRole={selectedRole}
-                                    getTabs={getTabs}
-                                    toggleSubModulePermission={
-                                      toggleSubModulePermission
-                                    }
-                                    toggleTabPermission={toggleTabPermission}
-                                  />
-                                </div>
-                              </div>
-                            )
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-    </div>
-  );
 }

@@ -63,7 +63,7 @@ export default function SitesPage() {
     "site-management"
   );
   console.log("Privileges:", { canView, canCreate, canEdit, canDelete });
-  
+
   if (!canView) {
     console.error("Access Denied: User does not have view privileges.");
     return <div>{t("common.accessDenied")}</div>;
@@ -120,6 +120,8 @@ export default function SitesPage() {
       <div className="w-full relative">
         <div className="rounded bg-background/90">
           <SitesHeader
+            canDelete={canDelete}
+            canCreate={canCreate}
             search={search}
             onSearchChange={setSearch}
             onAddSite={handleAddSite}

@@ -18,6 +18,8 @@ interface GradesTableProps {
   onEditGrade: (grade: IGrade) => void;
   onDeleteGrade: (id: number) => void;
   isLoading?: boolean;
+  canEdit: boolean;
+  canDelete: boolean;
 }
 
 export const GradesTable: React.FC<GradesTableProps> = ({
@@ -33,6 +35,8 @@ export const GradesTable: React.FC<GradesTableProps> = ({
   isLoading,
   onPageChange,
   onPageSizeChange,
+  canEdit,
+  canDelete,
 }) => {
   const { t } = useTranslations();
 
@@ -51,6 +55,8 @@ export const GradesTable: React.FC<GradesTableProps> = ({
 
   return (
     <GenericTable
+      canDelete={canDelete}
+      canEdit={canEdit}
       data={grades}
       columns={columns}
       selected={selected}

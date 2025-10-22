@@ -18,6 +18,7 @@ import {
   DesignationsHeader,
 } from "../index";
 import { CustomPagination } from "@/components/common/dashboard/Pagination";
+import { useSubModulePrivileges } from "@/hooks/security/useSubModulePrivileges";
 
 export default function DesignationsPage() {
   const { t } = useTranslations();
@@ -124,12 +125,17 @@ export default function DesignationsPage() {
   const handleCancelDelete = () => {
     setDeleteDialog({ open: false, type: null });
   };
-
+  const {  canCreate, canEdit, canDelete } = useSubModulePrivileges(
+    "enterprise-settings",
+    "job-titles"
+  );
   return (
     <div className="w-full h-full flex flex-col items-center justify-start">
       <div className="w-full relative">
         <div className="py-4 border-border bg-background/90">
           <DesignationsHeader
+            canDelete={canDelete}
+            canCreate={canCreate}
             search={search}
             onSearchChange={setSearch}
             onAddDesignation={handleAddDesignation}
@@ -138,6 +144,8 @@ export default function DesignationsPage() {
           />
 
           <DesignationsTable
+            canEdit={canEdit}
+            canDelete={canDelete}
             designations={designations}
             selected={selected}
             page={page}
@@ -184,7 +192,9 @@ export default function DesignationsPage() {
               <DialogDescription>
                 {deleteDialog.type === "single"
                   ? t("messages.confirm.delete")
-                  : t("messages.confirm.deleteMultiple", { count: selected.length })}
+                  : t("messages.confirm.deleteMultiple", {
+                      count: selected.length,
+                    })}
               </DialogDescription>
               <div className="flex justify-end space-x-2 mt-4">
                 <Button variant="outline" onClick={handleCancelDelete}>
