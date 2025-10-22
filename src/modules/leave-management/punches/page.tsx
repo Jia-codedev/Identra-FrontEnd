@@ -24,29 +24,22 @@ export default function PunchesPage() {
     data,
     total,
     teamMembers,
-    
+
     page,
     limit,
-    
+
     selectedItems,
-    
+
     isLoading,
-    isFetching,
-    isError,
     error,
-    
+
     handlePageChange,
     handleLimitChange,
     handleFiltersChange,
     handleSelectItem,
     handleSelectAll,
-    clearSelection,
     refresh,
-    
-    hasSelection,
     isAllSelected,
-    
-    currentUserId,
   } = usePunchesTabs({
     initialPage: 1,
     initialLimit: 5,
@@ -54,7 +47,7 @@ export default function PunchesPage() {
 
   useEffect(() => {
     handleFiltersChange({ search: searchTerm });
-  }, [searchTerm, handleFiltersChange]); 
+  }, [searchTerm, handleFiltersChange]);
 
   const totalPages = Math.ceil(total / limit);
 
@@ -65,9 +58,13 @@ export default function PunchesPage() {
           <div className="py-4 border-border bg-background/90 p-4">
             <div className="text-center py-16">
               <h3 className="text-lg font-medium text-destructive">
-                {t('leaveManagement.attendance.errorLoading') || t('common.errorLoading') || 'Error loading event transactions'}
+                {t("leaveManagement.attendance.errorLoading") ||
+                  t("common.errorLoading") ||
+                  "Error loading event transactions"}
               </h3>
-              <p className="text-sm text-muted-foreground mt-1">{error.message}</p>
+              <p className="text-sm text-muted-foreground mt-1">
+                {error.message}
+              </p>
             </div>
           </div>
         </div>
@@ -79,29 +76,45 @@ export default function PunchesPage() {
     <div className="w-full h-full flex flex-col items-center justify-start">
       <div className="w-full relative">
         <div className="py-4 border-border bg-background/90">
-          <Tabs value={activeTab} onValueChange={(value) => handleTabChange(value as PunchesTabType)} className="w-full">
+          <Tabs
+            value={activeTab}
+            onValueChange={(value) => handleTabChange(value as PunchesTabType)}
+            className="w-full"
+          >
             <div className="px-4 py-4 ">
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
                 <div className="flex-1">
                   <h1 className="text-3xl md:text-4xl font-bold text-primary tracking-tight leading-tight mb-1">
-                    {t('leaveManagement.punches.title') || 'Punches & Attendance'}
+                    {t("leaveManagement.punches.title") ||
+                      "Punches & Attendance"}
                   </h1>
                 </div>
-                
+
                 {/* Search and Actions */}
                 <div className="flex items-center gap-2">
-                  <div className={`flex items-center gap-0 bg-card/80 border border-border rounded-xl px-2 py-1 ${isRTL ? 'flex-row-reverse' : 'flex-row'}`}>
-                    <span className={`${isRTL ? 'pr-2 pl-1' : 'pl-2 pr-1'} text-xl text-primary/80`}>
+                  <div
+                    className={`flex items-center gap-0 bg-card/80 border border-border rounded-xl px-2 py-1 ${
+                      isRTL ? "flex-row-reverse" : "flex-row"
+                    }`}
+                  >
+                    <span
+                      className={`${
+                        isRTL ? "pr-2 pl-1" : "pl-2 pr-1"
+                      } text-xl text-primary/80`}
+                    >
                       <Search size={20} />
                     </span>
                     <Input
-                      placeholder={t('leaveManagement.punches.searchPlaceholder') || 'Search by employee number...'}
+                      placeholder={
+                        t("leaveManagement.punches.searchPlaceholder") ||
+                        "Search by employee number..."
+                      }
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                       className="border-0 bg-transparent rounded-lg focus:ring-0 focus-visible:ring-0 shadow-none text-base px-2 w-64"
                     />
                   </div>
-                  
+
                   <Button
                     variant="outline"
                     size="sm"
@@ -112,23 +125,31 @@ export default function PunchesPage() {
                   </Button>
                 </div>
               </div>
-              
+
               {/* Tab Navigation */}
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <TabsList className="grid w-full max-w-md grid-cols-2">
-                  <TabsTrigger value="my-punches" className="flex items-center gap-2">
+                  <TabsTrigger
+                    value="my-punches"
+                    className="flex items-center gap-2"
+                  >
                     <User className="w-4 h-4" />
-                    {t('leaveManagement.punches.myPunches') || 'My Punches'}
+                    {t("leaveManagement.punches.myPunches") || "My Punches"}
                   </TabsTrigger>
-                  <TabsTrigger value="team-punches" className="flex items-center gap-2">
+                  <TabsTrigger
+                    value="team-punches"
+                    className="flex items-center gap-2"
+                  >
                     <Users className="w-4 h-4" />
-                    {t('leaveManagement.punches.teamPunches') || 'Team Punches'}
+                    {t("leaveManagement.punches.teamPunches") || "Team Punches"}
                   </TabsTrigger>
                 </TabsList>
-                
+
                 {selectedItems.length > 0 && (
                   <div className="text-sm text-primary font-medium">
-                    {t('leaveManagement.common.selectedCount', { count: selectedItems.length }) || `${selectedItems.length} records selected`}
+                    {t("leaveManagement.common.selectedCount", {
+                      count: selectedItems.length,
+                    }) || `${selectedItems.length} records selected`}
                   </div>
                 )}
               </div>
@@ -167,10 +188,12 @@ export default function PunchesPage() {
                   <div className="text-center py-16">
                     <Users className="mx-auto h-12 w-12 text-muted-foreground" />
                     <h3 className="mt-2 text-sm font-medium text-foreground">
-                      {t('leaveManagement.attendance.noTeamMembers') || 'No team members found'}
+                      {t("leaveManagement.attendance.noTeamMembers") ||
+                        "No team members found"}
                     </h3>
                     <p className="mt-1 text-sm text-muted-foreground">
-                      {t('leaveManagement.attendance.noTeamMembersDesc') || 'You don\'t have any team members assigned to you.'}
+                      {t("leaveManagement.attendance.noTeamMembersDesc") ||
+                        "You don't have any team members assigned to you."}
                     </p>
                   </div>
                 ) : (

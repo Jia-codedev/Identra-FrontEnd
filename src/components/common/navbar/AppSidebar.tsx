@@ -1,95 +1,83 @@
 "use client";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  useSidebar,
-} from "@/components/ui/sidebar";
 import { useNavigationState } from "@/hooks/useNavigationState";
-import React, { useEffect } from "react";
+import React from "react";
 import { useAuthNavigationSync } from "@/hooks/useAuthNavigation";
 import { LogoIcon } from "../svg/icons";
 import { useLanguage } from "@/providers/language-provider";
 import Link from "next/link";
 import { getRouteFromKey } from "@/utils/routeFromKey";
 import { usePathname } from "next/navigation";
-// import {
-//   DropdownMenu,
-//   DropdownMenuTrigger,
-//   DropdownMenuContent,
-//   DropdownMenuGroup,
-//   DropdownMenuItem,
-// } from "@/components/ui/dropdown-menu";
-
-function AppSidebar({ ...props }) {
-  const { setOpen } = useSidebar();
-  useEffect(() => {
-    setOpen(false);
-  }, [setOpen]);
-  const { SIDEBAR_LINKS, isLoading, error, setActiveMenu } =
-    useNavigationState();
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from "@/components/ui/tooltip";
+import { motion } from "framer-motion";
+import { useTranslations } from "@/hooks/use-translations";
+function AppSidebar(props: React.HTMLAttributes<HTMLDivElement>) {
+  const { SIDEBAR_LINKS, setActiveMenu, isLoading } = useNavigationState();
   const { isRTL } = useLanguage();
   const pathname = usePathname();
-
+  const { t } = useTranslations();
   useAuthNavigationSync();
   return (
-    <Sidebar
-      className="border-r-white/10 bg-primary text-white"
-      collapsible="icon"
-      side={isRTL ? "right" : "left"}
+    <div
+      className="border-r bg-primary text-white min-w-12 min-h-screen flex flex-col"
       {...props}
     >
-      <SidebarHeader className="">
+      <div className="flex items-center justify-center h-16">
         <Link
           href={getRouteFromKey("mainMenu.workforceAnalytics.myInsights")}
           className="flex items-center justify-center h-16"
         >
           <LogoIcon />
         </Link>
-      </SidebarHeader>
-      <SidebarContent className="mx-auto flex">
-        <SidebarMenuItem className="mx-auto space-y-4">
-          {SIDEBAR_LINKS.map((link, idx) => {
-            const Icon = link.icon;
-            const key = link.id || link.label || `sidebar-${idx}`;
-            const isActive = !!(link.secondary || []).find(
-              (s) => s.href && pathname?.startsWith(s.href)
-            );
-
-            if (!Icon) {
-              console.warn(
-                `⚠️ Sidebar item "${link.label}" has undefined icon, skipping render`
+      </div>
+      <nav className="flex-1 flex flex-col items-center space-y-4 mt-4">
+        {isLoading
+          ? Array.from({ length: 6 }).map((_, idx) => (
+              <div
+                key={`skeleton-${idx}`}
+                className="w-8 h-8 rounded-lg bg-white/10 animate-pulse"
+              />
+            ))
+          : SIDEBAR_LINKS.map((link, idx) => {
+              const Icon = link.icon;
+              const key = link.id || link.label || `sidebar-${idx}`;
+              const isActive = !!(link.secondary || []).find(
+                (s) => s.href && pathname?.startsWith(s.href)
               );
-              return null;
-            }
-
-            return (
-              <SidebarMenuButton
-                key={key}
-                tooltip={link.label}
-                className={
-                  isActive
-                    ? "bg-white hover:bg-white text-primary hover:text-accent "
-                    : "bg-white/10 hover:bg-white/20 text-white"
-                }
-                onClick={() => {
-                  setOpen(false); // Close the sidebar
-                  setActiveMenu(link.id, link.secondary || []); // Set the active menu and sub-navigation
-                }}
-              >
-                <Icon className="text-lg mr-2" />
-              </SidebarMenuButton>
-            );
-          })}
-        </SidebarMenuItem>
-      </SidebarContent>
-      <SidebarFooter>
-        <SidebarMenuItem className="mx-auto space-y-4"></SidebarMenuItem>
-      </SidebarFooter>
-    </Sidebar>
+              if (!Icon) return null;
+              return (
+                <Tooltip key={key} delayDuration={200}>
+                  <TooltipTrigger asChild>
+                    <motion.button
+                      className={
+                        "flex items-center justify-center w-8 h-8 rounded-lg transition " +
+                        (isActive
+                          ? "bg-white text-primary font-bold"
+                          : "bg-white/10 hover:bg-white/20 text-white")
+                      }
+                      transition={{
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 30,
+                      }}
+                      onClick={() =>
+                        setActiveMenu(link.id, link.secondary || [])
+                      }
+                    >
+                      <Icon className="text-lg" />
+                    </motion.button>
+                  </TooltipTrigger>
+                  <TooltipContent side="right" className="text-xs">
+                    {t(link.label) || link.label}
+                  </TooltipContent>
+                </Tooltip>
+              );
+            })}
+      </nav>
+    </div>
   );
 }
 export default AppSidebar;
