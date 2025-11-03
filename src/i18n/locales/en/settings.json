@@ -1,0 +1,20 @@
+{
+  "updatePassword": "Update Password",
+  "title": "Settings",
+  "general": "General",
+  "appearanceLabel": "Appearance",
+  "notifications": "Notifications",
+  "security": "Security",
+  "privacy": "Privacy",
+  "language": "Language",
+  "timezone": "Timezone",
+  "dateFormat": "Date Format",
+  "timeFormat": "Time Format",
+  "currency": "Currency",
+  "theme": "Theme",
+  "light": "Light",
+  "dark": "Dark",
+  "system": "System",
+  "auto": "Auto",
+  "manual": "Manual"
+}

@@ -1,0 +1,26 @@
+{
+  "title": "إدارة أجهزة البصمة",
+  "description": "إدارة جميع أجهزة البصمة في مؤسستك هنا.",
+  "addNew": "إضافة جهاز",
+  "searchPlaceholder": "البحث في الأجهزة...",
+  "enterTerminalNumber": "أدخل رقم الجهاز",
+  "enterTerminalName": "أدخل اسم الجهاز",
+  "editTerminal": "تحرير الجهاز",
+  "addTerminal": "إضافة جهاز",
+  "terminalNumber": "رقم الجهاز",
+  "terminalName": "اسم الجهاز",
+  "status": "الحالة",
+  "noTerminalsFound": "لم يتم العثور على أجهزة",
+  "success": {
+    "created": "تم إنشاء الجهاز بنجاح",
+    "updated": "تم تحديث الجهاز بنجاح",
+    "deleted": "تم حذف الجهاز بنجاح",
+    "bulkDeleted": "تم حذف {count} أجهزة بنجاح"
+  },
+  "error": {
+    "create": "فشل في إنشاء الجهاز",
+    "update": "فشل في تحديث الجهاز",
+    "delete": "فشل في حذف الجهاز",
+    "bulkDelete": "فشل في حذف الأجهزة"
+  }
+}

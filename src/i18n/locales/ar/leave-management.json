@@ -1,0 +1,331 @@
+{
+  "title": "إدارة الإجازات",
+  "description": "إدارة طلبات الإجازة والموافقات للموظفين.",
+  "leaves": {
+    "title": "إدارة الإجازات",
+    "noData": "لم يتم العثور على إجازات",
+    "actions": {
+      "add": "إضافة طلب إجازة"
+    },
+    "columns": {
+      "type": "نوع الإجازة",
+      "dates": "التواريخ",
+      "duration": "المدة",
+      "status": "الحالة",
+      "remarks": "الملاحظات",
+      "reference": "المرجع",
+      "start": "من تاريخ",
+      "end": "إلى تاريخ"
+    }
+  },
+  "permissionTypes": {
+    "title": "أنواع التصاريح",
+    "noData": "لم يتم العثور على عناصر",
+    "columns": {
+      "code": "الرمز",
+      "name": "الاسم",
+      "status": "الحالة",
+      "created": "تاريخ الإنشاء"
+    },
+    "actions": {
+      "add": "إضافة نوع تصريح",
+      "edit": "تعديل نوع التصريح"
+    },
+    "fields": {
+      "code": "الرمز",
+      "status": "الحالة",
+      "nameEng": "الاسم (بالإنجليزية)",
+      "nameArb": "الاسم (بالعربية)"
+    }
+  },
+  "permissions": {
+    "title": "التصاريح",
+    "noData": "لم يتم العثور على تصاريح",
+    "actions": {
+      "add": "إضافة تصريح",
+      "edit": "تعديل تصريح",
+      "search": "البحث في التصاريح..."
+    },
+    "actionsMenu": {
+      "approve": "الموافقة",
+      "reject": "الرفض"
+    },
+    "columns": {
+      "employee": "الموظف",
+      "type": "النوع",
+      "from": "من",
+      "to": "إلى",
+      "time": "الوقت",
+      "status": "الحالة",
+      "remarks": "الملاحظات"
+    },
+    "confirmDeleteSingle": "هل أنت متأكد من حذف هذا التصريح؟ لا يمكن التراجع عن هذا الإجراء.",
+    "confirmDeleteMultiple": "هل أنت متأكد من حذف {count} تصاريح؟ لا يمكن التراجع عن هذا الإجراء.",
+    "messages": {
+      "approved": "تمت الموافقة على التصريح بنجاح",
+      "rejected": "تم رفض التصريح بنجاح",
+      "deleted": "تم حذف التصريح بنجاح",
+      "created": "تم إنشاء التصريح بنجاح",
+      "updated": "تم تحديث التصريح بنجاح",
+      "approveError": "فشل في الموافقة على التصريح",
+      "rejectError": "فشل في رفض التصريح",
+      "deleteError": "فشل في حذف التصريح",
+      "createError": "فشل في إنشاء التصريح",
+      "updateError": "فشل في تحديث التصريح"
+    }
+  },
+  "workflowAutomation": {
+    "title": "أنواع سير العمل",
+    "searchPlaceholder": "البحث في أنواع سير العمل...",
+    "errorLoading": "خطأ في تحميل سير العمل",
+    "createWorkflowType": "إنشاء نوع سير عمل",
+    "createWorkflowTypeDescription": "إنشاء قالب نوع سير عمل جديد وتحديد خطوات الموافقة (حد أقصى 4 خطوات)",
+    "columns": {
+      "code": "الرمز",
+      "name": "الاسم",
+      "category": "الفئة",
+      "status": "الحالة"
+    },
+    "actions": {
+      "edit": "تعديل سير العمل",
+      "delete": "حذف سير العمل",
+      "activate": "تبديل حالة سير العمل"
+    },
+    "messages": {
+      "created": "تم إنشاء نوع سير العمل والخطوات بنجاح"
+    },
+    "form": {
+      "workflowTypeInfo": "معلومات نوع سير العمل",
+      "code": "رمز سير العمل",
+      "nameEng": "اسم سير العمل",
+      "nameArb": "اسم سير العمل",
+      "categoryEng": "الفئة",
+      "categoryArb": "الفئة",
+      "workflowSteps": "خطوات سير العمل",
+      "addStep": "إضافة خطوة",
+      "step": "الخطوة",
+      "finalStep": "الخطوة النهائية",
+      "stepNameEng": "اسم الخطوة",
+      "stepNameArb": "اسم الخطوة",
+      "role": "دور الموافق",
+      "createWorkflow": "إنشاء نوع سير العمل"
+    }
+  },
+  "leaveTypes": {
+    "title": "أنواع الإجازات",
+    "columns": {
+      "code": "رمز الإجازة",
+      "name": "اسم الإجازة",
+      "status": "الحالة",
+      "created": "تاريخ الإنشاء"
+    },
+    "noData": "لا توجد أنواع إجازات",
+    "actions": {
+      "add": "إضافة نوع إجازة",
+      "edit": "تعديل نوع الإجازة",
+      "delete": "حذف نوع الإجازة",
+      "deleteMany": "حذف أنواع الإجازات"
+    },
+    "messages": {
+      "deleteConfirm": "هل أنت متأكد من حذف هذا النوع من الإجازات؟ لا يمكن التراجع عن هذا الإجراء.",
+      "deleteManyConfirm": "هل أنت متأكد من حذف {count} أنواع من الإجازات؟ لا يمكن التراجع عن هذا الإجراء.",
+      "created": "تم إنشاء نوع الإجازة بنجاح",
+      "updated": "تم تحديث نوع الإجازة بنجاح",
+      "deleted": "تم حذف نوع الإجازة بنجاح",
+      "bulkDeleted": "تم حذف {count} نوع إجازة بنجاح",
+      "createError": "فشل في إنشاء نوع الإجازة",
+      "updateError": "فشل في تحديث نوع الإجازة",
+      "deleteError": "فشل في حذف نوع الإجازة",
+      "bulkDeleteError": "فشل في حذف أنواع الإجازات",
+      "saveError": "فشل في حفظ نوع الإجازة"
+    },
+    "modal": {
+      "basicInformation": "المعلومات الأساسية",
+      "leaveConfiguration": "إعدادات الإجازة",
+      "approvalProcessing": "الموافقة والمعالجة",
+      "specialFlags": "العلامات الخاصة",
+      "noWorkflows": "لا توجد سير عمل"
+    },
+    "genderOptions": {
+      "all": "الكل",
+      "male": "ذكر",
+      "female": "أنثى",
+      "selectRestriction": "اختر تقييد الجنس"
+    },
+    "fields": {
+      "code": "الرمز",
+      "status": "الحالة",
+      "nameEng": "الاسم (بالإنجليزية)",
+      "nameArb": "الاسم (بالعربية)",
+      "workflowId": "نوع سير العمل",
+      "totalEntitledDays": "إجمالي الأيام المستحقة",
+      "fullPayDays": "أيام الراتب الكامل",
+      "halfPayDays": "أيام نصف الراتب",
+      "unpaidDays": "أيام بدون راتب",
+      "applyPriorToDays": "تطبيق قبل أيام",
+      "specificGender": "تقييد الجنس",
+      "needApproval": "يحتاج موافقة",
+      "official": "إجازة رسمية",
+      "allowAttachment": "السماح بالمرفقات",
+      "mandatoryJustification": "تبرير إلزامي",
+      "isAL": "إجازة سنوية",
+      "isSL": "إجازة مرضية",
+      "excludeHoliday": "استثناء العطلات",
+      "excludeWeekend": "استثناء نهاية الأسبوع",
+      "carryforward": "تحويل للأمام"
+    }
+  },
+  "common": {
+    "confirmDelete": "هل أنت متأكد من الحذف؟",
+    "cancel": "إلغاء",
+    "delete": "حذف",
+    "search": "بحث",
+    "add": "إضافة",
+    "active": "نشط",
+    "inactive": "غير نشط",
+    "select": "اختر",
+    "save": "حفظ",
+    "saving": "جاري الحفظ...",
+    "loading": "جاري التحميل...",
+    "deleting": "جاري الحذف...",
+    "update": "تحديث",
+    "deleteSelected": "حذف المحدد ({count})",
+    "selectedCount": "{count} سجل محدد",
+    "filters": "الفلاتر",
+    "export": "تصدير",
+    "refresh": "تحديث",
+    "notAvailable": "غير معروف",
+    "errorLoading": "خطأ في تحميل البيانات",
+    "edit": "تعديل",
+    "viewSummary": "عرض الملخص",
+    "date": "التاريخ",
+    "type": "النوع",
+    "time": "الوقت",
+    "device": "الجهاز",
+    "location": "الموقع"
+  },
+  "messages": {
+    "confirm": {
+      "delete": "هل أنت متأكد من حذف هذا العنصر؟",
+      "deleteMultiple": "هل أنت متأكد من حذف {count} عناصر؟"
+    }
+  },
+  "attendance": {
+    "errorLoading": "خطأ في تحميل معاملات الحدث",
+    "noTeamMembers": "لم يتم العثور على أعضاء الفريق",
+    "noTeamMembersDesc": "ليس لديك أي أعضاء فريق مخصصين لك.",
+    "form": {
+      "employeeId": "معرف الموظف",
+      "employeeNumber": "رقم الموظف",
+      "date": "التاريخ",
+      "checkInTime": "وقت تسجيل الدخول",
+      "checkOutTime": "وقت تسجيل الخروج",
+      "breakStart": "بداية الاستراحة",
+      "breakEnd": "نهاية الاستراحة",
+      "status": "الحالة",
+      "location": "الموقع",
+      "selectDate": "اختر التاريخ",
+      "selectStatus": "اختر الحالة",
+      "enterLocation": "أدخل الموقع",
+      "cancel": "إلغاء",
+      "update": "تحديث",
+      "save": "حفظ",
+      "submitting": "جاري الإرسال...",
+      "submitError": "فشل في إرسال سجل الحضور"
+    },
+    "messages": {
+      "created": "تم إنشاء سجل الحضور بنجاح",
+      "updated": "تم تحديث سجل الحضور بنجاح",
+      "deleted": "تم حذف سجل الحضور بنجاح",
+      "bulkUpdated": "تم تحديث سجلات الحضور بنجاح",
+      "exported": "تم تصدير بيانات الحضور بنجاح",
+      "createError": "فشل في إنشاء سجل الحضور",
+      "updateError": "فشل في تحديث سجل الحضور",
+      "deleteError": "فشل في حذف سجل الحضور",
+      "bulkUpdateError": "فشل في تحديث سجلات الحضور",
+      "exportError": "فشل في تصدير بيانات الحضور",
+      "summaryError": "فشل في الحصول على ملخص الحضور",
+      "confirmDelete": "هل أنت متأكد من حذف سجل الحضور هذا؟"
+    }
+  },
+  "punches": {
+    "title": "النقرات والحضور",
+    "description": "إدارة سجلات حضور الموظفين وبيانات النقرات",
+    "searchPlaceholder": "البحث برقم الموظف...",
+    "myPunches": "نقراتي",
+    "teamPunches": "نقرات الفريق",
+    "fromDate": "من تاريخ",
+    "toDate": "إلى تاريخ",
+    "status": "الحالة",
+    "allStatus": "جميع الحالات",
+    "present": "حاضر",
+    "absent": "غائب",
+    "late": "متأخر",
+    "halfDay": "نصف يوم",
+    "checkIn": "تسجيل الدخول",
+    "checkOut": "تسجيل الخروج",
+    "breakStart": "بداية الاستراحة",
+    "breakEnd": "نهاية الاستراحة",
+    "manualEntry": "إدخال يدوي",
+    "noRecords": "لم يتم العثور على نقرات",
+    "noRecordsDesc": "لا توجد سجلات حضور تطابق فلاترك الحالية."
+  },
+  "employee": {
+    "name": "الموظف",
+    "employeeName": "اسم الموظف"
+  },
+  "permission":{
+    "title": "طلب تصريح",
+    "description": "تقديم وإدارة طلبات التصريح الخاصة بك",
+    "form": {
+      "permissionType": "نوع التصريح",
+      "selectPermissionType": "اختر نوع التصريح",
+      "date": "التاريخ",
+      "selectDate": "اختر التاريخ",
+      "fromTime": "من الساعة",
+      "toTime": "إلى الساعة",
+      "duration": "المدة",
+      "hours": "ساعات",
+      "reason": "السبب",
+      "enterReason": "أدخل سبب التصريح",
+      "remarks": "الملاحظات",
+      "enterRemarks": "أدخل ملاحظات إضافية",
+      "attachment": "المرفق",
+      "uploadAttachment": "رفع مرفق (اختياري)",
+      "submit": "تقديم التصريح",
+      "save": "حفظ التصريح",
+      "cancel": "إلغاء"
+    },
+    "status": {
+      "pending": "في الانتظار",
+      "approved": "مُعتمد",
+      "rejected": "مرفوض",
+      "draft": "مسودة"
+    },
+    "messages": {
+      "submitSuccess": "تم تقديم طلب التصريح بنجاح",
+      "saveSuccess": "تم حفظ التصريح كمسودة بنجاح",
+      "updateSuccess": "تم تحديث التصريح بنجاح",
+      "deleteSuccess": "تم حذف التصريح بنجاح",
+      "approveSuccess": "تمت الموافقة على التصريح بنجاح",
+      "rejectSuccess": "تم رفض التصريح بنجاح",
+      "submitError": "فشل في تقديم طلب التصريح",
+      "saveError": "فشل في حفظ التصريح",
+      "updateError": "فشل في تحديث التصريح",
+      "deleteError": "فشل في حذف التصريح",
+      "approveError": "فشل في الموافقة على التصريح",
+      "rejectError": "فشل في رفض التصريح",
+      "validationError": "يرجى ملء جميع الحقول المطلوبة",
+      "invalidTimeRange": "يجب أن يكون وقت النهاية بعد وقت البداية",
+      "insufficientBalance": "رصيد التصريح غير كافٍ لهذا النوع"
+    },
+    "validation": {
+      "permissionTypeRequired": "نوع التصريح مطلوب",
+      "dateRequired": "التاريخ مطلوب",
+      "timeRequired": "الوقت مطلوب",
+      "reasonRequired": "السبب مطلوب",
+      "futureDateOnly": "يجب أن يكون تاريخ التصريح في المستقبل",
+      "maxDuration": "تم تجاوز الحد الأقصى للمدة لهذا النوع من التصريح"
+    }
+  }
+}

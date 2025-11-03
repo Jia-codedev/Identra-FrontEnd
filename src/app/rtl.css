@@ -1,0 +1,252 @@
+/* RTL Support for Arabic Language */
+
+[dir="rtl"] {
+  /* Text alignment */
+  text-align: right;
+}
+
+[dir="rtl"] .text-left {
+  text-align: right;
+}
+
+[dir="rtl"] .text-right {
+  text-align: left;
+}
+
+/* Flexbox direction */
+[dir="rtl"] .flex-row {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .flex-row-reverse {
+  flex-direction: row;
+}
+
+/* Margins and paddings */
+[dir="rtl"] .ml-auto {
+  margin-left: unset;
+  margin-right: auto;
+}
+
+[dir="rtl"] .mr-auto {
+  margin-right: unset;
+  margin-left: auto;
+}
+
+[dir="rtl"] .ml-2 {
+  margin-left: unset;
+  margin-right: 0.5rem;
+}
+
+[dir="rtl"] .mr-2 {
+  margin-right: unset;
+  margin-left: 0.5rem;
+}
+
+[dir="rtl"] .ml-4 {
+  margin-left: unset;
+  margin-right: 1rem;
+}
+
+[dir="rtl"] .mr-4 {
+  margin-right: unset;
+  margin-left: 1rem;
+}
+
+[dir="rtl"] .ml-6 {
+  margin-left: unset;
+  margin-right: 1.5rem;
+}
+
+[dir="rtl"] .mr-6 {
+  margin-right: unset;
+  margin-left: 1.5rem;
+}
+
+/* Padding adjustments */
+[dir="rtl"] .pl-10 {
+  padding-left: unset;
+  padding-right: 2.5rem;
+}
+
+[dir="rtl"] .pr-4 {
+  padding-right: unset;
+  padding-left: 1rem;
+}
+
+[dir="rtl"] .pl-3 {
+  padding-left: unset;
+  padding-right: 0.75rem;
+}
+
+[dir="rtl"] .pr-3 {
+  padding-right: unset;
+  padding-left: 0.75rem;
+}
+
+/* Border radius adjustments */
+[dir="rtl"] .rounded-l-lg {
+  border-top-left-radius: unset;
+  border-bottom-left-radius: unset;
+  border-top-right-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+}
+
+[dir="rtl"] .rounded-r-lg {
+  border-top-right-radius: unset;
+  border-bottom-right-radius: unset;
+  border-top-left-radius: 0.5rem;
+  border-bottom-left-radius: 0.5rem;
+}
+
+/* Icon positioning */
+[dir="rtl"] .absolute.left-3 {
+  left: unset;
+  right: 0.75rem;
+}
+
+[dir="rtl"] .absolute.right-3 {
+  right: unset;
+  left: 0.75rem;
+}
+
+/* Dropdown alignment */
+[dir="rtl"] [data-radix-popper-content-wrapper] {
+  text-align: right;
+}
+
+/* Input placeholder alignment */
+[dir="rtl"] input::placeholder {
+  text-align: right;
+}
+
+/* Button icon positioning */
+[dir="rtl"] .gap-1 > svg:first-child {
+  order: 2;
+}
+
+[dir="rtl"] .gap-1 > span:last-child {
+  order: 1;
+}
+
+/* Navigation specific adjustments */
+[dir="rtl"] .space-x-2 > * + * {
+  margin-left: unset;
+  margin-right: 0.5rem;
+}
+
+[dir="rtl"] .space-x-3 > * + * {
+  margin-left: unset;
+  margin-right: 0.75rem;
+}
+
+[dir="rtl"] .space-x-4 > * + * {
+  margin-left: unset;
+  margin-right: 1rem;
+}
+
+/* Mobile drawer adjustments */
+[dir="rtl"] .ml-6 {
+  margin-left: unset;
+  margin-right: 1.5rem;
+}
+
+/* Table adjustments for RTL */
+[dir="rtl"] table {
+  direction: rtl;
+}
+
+[dir="rtl"] th,
+[dir="rtl"] td {
+  text-align: right;
+}
+
+[dir="rtl"] .text-center {
+  text-align: center;
+}
+
+[dir="rtl"] .text-left {
+  text-align: right;
+}
+
+[dir="rtl"] .text-right {
+  text-align: left;
+}
+
+/* Table header gradient direction */
+[dir="rtl"] .bg-gradient-to-r {
+  background: linear-gradient(to left, var(--tw-gradient-stops));
+}
+
+[dir="rtl"] .bg-gradient-to-l {
+  background: linear-gradient(to right, var(--tw-gradient-stops));
+}
+
+/* Animation adjustments for RTL */
+[dir="rtl"] .animate-slide-in-right {
+  animation: slide-in-left 0.3s ease-out;
+}
+
+[dir="rtl"] .animate-slide-in-left {
+  animation: slide-in-right 0.3s ease-out;
+}
+
+[dir="rtl"] .flex-row {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .flex-row-reverse {
+  flex-direction: row;
+}
+
+[dir="rtl"] .sm\:flex-row {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .sm\:flex-row-reverse {
+  flex-direction: row;
+}
+
+[dir="rtl"] .md\:flex-row {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .md\:flex-row-reverse {
+  flex-direction: row;
+}
+
+[dir="rtl"] .lg\:flex-row {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .lg\:flex-row-reverse {
+  flex-direction: row;
+}
+
+[dir="rtl"] .xl\:flex-row {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .xl\:flex-row-reverse {
+  flex-direction: row;
+}
+
+
+
+@keyframes slide-in-left {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+} 

@@ -1,0 +1,25 @@
+# iisnode configuration overrides
+
+# Enable detailed error pages
+devErrorsEnabled: true
+
+# Set node environment
+node_env: production
+
+# Enable logging
+loggingEnabled: true
+
+# Log directory
+logDirectory: iisnode
+
+# Set proper headers for cookies
+promoteServerVars: HTTP_COOKIE,HTTP_SET_COOKIE
+
+# Enable session affinity
+nodeProcessCountPerApplication: 1
+
+# Increase timeout for better cookie handling
+namedPipeConnectionRetryDelay: 250
+
+# Enable graceful shutdown
+gracefulShutdownTimeout: 60000

@@ -2,37 +2,42 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --primary: #6b21a8; /* default purple */
+*,
+html,
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-[data-theme="light-blue"] {
-  --foreground: #ffffff;
-  --background: #f9f9f9;
-  --background-transparent: #f9f9f999;
+[data-theme="light-blue"]{
+  --foreground: #FFFFFF;
+  --background: #F9F9F9;
+  --background-transparent: #F9F9F999;
 
-  --primary: var(--primary);
-  --secondary: #9ba9d2;
-  --content: #2b3674;
-
-  --text-primary: #23272e;
-  --text-secondary: #64748b;
+  --primary: #0078D4;
+  --secondary: #9BA9D2;
+  --content: #2B3674;
+  
+  --text-primary: #23272E;
+  --text-secondary: #64748B;
 
   --backdrop: rgba(0, 120, 212, 0.05);
-  --table-backdrop: rgba(0, 120, 212, 0.1);
-
+  --table-backdrop: rgba(0, 120, 212, 0.10);
+  
   --btn-outline: #919396;
-  --danger: #ff3b30;
-  --success: #34c759;
+  --danger: #FF3B30;
+  --success: #34C759;
 
-  --border: #9ba9d2;
-  --border-accent: #e9edf7;
-  --border-grey: #808080cc;
-}
+  --border: #9BA9D2;
+  --border-accent: #E9EDF7;
+  --border-grey: #808080CC;
+  /* --border-grey: #E2E2E2; */
 
-.bg-primary {
-  background-color: var(--primary);
-}
-.text-primary {
-  color: var(--primary);
+  /* Charts Color */
+  --chart-leaves: 206 100% 89%;
+  --chart-absent: 206 100% 42%;
+  /* --chart-absent: 348 82% 47%; */
+  /* --chart-leave: #FFBF00; */
+  /* --chart-absent: #DA153E; */
 }

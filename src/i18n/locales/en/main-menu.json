@@ -1,0 +1,117 @@
+{
+  "mainMenu": {
+    "workforceAnalytics": {
+      "title": "Workforce Analytics",
+      "items": {
+        "myInsights": "My Insights",
+        "teamInsights": "Team Insights",
+        "activityLog": "Activity Log",
+        "productivityMetrics": "Productivity Metrics",
+        "geoAnalytics": "Geo-Analytics"
+      }
+    },
+    "enterpriseSettings": {
+      "title": "Enterprise Settings",
+      "items": {
+        "siteManagements": "Site Managements",
+        "jobLevels": "Job Levels",
+        "jobTitles": "Job Titles",
+        "citizenshipInfo": "Citizenship Info"
+      }
+    },
+    "organization": {
+      "title": "Organization",
+      "items": {
+        "organizationType": "Organization Type",
+        "orgChart": "Org Chart",
+        "organizations": "Organizations",
+        "deptAdmins": "Department Admins"
+      }
+    },
+    "employeeManagement": {
+      "title": "Employee Management",
+      "items": {
+        "employeeDirectory": "Employee Directory",
+        "contractTypes": "Contract Types",
+        "teamGrouping": "Team Grouping"
+      }
+    },
+    "rosterManagement": {
+      "title": "Roster Management",
+      "items": {
+        "reasons": "Reasons",
+        "holidayCalendar": "Holiday Calendar",
+        "ramadanHours": "Ramadan Hours",
+        "shiftPatterns": "Shift Patterns",
+        "monthlyRoster": "Monthly Roster",
+        "weeklyRoster": "Weekly Roster"
+      }
+    },
+    "theme": {
+      "title": "Theme",
+      "items": {
+        "darkMode": "Dark Mode",
+        "lightMode": "Light Mode"
+      }
+    },
+    "selfServices": {
+      "title": "Self Services",
+      "items": {
+        "leaveManagement": "Leave Management",
+        "leaveTypes": "Leave Types",
+        "permissionTypes": "Permission Types",
+        "permissionManagement": "Permission Management",
+        "attendanceLogs": "Attendance Logs",
+        "workflowAutomation": "Workflow Automation"
+      }
+    },
+    "devicesAndInfrastructure": {
+      "title": "Devices and Infrastructure",
+      "items": {
+        "biometricTerminals": "Biometric Terminals",
+        "accessZones": "Access Zones",
+        "buildings": "Buildings"
+      }
+    },
+    "userSecuritySettings": {
+      "title": "User Security Settings",
+      "items": {
+        "rolesManagement": "Roles Management",
+        "accessPermissions": "Access Permissions",
+        "sessionMonitor": "Session Monitor",
+        "activitySummary": "Activity Summary"
+      }
+    },
+    "applicationSettings": {
+      "title": "Application Settings",
+      "items": {
+        "appSettings": "App Settings",
+        "appConfiguration": "App Configuration",
+        "alertPreferences": "Alert Preferences",
+        "auditTrail": "Audit Trail"
+      }
+    },
+    "alertCentre": {
+      "title": "Alert Centre",
+      "items": {
+        "emailAlerts": "Email Alerts",
+        "smsAlerts": "SMS Alerts",
+        "bulletins": "Bulletins"
+      }
+    },
+    "supportCentre": {
+      "title": "Support Centre",
+      "items": {
+        "faqs": "FAQs",
+        "userManual": "User Manual",
+        "licenseManagement": "License Management"
+      }
+    },
+    "profileIcon": {
+      "items": {
+        "myAccount": "My Account",
+        "themeLayout": "Theme & Layout"
+      }
+    }
+  }
+}

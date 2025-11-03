@@ -3,16 +3,26 @@ const { parse } = require('url')
 const next = require('next')
 
 const dev = process.env.NODE_ENV !== 'production'
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3000
 const app = next({ dev })
 const handle = app.getRequestHandler()
 
 app.prepare().then(() => {
   createServer((req, res) => {
-    // Be sure to pass `true` as the second argument to `url.parse`.
-    // This tells it to parse the query portion of the URL.
     const parsedUrl = parse(req.url, true)
     const { pathname, query } = parsedUrl
+
+    // Set proper headers for cookie handling in IIS
+    res.setHeader('Access-Control-Allow-Credentials', 'true')
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, Cookie')
+    
+    // Handle preflight requests
+    if (req.method === 'OPTIONS') {
+      res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+      res.writeHead(200)
+      res.end()
+      return
+    }
 
     if (pathname === '/a') {
       app.render(req, res, '/a', query)
@@ -21,8 +31,9 @@ app.prepare().then(() => {
     } else {
       handle(req, res, parsedUrl)
     }
-  }).listen(port, (err) => {
-    if (err) throw err
-    console.log(`> Ready on http://localhost:${port}`)
+  }).listen(port, () => {
+    console.log(`> Ready on port ${port}`)
+    console.log(`> Environment: ${process.env.NODE_ENV}`)
+    console.log(`> Cookie handling configured for IIS`)
   })
 })

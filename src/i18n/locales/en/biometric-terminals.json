@@ -1,0 +1,26 @@
+{
+  "title": "Biometric Terminal Management",
+  "description": "Manage all your organization biometric terminals here.",
+  "addNew": "Add Terminal",
+  "searchPlaceholder": "Search terminals...",
+  "enterTerminalNumber": "Enter terminal number",
+  "enterTerminalName": "Enter terminal name",
+  "editTerminal": "Edit Terminal",
+  "addTerminal": "Add Terminal",
+  "terminalNumber": "Terminal Number",
+  "terminalName": "Terminal Name",
+  "status": "Status",
+  "noTerminalsFound": "No terminals found",
+  "success": {
+    "created": "Terminal created successfully",
+    "updated": "Terminal updated successfully",
+    "deleted": "Terminal deleted successfully",
+    "bulkDeleted": "Deleted {count} terminals successfully"
+  },
+  "error": {
+    "create": "Failed to create terminal",
+    "update": "Failed to update terminal",
+    "delete": "Failed to delete terminal",
+    "bulkDelete": "Failed to delete terminals"
+  }
+}

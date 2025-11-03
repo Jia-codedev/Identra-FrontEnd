@@ -1,5 +1,5 @@
 'use client';
-import React, { forwardRef } from 'react';
+import React from 'react';
 import { cn } from '@/lib/utils';
 
 const baseClasses = `w-auto h-10 flex items-center justify-center gap-2 border px-3 capitalize`;
@@ -31,7 +31,6 @@ type ButtonProps = {
   disabled?: boolean;
 };
 
-// eslint-disable-next-line react/display-name
 const CustomButton = React.forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
   const { className, width, height, variant, borderRadius, btnText, btnIcon, onClick, disabled, ...rest } = props;
   const classes = cn([
