@@ -7,10 +7,10 @@ import {
   AccordionTrigger,
   AccordionContent,
 } from "@/components/ui/accordion";
-import { Checkbox } from "@/components/ui/Checkbox";
+import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
+import { Shield, Folder, Settings } from "lucide-react";
 
 type SubModule = {
   sub_module_id: number;
@@ -38,6 +38,7 @@ export default function SubModuleTabs({
 }) {
   const [tabs, setTabs] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const perms = ["view", "create", "edit", "delete"];
 
   useEffect(() => {
     let mounted = true;
@@ -58,106 +59,123 @@ export default function SubModuleTabs({
     };
   }, [subModule.sub_module_id, getTabs]);
 
-  const perms = ["view", "create", "edit", "delete"];
-
   return (
-    <Accordion
-      type="single"
-      className="border-border bg-card p-3 rounded-2xl"
-      collapsible
-    >
+    <Accordion type="single" collapsible className="w-full">
       <AccordionItem value={`sub-${subModule.sub_module_id}`}>
-        <AccordionTrigger className="py-2 flex items-center justify-between hover:no-underline">
+        {/* Header */}
+        <AccordionTrigger className="px-5 py-3 flex items-center justify-between rounded-lg bg-muted hover:bg-muted/80 transition">
           <div className="flex items-center space-x-2">
-            <span className="font-medium">{subModule.sub_module_name}</span>
-            <Badge className="ml-2" variant="outline">
+            <Folder size={18} />
+            <span className="font-medium text-foreground">
+              {subModule.sub_module_name}
+            </span>
+            <Badge variant="outline" className="ml-2">
               Submodule
             </Badge>
           </div>
+          <span className="text-xs text-muted-foreground">
+            {loading ? "Loading..." : `${tabs.length} Tabs`}
+          </span>
         </AccordionTrigger>
-        <AccordionContent>
-          <div className="space-y-4">
-            <div className="flex flex-wrap gap-3 items-center">
-              {perms.map((perm) => {
-                const key =
-                  `sub_${subModule.sub_module_id}_${perm}` +
-                  (selectedRole ? `_role_${selectedRole}` : "");
-                return (
-                  <div key={perm} className="flex items-center space-x-2">
-                    <Checkbox
-                      checked={!!rolePrivileges[key]}
-                      onCheckedChange={() =>
-                        toggleSubModulePermission(subModule.sub_module_id, perm)
-                      }
-                      disabled={!selectedRole}
-                    />
-                    <Label className="capitalize">{perm}</Label>
-                  </div>
-                );
-              })}
-            </div>
 
-            <Separator />
+        {/* Expandable Content */}
+        <AccordionContent className="pt-4 ">
+          <div className="overflow-x-auto border border-border rounded-xl overflow-hidden">
+            <table className="min-w-full text-sm">
+              <thead className="bg-muted text-muted-foreground">
+                <tr>
+                  <th className="px-4 py-3 text-right font-medium">Type</th>
+                  <th className="px-4 py-3 text-right font-medium">Name</th>
+                  {perms.map((perm) => (
+                    <th
+                      key={perm}
+                      className="px-4 py-3 text-center capitalize font-medium"
+                    >
+                      {perm}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {/* Submodule Row */}
+                <tr className="border-b border-border hover:bg-muted/40 transition">
+                  <td className="px-4 py-3 text-right font-medium flex items-center justify-end gap-1">
+                    <Shield size={14} />
+                    Submodule
+                  </td>
+                  <td className="px-4 py-3 text-right text-foreground">
+                    {subModule.sub_module_name}
+                  </td>
+                  {perms.map((perm) => {
+                    const key =
+                      `sub_${subModule.sub_module_id}_${perm}` +
+                      (selectedRole ? `_role_${selectedRole}` : "");
+                    return (
+                      <td key={perm} className="px-4 py-3 text-center">
+                        <Switch
+                          checked={!!rolePrivileges[key]}
+                          onCheckedChange={() =>
+                            toggleSubModulePermission(
+                              subModule.sub_module_id,
+                              perm
+                            )
+                          }
+                          disabled={!selectedRole}
+                        />
+                      </td>
+                    );
+                  })}
+                </tr>
 
-            <div>
-              <div className="text-sm font-medium mb-2">Tabs</div>
-              <div className="space-y-3">
-                {loading && (
-                  <div className="text-sm text-muted-foreground">
-                    Loading tabs...
-                  </div>
-                )}
-
-                {tabs.map((tab: any) => (
-                  <div
+                {/* Tabs Rows */}
+                {tabs.map((tab) => (
+                  <tr
                     key={tab.tab_id}
-                    className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
+                    className="border-b border-border hover:bg-muted/40 transition"
                   >
-                    <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-                      <div className="font-medium">{tab.tab_name}</div>
-                      {tab.tab_description && (
-                        <div className="text-sm text-muted-foreground">
-                          {tab.tab_description}
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="flex items-center gap-3">
-                      {perms.map((perm) => {
-                        const key =
-                          `tab_${tab.tab_id}_sub_${subModule.sub_module_id}_${perm}` +
-                          (selectedRole ? `_role_${selectedRole}` : "");
-                        return (
-                          <div
-                            key={perm}
-                            className="flex items-center space-x-2"
-                          >
-                            <Checkbox
-                              checked={!!rolePrivileges[key]}
-                              onCheckedChange={() =>
-                                toggleTabPermission(
-                                  tab.tab_id,
-                                  subModule.sub_module_id,
-                                  perm
-                                )
-                              }
-                              disabled={!selectedRole}
-                            />
-                            <Label className="capitalize">{perm}</Label>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
+                    <td className="px-4 py-3 text-right font-medium flex items-center justify-end gap-1">
+                      <Settings size={14} />
+                      Tab
+                    </td>
+                    <td className="px-4 py-3 text-right text-foreground">
+                      {tab.tab_name}
+                    </td>
+                    {perms.map((perm) => {
+                      const key =
+                        `tab_${tab.tab_id}_sub_${subModule.sub_module_id}_${perm}` +
+                        (selectedRole ? `_role_${selectedRole}` : "");
+                      return (
+                        <td key={perm} className="px-4 py-3 text-center">
+                          <Switch
+                            checked={!!rolePrivileges[key]}
+                            onCheckedChange={() =>
+                              toggleTabPermission(
+                                tab.tab_id,
+                                subModule.sub_module_id,
+                                perm
+                              )
+                            }
+                            disabled={!selectedRole}
+                          />
+                        </td>
+                      );
+                    })}
+                  </tr>
                 ))}
 
+                {/* Fallback */}
                 {!loading && tabs.length === 0 && (
-                  <div className="text-sm text-muted-foreground">
-                    No tabs found for this submodule.
-                  </div>
+                  <tr>
+                    <td
+                      colSpan={perms.length + 2}
+                      className="text-center py-4 text-muted-foreground italic"
+                    >
+                      No tabs found for this submodule.
+                    </td>
+                  </tr>
                 )}
-              </div>
-            </div>
+              </tbody>
+            </table>
           </div>
         </AccordionContent>
       </AccordionItem>
