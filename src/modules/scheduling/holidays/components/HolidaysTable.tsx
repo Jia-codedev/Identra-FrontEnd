@@ -22,6 +22,8 @@ interface HolidaysTableProps {
   isLoading: boolean;
   onEditHoliday: (holiday: IHoliday) => void;
   onDeleteHoliday: (id: number) => void;
+  canEdit?: boolean;
+  canDelete?: boolean;  
 }
 
 export const HolidaysTable: React.FC<HolidaysTableProps> = ({
@@ -37,6 +39,8 @@ export const HolidaysTable: React.FC<HolidaysTableProps> = ({
   onDeleteHoliday,
   onPageChange,
   onPageSizeChange,
+  canEdit,
+  canDelete,
 }) => {
   const { t } = useTranslations();
   const { isRTL } = useLanguage();
@@ -118,6 +122,8 @@ export const HolidaysTable: React.FC<HolidaysTableProps> = ({
 
   return (
     <GenericTable<IHoliday>
+      canEdit={canEdit}
+      canDelete={canDelete}
       data={holidays}
       columns={columns}
       selected={selected}

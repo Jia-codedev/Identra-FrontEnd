@@ -15,6 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { RamadanDateFilters } from "../types";
+import { ca } from "date-fns/locale";
 
 interface RamadanDatesHeaderProps {
   search: string;
@@ -24,6 +25,8 @@ interface RamadanDatesHeaderProps {
   onDeleteSelected?: () => void;
   filters: RamadanDateFilters;
   onFiltersChange: (filters: Partial<RamadanDateFilters>) => void;
+  canCreate: boolean;
+  canDelete: boolean;
 }
 
 const RamadanDatesHeader: React.FC<RamadanDatesHeaderProps> = ({
@@ -34,6 +37,8 @@ const RamadanDatesHeader: React.FC<RamadanDatesHeaderProps> = ({
   onDeleteSelected,
   filters,
   onFiltersChange,
+  canCreate,
+  canDelete,
 }) => {
   const { t } = useTranslations();
   const { isRTL } = useLanguage();
@@ -141,7 +146,7 @@ const RamadanDatesHeader: React.FC<RamadanDatesHeaderProps> = ({
               className="border-0 bg-transparent shadow-none focus-visible:ring-0 text-sm sm:text-base placeholder:text-muted-foreground/70"
             />
             <div className="flex flex-col sm:flex-row gap-2">
-              {selectedCount > 0  && (
+              {selectedCount > 0  &&  canDelete && (
                 <Button
                   variant="destructive"
                   size="sm"
@@ -152,6 +157,7 @@ const RamadanDatesHeader: React.FC<RamadanDatesHeaderProps> = ({
                 </Button>
               )}
               <Button
+                disabled={!canCreate}
                 onClick={onAddNew}
                 className="gap-2 text-xs sm:text-sm h-8 sm:h-9"
               >

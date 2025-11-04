@@ -19,6 +19,8 @@ interface EmployeeGroupTableProps {
   onEditEmployeeGroup: (employeeGroup: IEmployeeGroup) => void;
   onDeleteEmployeeGroup: (id: string | number) => void;
   isLoading?: boolean;
+  canEdit?: boolean;
+  canDelete?: boolean;
 }
 
 export const EmployeeGroupTable: React.FC<EmployeeGroupTableProps> = ({
@@ -34,6 +36,8 @@ export const EmployeeGroupTable: React.FC<EmployeeGroupTableProps> = ({
   isLoading,
   onPageChange,
   onPageSizeChange,
+  canEdit,
+  canDelete,
 }) => {
   const { t } = useTranslations();
 
@@ -83,6 +87,8 @@ export const EmployeeGroupTable: React.FC<EmployeeGroupTableProps> = ({
 
   return (
     <GenericTable
+      canEdit={canEdit}
+      canDelete={canDelete}
       data={employeeGroups}
       columns={columns}
       selected={selected}

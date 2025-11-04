@@ -18,6 +18,8 @@ interface EmployeeTypesTableProps {
   onEditEmployeeType: (employeeType: IEmployeeType) => void;
   onDeleteEmployeeType: (id: string | number) => void;
   isLoading?: boolean;
+  canEdit?: boolean;
+  canDelete?: boolean;
 }
 
 export const EmployeeTypesTable: React.FC<EmployeeTypesTableProps> = ({
@@ -33,6 +35,8 @@ export const EmployeeTypesTable: React.FC<EmployeeTypesTableProps> = ({
   isLoading,
   onPageChange,
   onPageSizeChange,
+  canEdit,
+  canDelete,
 }) => {
   const { t } = useTranslations();
 

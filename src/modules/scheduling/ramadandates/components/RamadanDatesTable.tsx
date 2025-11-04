@@ -22,6 +22,8 @@ interface RamadanDatesTableProps {
   isLoading: boolean;
   onEditRamadanDate: (ramadanDate: IRamadanDate) => void;
   onDeleteRamadanDate: (id: number) => void;
+  canEdit?: boolean;
+  canDelete?: boolean;
 }
 
 export const RamadanDatesTable: React.FC<RamadanDatesTableProps> = ({
@@ -37,6 +39,8 @@ export const RamadanDatesTable: React.FC<RamadanDatesTableProps> = ({
   onDeleteRamadanDate,
   onPageChange,
   onPageSizeChange,
+  canEdit,
+  canDelete,
 }) => {
   const { t } = useTranslations();
   const { currentLocale } = useLanguage();
@@ -108,6 +112,8 @@ export const RamadanDatesTable: React.FC<RamadanDatesTableProps> = ({
 
   return (
     <GenericTable<IRamadanDate>
+      canEdit={canEdit}
+      canDelete={canDelete}
       data={ramadanDates}
       columns={columns}
       selected={selected}

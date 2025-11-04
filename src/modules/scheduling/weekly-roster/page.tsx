@@ -11,6 +11,7 @@ import { useMutations } from './hooks/useMutations';
 import { IGroupSchedule, ICreateGroupSchedule, IUpdateGroupSchedule } from '@/services/scheduling/groupSchedules';
 import { WeeklyRosterFilters } from './types';
 import { toast } from 'sonner';
+import { useSubModulePrivileges } from '@/hooks/security/useSubModulePrivileges';
 
 export default function WeeklyRosterPage() {
   const { t } = useTranslations();
@@ -51,6 +52,12 @@ export default function WeeklyRosterPage() {
     deleteMutation,
     deleteManyMutation
   } = useMutations();
+
+  const { canView, canCreate, canEdit, canDelete } = useSubModulePrivileges(
+    "roster-management",
+    "weekly-roster"
+  );
+  console.log("Privileges:", { canView, canCreate, canEdit, canDelete });
 
   const handleAdd = () => {
     setEditingSchedule(null);
@@ -117,8 +124,8 @@ export default function WeeklyRosterPage() {
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <p className="text-destructive mb-4">{t('common.errorLoading')}</p>
-          <button 
-            onClick={() => refetch()} 
+          <button
+            onClick={() => refetch()}
             className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
           >
             {t('common.retry')}
@@ -131,6 +138,8 @@ export default function WeeklyRosterPage() {
   return (
     <div className="p-6 space-y-6">
       <WeeklyRosterHeader
+        canCreate={canCreate}
+        canDelete={canDelete}
         search={search}
         onSearchChange={setSearch}
         onAddRoster={handleAdd}
@@ -141,10 +150,12 @@ export default function WeeklyRosterPage() {
       />
 
       <WeeklyRosterTable
-  data={weeklySchedules}
+        canEdit={canEdit}
+        canDelete={canDelete}
+        data={weeklySchedules}
         isLoading={isLoading || stateLoading}
         selectedItems={selected}
-  onSelectionChange={(selectedIds: number[]) => {
+        onSelectionChange={(selectedIds: number[]) => {
           selectedIds.forEach(id => {
             if (!selected.includes(id)) {
               selectWeeklyRoster(id);

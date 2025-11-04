@@ -14,6 +14,7 @@ import { ISchedule, CreateScheduleRequest } from "../types";
 import { useScheduleMutations } from "../hooks/useMutations";
 import { SchedulesTable, ScheduleModal, SchedulesHeader } from "../index";
 import { CustomPagination } from "@/components/common/dashboard/Pagination";
+import { useSubModulePrivileges } from "@/hooks/security/useSubModulePrivileges";
 
 export default function ScheduleTypesPage() {
   const { t } = useTranslations();
@@ -61,6 +62,12 @@ export default function ScheduleTypesPage() {
     type: "single" | "bulk" | null;
     id?: number;
   }>({ open: false, type: null });
+
+    const { canView, canCreate, canEdit, canDelete } = useSubModulePrivileges(
+    "roster-management",
+    "shift-patterns"
+  );
+  console.log("Privileges:", { canView, canCreate, canEdit, canDelete });
 
   const handleAddSchedule = () => {
     setModalState({
@@ -133,6 +140,8 @@ export default function ScheduleTypesPage() {
       <div className="w-full relative">
         <div className="py-4 border-border bg-background/90">
           <SchedulesHeader
+            canCreate={canCreate}
+            canDelete={canDelete}
             search={search}
             onSearchChange={setSearch}
             onAddSchedule={handleAddSchedule}
@@ -143,6 +152,8 @@ export default function ScheduleTypesPage() {
           />
 
           <SchedulesTable
+            canEdit={canEdit}
+            canDelete={canDelete}
             schedules={schedules}
             selected={selected}
             page={page}

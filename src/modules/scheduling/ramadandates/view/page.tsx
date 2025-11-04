@@ -15,6 +15,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { CommonDeleteModal } from "@/components/common/CommonDeleteModal";
+import { useSubModulePrivileges } from "@/hooks/security/useSubModulePrivileges";
 import { Button } from "@/components/ui/button";
 import {
   useCreateRamadanDate,
@@ -60,6 +61,12 @@ const RamadanDatesPage: React.FC = () => {
   const createMutation = useCreateRamadanDate();
   const updateMutation = useUpdateRamadanDate();
   const deleteMutation = useDeleteRamadanDate();
+
+  const { canView, canCreate, canEdit, canDelete } = useSubModulePrivileges(
+    "roster-management",
+    "ramadan-hours"
+  );
+  console.log("Privileges:", { canView, canCreate, canEdit, canDelete });
 
   const handleAddNew = () => {
     setSelectedRamadanDate(null);
@@ -145,6 +152,8 @@ const RamadanDatesPage: React.FC = () => {
   return (
     <div className="px-4 py-6 space-y-6-lg">
       <RamadanDatesHeader
+        canDelete={canDelete}
+        canCreate={canCreate} 
         search={search}
         onSearchChange={setSearch}
         onAddNew={handleAddNew}
@@ -155,6 +164,8 @@ const RamadanDatesPage: React.FC = () => {
       />
 
       <RamadanDatesTable
+        canEdit={canEdit}
+        canDelete={canDelete}
         ramadanDates={ramadanDates}
         selected={selected}
         page={page}

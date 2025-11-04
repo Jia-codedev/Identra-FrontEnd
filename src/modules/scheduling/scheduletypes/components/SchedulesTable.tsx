@@ -30,6 +30,8 @@ interface SchedulesTableProps {
   isLoading: boolean;
   onEditSchedule: (schedule: ISchedule) => void;
   onDeleteSchedule: (id: number) => void;
+  canDelete?: boolean;
+  canEdit?: boolean;
 }
 
 export const SchedulesTable: React.FC<SchedulesTableProps> = ({
@@ -45,6 +47,8 @@ export const SchedulesTable: React.FC<SchedulesTableProps> = ({
   onDeleteSchedule,
   onPageChange,
   onPageSizeChange,
+  canEdit,
+  canDelete,
 }) => {
   const { t } = useTranslations();
   const { isRTL } = useLanguage();
@@ -150,6 +154,8 @@ export const SchedulesTable: React.FC<SchedulesTableProps> = ({
 
   return (
     <GenericTable<ISchedule>
+      canEdit={canEdit} 
+      canDelete={canDelete}
       data={schedules}
       columns={columns}
       selected={selected}

@@ -18,6 +18,7 @@ import {
   IEmployee,
 } from "../index";
 import { EmployeeModal } from "../components/EmployeeModal";
+import { useSubModulePrivileges } from "@/hooks/security/useSubModulePrivileges";
 
 export default function EmployeePage() {
   const { t } = useTranslations();
@@ -57,6 +58,13 @@ export default function EmployeePage() {
     type: "single" | "bulk" | null;
     id?: number;
   }>({ open: false, type: null });
+
+    const { canView, canCreate, canEdit, canDelete } = useSubModulePrivileges(
+      "employee-management",
+      "employee-directory"
+    );
+    console.log("Privileges:", { canView, canCreate, canEdit, canDelete });
+  
 
   const handleAddEmployeeType = () => {
     setModalState({
@@ -116,6 +124,8 @@ export default function EmployeePage() {
       <div className="w-full relative">
         <div className="py-4 border-border bg-background/90">
           <EmployeesHeader
+            canDelete={canDelete}
+            canCreate={canCreate}
             search={search}
             onSearchChange={setSearch}
             onIsManagerChange={setIsManager}
@@ -126,6 +136,8 @@ export default function EmployeePage() {
           />
 
           <EmployeesTable
+            canEdit={canEdit}
+            canDelete={canDelete} 
             employee={employees}
             selected={selected}
             page={page}

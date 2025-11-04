@@ -16,6 +16,7 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import employeeGroupApi from "@/services/employeemaster/employeeGroup";
 import { WeeklyRosterFilters, EmployeeGroup } from "../types";
+import { ca } from "date-fns/locale";
 
 interface WeeklyRosterHeaderProps {
   search: string;
@@ -25,6 +26,8 @@ interface WeeklyRosterHeaderProps {
   filters?: WeeklyRosterFilters;
   onFiltersChange?: (filters: Partial<WeeklyRosterFilters>) => void;
   onDeleteSelected?: () => void;
+  canDelete?: boolean;
+  canCreate?: boolean;
 }
 
 export const WeeklyRosterHeader: React.FC<WeeklyRosterHeaderProps> = ({
@@ -35,6 +38,8 @@ export const WeeklyRosterHeader: React.FC<WeeklyRosterHeaderProps> = ({
   filters = {},
   onFiltersChange,
   onDeleteSelected,
+  canCreate,
+  canDelete,
 }) => {
   const { t } = useTranslations();
   const { isRTL } = useLanguage();
@@ -116,7 +121,7 @@ export const WeeklyRosterHeader: React.FC<WeeklyRosterHeaderProps> = ({
             />
 
             <div className="flex flex-col sm:flex-row gap-2">
-              {selectedCount > 0 && onDeleteSelected && (
+              {selectedCount > 0 && onDeleteSelected && canDelete && (
                 <Button
                   variant="destructive"
                   size="sm"
@@ -127,6 +132,7 @@ export const WeeklyRosterHeader: React.FC<WeeklyRosterHeaderProps> = ({
                 </Button>
               )}
               <Button
+                disabled={!canCreate}
                 onClick={onAddRoster}
                 className="gap-2 text-xs sm:text-sm h-8 sm:h-9"
               >

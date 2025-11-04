@@ -20,6 +20,8 @@ interface EmployeesTableProps {
   onEditEmployee: (employee: IEmployee) => void;
   onDeleteEmployee: (id: string | number) => void;
   isLoading?: boolean;
+  canEdit: boolean;
+  canDelete: boolean;
 }
 
 export const EmployeesTable: React.FC<EmployeesTableProps> = ({
@@ -35,6 +37,8 @@ export const EmployeesTable: React.FC<EmployeesTableProps> = ({
   isLoading,
   onPageChange,
   onPageSizeChange,
+  canEdit,
+  canDelete,
 }) => {
   const { t } = useTranslations();
   const [designationMap, setDesignationMap] = React.useState<
@@ -129,6 +133,8 @@ export const EmployeesTable: React.FC<EmployeesTableProps> = ({
 
   return (
     <GenericTable<IEmployee>
+      canEdit={canEdit}
+      canDelete={canDelete}
       data={employee}
       columns={columns}
       selected={selected}

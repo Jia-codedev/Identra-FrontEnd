@@ -15,6 +15,7 @@ import { useHolidayMutations } from "../hooks/useMutations";
 import { HolidaysTable, HolidayModal, HolidaysHeader } from "../index";
 import HolidaysCalendarView from "../components/HolidaysCalendarView";
 import { CustomPagination } from "@/components/common/dashboard/Pagination";
+import { useSubModulePrivileges } from "@/hooks/security/useSubModulePrivileges";
 
 export default function HolidaysPage() {
   const { t } = useTranslations();
@@ -56,6 +57,12 @@ export default function HolidaysPage() {
 
   const [viewMode, setViewMode] = useState<"table" | "calendar">("table");
 
+    const { canView, canCreate, canEdit, canDelete } = useSubModulePrivileges(
+      "roster-management",
+      "holiday-calendar"
+    );
+    console.log("Privileges:", { canView, canCreate, canEdit, canDelete });
+  
   const handleAddHoliday = () => {
     setModalState({
       isOpen: true,
@@ -125,6 +132,8 @@ export default function HolidaysPage() {
       <div className="w-full relative">
         <div className="py-4 border-border bg-background/90">
           <HolidaysHeader
+            canDelete={canDelete}
+            canCreate={canCreate}
             search={search}
             onSearchChange={setSearch}
             onAddHoliday={handleAddHoliday}
@@ -137,6 +146,8 @@ export default function HolidaysPage() {
           />
           {viewMode === "table" ? (
             <HolidaysTable
+              canEdit={canEdit}
+              canDelete={canDelete}
               holidays={holidays}
               selected={selected}
               page={page}

@@ -18,6 +18,8 @@ import {
   OrganizationHeader,
 } from "../index";
 import { CustomPagination } from "@/components/common/dashboard/Pagination";
+import { useSubModulePrivileges } from "@/hooks/security/useSubModulePrivileges";
+
 
 export default function OrganizationsPage() {
   const { t } = useTranslations();
@@ -60,7 +62,18 @@ export default function OrganizationsPage() {
     id?: number;
   }>({ open: false, type: null });
 
+  const { canView, canCreate, canEdit, canDelete } = useSubModulePrivileges(
+    "organization",
+    "organizations"
+  );
+
+
   const handleAddOrganization = () => {
+    if (!canCreate) {
+      alert(t("common.noPermission"));
+      return;
+    }
+
     setModalState({
       isOpen: true,
       mode: "add",
@@ -69,6 +82,11 @@ export default function OrganizationsPage() {
   };
 
   const handleEditOrganization = (organization: IOrganization) => {
+    if (!canEdit) {
+      alert(t("common.noPermission"));
+      return;
+    }
+
     setModalState({
       isOpen: true,
       mode: "edit",
@@ -104,10 +122,20 @@ export default function OrganizationsPage() {
   };
 
   const handleDeleteOrganization = (id: number) => {
+    if (!canDelete) {
+      alert(t("common.noPermission"));
+      return;
+    }
+
     setDeleteDialog({ open: true, type: "single", id });
   };
 
   const handleDeleteSelected = () => {
+    if (!canDelete) {
+      alert(t("common.noPermission"));
+      return;
+    }
+
     setDeleteDialog({ open: true, type: "bulk" });
   };
 
@@ -129,6 +157,8 @@ export default function OrganizationsPage() {
       <div className="w-full relative">
         <div className="py-4 border-border bg-background/90">
           <OrganizationHeader
+            canDelete={canDelete}
+            canCreate={canCreate}
             search={search}
             onSearchChange={setSearch}
             onAddOrganization={handleAddOrganization}
@@ -137,6 +167,8 @@ export default function OrganizationsPage() {
           />
 
           <OrganizationsTable
+            canEdit={canEdit}
+            canDelete={canDelete}
             organizations={organizations}
             selected={selected}
             page={page}
@@ -183,12 +215,12 @@ export default function OrganizationsPage() {
               <DialogDescription>
                 {selected?.length === 1 || deleteDialog.type === "single"
                   ? t("common.messages.confirmDeleteSingleDescription", {
-                      deleteType: "Organization",
-                    })
+                    deleteType: "Organization",
+                  })
                   : t("common.messages.confirmDeleteMultipleDescription", {
-                      count: selected?.length,
-                      deleteType: "Organizations",
-                    })}
+                    count: selected?.length,
+                    deleteType: "Organizations",
+                  })}
               </DialogDescription>
               <div className="flex justify-end space-x-2 mt-4">
                 <Button variant="outline" onClick={handleCancelDelete}>
