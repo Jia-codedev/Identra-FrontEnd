@@ -1,103 +1,50 @@
-"use client";
-
 import React from "react";
-import useInsights from "../hooks/useInsights";
-import AnalyticsGrid from "../components/AnalyticsGrid";
-import PunchCard from "../components/PunchCard";
-import InsightsCard from "../components/InsightsCard";
-import Sparkline from "../components/Sparkline";
-import MiniBarChart from "../components/MiniBarChart";
-import { numericSeriesFromWorkHourTrends } from "../components/dataUtils";
+import { useInsights } from "../hooks/useInsights";
+import LeavesAndPermissionsCard from "../components/LeavesAndPermissionsCard";
+import EventTransation from "../components/EventTransation";
+import WelcomeCard from "../components/WelcomeCard";
+import LeaveAnalytics from "../components/LeaveAnalytics";
+import WorkHoursTrends from "../components/WorkHoursTrends";
+import Violation from "../components/Violation";
+import Schedule from "../components/Schedule";
+import Announcements from "../components/Anouncements";
 
-function MyInsights() {
-  const { attendance, workSchedule, leaveAnalytics, workHourTrends, refresh } =
-    useInsights();
-
-  // Simple derived states
-  const loading =
-    attendance?.loading ||
-    workSchedule?.loading ||
-    leaveAnalytics?.loading ||
-    workHourTrends?.loading;
-
-  const error =
-    attendance?.error ||
-    workSchedule?.error ||
-    leaveAnalytics?.error ||
-    workHourTrends?.error ||
-    null;
+async function MyInsights() {
+  const { attendance, workSchedule, leaveAnalytics, workHourTrends } =
+    await useInsights();
 
   return (
-    <div className="p-4">
-      <div className="mb-4">
-        <button onClick={() => refresh()} className="btn">
-          Refresh
-        </button>
-      </div>
-
-      {loading ? (
-        <div>Loading insights…</div>
-      ) : error ? (
-        <div className="text-red-600">Error: {error}</div>
-      ) : (
-        <AnalyticsGrid>
-          <div className="md:col-span-2">
-            <PunchCard
-              punches={attendance?.data?.punches ?? []}
-              onPunch={refresh}
-            />
+    <div
+      className="py-4"
+    >
+      <div className="grid grid-cols-6 gap-2">
+        <div className="col-span-1 row-span-1 gap-2">
+          <WelcomeCard />
+        </div>
+        <div className="col-span-3 row-span-1 h-full">
+          <LeavesAndPermissionsCard />
+        </div>
+        <div className="col-span-2 row-span-1 h-full">
+          <EventTransation />
+        </div>
+        <div className="col-span-3">
+          <WorkHoursTrends />
+        </div>
+        <div className="col-span-3 grid grid-cols-2 grid-rows-2 gap-2">
+          <div className="col-span-2">
+            <Violation />
           </div>
-
-          <InsightsCard title="Work Schedule">
-            {workSchedule?.data && workSchedule.data.length > 0 ? (
-              <div className="text-sm">
-                <div>Schedule: {workSchedule.data[0].SchCode ?? "—"}</div>
-                <div>
-                  In: {workSchedule.data[0].InTime ?? "—"} · Out:{" "}
-                  {workSchedule.data[0].OutTime ?? "—"}
-                </div>
-                <div className="mt-2">
-                  <MiniBarChart
-                    data={numericSeriesFromWorkHourTrends(
-                      workSchedule?.data[0]?.history ?? []
-                    )}
-                  />
-                </div>
-              </div>
-            ) : (
-              <div className="text-sm text-muted-foreground">
-                No schedule data
-              </div>
-            )}
-          </InsightsCard>
-
-          <InsightsCard title="Leave Analytics">
-            {Array.isArray(leaveAnalytics?.data) &&
-            leaveAnalytics.data.length > 0 ? (
-              <Sparkline
-                data={numericSeriesFromWorkHourTrends(leaveAnalytics)}
-              />
-            ) : (
-              <div className="text-sm text-muted-foreground">
-                No leave analytics to show
-              </div>
-            )}
-          </InsightsCard>
-
-          <InsightsCard title="Work Hour Trends">
-            {Array.isArray(workHourTrends?.data) &&
-            workHourTrends.data.length > 0 ? (
-              <Sparkline
-                data={numericSeriesFromWorkHourTrends(workHourTrends)}
-              />
-            ) : (
-              <div className="text-sm text-muted-foreground">
-                No trends to show
-              </div>
-            )}
-          </InsightsCard>
-        </AnalyticsGrid>
-      )}
+          <div className="col-span-2">
+            <Schedule />
+          </div>
+        </div>
+        <div className="col-span-3">
+          <Announcements />
+        </div>
+        <div className="col-span-3">
+          <LeaveAnalytics />
+        </div>
+      </div>
     </div>
   );
 }

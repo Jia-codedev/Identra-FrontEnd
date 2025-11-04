@@ -12,15 +12,13 @@ function DashboardFadeInAnimation({ children }: { children: React.ReactNode }) {
         key={pathname}
         initial={{
           opacity: 0,
-          y: 20,
         }}
         animate={{
           opacity: 1,
-          y: 0,
         }}
         transition={{
           duration: 0.5,
-          type: "tween",
+          ease: "easeInOut",
         }}
         className="w-full flex"
       >

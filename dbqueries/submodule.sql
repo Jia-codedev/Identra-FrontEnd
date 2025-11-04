@@ -32,7 +32,7 @@ INSERT INTO sec_sub_modules (sub_module_name, module_id, created_id, created_dat
 ('organization-type', @OrganizationId, 1, GETDATE(), 1, GETDATE()),
 ('org-chart', @OrganizationId, 1, GETDATE(), 1, GETDATE()),
 ('organizations', @OrganizationId, 1, GETDATE(), 1, GETDATE()),
-('dept-admins', @OrganizationId, 1, GETDATE(), 1, GETDATE());
+('delegations', @OrganizationId, 1, GETDATE(), 1, GETDATE());
 
 -- Employee Management sub-modules
 INSERT INTO sec_sub_modules (sub_module_name, module_id, created_id, created_date, last_updated_id, last_updated_date) VALUES
@@ -42,7 +42,7 @@ INSERT INTO sec_sub_modules (sub_module_name, module_id, created_id, created_dat
 
 -- Roster Management sub-modules
 INSERT INTO sec_sub_modules (sub_module_name, module_id, created_id, created_date, last_updated_id, last_updated_date) VALUES
-('reasons', @RosterManagementId, 1, GETDATE(), 1, GETDATE()),
+('  ', @RosterManagementId, 1, GETDATE(), 1, GETDATE()),
 ('holiday-calendar', @RosterManagementId, 1, GETDATE(), 1, GETDATE()),
 ('ramadan-hours', @RosterManagementId, 1, GETDATE(), 1, GETDATE()),
 ('shift-patterns', @RosterManagementId, 1, GETDATE(), 1, GETDATE()),
@@ -68,8 +68,8 @@ INSERT INTO sec_sub_modules (sub_module_name, module_id, created_id, created_dat
 INSERT INTO sec_sub_modules (sub_module_name, module_id, created_id, created_date, last_updated_id, last_updated_date) VALUES
 ('roles-management', @UserSecurityId, 1, GETDATE(), 1, GETDATE()),
 ('access-permissions', @UserSecurityId, 1, GETDATE(), 1, GETDATE()),
-('session-monitor', @UserSecurityId, 1, GETDATE(), 1, GETDATE()),
-('activity-summary', @UserSecurityId, 1, GETDATE(), 1, GETDATE());
+-- ('session-monitor', @UserSecurityId, 1, GETDATE(), 1, GETDATE()),
+-- ('activity-summary', @UserSecurityId, 1, GETDATE(), 1, GETDATE());
 
 -- Application Settings sub-modules
 INSERT INTO sec_sub_modules (sub_module_name, module_id, created_id, created_date, last_updated_id, last_updated_date) VALUES

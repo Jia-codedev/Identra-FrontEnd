@@ -1,0 +1,118 @@
+"use client";
+import React from "react";
+import { LogIn, LogOut, Clock } from "lucide-react";
+
+interface EventTransationProps {
+    currentTime?: string;
+    remainingTime?: string;
+    overtimeTime?: string;
+    checkInTime?: string;
+    checkOutTime?: string;
+    isCheckedIn?: boolean;
+    onCheckIn?: () => void;
+    onCheckOut?: () => void;
+}
+
+function EventTransation({
+    currentTime = "00:00:00",
+    remainingTime = "08:00",
+    overtimeTime = "00:00",
+    checkInTime = "--:--",
+    checkOutTime = "--:--",
+    isCheckedIn = false,
+    onCheckIn,
+    onCheckOut,
+}: EventTransationProps) {
+    const handlePrimaryAction = () => {
+        if (isCheckedIn) {
+            onCheckOut?.();
+        } else {
+            onCheckIn?.();
+        }
+    };
+
+    const primaryLabel = isCheckedIn ? "Check Out" : "Check In";
+    const PrimaryIcon = isCheckedIn ? LogOut : LogIn;
+
+    return (
+        <div className="bg-primary rounded-xl p-4 relative overflow-hidden h-full w-full">
+            <div className="absolute inset-0 opacity-20">
+                <div className="absolute top-10 left-10 w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                <div className="absolute top-20 right-20 w-2 h-2 bg-white rounded-full animate-pulse delay-100"></div>
+                <div className="absolute bottom-20 left-20 w-2 h-2 bg-white rounded-full animate-pulse delay-200"></div>
+                <div className="absolute bottom-10 right-10 w-2 h-2 bg-white rounded-full animate-pulse delay-300"></div>
+                <div className="absolute top-1/2 left-1/4 w-2 h-2 bg-white rounded-full animate-pulse delay-150"></div>
+                <div className="absolute top-1/3 right-1/3 w-2 h-2 bg-white rounded-full animate-pulse delay-250"></div>
+            </div>
+            <div className="relative z-10 flex flex-col h-full">
+                <div className="text-center mb-3">
+                    <h2 className="text-white text-lg font-semibold mb-1">
+                        Clock Your Hours
+                    </h2>
+                    <div className="flex items-center justify-center gap-1.5 text-white/80 text-xs">
+                        <Clock className="w-3.5 h-3.5" />
+                        <span>{new Date().toLocaleDateString("en-US", {
+                            weekday: "long",
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric"
+                        })}</span>
+                    </div>
+                </div>
+                <div className="text-center mb-4">
+                    <div className="text-5xl font-bold text-white tracking-wider">
+                        {currentTime}
+                    </div>
+                </div>
+                <div className="grid grid-cols-2 gap-2 mb-4">
+                    <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/20">
+                        <div className="flex items-center gap-1.5 mb-1">
+                            <LogIn className="w-3.5 h-3.5 text-white/80" />
+                            <span className="text-white/80 text-xs">Check In</span>
+                        </div>
+                        <div className="text-white text-lg font-bold">
+                            {checkInTime}
+                        </div>
+                    </div>
+
+                    <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/20">
+                        <div className="flex items-center gap-1.5 mb-1">
+                            <LogOut className="w-3.5 h-3.5 text-white/80" />
+                            <span className="text-white/80 text-xs">Check Out</span>
+                        </div>
+                        <div className="text-white text-lg font-bold">
+                            {checkOutTime}
+                        </div>
+                    </div>
+                </div>
+                <div className="grid grid-cols-2 gap-2 mb-4">
+                    <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/20">
+                        <div className="text-white/80 text-xs mb-0.5">Remaining</div>
+                        <div className="text-white text-base font-semibold">
+                            {remainingTime}
+                        </div>
+                    </div>
+
+                    <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/20">
+                        <div className="text-white/80 text-xs mb-0.5">Overtime</div>
+                        <div className="text-white text-base font-semibold">
+                            {overtimeTime}
+                        </div>
+                    </div>
+                </div>
+                <div className="mt-auto">
+                    <button
+                        onClick={handlePrimaryAction}
+                        className="w-full bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white font-medium py-2.5 px-3 rounded-lg border border-white/30 transition-all flex items-center justify-center gap-2"
+                        aria-label={primaryLabel}
+                    >
+                        <PrimaryIcon className="w-4 h-4" />
+                        <span className="text-sm">{primaryLabel}</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+export default EventTransation;

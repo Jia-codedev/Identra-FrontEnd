@@ -10,7 +10,6 @@ import { Button } from "@/components/ui/button";
 import PunchesList from "./components/PunchesList";
 import { CustomPagination } from "@/components/common/dashboard/Pagination";
 import usePunchesTabs, { PunchesTabType } from "./hooks/usePunchesTabs";
-import { EmployeeEventTransaction } from "@/services/leaveManagement/employeeEventTransactions";
 
 export default function PunchesPage() {
   const { t } = useTranslations();

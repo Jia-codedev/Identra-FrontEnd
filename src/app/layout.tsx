@@ -7,6 +7,7 @@ import { AppThemeProvider } from "@/providers/app-theme-provider";
 import { LanguageProvider } from "@/providers/language-provider";
 import { SocketProvider } from "@/providers/socket-provider";
 import { UserProvider } from "@/providers/user-provider";
+import CustomQueryClientProvider from "@/providers/QueryClientProvider";
 import { Toaster } from "@/components/ui/sonner";
 import React from "react";
 
@@ -39,18 +40,20 @@ export default function RootLayout({
           >
             <AppThemeProvider>
               <UserProvider>
-                <SocketProvider
-                  options={{
-                    autoConnect: true,
-                    reconnectOnUserChange: true,
-                    enableLogging: process.env.NODE_ENV === "development",
-                  }}
-                >
-                  <main className="bg-background">
-                    {children}
-                    <Toaster position="top-right" />
-                  </main>
-                </SocketProvider>
+                <CustomQueryClientProvider>
+                  <SocketProvider
+                    options={{
+                      autoConnect: true,
+                      reconnectOnUserChange: true,
+                      enableLogging: process.env.NODE_ENV === "development",
+                    }}
+                  >
+                    <main className="bg-background">
+                      {children}
+                      <Toaster position="top-right" />
+                    </main>
+                  </SocketProvider>
+                </CustomQueryClientProvider>
               </UserProvider>
             </AppThemeProvider>
           </ThemeProvider>

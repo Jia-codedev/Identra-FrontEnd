@@ -417,7 +417,7 @@ WHERE p.privilege_name IN (
 PRINT 'SENIORS role privileges assigned';
 
 -- =====================================================================================
--- ROLE 10: DEPT_ADMINS - Department administrators
+-- ROLE 10: DELEGATIONS - Department administrators
 -- =====================================================================================
 INSERT INTO sec_role_privileges (role_id, privilege_id, created_id, created_date, last_updated_id, last_updated_date)
 SELECT 10, p.privilege_id, 1, GETDATE(), 1, GETDATE()
@@ -458,7 +458,7 @@ WHERE p.privilege_name IN (
     'VIEW_ORGANIZATION_TYPES',
     'VIEW_ORG_CHART',
     'MANAGE_ORGANIZATIONS',
-    'MANAGE_DEPT_ADMINS',
+    'MANAGE_DELEGATIONS',
     
     -- Workflow
     'MANAGE_WORKFLOW',
@@ -473,7 +473,7 @@ WHERE p.privilege_name IN (
     'VIEW_USER_MANUAL'
 );
 
-PRINT 'DEPT_ADMINS role privileges assigned';
+PRINT 'DELEGATIONS role privileges assigned';
 
 -- =====================================================================================
 -- Summary
