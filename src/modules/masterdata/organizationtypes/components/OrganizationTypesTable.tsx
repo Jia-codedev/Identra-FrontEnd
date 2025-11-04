@@ -18,6 +18,8 @@ interface OrganizationTypesTableProps {
   onEditOrganizationType: (organizationType: IOrganizationType) => void;
   onDeleteOrganizationType: (id: number) => void;
   isLoading?: boolean;
+  canEdit?: boolean;
+  canDelete?: boolean;
 }
 
 export const OrganizationTypesTable: React.FC<OrganizationTypesTableProps> = ({
@@ -33,6 +35,8 @@ export const OrganizationTypesTable: React.FC<OrganizationTypesTableProps> = ({
   isLoading = false,
   onPageChange,
   onPageSizeChange,
+  canEdit,
+  canDelete,
 }) => {
   const { t } = useTranslations();
 
@@ -53,6 +57,8 @@ export const OrganizationTypesTable: React.FC<OrganizationTypesTableProps> = ({
   ];
   return (
     <GenericTable
+      canDelete={canDelete}
+      canEdit={canEdit}
       data={organizationTypes}
       columns={columns}
       selected={selected}
