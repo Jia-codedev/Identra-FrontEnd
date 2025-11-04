@@ -22,4 +22,4 @@ INSERT INTO sec_modules (
 ('workforce', 1, GETDATE(), 1, GETDATE()),
 
 -- Footer Menu Items
-('support-centre', 1, GETDATE(), 1, GETDATE());
+-- ('support-centre', 1, GETDATE(), 1, GETDATE());

@@ -74,7 +74,7 @@ export function GenericTable<T>({
 
   if (data.length === 0) {
     return (
-      <div className="overflow-x-auto rounded-md px-4">
+      <div className="overflow-x-auto rounded-md">
         <div className="backdrop-blur-xl mt-4 bg-card/70 border border-border rounded-lg overflow-hidden">
           {isLoading ? (
             <Loader />
