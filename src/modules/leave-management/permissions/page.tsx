@@ -10,6 +10,7 @@ import PermissionsList from "./components/PermissionsList";
 import PermissionRequestForm from "./components/PermissionRequestForm";
 import usePermissions from "./hooks/usePermissions";
 import usePermissionMutations from "./hooks/useMutations";
+import { useSubModulePrivileges } from "@/hooks/security/useSubModulePrivileges";
 
 export default function PermissionsPage() {
   const { t } = useTranslations();
@@ -35,6 +36,13 @@ export default function PermissionsPage() {
     setSearch,
     refetch
   } = usePermissions();
+
+    const { canView, canCreate, canEdit, canDelete } = useSubModulePrivileges(
+    "self-services",
+    "permission-management"
+  );
+  console.log("Privileges:", { canView, canCreate, canEdit, canDelete });
+
 
   const handleAddNew = () => {
     setEditingPermission(null);
@@ -80,6 +88,8 @@ export default function PermissionsPage() {
       <div className="w-full relative">
         <div className="py-4 border-border bg-background/90 p-4">
           <PermissionsHeader
+            canCreate={canCreate}
+            canDelete={canDelete} 
             search={search}
             onSearchChange={setSearch}
             onAdd={handleAddNew}
@@ -89,6 +99,8 @@ export default function PermissionsPage() {
           />
           <div className="w-full mt-4">
             <PermissionsList
+              canEdit={canEdit}
+              canView={canView}
               permissions={permissions}
               loading={isLoading}
               selected={selected}

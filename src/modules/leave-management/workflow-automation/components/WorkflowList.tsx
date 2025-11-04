@@ -21,6 +21,8 @@ interface WorkflowItem {
   last_updated_date: string;
   status?: "ACTIVE" | "INACTIVE" | "DRAFT";
   isActive?: boolean;
+  canEdit?: boolean;
+  canDelete?: boolean;
 }
 
 interface WorkflowListProps {
@@ -39,6 +41,8 @@ interface WorkflowListProps {
   pageSize?: number;
   onPageSizeChange?: (size: number) => void;
   total?: number;
+  canEdit?: boolean;  
+  canDelete?: boolean;
 }
 
 const getStatusColor = (isActive: boolean) => {
@@ -73,6 +77,8 @@ export default function WorkflowList({
   pageSize = 10,
   onPageSizeChange,
   total = 0,
+  canEdit,  
+  canDelete,
 }: WorkflowListProps) {
   const { t } = useTranslations();
   const { currentLocale } = useLanguage();
@@ -151,6 +157,8 @@ export default function WorkflowList({
 
   return (
     <GenericTable
+      canEdit={canEdit}
+      canDelete={canDelete}
       data={safeWorkflows}
       columns={columns}
       selected={selected}

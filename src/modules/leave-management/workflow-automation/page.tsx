@@ -7,6 +7,7 @@ import WorkflowHeader from "./components/WorkflowHeader";
 import WorkflowList from "./components/WorkflowList";
 import useWorkflow from "./hooks/useWorkflow";
 import { CustomPagination } from "@/components/common/dashboard/Pagination";
+import { useSubModulePrivileges } from "@/hooks/security/useSubModulePrivileges";
 
 export default function WorkflowAutomationPage() {
   const { t } = useTranslations();
@@ -27,6 +28,13 @@ export default function WorkflowAutomationPage() {
     initialPage: 1,
     initialLimit: 25,
   });
+
+    const { canView, canCreate, canEdit, canDelete } = useSubModulePrivileges(
+    "self-services",
+    "workflow-automation"
+  );
+  console.log("Privileges:", { canView, canCreate, canEdit, canDelete });
+
 
   useEffect(() => {
     handleFiltersChange({ search: searchTerm });
@@ -76,6 +84,8 @@ export default function WorkflowAutomationPage() {
       <div className="w-full relative">
         <div className="py-4 border-border bg-background/90 p-4">
           <WorkflowHeader
+            canCreate={canCreate}
+            canDelete={canDelete}
             searchTerm={searchTerm}
             onSearchChange={setSearchTerm}
             onAddNew={handleAddNew}
@@ -86,6 +96,8 @@ export default function WorkflowAutomationPage() {
 
           <div className="w-full mt-4">
             <WorkflowList
+              canEdit={canEdit}
+              canDelete={canDelete}
               workflows={workflowTypes || []}
               onEdit={handleEdit}
               onDelete={handleDelete}
