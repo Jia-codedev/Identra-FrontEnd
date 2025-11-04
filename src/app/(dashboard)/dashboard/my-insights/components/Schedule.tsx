@@ -1,12 +1,29 @@
 import React from "react";
 import { Link } from "lucide-react";
 
+// Backend API shape for schedule
+export interface ApiScheduleItem {
+    TimeIn?: string | null;
+    TimeOut?: string | null;
+    SchCode?: string | null;
+    Flexible?: string | null;
+    GraceIn?: string | null;
+    GraceOut?: string | null;
+    InTime?: string | null;
+    OutTime?: string | null;
+    DayReqdHrs?: number | string | null;
+    TotalWorkedHrs?: string | null;
+    PendingWorkHrs?: string | null;
+    TotalMonthlyExpectedWrkHrs?: number | string | null;
+}
+
 interface ScheduleProps {
     expectedHours?: number;
     worked?: number;
     overtime?: number;
     pending?: number;
     onShowAll?: () => void;
+    apiData?: ApiScheduleItem | null;
 }
 
 function Schedule({
@@ -15,13 +32,31 @@ function Schedule({
     overtime = 0.0,
     pending = 0.0,
     onShowAll,
+    apiData,
 }: ScheduleProps) {
-    const totalHours = worked + overtime + pending;
-    const workedPercent = expectedHours > 0 ? (worked / expectedHours) * 100 : 0;
-    const overtimePercent =
-        expectedHours > 0 ? (overtime / expectedHours) * 100 : 0;
-    const pendingPercent =
-        expectedHours > 0 ? (pending / expectedHours) * 100 : 0;
+    // If apiData is provided, normalize values
+    let normExpected = expectedHours;
+    let normWorked = worked;
+    let normPending = pending;
+    let normOvertime = overtime;
+    if (apiData) {
+        // DayReqdHrs and TotalMonthlyExpectedWrkHrs can be number or string (hours)
+        normExpected = Number(apiData.DayReqdHrs ?? apiData.TotalMonthlyExpectedWrkHrs ?? 0);
+        // TotalWorkedHrs and PendingWorkHrs are strings like "00:00"
+        const parseHrs = (val: string | null | undefined) => {
+            if (!val) return 0;
+            const [h, m] = val.split(":").map(Number);
+            return (Number.isFinite(h) ? h : 0) + (Number.isFinite(m) ? m / 60 : 0);
+        };
+        normWorked = parseHrs(apiData.TotalWorkedHrs);
+        normPending = parseHrs(apiData.PendingWorkHrs);
+        // Overtime: worked - expected, if positive
+        normOvertime = Math.max(0, normWorked - normExpected);
+    }
+    const totalHours = normWorked + normOvertime + normPending;
+    const workedPercent = normExpected > 0 ? (normWorked / normExpected) * 100 : 0;
+    const overtimePercent = normExpected > 0 ? (normOvertime / normExpected) * 100 : 0;
+    const pendingPercent = normExpected > 0 ? (normPending / normExpected) * 100 : 0;
 
     return (
         <div className="bg-card border rounded-xl p-6">
@@ -36,7 +71,7 @@ function Schedule({
             </div>
             <div className="mb-4">
                 <div className="text-4xl font-bold text-foreground mb-1">
-                    {expectedHours.toFixed(2)}
+                    {normExpected.toFixed(2)}
                 </div>
                 <p className="text-sm text-muted-foreground">Expected Working Hours</p>
             </div>
@@ -70,7 +105,7 @@ function Schedule({
                     <div className="flex items-baseline gap-1">
                         <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
                         <span className="text-2xl font-bold text-foreground">
-                            {worked.toFixed(2)}
+                            {normWorked.toFixed(2)}
                         </span>
                     </div>
                 </div>
@@ -79,7 +114,7 @@ function Schedule({
                     <div className="flex items-baseline gap-1">
                         <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
                         <span className="text-2xl font-bold text-foreground">
-                            {overtime.toFixed(2)}
+                            {normOvertime.toFixed(2)}
                         </span>
                     </div>
                 </div>
@@ -88,7 +123,7 @@ function Schedule({
                     <div className="flex items-baseline gap-1">
                         <div className="w-1 h-6 bg-orange-500 rounded-full"></div>
                         <span className="text-2xl font-bold text-foreground">
-                            {pending.toFixed(2)}
+                            {normPending.toFixed(2)}
                         </span>
                     </div>
                 </div>

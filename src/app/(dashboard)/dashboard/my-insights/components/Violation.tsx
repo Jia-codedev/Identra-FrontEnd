@@ -1,5 +1,6 @@
 import React from "react";
 import { LogIn, LogOut, Clock, Sun } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface ViolationData {
     missedIn?: number;
@@ -9,14 +10,20 @@ interface ViolationData {
 }
 
 interface ViolationProps {
+    isLoading?: boolean;
     data?: ViolationData;
 }
 
 function Violation({
+    isLoading,
     data = { missedIn: 0, missedOut: 0, late: 0, early: 0 },
 }: ViolationProps) {
     return (
-        <div className="bg-card border rounded-xl p-6 w-full h-full">
+        <div className={
+            cn("bg-card border rounded-xl p-6 w-full h-full",
+                isLoading ? "animate-pulse" : ""
+            )
+        }>
             <h3 className="text-xl font-semibold text-foreground text-center mb-6">
                 Violations
             </h3>
@@ -29,7 +36,7 @@ function Violation({
                     </div>
                     <div className="text-center pt-8">
                         <div className="text-3xl font-bold text-foreground mb-1">
-                            {data.missedIn}
+                            {data.missedIn ? data.missedIn : 0}
                         </div>
                         <p className="text-muted-foreground text-xs">Missed In</p>
                     </div>
@@ -42,7 +49,7 @@ function Violation({
                     </div>
                     <div className="text-center pt-8">
                         <div className="text-3xl font-bold text-foreground mb-1">
-                            {data.missedOut}
+                            {data.missedOut ? data.missedOut : 0}
                         </div>
                         <p className="text-muted-foreground text-xs">Missed Out</p>
                     </div>
@@ -55,7 +62,7 @@ function Violation({
                     </div>
                     <div className="text-center pt-8">
                         <div className="text-3xl font-bold text-foreground mb-1">
-                            {data.late}
+                            {data.late ? data.late : 0}
                         </div>
                         <p className="text-muted-foreground text-xs">Late</p>
                     </div>
@@ -68,7 +75,7 @@ function Violation({
                     </div>
                     <div className="text-center pt-8">
                         <div className="text-3xl font-bold text-foreground mb-1">
-                            {data.early}
+                            {data.early ? data.early : 0}
                         </div>
                         <p className="text-muted-foreground text-xs">Early</p>
                     </div>

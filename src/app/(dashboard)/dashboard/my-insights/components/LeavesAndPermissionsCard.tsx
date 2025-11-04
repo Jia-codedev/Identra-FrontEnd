@@ -1,14 +1,15 @@
 import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Briefcase, Calendar, CheckCircle, Clock, XCircle } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface LeavesData {
-  workingDays: number;
-  totalLeaves: number;
-  leavesTaken: number;
-  absent: number;
-  approvedLeaves: number;
-  pendingLeaves: number;
+  workingDays: number | null;
+  totalLeaves: number | null;
+  leavesTaken: number | null;
+  absent: number | null;
+  approvedLeaves: number | null;
+  pendingLeaves: number | null;
 }
 
 interface PermissionsData {
@@ -24,15 +25,21 @@ interface LeavesAndPermissionsCardProps {
   leavesData?: LeavesData;
   permissionsData?: PermissionsData;
   onApplyClick?: () => void;
+  isLoading?: boolean;
 }
 
 function LeavesAndPermissionsCard({
   leavesData,
   permissionsData,
   onApplyClick,
+  isLoading
 }: LeavesAndPermissionsCardProps) {
   return (
-    <div className="bg-card border p-4 rounded-xl h-full">
+    <div className={
+      cn("bg-card border p-4 rounded-xl h-full", {
+        [isLoading ? "animate-pulse" : ""]: true
+      })
+    }>
       <Tabs defaultValue="leaves" className="w-full">
         <div className="flex items-center justify-between mb-4">
           <TabsList className="bg-transparent">

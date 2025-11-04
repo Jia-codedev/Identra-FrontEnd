@@ -67,7 +67,7 @@ INSERT INTO sec_sub_modules (sub_module_name, module_id, created_id, created_dat
 -- User Security Settings sub-modules
 INSERT INTO sec_sub_modules (sub_module_name, module_id, created_id, created_date, last_updated_id, last_updated_date) VALUES
 ('roles-management', @UserSecurityId, 1, GETDATE(), 1, GETDATE()),
-('access-permissions', @UserSecurityId, 1, GETDATE(), 1, GETDATE()),
+('access-permissions', @UserSecurityId, 1, GETDATE(), 1, GETDATE());
 -- ('session-monitor', @UserSecurityId, 1, GETDATE(), 1, GETDATE()),
 -- ('activity-summary', @UserSecurityId, 1, GETDATE(), 1, GETDATE());
 
