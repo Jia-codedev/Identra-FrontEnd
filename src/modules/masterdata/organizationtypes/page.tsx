@@ -9,6 +9,7 @@ import { useTranslations } from "@/hooks/use-translations";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { CustomPagination } from "@/components/common/dashboard/Pagination";
 import { useOrganizationTypeMutations } from "./hooks/useMutations";
+import { useSubModulePrivileges } from "@/hooks/security/useSubModulePrivileges";
 
 const OrganizationTypesPage = () => {
   const { t } = useTranslations();
@@ -94,10 +95,16 @@ const OrganizationTypesPage = () => {
       });
     }
   };
+  const { canView, canCreate, canEdit, canDelete } = useSubModulePrivileges(
+    "organization",
+    "organization-type"
+  );
 
   return (
     <div className="h-full flex flex-col">
       <OrganizationTypesHeader
+        canCreate={canCreate}
+        canDelete={canDelete}
         search={search}
         onSearchChange={setSearch}
         onAddOrganizationType={handleAdd}
@@ -106,6 +113,8 @@ const OrganizationTypesPage = () => {
       />
       <div className="flex-grow overflow-y-auto">
         <OrganizationTypesTable
+          canEdit={canEdit}
+          canDelete={canDelete}
           organizationTypes={organizationtypes}
           selected={selected}
           page={page}

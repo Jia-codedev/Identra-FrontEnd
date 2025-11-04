@@ -16,6 +16,7 @@ import { BiLogoMicrosoft } from "react-icons/bi";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 
 import Link from "next/link";
+import { LogoIcon } from "@/components/common/svg/icons";
 function AuthComponent() {
   const { t } = useTranslations();
   const { isRTL } = useLanguage();
@@ -42,6 +43,10 @@ function AuthComponent() {
       if (response.status === 401) {
         setError(t("auth.invalidCredentials"));
         return;
+      }
+      if (response.status === 403) {
+        setError(response.data?.message || t("auth.loginFailed"));
+        return;
       } else {
         setError(null);
         setSubmitted(true);
@@ -64,43 +69,40 @@ function AuthComponent() {
     const res = await authService.adlogin();
   };
   return (
-    <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden">
+    <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden px-4">
       <motion.div
         initial={{ y: 40, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ type: "spring", stiffness: 120, damping: 16 }}
-        className="w-full max-w-md bg-card border border-border shadow-lg rounded-2xl px-6 py-8 flex flex-col items-center gap-4 backdrop-blur-lg"
+        className="w-full max-w-md  bg-card border-border shadow-lg rounded-2xl px-4 sm:px-6 py-6 sm:py-8 flex flex-col items-center gap-4 backdrop-blur-lg"
       >
-        <motion.div
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ delay: 0.2, type: "spring" }}
-        >
-          <Image
-            src="/logo-full.svg"
-            alt="Chronologix Logo"
-            width={100}
-            height={30}
-            className="mb-6"
-          />
-        </motion.div>
-
-        <motion.h2
-          initial={{ y: 10, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.3, type: "spring" }}
-          className="text-3xl font-bold text-primary text-center mb-2 tracking-tight"
-        >
-          {t("auth.welcomeBack")}
-        </motion.h2>
-        <motion.p
-          initial={{ y: 10, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.35, type: "spring" }}
-          className="text-muted-foreground text-center mb-6 text-base"
-        >
-          {t("auth.signInToAccount")}
-        </motion.p>
+        <div className="flex flex-col items-center w-full">
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.2, type: "spring" }}
+          >
+            <div className="mb-6 w-8 sm:w-36">
+              <LogoIcon />
+            </div>
+          </motion.div>
+          <motion.h2
+            initial={{ y: 10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.3, type: "spring" }}
+            className="text-xl sm:text-2xl font-bold text-primary text-center mb-2 tracking-tight"
+          >
+            {t("auth.welcomeBack")}
+          </motion.h2>
+          <motion.p
+            initial={{ y: 10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.35, type: "spring" }}
+            className="text-muted-foreground text-center mb-6 text-xs sm:text-sm"
+          >
+            {t("auth.signInToAccount")}
+          </motion.p>
+        </div>
         <AnimatePresence>
           {error && (
             <motion.div
@@ -109,9 +111,7 @@ function AuthComponent() {
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.2 }}
               className={cn(
-                "w-full mb-2 p-3 rounded-lg border text-center",
-                "bg-red-100 border-red-300 text-red-700",
-                "dark:bg-red-950 dark:border-red-800 dark:text-red-300"
+                "w-full mb-2 p-3 rounded-lg text-center text-sm font-light bg-destructive/10 text-destructive"
               )}
             >
               {error}
@@ -132,7 +132,7 @@ function AuthComponent() {
               noValidate
             >
               <div>
-                <label className="block text-sm font-medium text-foreground mb-1">
+                <label className="block text-xs sm:text-sm font-medium text-foreground mb-1">
                   {t("auth.login")}
                 </label>
                 <input
@@ -141,7 +141,7 @@ function AuthComponent() {
                   placeholder={t("auth.enterLogin")}
                   autoComplete="username"
                   className={cn(
-                    "w-full p-3 border border-border rounded-lg text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 transition",
+                    "w-full p-3 sm:p-3 border border-border rounded-lg text-xs sm:text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 transition",
                     errors.login ? "border-red-500" : ""
                   )}
                   {...register("login")}
@@ -156,7 +156,7 @@ function AuthComponent() {
                 )}
               </div>
               <div>
-                <label className="block text-sm font-medium text-foreground mb-1">
+                <label className="block text-xs sm:text-sm font-medium text-foreground mb-1">
                   {t("auth.password")}
                 </label>
                 <div className="relative">
@@ -166,7 +166,7 @@ function AuthComponent() {
                     placeholder={t("auth.enterPassword")}
                     autoComplete="current-password"
                     className={cn(
-                      "w-full p-3 border border-border rounded-lg text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 transition",
+                      "w-full p-3 sm:p-3 border border-border rounded-lg text-xs sm:text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 transition",
                       errors.password ? "border-red-500" : "",
                       isRTL ? "pl-10" : "pr-10"
                     )}
@@ -201,7 +201,7 @@ function AuthComponent() {
                 {errors.password && (
                   <div
                     id="password-error"
-                    className="text-red-500 text-xs mt-1"
+                    className="text-red-500 text-xs sm:text-sm mt-1"
                   >
                     {errors.password.message}
                   </div>
@@ -217,21 +217,21 @@ function AuthComponent() {
                   />
                   <label
                     htmlFor="remember"
-                    className="text-sm text-muted-foreground"
+                    className="text-xs sm:text-sm text-muted-foreground"
                   >
                     {t("auth.rememberMe")}
                   </label>
                 </div>
                 <Link
                   href={"/forgot-password"}
-                  className="text-primary text-xs font-medium hover:underline"
+                  className="text-primary text-xs sm:text-sm font-medium hover:underline"
                 >
                   {t("auth.forgotPassword")}
                 </Link>
               </div>
               <Button
                 type="submit"
-                className="w-full bg-primary text-primary-foreground py-3 rounded-lg font-semibold hover:bg-primary/90 transition"
+                className="w-full bg-primary text-primary-foreground py-2 sm:py-3 rounded-lg font-semibold text-sm sm:text-base hover:bg-primary/90 transition"
                 disabled={submitted}
               >
                 {t("auth.signIn")}

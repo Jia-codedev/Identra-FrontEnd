@@ -19,7 +19,7 @@ function buildLocale(allMessages: Messages) {
   return {
     ...all,
     mainMenu,
-    navigation, // Ensure navigation is included in the returned object
+    navigation,
     search: (common as any).search,
     add: (common as any).add,
     edit: (common as any).edit,

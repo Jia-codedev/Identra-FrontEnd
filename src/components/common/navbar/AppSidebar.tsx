@@ -2,7 +2,7 @@
 import { useNavigationState } from "@/hooks/useNavigationState";
 import React from "react";
 import { useAuthNavigationSync } from "@/hooks/useAuthNavigation";
-import { LogoIcon } from "../svg/icons";
+import { LogoFav } from "../svg/icons";
 import { useLanguage } from "@/providers/language-provider";
 import Link from "next/link";
 import { getRouteFromKey } from "@/utils/routeFromKey";
@@ -30,7 +30,7 @@ function AppSidebar(props: React.HTMLAttributes<HTMLDivElement>) {
           href={getRouteFromKey("mainMenu.workforceAnalytics.myInsights")}
           className="flex items-center justify-center h-16"
         >
-          <LogoIcon />
+          <LogoFav />
         </Link>
       </div>
       <nav className="flex-1 flex flex-col items-center space-y-4 mt-4">

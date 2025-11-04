@@ -60,11 +60,11 @@ export function setupInterceptors(client: AxiosInstance) {
             }
             window.location.href = "/";
           }
-          return Promise.reject(error);
+          return Promise.resolve(error.response!);
         }
       }
 
-      return Promise.reject(error);
+      return Promise.resolve(error.response!);
     }
   );
 }
