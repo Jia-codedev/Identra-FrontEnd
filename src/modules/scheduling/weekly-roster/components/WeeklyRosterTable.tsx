@@ -16,6 +16,8 @@ interface WeeklyRosterTableProps {
   onDelete: (id: number) => void;
   isLoading?: boolean;
   isDeleting?: boolean;
+  canEdit?: boolean;
+  canDelete?: boolean;
 }
 
 const ScheduleCell: React.FC<{
@@ -77,6 +79,10 @@ export const WeeklyRosterTable: React.FC<WeeklyRosterTableProps> = ({
   onDelete,
   isLoading = false,
   isDeleting = false,
+  canEdit,
+  canDelete,
+
+
 }) => {
   const { t } = useTranslations();
   const { isRTL } = useLanguage();
@@ -192,6 +198,8 @@ export const WeeklyRosterTable: React.FC<WeeklyRosterTableProps> = ({
 
   return (
     <GenericTable
+      canEdit={canEdit}
+      canDelete={canDelete}
       data={data}
       columns={columns}
       selected={selectedItems}

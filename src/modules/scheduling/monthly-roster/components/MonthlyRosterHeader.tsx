@@ -18,9 +18,11 @@ interface MonthlyRosterHeaderProps {
   onAddRoster?: () => void;
   onAddSampleData?: () => void;
   selectedIds?: number[];
+  canCreate?: boolean;
+  canDelete?: boolean;
 }
 
-export const MonthlyRosterHeader: React.FC<MonthlyRosterHeaderProps> = ({ filters, onFiltersChange, onAddRoster, onAddSampleData, selectedIds }) => {
+export const MonthlyRosterHeader: React.FC<MonthlyRosterHeaderProps> = ({ filters, onFiltersChange, onAddRoster, onAddSampleData, selectedIds, canCreate, canDelete }) => {
   const { t } = useTranslations();
   const { isRTL } = useLanguage();
 
@@ -156,7 +158,8 @@ export const MonthlyRosterHeader: React.FC<MonthlyRosterHeaderProps> = ({ filter
             <h1 className="text-2xl font-bold">{t('scheduling.monthlyRoster.title') || 'Monthly Roster'}</h1>
           </div>
           <div className="flex gap-2">
-            <Button onClick={onAddRoster} className="gap-2">
+            <Button disabled={!canCreate}
+            onClick={onAddRoster} className="gap-2">
               <Calendar className="h-4 w-4" />
               {t('scheduling.monthlyRoster.addRoster')}
             </Button>

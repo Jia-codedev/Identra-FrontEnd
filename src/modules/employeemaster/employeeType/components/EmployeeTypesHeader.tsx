@@ -13,6 +13,8 @@ interface EmployeeTypesHeaderProps {
   onAddEmployeeType: () => void;
   selectedCount: number;
   onDeleteSelected?: () => void;
+  canDelete?: boolean;
+  canCreate?: boolean;
 }
 
 export const EmployeeTypesHeader: React.FC<EmployeeTypesHeaderProps> = ({
@@ -21,6 +23,8 @@ export const EmployeeTypesHeader: React.FC<EmployeeTypesHeaderProps> = ({
   onAddEmployeeType,
   selectedCount,
   onDeleteSelected,
+  canDelete,
+  canCreate,
 }) => {
   const { t } = useTranslations();
   const { isRTL } = useLanguage();
@@ -45,7 +49,7 @@ export const EmployeeTypesHeader: React.FC<EmployeeTypesHeaderProps> = ({
               className="border-0 bg-transparent rounded-lg focus:ring-0 focus-visible:ring-0 shadow-none text-base px-2"
             />
             <span className="mx-2 h-6 w-px bg-border" />
-            {selectedCount > 0 && onDeleteSelected ? (
+            {selectedCount > 0 && onDeleteSelected && canDelete ? (
               <Button
                 onClick={onDeleteSelected}
                 className="font-semibold text-base px-4 py-2 rounded-lg bg-destructive hover:bg-destructive/90 transition-all shadow-none"
@@ -56,6 +60,7 @@ export const EmployeeTypesHeader: React.FC<EmployeeTypesHeaderProps> = ({
               </Button>
             ) : (
               <Button
+                disabled={!canCreate}
                 onClick={onAddEmployeeType}
                 className="font-semibold text-base px-4 py-2 rounded-lg bg-primary hover:bg-primary/90 transition-all shadow-none"
                 variant="default"

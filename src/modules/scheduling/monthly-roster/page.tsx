@@ -12,6 +12,7 @@ import { CustomPagination } from "@/components/common/dashboard/Pagination";
 import { useUserId } from "@/store/userStore";
 import { useTranslations } from "@/hooks/use-translations";
 import { MonthlyRosterRow } from "./types";
+import { useSubModulePrivileges } from "@/hooks/security/useSubModulePrivileges";
 
 export default function MonthlyRosterPage() {
   const { t } = useTranslations();
@@ -99,6 +100,13 @@ export default function MonthlyRosterPage() {
     fetchData();
   }, [filters, page, pageSize]);
 
+    const { canView, canCreate, canEdit, canDelete } = useSubModulePrivileges(
+    "roster-management",
+    "monthly-roster"
+  );
+  console.log("Privileges:", { canView, canCreate, canEdit, canDelete });
+
+
   const handleFinalize = async (row: MonthlyRosterRow) => {
     try {
       await finalizeMutation.mutateAsync(row.schedule_roster_id);
@@ -136,6 +144,8 @@ export default function MonthlyRosterPage() {
   return (
     <div className="p-6 space-y-4">
       <MonthlyRosterHeader
+        canCreate={canCreate} 
+        canDelete={canDelete}
         filters={filters}
         onFiltersChange={onFiltersChange}
         onAddRoster={() => {
@@ -145,6 +155,8 @@ export default function MonthlyRosterPage() {
       />
       
       <MonthlyRosterTable
+        canEdit={canEdit} 
+        canDelete={canDelete}
         data={data}
         isLoading={isLoading}
         onEdit={handleEdit}

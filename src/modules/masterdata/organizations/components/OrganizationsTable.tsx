@@ -18,6 +18,9 @@ interface OrganizationsTableProps {
   onEditOrganization: (organization: IOrganization) => void;
   onDeleteOrganization: (id: number) => void;
   isLoading?: boolean;
+  canEdit: boolean;
+  canDelete: boolean;
+
 }
 
 export const OrganizationsTable: React.FC<OrganizationsTableProps> = ({
@@ -33,6 +36,8 @@ export const OrganizationsTable: React.FC<OrganizationsTableProps> = ({
   isLoading = false,
   onPageChange,
   onPageSizeChange,
+  canEdit,
+  canDelete,
 }) => {
   const { t } = useTranslations();
 
@@ -60,6 +65,8 @@ export const OrganizationsTable: React.FC<OrganizationsTableProps> = ({
 
   return (
     <GenericTable
+      canDelete={canDelete}
+      canEdit={canEdit}
       data={organizations}
       columns={columns}
       selected={selected}

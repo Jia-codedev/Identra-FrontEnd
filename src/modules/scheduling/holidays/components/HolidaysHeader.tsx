@@ -14,6 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { HolidayFilters } from "../types";
+import { ca } from "date-fns/locale";
 
 interface HolidaysHeaderProps {
   search: string;
@@ -25,6 +26,8 @@ interface HolidaysHeaderProps {
   onFiltersChange: (filters: Partial<HolidayFilters>) => void;
   viewMode?: "table" | "calendar";
   onViewModeChange?: (mode: "table" | "calendar") => void;
+  canCreate?: boolean;  
+  canDelete?: boolean;
 }
 
 export const HolidaysHeader: React.FC<HolidaysHeaderProps> = ({
@@ -37,6 +40,8 @@ export const HolidaysHeader: React.FC<HolidaysHeaderProps> = ({
   onFiltersChange,
   viewMode,
   onViewModeChange,
+  canCreate,
+  canDelete,
 }) => {
   const { t } = useTranslations();
   const { isRTL } = useLanguage();
@@ -135,7 +140,7 @@ export const HolidaysHeader: React.FC<HolidaysHeaderProps> = ({
                 </button>
               </div>
             </div>
-            {selectedCount > 0 && onDeleteSelected && (
+            {selectedCount > 0 && onDeleteSelected && canDelete && (
               <Button
                 variant="destructive"
                 size="sm"
@@ -146,6 +151,7 @@ export const HolidaysHeader: React.FC<HolidaysHeaderProps> = ({
               </Button>
             )}
             <Button
+             disabled={!canCreate}
               onClick={onAddHoliday}
               className="gap-2 text-xs sm:text-sm h-8 sm:h-9"
             >

@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { GenericTable, TableColumn } from '@/components/common/GenericTable';
 import { ScheduleCalendarModal } from './ScheduleCalendarModal';
 import { Calendar } from 'lucide-react';
+import { ca } from 'date-fns/locale';
 
 interface MonthlyRosterTableProps {
   data: MonthlyRosterRow[];
@@ -15,6 +16,8 @@ interface MonthlyRosterTableProps {
   onEdit?: (row: MonthlyRosterRow) => void;
   onFinalize?: (row: MonthlyRosterRow) => void;
   onDelete?: (row: MonthlyRosterRow) => void;
+  canEdit?: boolean;
+  canDelete?: boolean;
 }
 
 
@@ -24,7 +27,9 @@ export const MonthlyRosterTable: React.FC<MonthlyRosterTableProps> = ({
   isLoading,
   onEdit,
   onFinalize,
-  onDelete
+  onDelete,
+  canEdit,
+  canDelete
 }) => {
   const { isRTL } = useLanguage();
   const { t } = useTranslations();
@@ -84,6 +89,8 @@ export const MonthlyRosterTable: React.FC<MonthlyRosterTableProps> = ({
   return (
     <>
       <GenericTable
+        canEdit={canEdit} 
+        canDelete={canDelete}
         data={data}
         columns={columns}
         selected={[]}

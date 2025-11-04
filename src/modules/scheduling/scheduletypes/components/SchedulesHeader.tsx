@@ -43,6 +43,8 @@ interface SchedulesHeaderProps {
   onDeleteSelected: () => void;
   filters: ScheduleFilters;
   onFiltersChange: (filters: Partial<ScheduleFilters>) => void;
+  canDelete?: boolean;
+  canCreate?: boolean;
 }
 
 export const SchedulesHeader: React.FC<SchedulesHeaderProps> = ({
@@ -53,6 +55,8 @@ export const SchedulesHeader: React.FC<SchedulesHeaderProps> = ({
   onDeleteSelected,
   filters,
   onFiltersChange,
+  canDelete,
+  canCreate,
 }) => {
   const { t } = useTranslations();
   const { isRTL } = useLanguage();
@@ -132,7 +136,7 @@ export const SchedulesHeader: React.FC<SchedulesHeaderProps> = ({
             />
 
             <div className="flex flex-col sm:flex-row gap-2">
-              {selectedCount > 0 && (
+              {selectedCount > 0 && canDelete && (
                 <Button
                   variant="destructive"
                   size="sm"
@@ -143,6 +147,7 @@ export const SchedulesHeader: React.FC<SchedulesHeaderProps> = ({
                 </Button>
               )}
               <Button
+                disabled={!canCreate}
                 onClick={onAddSchedule}
                 className="gap-2 text-xs sm:text-sm h-8 sm:h-9"
               >

@@ -13,6 +13,9 @@ interface OrganizationHeaderProps {
   onAddOrganization: () => void;
   selectedCount: number;
   onDeleteSelected?: () => void;
+  canCreate: boolean;
+  canDelete: boolean;
+
 }
 
 export const OrganizationHeader: React.FC<OrganizationHeaderProps> = ({
@@ -21,6 +24,8 @@ export const OrganizationHeader: React.FC<OrganizationHeaderProps> = ({
   onAddOrganization,
   selectedCount,
   onDeleteSelected,
+  canCreate,
+  canDelete,
 }) => {
   const { t } = useTranslations();
   const { isRTL } = useLanguage();
@@ -45,7 +50,7 @@ export const OrganizationHeader: React.FC<OrganizationHeaderProps> = ({
               className="border-0 bg-transparent rounded-lg focus:ring-0 focus-visible:ring-0 shadow-none text-base px-2"
             />
             <span className="mx-2 h-6 w-px bg-border" />
-            {selectedCount > 0 && onDeleteSelected ? (
+            {selectedCount > 0 && onDeleteSelected && canDelete ? (
               <Button
                 onClick={onDeleteSelected}
                 className="font-semibold text-base px-4 py-2 rounded-lg bg-destructive hover:bg-destructive/90 transition-all shadow-none"
@@ -56,6 +61,7 @@ export const OrganizationHeader: React.FC<OrganizationHeaderProps> = ({
               </Button>
             ) : (
               <Button
+                disabled={!canCreate}
                 onClick={onAddOrganization}
                 className="font-semibold text-base px-4 py-2 rounded-lg bg-primary hover:bg-primary/90 transition-all shadow-none"
                 variant="default"

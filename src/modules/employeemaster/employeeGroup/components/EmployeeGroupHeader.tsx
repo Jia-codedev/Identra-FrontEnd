@@ -13,6 +13,8 @@ interface EmployeeGroupHeaderProps {
   onAddEmployeeGroup: () => void;
   selectedCount: number;
   onDeleteSelected?: () => void;
+  canDelete?: boolean;
+  canCreate?: boolean;
 }
 
 const EmployeeGroupHeader: React.FC<EmployeeGroupHeaderProps> = ({
@@ -21,6 +23,8 @@ const EmployeeGroupHeader: React.FC<EmployeeGroupHeaderProps> = ({
   onAddEmployeeGroup,
   selectedCount,
   onDeleteSelected,
+  canDelete,
+  canCreate,
 }) => {
   const { t } = useTranslations();
   const { isRTL } = useLanguage();
@@ -59,7 +63,7 @@ const EmployeeGroupHeader: React.FC<EmployeeGroupHeaderProps> = ({
             <span className="mx-2 h-6 w-px bg-border" />
 
             {/* Conditional Button */}
-            {selectedCount > 0 && onDeleteSelected ? (
+            {selectedCount > 0 && onDeleteSelected && canDelete ? (
               <Button
                 onClick={onDeleteSelected}
                 className="font-semibold text-base px-4 py-2 rounded-lg bg-destructive hover:bg-destructive/90 transition-all shadow-none"
@@ -70,6 +74,7 @@ const EmployeeGroupHeader: React.FC<EmployeeGroupHeaderProps> = ({
               </Button>
             ) : (
               <Button
+                disabled={!canCreate}
                 onClick={onAddEmployeeGroup}
                 className="font-semibold text-base px-4 py-2 rounded-lg bg-primary hover:bg-primary/90 transition-all shadow-none"
                 variant="default"

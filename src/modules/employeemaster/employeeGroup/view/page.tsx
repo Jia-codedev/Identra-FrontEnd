@@ -18,6 +18,7 @@ import {
   EmployeeGroupHeader,
 } from "../index";
 import { CustomPagination } from "@/components/common/dashboard/Pagination";
+import { useSubModulePrivileges } from "@/hooks/security/useSubModulePrivileges";
 
 export default function EmployeeGroupsPage() {
   const { t } = useTranslations();
@@ -60,6 +61,12 @@ export default function EmployeeGroupsPage() {
     id?: number;
   }>({ open: false, type: null });
 
+    const { canView, canCreate, canEdit, canDelete } = useSubModulePrivileges(
+      "employee-management",
+      "team-grouping"
+    );
+    console.log("Privileges:", { canView, canCreate, canEdit, canDelete });
+  
   const handleAddEmployeeGroup = () => {
     setModalState({ isOpen: true, mode: "add", employeeGroup: null });
   };
@@ -129,6 +136,8 @@ export default function EmployeeGroupsPage() {
       <div className="w-full relative">
         <div className="py-4 border-border bg-background/90">
           <EmployeeGroupHeader
+            canDelete={canDelete}
+            canCreate={canCreate}
             search={search}
             onSearchChange={setSearch}
             onAddEmployeeGroup={handleAddEmployeeGroup}
@@ -137,6 +146,8 @@ export default function EmployeeGroupsPage() {
           />
 
           <EmployeeGroupTable
+            canDelete={canDelete}
+            canEdit={canEdit}
             employeeGroups={employeeGroups}
             selected={selected}
             page={page}
