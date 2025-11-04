@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import PunchesList from "./components/PunchesList";
 import { CustomPagination } from "@/components/common/dashboard/Pagination";
 import usePunchesTabs, { PunchesTabType } from "./hooks/usePunchesTabs";
+import { useSubModulePrivileges } from "@/hooks/security/useSubModulePrivileges";
 
 export default function PunchesPage() {
   const { t } = useTranslations();
@@ -43,6 +44,13 @@ export default function PunchesPage() {
     initialPage: 1,
     initialLimit: 5,
   });
+
+    const { canView, canCreate, canEdit, canDelete } = useSubModulePrivileges(
+    "self-services",
+    "attendance-logs"
+  );
+  console.log("Privileges:", { canView, canCreate, canEdit, canDelete });
+
 
   useEffect(() => {
     handleFiltersChange({ search: searchTerm });

@@ -20,6 +20,7 @@ import { debounce } from "lodash";
 import useLeaves from "./hooks/useLeavesType";
 import useLeaveTypeMutations from "./hooks/useMutations";
 import { format, parseISO } from "date-fns";
+import { useSubModulePrivileges } from "@/hooks/security/useSubModulePrivileges";
 
 type LeaveType = {
   id: number;
@@ -77,6 +78,14 @@ export default function LeavesTypePage() {
     type: "single" | "bulk" | null;
     id?: number;
   }>({ open: false, type: null });
+
+    const { canView, canCreate, canEdit, canDelete } = useSubModulePrivileges(
+    "self-services",
+    "leave-types"
+  );
+  console.log("Privileges:", { canView, canCreate, canEdit, canDelete });
+
+
   const handleAdd = () => {
     setEditingItem(null);
     setShowDialog(true);
@@ -119,6 +128,8 @@ export default function LeavesTypePage() {
       <div className="w-full relative">
         <div className="py-4 border-border bg-background/90 p-4">
           <LeavesHeader
+            canCreate={canCreate} 
+            canDelete={canDelete}
             search={search}
             onSearchChange={handleSearchChange}
             onAdd={handleAdd}
@@ -128,6 +139,8 @@ export default function LeavesTypePage() {
 
           <div className="w-full mt-4">
             <LeavesList
+              canEdit={canEdit} 
+              canDelete={canDelete} 
               leaves={data}
               loading={isLoading}
               selected={selected}

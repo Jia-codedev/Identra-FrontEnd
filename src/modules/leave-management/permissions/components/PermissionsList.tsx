@@ -24,6 +24,9 @@ interface Props {
   total: number;
   onPageChange: (page: number) => void;
   onPageSizeChange: (size: number) => void;
+  canEdit?: boolean;
+  canDelete?: boolean;
+  canView?: boolean;
 }
 
 const formatDateTime = (dt: string) => {
@@ -65,6 +68,8 @@ const PermissionsList: React.FC<Props> = ({
   total,
   onPageChange,
   onPageSizeChange,
+  canEdit,
+  canDelete,
 }) => {
   const { t } = useTranslations();
 
@@ -140,6 +145,8 @@ const PermissionsList: React.FC<Props> = ({
 
   return (
     <GenericTable
+    canEdit={canEdit}
+    canDelete={canDelete}
       data={permissions}
       columns={columns}
       selected={selected}

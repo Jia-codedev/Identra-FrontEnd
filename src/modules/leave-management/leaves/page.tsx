@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import { debounce } from "lodash";
 import useLeaves from "./hooks/useLeaves";
 import { format, parseISO } from "date-fns";
+import { useSubModulePrivileges } from "@/hooks/security/useSubModulePrivileges";
 
 type LeaveType = {
   id: number;
@@ -51,6 +52,13 @@ export default function LeavesPage() {
     }
   };
 
+    const { canView, canCreate, canEdit, canDelete } = useSubModulePrivileges(
+    "self-services",
+    "leave-management"
+  );
+  console.log("Privileges:", { canView, canCreate, canEdit, canDelete });
+
+
   const getItemId = (item: LeaveType) => item.id;
   const getItemDisplayName = (item: LeaveType) =>
     item.employee_name || String(item.id);
@@ -72,6 +80,8 @@ export default function LeavesPage() {
       <div className="w-full relative">
         <div className="py-4 border-border bg-background/90 p-4">
           <LeavesHeader
+            canCreate={canCreate} 
+            canDelete={canDelete}
             search={search}
             onSearchChange={handleSearchChange}
             onAdd={handleAdd}

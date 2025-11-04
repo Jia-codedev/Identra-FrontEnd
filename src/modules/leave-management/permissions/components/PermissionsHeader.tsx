@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "@/hooks/use-translations";
 import { useLanguage } from "@/providers/language-provider";
+import { ca } from "date-fns/locale";
 
 interface PermissionsHeaderProps {
   search: string;
@@ -14,6 +15,8 @@ interface PermissionsHeaderProps {
   selectedCount: number;
   onDeleteSelected?: () => void;
   onRefresh: () => void;
+  canCreate?: boolean;  
+  canDelete?: boolean;
 }
 
 export const PermissionsHeader: React.FC<PermissionsHeaderProps> = ({
@@ -23,6 +26,8 @@ export const PermissionsHeader: React.FC<PermissionsHeaderProps> = ({
   selectedCount,
   onDeleteSelected,
   onRefresh,
+  canCreate = true,
+  canDelete = true,
 }) => {
   const { t } = useTranslations();
   const { isRTL } = useLanguage();
@@ -66,7 +71,7 @@ export const PermissionsHeader: React.FC<PermissionsHeaderProps> = ({
             />
             <span className="mx-2 h-6 w-px bg-border" /> {/* Refresh Button */}
             <div className="flex gap-2">
-              {selectedCount > 0 && onDeleteSelected && (
+              {selectedCount > 0 && onDeleteSelected && canDelete && (
                 <Button
                   variant="destructive"
                   size="sm"
@@ -76,7 +81,7 @@ export const PermissionsHeader: React.FC<PermissionsHeaderProps> = ({
                   {t("common.deleteSelected", { count: selectedCount })}
                 </Button>
               )}
-              <Button onClick={onAdd} className="h-10">
+              <Button disabled={!canCreate} onClick={onAdd} className="h-10">
                 +{t("common.add")}
               </Button>
             </div>

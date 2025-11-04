@@ -19,6 +19,7 @@ import PermissionTypeModal from "./components/PermissionTypeModal";
 import { debounce } from "lodash";
 import usePermissionTypes from "./hooks/usePermissionTypes";
 import usePermissionTypeMutations from "./hooks/usePermissionTypeMutations";
+import { useSubModulePrivileges } from "@/hooks/security/useSubModulePrivileges";
 
 type PermissionType = {
   id: number;
@@ -64,6 +65,14 @@ export default function PermissionTypesPage() {
     type: "single" | "bulk" | null;
     id?: number;
   }>({ open: false, type: null });
+
+    const { canView, canCreate, canEdit, canDelete } = useSubModulePrivileges(
+    "self-services",
+    "permission-types"
+  );
+  console.log("Privileges:", { canView, canCreate, canEdit, canDelete });
+
+
   const handleAdd = () => {
     setEditingItem(null);
     setShowDialog(true);
@@ -116,6 +125,8 @@ export default function PermissionTypesPage() {
       <div className="w-full relative">
         <div className="py-4 border-border bg-background/90 p-4">
           <PermissionTypesHeader
+            canCreate={canCreate}
+            canDelete={canDelete}
             search={search}
             onSearchChange={handleSearchChange}
             onAdd={handleAdd}
@@ -125,6 +136,8 @@ export default function PermissionTypesPage() {
 
           <div className="w-full mt-4">
             <PermissionTypesList
+              canEdit={canEdit}
+              canDelete={canDelete}
               permissionTypes={data}
               loading={isLoading}
               selected={selected}
