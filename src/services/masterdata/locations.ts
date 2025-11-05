@@ -11,11 +11,11 @@ class LocationsApi {
   }
 
   getLocationById(id: number) {
-    return apiClient.get(`/location/${id}`);
+    return apiClient.get(`/location/get/${id}`);
   }
 
   getLocationsWithoutPagination() {
-    return apiClient.get("/location/all");
+    return apiClient.get("/location");
   }
 
   addLocation(data: any) {

@@ -12,12 +12,6 @@ import Announcements from "../components/Anouncements";
 function MyInsights() {
   const { attendance, workSchedule, leaveAnalytics, workHourTrends, profile } =
     useInsights();
-
-  // console.log("MyInsights attendance Data:", attendance.data);
-  // console.log("MyInsights workSchedule Data:", workSchedule.data);
-  // console.log("MyInsights leaveAnalytics Data:", leaveAnalytics.data);
-  // console.log("MyInsights workHourTrends Data:", workHourTrends.data);
-  // console.log("MyInsights profile Data:", profile.data);
   return (
     <div
       className="py-4"

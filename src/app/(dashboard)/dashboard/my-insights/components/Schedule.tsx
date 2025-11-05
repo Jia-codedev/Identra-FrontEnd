@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "lucide-react";
+import { useTranslations } from "@/hooks/use-translations";
 
 // Backend API shape for schedule
 export interface ApiScheduleItem {
@@ -34,15 +35,14 @@ function Schedule({
     onShowAll,
     apiData,
 }: ScheduleProps) {
-    // If apiData is provided, normalize values
+    const { t } = useTranslations();
+
     let normExpected = expectedHours;
     let normWorked = worked;
     let normPending = pending;
     let normOvertime = overtime;
     if (apiData) {
-        // DayReqdHrs and TotalMonthlyExpectedWrkHrs can be number or string (hours)
         normExpected = Number(apiData.DayReqdHrs ?? apiData.TotalMonthlyExpectedWrkHrs ?? 0);
-        // TotalWorkedHrs and PendingWorkHrs are strings like "00:00"
         const parseHrs = (val: string | null | undefined) => {
             if (!val) return 0;
             const [h, m] = val.split(":").map(Number);
@@ -50,7 +50,6 @@ function Schedule({
         };
         normWorked = parseHrs(apiData.TotalWorkedHrs);
         normPending = parseHrs(apiData.PendingWorkHrs);
-        // Overtime: worked - expected, if positive
         normOvertime = Math.max(0, normWorked - normExpected);
     }
     const totalHours = normWorked + normOvertime + normPending;
@@ -61,19 +60,19 @@ function Schedule({
     return (
         <div className="bg-card border rounded-xl p-6">
             <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-semibold text-foreground">Schedule</h3>
+                <h3 className="text-xl font-semibold text-foreground">{t("dashboard.schedule")}</h3>
                 <button
                     onClick={onShowAll}
                     className="text-blue-500 hover:text-blue-400 text-sm font-medium"
                 >
-                    Show all
+                    {t("dashboard.showAll")}
                 </button>
             </div>
             <div className="mb-4">
                 <div className="text-4xl font-bold text-foreground mb-1">
                     {normExpected.toFixed(2)}
                 </div>
-                <p className="text-sm text-muted-foreground">Expected Working Hours</p>
+                <p className="text-sm text-muted-foreground">{t("dashboard.expectedWorkingHours")}</p>
             </div>
             <div className="mb-6">
                 <div className="flex h-12 gap-0.5 rounded-lg overflow-hidden bg-muted/30">
@@ -101,7 +100,7 @@ function Schedule({
 
             <div className="grid grid-cols-3 gap-4">
                 <div>
-                    <p className="text-xs text-muted-foreground mb-1">Worked</p>
+                    <p className="text-xs text-muted-foreground mb-1">{t("dashboard.worked")}</p>
                     <div className="flex items-baseline gap-1">
                         <div className="w-1 h-6 bg-blue-500 rounded-full"></div>
                         <span className="text-2xl font-bold text-foreground">
@@ -110,7 +109,7 @@ function Schedule({
                     </div>
                 </div>
                 <div>
-                    <p className="text-xs text-muted-foreground mb-1">Overtime</p>
+                    <p className="text-xs text-muted-foreground mb-1">{t("dashboard.overtime")}</p>
                     <div className="flex items-baseline gap-1">
                         <div className="w-1 h-6 bg-purple-500 rounded-full"></div>
                         <span className="text-2xl font-bold text-foreground">
@@ -119,7 +118,7 @@ function Schedule({
                     </div>
                 </div>
                 <div>
-                    <p className="text-xs text-muted-foreground mb-1">Pending</p>
+                    <p className="text-xs text-muted-foreground mb-1">{t("dashboard.pending")}</p>
                     <div className="flex items-baseline gap-1">
                         <div className="w-1 h-6 bg-orange-500 rounded-full"></div>
                         <span className="text-2xl font-bold text-foreground">

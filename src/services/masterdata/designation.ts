@@ -15,7 +15,7 @@ class DesignationsApi {
   }
 
   getDesignationById(id: number) {
-    return apiClient.get(`/designation/${id}`);
+    return apiClient.get(`/designation/get/${id}`);
   }
 
   addDesignation(data: Partial<IDesignation>) {
@@ -32,6 +32,10 @@ class DesignationsApi {
 
   deleteDesignations(ids: number[]) {
     return apiClient.delete("/designation/delete", { data: { ids } });
+  }
+
+  getDesignationsWithoutPagination() {
+    return apiClient.get("/designation");
   }
 }
 

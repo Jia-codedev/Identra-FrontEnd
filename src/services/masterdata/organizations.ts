@@ -21,7 +21,7 @@ class OrganizationsApi {
     return apiClient.get(`/organization/${id}`);
   }
   getOrganizationsWithoutPagination() {
-    return apiClient.get("/organization/all");
+    return apiClient.get("/organization");
   }
   addOrganization(data: Partial<IOrganization>) {
     return apiClient.post("/organization/add", data);
@@ -41,11 +41,11 @@ class OrganizationsApi {
   }
 
   getOrganizationsForDropdown(params?: {
-    offset?: number;
+    name?: string;
     limit?: number;
-    search?: string;
+    offset?: number;
   }) {
-    return apiClient.get("/organization/", { params });
+    return apiClient.get("/organization", { params });
   }
 }
 const organizationsApi = new OrganizationsApi();

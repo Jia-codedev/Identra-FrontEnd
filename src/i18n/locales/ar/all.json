@@ -1,4 +1,10 @@
 {
+  "messages": {
+    "confirm": {
+      "delete": "هل أنت متأكد أنك تريد حذف هذا العنصر؟ لا يمكن التراجع عن هذا الإجراء.",
+      "deleteMultiple": "هل أنت متأكد أنك تريد حذف {count} عناصر محددة؟ لا يمكن التراجع عن هذا الإجراء."
+    }
+  },
   "common": {
     "dashboard": "لوحة التحكم",
     "masterData": "البيانات الأساسية",
@@ -162,7 +168,67 @@
     "overview": "نظرة عامة",
     "statistics": "الإحصائيات",
     "recentActivity": "النشاط الأخير",
-    "quickActions": "الإجراءات السريعة"
+    "quickActions": "الإجراءات السريعة",
+    "totalEmployees": "إجمالي الموظفين",
+    "activeEmployees": "الموظفون النشطون",
+    "inactiveEmployees": "الموظفون غير النشطين",
+    "totalDepartments": "إجمالي الأقسام",
+    "totalProjects": "إجمالي المشاريع",
+    "attendanceRate": "معدل الحضور",
+    "productivityScore": "نقاط الإنتاجية",
+    "leaveRequests": "طلبات الإجازات",
+    "pendingApprovals": "الموافقات المعلقة",
+    "upcomingHolidays": "العطل القادمة",
+    "birthdays": "أعياد الميلاد",
+    "anniversaries": "الذكرى السنوية",
+    "email": "البريد الإلكتروني",
+    "organization": "المؤسسة",
+    "role": "الدور الوظيفي",
+    "leaves": "الإجازات",
+    "permissions": "الأذونات",
+    "apply": "تقديم طلب",
+    "workingDays": "أيام العمل",
+    "totalLeaves": "إجمالي الإجازات",
+    "leavesTaken": "الإجازات المأخوذة",
+    "absent": "الغياب",
+    "approvedLeaves": "الإجازات الموافق عليها",
+    "pendingLeaves": "الإجازات المعلقة",
+    "totalPermissions": "إجمالي الأذونات",
+    "permissionTaken": "الأذونات المأخوذة",
+    "unapprovedPermissions": "غير موافق عليها",
+    "approvedPermissions": "موافق عليها",
+    "pendingPermissions": "معلقة",
+    "currentTime": "الوقت الحالي",
+    "workingDuration": "مدة العمل",
+    "checkIn": "بداية الدوام",
+    "checkOut": "نهاية الدوام",
+    "lastPunchIn": "آخر بداية دوام",
+    "lastPunchOut": "آخر نهاية دوام",
+    "remaining": "المتبقي",
+    "overtime": "وقت إضافي",
+    "workHoursTrends": "اتجاهات ساعات العمل",
+    "dailyWorkHoursFor": "ساعات العمل اليومية لشهر",
+    "workHours": "ساعات العمل",
+    "totalWorkHours": "إجمالي ساعات العمل",
+    "totalOvertime": "إجمالي الوقت الإضافي",
+    "violations": "المخالفات",
+    "missedIn": "تأخر دخول",
+    "missedOut": "خروج مبكر",
+    "late": "التأخير",
+    "early": "المغادرة المبكرة",
+    "schedule": "الجدول الزمني",
+    "showAll": "عرض الكل",
+    "expectedWorkingHours": "ساعات العمل المتوقعة",
+    "worked": "ساعات العمل",
+    "pending": "المعلقة",
+    "announcements": "الإعلانات",
+    "noAnnouncementsAtThisTime": "لا توجد إعلانات في هذا الوقت",
+    "high": "عالية",
+    "medium": "متوسطة",
+    "low": "منخفضة",
+    "leaveAnalytics": "تحليلات الإجازات",
+    "yearlyLeaveRecordFor": "سجل الإجازات السنوية لعام",
+    "totalAbsent": "إجمالي الغياب"
   },
   "masterData": {
     "title": "إدارة البيانات الأساسية",
@@ -685,11 +751,16 @@
     "success": {
       "general": "تمت العملية بنجاح",
       "saved": "تم حفظ البيانات بنجاح",
-      "created": "تم الإنشاء بنجاح"
+      "created": "تم الإنشاء بنجاح",
+      "deleted": "تم الحذف بنجاح",
+      "deletedMultiple": "تم حذف العناصر المحددة بنجاح",
+      "updated": "تم التحديث بنجاح"
     },
     "error": {
       "general": "حدث خطأ. يرجى المحاولة مرة أخرى.",
-      "passwordExpired": "انتهت صلاحية كلمة المرور."
+      "passwordExpired": "انتهت صلاحية كلمة المرور.",
+      "conflict": " تعارض في البيانات. يرجى التحقق والمحاولة مرة أخرى.",
+      "foreignKeyConstraint": "لا يمكن الحذف بسبب وجود بيانات مرتبطة."
     }
   },
   "workflow": {

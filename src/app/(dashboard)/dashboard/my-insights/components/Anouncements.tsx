@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { Bell, Calendar, User } from "lucide-react";
+import { useTranslations } from "@/hooks/use-translations";
 
 interface Announcement {
     id: number;
@@ -50,6 +51,8 @@ function Announcements({
     announcements = defaultAnnouncements,
     onShowAll,
 }: AnnouncementsProps) {
+    const { t } = useTranslations();
+    
     const getPriorityColor = (priority?: string) => {
         switch (priority) {
             case "high":
@@ -68,19 +71,19 @@ function Announcements({
             case "high":
                 return (
                     <span className="text-xs px-2 py-0.5 rounded-full bg-red-500/20 text-red-500">
-                        High
+                        {t("dashboard.high")}
                     </span>
                 );
             case "medium":
                 return (
                     <span className="text-xs px-2 py-0.5 rounded-full bg-orange-500/20 text-orange-500">
-                        Medium
+                        {t("dashboard.medium")}
                     </span>
                 );
             case "low":
                 return (
                     <span className="text-xs px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-500">
-                        Low
+                        {t("dashboard.low")}
                     </span>
                 );
             default:
@@ -95,14 +98,14 @@ function Announcements({
                 <div className="flex items-center gap-2">
                     <Bell className="w-5 h-5 text-foreground" />
                     <h3 className="text-xl font-semibold text-foreground">
-                        Announcements
+                        {t("dashboard.announcements")}
                     </h3>
                 </div>
                 <button
                     onClick={onShowAll}
                     className="text-blue-500 hover:text-blue-400 text-sm font-medium"
                 >
-                    Show all
+                    {t("dashboard.showAll")}
                 </button>
             </div>
 
@@ -110,7 +113,7 @@ function Announcements({
                 {announcements.length === 0 ? (
                     <div className="text-center py-8">
                         <p className="text-muted-foreground text-sm">
-                            No announcements at this time
+                            {t("dashboard.noAnnouncementsAtThisTime")}
                         </p>
                     </div>
                 ) : (

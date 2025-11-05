@@ -9,6 +9,7 @@ import {
   ChartLegendContent,
   type ChartConfig,
 } from "@/components/ui/BarChart";
+import { useTranslations } from "@/hooks/use-translations";
 
 interface MonthlyLeaveData {
   month: string;
@@ -51,14 +52,16 @@ function LeaveAnalytics({
   data = defaultData,
   year = new Date().getFullYear(),
 }: LeaveAnalyticsProps) {
+  const { t } = useTranslations();
+  
   return (
     <div className="bg-card border rounded-xl p-6">
       <div className="mb-6">
         <h3 className="text-xl font-semibold text-foreground mb-1">
-          Leave Analytics
+          {t("dashboard.leaveAnalytics")}
         </h3>
         <p className="text-sm text-muted-foreground">
-          Yearly leave record for {year}
+          {t("dashboard.yearlyLeaveRecordFor")} {year}
         </p>
       </div>
 
@@ -91,13 +94,13 @@ function LeaveAnalytics({
           <div className="text-2xl font-bold" style={{ color: "hsl(var(--chart-1))" }}>
             {data.reduce((sum, item) => sum + item.leaves, 0)}
           </div>
-          <p className="text-xs text-muted-foreground mt-1">Total Leaves</p>
+          <p className="text-xs text-muted-foreground mt-1">{t("dashboard.totalLeaves")}</p>
         </div>
         <div className="text-center">
           <div className="text-2xl font-bold" style={{ color: "hsl(var(--chart-2))" }}>
             {data.reduce((sum, item) => sum + item.absent, 0)}
           </div>
-          <p className="text-xs text-muted-foreground mt-1">Total Absent</p>
+          <p className="text-xs text-muted-foreground mt-1">{t("dashboard.totalAbsent")}</p>
         </div>
       </div>
     </div>

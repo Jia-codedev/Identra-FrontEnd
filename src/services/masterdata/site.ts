@@ -35,6 +35,13 @@ class SitesApi {
   deleteSites(ids: number[]) {
     return apiClient.delete("/location/delete", { data: { ids } });
   }
+  getLocationsForDropdown(params?: {
+    name?: string;
+    limit?: number;
+    offset?: number;
+  }) {
+    return apiClient.get("/location", { params });
+  }
 }
 const sitesApi = new SitesApi();
 export default sitesApi;

@@ -9,6 +9,7 @@ import {
   ChartLegendContent,
   type ChartConfig,
 } from "@/components/ui/BarChart";
+import { useTranslations } from "@/hooks/use-translations";
 
 interface DailyWorkData {
   day: string;
@@ -66,6 +67,8 @@ function WorkHoursTrends({
   month,
   year,
 }: WorkHoursTrendsProps) {
+  const { t } = useTranslations();
+  
   // Helpers to coerce values safely
   const toMinutes = (val: number | string | null | undefined): number => {
     const n = Number(val);
@@ -124,10 +127,10 @@ function WorkHoursTrends({
     <div className="bg-card border rounded-xl p-6 h-full">
       <div className="mb-6">
         <h3 className="text-xl font-semibold text-foreground mb-1">
-          Work Hours Trends
+          {t("dashboard.workHoursTrends")}
         </h3>
         <p className="text-sm text-muted-foreground">
-          Daily work hours for {displayMonth} {displayYear}
+          {t("dashboard.dailyWorkHoursFor")} {displayMonth} {displayYear}
         </p>
       </div>
       <ChartContainer config={chartConfig} className="h-[350px] w-full">
@@ -163,7 +166,7 @@ function WorkHoursTrends({
           >
             {totalWorkHours}h
           </div>
-          <p className="text-xs text-muted-foreground mt-1">Total Work Hours</p>
+          <p className="text-xs text-muted-foreground mt-1">{t("dashboard.totalWorkHours")}</p>
         </div>
         <div className="text-center">
           <div
@@ -172,7 +175,7 @@ function WorkHoursTrends({
           >
             {totalOvertime}h
           </div>
-          <p className="text-xs text-muted-foreground mt-1">Total Overtime</p>
+          <p className="text-xs text-muted-foreground mt-1">{t("dashboard.totalOvertime")}</p>
         </div>
       </div>
     </div>

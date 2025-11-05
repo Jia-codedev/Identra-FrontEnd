@@ -16,6 +16,7 @@ function buildLocale(allMessages: Messages) {
   const mainMenuWrapper = (all.mainMenu as Record<string, unknown>) || {};
   const mainMenu = (mainMenuWrapper as any).mainMenu || {};
   const navigation = (all.navigation as Record<string, unknown>) || {};
+  const messages = (all.messages as Record<string, unknown>) || {};
   return {
     ...all,
     mainMenu,
@@ -30,7 +31,7 @@ function buildLocale(allMessages: Messages) {
     error: (common as any).error,
     success: (common as any).success,
     warning: (common as any).warning,
-    messages: (common as any).messages,
+    messages: messages,
     pagination: (common as any).pagination,
     appearance: (settings as any).appearance,
     employeeMaster: employeeMaster,

@@ -1,4 +1,10 @@
 {
+  "messages": {
+    "confirm": {
+      "delete": "Are you sure you want to delete this item? This action cannot be undone.",
+      "deleteMultiple": "Are you sure you want to delete {count} selected items? This action cannot be undone."
+    }
+  },
   "common": {
     "dashboard": "Workforce Analytics",
     "masterData": "Master Data",
@@ -176,7 +182,55 @@
     "pendingApprovals": "Pending Approvals",
     "upcomingHolidays": "Upcoming Holidays",
     "birthdays": "Birthdays",
-    "anniversaries": "Anniversaries"
+    "anniversaries": "Anniversaries",
+    "email": "Email",
+    "organization": "Organization",
+    "role": "Role",
+    "leaves": "Leaves",
+    "permissions": "Permissions",
+    "apply": "Apply",
+    "workingDays": "Working Days",
+    "totalLeaves": "Total Leaves",
+    "leavesTaken": "Leaves Taken",
+    "absent": "Absent",
+    "approvedLeaves": "Approved Leaves",
+    "pendingLeaves": "Pending Leaves",
+    "totalPermissions": "Total Permissions",
+    "permissionTaken": "Permission Taken",
+    "unapprovedPermissions": "Unapproved",
+    "approvedPermissions": "Approved",
+    "pendingPermissions": "Pending",
+    "currentTime": "Current Time",
+    "workingDuration": "Working Duration",
+    "checkIn": "Punch In",
+    "checkOut": "Punch Out",
+    "lastPunchIn": "Last Punch In",
+    "lastPunchOut": "Last Punch Out",
+    "remaining": "Remaining",
+    "overtime": "Overtime",
+    "workHoursTrends": "Work Hours Trends",
+    "dailyWorkHoursFor": "Daily work hours for",
+    "workHours": "Work Hours",
+    "totalWorkHours": "Total Work Hours",
+    "totalOvertime": "Total Overtime",
+    "violations": "Violations",
+    "missedIn": "Missed In",
+    "missedOut": "Missed Out",
+    "late": "Late",
+    "early": "Early",
+    "schedule": "Schedule",
+    "showAll": "Show all",
+    "expectedWorkingHours": "Expected Working Hours",
+    "worked": "Worked",
+    "pending": "Pending",
+    "announcements": "Announcements",
+    "noAnnouncementsAtThisTime": "No announcements at this time",
+    "high": "High",
+    "medium": "Medium",
+    "low": "Low",
+    "leaveAnalytics": "Leave Analytics",
+    "yearlyLeaveRecordFor": "Yearly leave record for",
+    "totalAbsent": "Total Absent"
   },
   "masterData": {
     "title": "Master Data Management",
@@ -729,11 +783,16 @@
     "success": {
       "general": "Operation completed successfully",
       "saved": "Data saved successfully",
-      "created": "created successfully"
+      "created": "created successfully",
+      "deleted": "deleted successfully",
+      "deletedMultiple": "Selected items deleted successfully",
+      "updated": "updated successfully"
     },
     "error": {
       "general": "An error occurred. Please try again.",
-      "passwordExpired": "Password has expired."
+      "passwordExpired": "Password has expired.",
+      "conflict": "Data conflict. Please verify and try again.",
+      "foreignKeyConstraint": "Cannot delete due to related data existing."
     }
   },
   "workflow": {

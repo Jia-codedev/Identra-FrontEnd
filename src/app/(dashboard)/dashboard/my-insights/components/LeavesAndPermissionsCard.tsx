@@ -2,6 +2,8 @@ import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Briefcase, Calendar, CheckCircle, Clock, XCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "@/hooks/use-translations";
+import { useRouter } from "next/navigation";
 
 interface LeavesData {
   workingDays: number | null;
@@ -24,44 +26,59 @@ interface PermissionsData {
 interface LeavesAndPermissionsCardProps {
   leavesData?: LeavesData;
   permissionsData?: PermissionsData;
-  onApplyClick?: () => void;
   isLoading?: boolean;
 }
 
 function LeavesAndPermissionsCard({
   leavesData,
   permissionsData,
-  onApplyClick,
   isLoading
 }: LeavesAndPermissionsCardProps) {
+  const { t } = useTranslations();
+  const [selectedTab, setSelectedTab] = React.useState<"leaves" | "permissions">("leaves");
+  const router = useRouter();
+  const onApplyClick = () => {
+    router.push(selectedTab === "leaves" ? "/leave-management" : "/permission-management");
+  }
   return (
     <div className={
       cn("bg-card border p-4 rounded-xl h-full", {
         [isLoading ? "animate-pulse" : ""]: true
       })
     }>
-      <Tabs defaultValue="leaves" className="w-full">
+      <Tabs
+
+
+        defaultValue="leaves" className="w-full">
         <div className="flex items-center justify-between mb-4">
-          <TabsList className="bg-transparent">
+          <TabsList
+
+            className="bg-transparent">
             <TabsTrigger
               value="leaves"
               className="[data-state=active]:border-b-2 rounded-full px-4 py-2 [data-state=active]:bg-transparent"
+              onClick={
+                () => setSelectedTab("leaves")
+              }
             >
-              Leaves
+              {t("dashboard.leaves")}
             </TabsTrigger>
             <TabsTrigger
+              onClick={
+                () => setSelectedTab("permissions")
+              }
               value="permissions"
               className="[data-state=active]:border-b-2 rounded-full px-4 py-2 [data-state=active]:bg-transparent"
 
             >
-              Permissions
+              {t("dashboard.permissions")}
             </TabsTrigger>
           </TabsList>
           <button
             onClick={onApplyClick}
             className="text-blue-500 hover:text-blue-400 text-sm font-medium"
           >
-            Apply
+            {t("dashboard.apply")}
           </button>
         </div>
 
@@ -69,7 +86,7 @@ function LeavesAndPermissionsCard({
           <div className="grid grid-cols-3 gap-4">
             <div className="bg-muted/50 rounded-lg p-4">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-muted-foreground text-sm">Working Days</span>
+                <span className="text-muted-foreground text-sm">{t("dashboard.workingDays")}</span>
                 <div className="bg-blue-500/20 p-2 rounded-lg">
                   <Briefcase className="w-4 h-4 text-blue-500" />
                 </div>
@@ -81,7 +98,7 @@ function LeavesAndPermissionsCard({
 
             <div className="bg-muted/50 rounded-lg p-4">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-muted-foreground text-sm">Total Leaves</span>
+                <span className="text-muted-foreground text-sm">{t("dashboard.totalLeaves")}</span>
                 <div className="bg-purple-500/20 p-2 rounded-lg">
                   <Calendar className="w-4 h-4 text-purple-500" />
                 </div>
@@ -92,7 +109,7 @@ function LeavesAndPermissionsCard({
             </div>
             <div className="bg-muted/50 rounded-lg p-4">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-muted-foreground text-sm">Leaves Taken</span>
+                <span className="text-muted-foreground text-sm">{t("dashboard.leavesTaken")}</span>
                 <div className="bg-yellow-500/20 p-2 rounded-lg">
                   <Calendar className="w-4 h-4 text-yellow-500" />
                 </div>
@@ -104,7 +121,7 @@ function LeavesAndPermissionsCard({
 
             <div className="bg-muted/50 rounded-lg p-4">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-muted-foreground text-sm">Absent</span>
+                <span className="text-muted-foreground text-sm">{t("dashboard.absent")}</span>
                 <div className="bg-red-500/20 p-2 rounded-lg">
                   <XCircle className="w-4 h-4 text-red-500" />
                 </div>
@@ -115,7 +132,7 @@ function LeavesAndPermissionsCard({
             </div>
             <div className="bg-muted/50 rounded-lg p-4">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-muted-foreground text-sm">Approved Leaves</span>
+                <span className="text-muted-foreground text-sm">{t("dashboard.approvedLeaves")}</span>
                 <div className="bg-green-500/20 p-2 rounded-lg">
                   <CheckCircle className="w-4 h-4 text-green-500" />
                 </div>
@@ -126,7 +143,7 @@ function LeavesAndPermissionsCard({
             </div>
             <div className="bg-muted/50 rounded-lg p-4">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-muted-foreground text-sm">Pending Leaves</span>
+                <span className="text-muted-foreground text-sm">{t("dashboard.pendingLeaves")}</span>
                 <div className="bg-orange-500/20 p-2 rounded-lg">
                   <Clock className="w-4 h-4 text-orange-500" />
                 </div>
@@ -142,7 +159,7 @@ function LeavesAndPermissionsCard({
           <div className="grid grid-cols-3 gap-4">
             <div className="bg-muted/50 rounded-lg p-4">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-muted-foreground text-sm">Working Days</span>
+                <span className="text-muted-foreground text-sm">{t("dashboard.workingDays")}</span>
                 <div className="bg-blue-500/20 p-2 rounded-lg">
                   <Briefcase className="w-4 h-4 text-blue-500" />
                 </div>
@@ -154,7 +171,7 @@ function LeavesAndPermissionsCard({
 
             <div className="bg-muted/50 rounded-lg p-4">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-muted-foreground text-sm">Total Permissions</span>
+                <span className="text-muted-foreground text-sm">{t("dashboard.totalPermissions")}</span>
                 <div className="bg-purple-500/20 p-2 rounded-lg">
                   <Calendar className="w-4 h-4 text-purple-500" />
                 </div>
@@ -166,7 +183,7 @@ function LeavesAndPermissionsCard({
 
             <div className="bg-muted/50 rounded-lg p-4">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-muted-foreground text-sm">Permission Taken</span>
+                <span className="text-muted-foreground text-sm">{t("dashboard.permissionTaken")}</span>
                 <div className="bg-yellow-500/20 p-2 rounded-lg">
                   <Calendar className="w-4 h-4 text-yellow-500" />
                 </div>
@@ -178,7 +195,7 @@ function LeavesAndPermissionsCard({
             <div className="bg-muted/50 rounded-lg p-4">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-muted-foreground text-sm">
-                  Unapproved Permissions
+                  {t("dashboard.unapprovedPermissions")}
                 </span>
                 <div className="bg-red-500/20 p-2 rounded-lg">
                   <XCircle className="w-4 h-4 text-red-500" />
@@ -191,7 +208,7 @@ function LeavesAndPermissionsCard({
             <div className="bg-muted/50 rounded-lg p-4">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-muted-foreground text-sm">
-                  Approved Permissions
+                  {t("dashboard.approvedPermissions")}
                 </span>
                 <div className="bg-green-500/20 p-2 rounded-lg">
                   <CheckCircle className="w-4 h-4 text-green-500" />
@@ -203,7 +220,7 @@ function LeavesAndPermissionsCard({
             </div>
             <div className="bg-muted/50 rounded-lg p-4">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-muted-foreground text-sm">Pending Permissions</span>
+                <span className="text-muted-foreground text-sm">{t("dashboard.pendingPermissions")}</span>
                 <div className="bg-orange-500/20 p-2 rounded-lg">
                   <Clock className="w-4 h-4 text-orange-500" />
                 </div>

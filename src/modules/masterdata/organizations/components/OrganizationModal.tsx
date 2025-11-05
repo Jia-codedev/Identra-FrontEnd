@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -13,6 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Combobox } from "@/components/ui/combobox";
 import { useTranslations } from "@/hooks/use-translations";
 import { useLanguage } from "@/providers/language-provider";
 import { IOrganization } from "../types";
@@ -67,13 +68,51 @@ export const OrganizationModal: React.FC<OrganizationModalProps> = ({
     { label: string; value: number }[]
   >([]);
   const [isLoadingData, setIsLoadingData] = useState(false);
+  const [isLoadingLocations, setIsLoadingLocations] = useState(false);
+  const [isLoadingParents, setIsLoadingParents] = useState(false);
   const [errors, setErrors] = useState<
     Partial<Record<keyof OrganizationFormFields, string>>
   >({});
   const [dropdownsLoaded, setDropdownsLoaded] = useState(false);
 
+  // Fetch organization types when modal opens
   useEffect(() => {
-    if (organization && mode === "edit" && (dropdownsLoaded || !isOpen)) {
+    const fetchDropdownData = async () => {
+      if (!isOpen) return;
+
+      setIsLoadingData(true);
+      setDropdownsLoaded(false);
+      try {
+        // Only fetch organization types (small dataset)
+        const orgTypesRes = await organizationTypesApi.getOrganizationTypesWithoutPagination();
+
+        if (orgTypesRes.data?.success) {
+          setOrganizationTypes(
+            orgTypesRes.data.data.map((ot: any) => ({
+              label: isRTL
+                ? ot.organization_type_arb || ot.organization_type_eng
+                : ot.organization_type_eng,
+              value: ot.organization_type_id,
+            }))
+          );
+        }
+
+        setDropdownsLoaded(true);
+      } catch (error) {
+        console.error("Failed to fetch dropdown data", error);
+      } finally {
+        setIsLoadingData(false);
+      }
+    };
+
+    fetchDropdownData();
+  }, [isOpen, isRTL]);
+
+  // Initialize form data when modal opens and after dropdowns are loaded
+  useEffect(() => {
+    if (!isOpen || !dropdownsLoaded) return;
+
+    if (organization && mode === "edit") {
       setFormData({
         organization_eng: organization.organization_eng || "",
         organization_arb: organization.organization_arb || "",
@@ -88,46 +127,40 @@ export const OrganizationModal: React.FC<OrganizationModalProps> = ({
     setErrors({});
   }, [organization, mode, isOpen, dropdownsLoaded]);
 
-  const disableButton =
-    (formData.organization_type_id === organization?.organization_type_id &&
-      formData.organization_code === organization?.organization_code &&
-      formData.organization_arb === organization?.organization_arb &&
-      formData.organization_eng === organization?.organization_eng &&
-      formData.parent_id === organization?.parent_id &&
-      formData.location_id === organization?.location_id) ||
-    formData.organization_type_id === 0 ||
-    formData.location_id === 0 ||
-    !formData.organization_code ||
-    (!formData.organization_arb && !formData.organization_eng) ||
-    formData.parent_id === 0;
+  // Memoize disable button logic
+  const disableButton = React.useMemo(() => {
+    // Check if data has changed
+    const hasChanges = mode === "add" || (
+      formData.organization_type_id !== organization?.organization_type_id ||
+      formData.organization_code !== organization?.organization_code ||
+      formData.organization_arb !== organization?.organization_arb ||
+      formData.organization_eng !== organization?.organization_eng ||
+      formData.parent_id !== organization?.parent_id ||
+      formData.location_id !== organization?.location_id
+    );
 
-  useEffect(() => {
-    const fetchDropdownData = async () => {
-      if (!isOpen) return;
+    // Check if required fields are filled
+    const requiredFieldsFilled = 
+      formData.organization_type_id !== 0 &&
+      Boolean(formData.organization_code) &&
+      (Boolean(formData.organization_arb) || Boolean(formData.organization_eng));
 
-      setIsLoadingData(true);
-      setDropdownsLoaded(false);
+    return !hasChanges || !requiredFieldsFilled;
+  }, [formData, organization, mode]);
+
+  // Fetch locations with search and debouncing
+  const handleLocationSearch = useCallback((searchQuery: string) => {
+    setIsLoadingLocations(true);
+    const timer = setTimeout(async () => {
       try {
-        const [orgTypesRes, locationsRes, parentsRes] = await Promise.all([
-          organizationTypesApi.getOrganizationTypesWithoutPagination(),
-          siteApi.getSitesWithoutPagination(),
-          organizationsApi.getOrganizationsWithoutPagination(),
-        ]);
+        const response = await siteApi.getLocationsForDropdown({
+          name: searchQuery,
+          limit: 50,
+        });
 
-        if (orgTypesRes.data?.success) {
-          setOrganizationTypes(
-            orgTypesRes.data.data.map((ot: any) => ({
-              label: isRTL
-                ? ot.organization_type_arb || ot.organization_type_eng
-                : ot.organization_type_eng,
-              value: ot.organization_type_id,
-            }))
-          );
-        }
-
-        if (locationsRes?.success) {
+        if (response.data?.success && response.data.data) {
           setLocations(
-            locationsRes.data.map((loc: any) => ({
+            response.data.data.map((loc: any) => ({
               label: isRTL
                 ? loc.location_arb || loc.location_eng
                 : loc.location_eng,
@@ -135,10 +168,29 @@ export const OrganizationModal: React.FC<OrganizationModalProps> = ({
             }))
           );
         }
+      } catch (error) {
+        console.error("Failed to fetch locations", error);
+      } finally {
+        setIsLoadingLocations(false);
+      }
+    }, 300);
 
-        if (parentsRes.data?.success) {
+    return () => clearTimeout(timer);
+  }, [isRTL]);
+
+  // Fetch parent organizations with search and debouncing
+  const handleParentSearch = useCallback((searchQuery: string) => {
+    setIsLoadingParents(true);
+    const timer = setTimeout(async () => {
+      try {
+        const response = await organizationsApi.getOrganizationsForDropdown({
+          name: searchQuery,
+          limit: 50,
+        });
+
+        if (response.data?.success) {
           setParentOrganizations(
-            parentsRes.data.data
+            response.data.data
               .filter((org: any) =>
                 mode === "edit"
                   ? org.organization_id !== organization?.organization_id
@@ -152,22 +204,27 @@ export const OrganizationModal: React.FC<OrganizationModalProps> = ({
               }))
           );
         }
-
-        setDropdownsLoaded(true);
       } catch (error) {
-        console.error("Failed to fetch dropdown data", error);
+        console.error("Failed to fetch parent organizations", error);
       } finally {
-        setIsLoadingData(false);
+        setIsLoadingParents(false);
       }
-    };
+    }, 300);
 
-    fetchDropdownData();
-  }, [isOpen, isRTL, mode, organization]);
+    return () => clearTimeout(timer);
+  }, [isRTL, mode, organization]);
+
+  useEffect(() => {
+    if (isOpen) {
+      handleLocationSearch("");
+      handleParentSearch("");
+    }
+  }, [isOpen, handleLocationSearch, handleParentSearch]);
 
   const validateForm = (): boolean => {
     const newErrors: Partial<Record<keyof OrganizationFormFields, string>> = {};
 
-    if (!formData.organization_code.trim()) {
+    if (!formData.organization_code?.trim()) {
       newErrors.organization_code = t("validation.required");
     }
     if (!formData.organization_eng?.trim()) {
@@ -186,7 +243,13 @@ export const OrganizationModal: React.FC<OrganizationModalProps> = ({
     if (!validateForm()) return;
 
     try {
-      const submitData = { ...formData };
+      const submitData: Partial<IOrganization> = {
+        ...formData,
+        organization_eng: formData.organization_eng || formData.organization_arb || "",
+        organization_arb: formData.organization_arb || formData.organization_eng || "",
+      };
+      
+      // Remove undefined optional fields
       if (!submitData.parent_id) delete submitData.parent_id;
       if (!submitData.location_id) delete submitData.location_id;
 
@@ -197,15 +260,17 @@ export const OrganizationModal: React.FC<OrganizationModalProps> = ({
     }
   };
 
-  const handleInputChange = (
+  const handleInputChange = useCallback((
     field: keyof OrganizationFormFields,
     value: string | number | undefined
   ) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
-    if (errors[field]) {
-      setErrors((prev) => ({ ...prev, [field]: undefined }));
-    }
-  };
+    setErrors((prev) => {
+      if (!prev[field]) return prev;
+      const { [field]: _, ...rest } = prev;
+      return rest;
+    });
+  }, []);
 
   if (!isOpen) return null;
 
@@ -376,76 +441,54 @@ export const OrganizationModal: React.FC<OrganizationModalProps> = ({
               <Label htmlFor="parent_id" className="text-sm font-medium">
                 {t("masterData.organizations.parentOrganization")}
               </Label>
-              <Select
-                value={formData.parent_id ? formData.parent_id.toString() : "0"}
+              <Combobox
+                options={[
+                  { label: t("masterData.organizations.root"), value: 0 },
+                  ...parentOrganizations,
+                ]}
+                value={formData.parent_id ?? 0}
                 onValueChange={(value) =>
                   handleInputChange(
                     "parent_id",
-                    value === "0" ? undefined : parseInt(value)
+                    value === 0 ? undefined : (value as number)
                   )
                 }
-                disabled={isLoading || isLoadingData}
-              >
-                <SelectTrigger className="w-full mt-1">
-                  <SelectValue
-                    placeholder={
-                      isLoadingData
-                        ? t("common.loading")
-                        : t("masterData.organizations.selectParentOrganization")
-                    }
-                  />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="0">
-                    {t("masterData.organizations.root")}
-                  </SelectItem>
-                  {parentOrganizations.map((option) => (
-                    <SelectItem
-                      key={option.value}
-                      value={option.value.toString()}
-                    >
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                placeholder={
+                  isLoadingParents
+                    ? t("common.loading")
+                    : t("masterData.organizations.selectParentOrganization")
+                }
+                disabled={isLoading || isLoadingParents}
+                onSearch={handleParentSearch}
+                isLoading={isLoadingParents}
+                disableLocalFiltering={true}
+                className="mt-1"
+              />
             </div>
             <div>
               <Label htmlFor="location_id" className="text-sm font-medium">
                 {t("masterData.organizations.location")}
               </Label>
-              <Select
-                value={
-                  formData.location_id ? formData.location_id.toString() : ""
-                }
+              <Combobox
+                options={locations}
+                value={formData.location_id ?? null}
                 onValueChange={(value) =>
                   handleInputChange(
                     "location_id",
-                    value ? parseInt(value) : undefined
+                    value ? (value as number) : undefined
                   )
                 }
-                disabled={isLoading || isLoadingData}
-              >
-                <SelectTrigger className="w-full mt-1">
-                  <SelectValue
-                    placeholder={
-                      isLoadingData
-                        ? t("common.loading")
-                        : t("masterData.organizations.selectLocation")
-                    }
-                  />
-                </SelectTrigger>
-                <SelectContent>
-                  {locations.map((option) => (
-                    <SelectItem
-                      key={option.value}
-                      value={option.value.toString()}
-                    >
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                placeholder={
+                  isLoadingLocations
+                    ? t("common.loading")
+                    : t("masterData.organizations.selectLocation")
+                }
+                disabled={isLoading || isLoadingLocations}
+                onSearch={handleLocationSearch}
+                isLoading={isLoadingLocations}
+                disableLocalFiltering={true}
+                className="mt-1"
+              />
             </div>
             <div
               className={`flex gap-3 pt-4 ${
