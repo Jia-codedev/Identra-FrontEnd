@@ -3,6 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Briefcase, Calendar, CheckCircle, Clock, XCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "@/hooks/use-translations";
+import { useRouter } from "next/navigation";
 
 interface LeavesData {
   workingDays: number | null;
@@ -25,34 +26,47 @@ interface PermissionsData {
 interface LeavesAndPermissionsCardProps {
   leavesData?: LeavesData;
   permissionsData?: PermissionsData;
-  onApplyClick?: () => void;
   isLoading?: boolean;
 }
 
 function LeavesAndPermissionsCard({
   leavesData,
   permissionsData,
-  onApplyClick,
   isLoading
 }: LeavesAndPermissionsCardProps) {
   const { t } = useTranslations();
-  
+  const [selectedTab, setSelectedTab] = React.useState<"leaves" | "permissions">("leaves");
+  const router = useRouter();
+  const onApplyClick = () => {
+    router.push(selectedTab === "leaves" ? "/leave-management" : "/permission-management");
+  }
   return (
     <div className={
       cn("bg-card border p-4 rounded-xl h-full", {
         [isLoading ? "animate-pulse" : ""]: true
       })
     }>
-      <Tabs defaultValue="leaves" className="w-full">
+      <Tabs
+
+
+        defaultValue="leaves" className="w-full">
         <div className="flex items-center justify-between mb-4">
-          <TabsList className="bg-transparent">
+          <TabsList
+
+            className="bg-transparent">
             <TabsTrigger
               value="leaves"
               className="[data-state=active]:border-b-2 rounded-full px-4 py-2 [data-state=active]:bg-transparent"
+              onClick={
+                () => setSelectedTab("leaves")
+              }
             >
               {t("dashboard.leaves")}
             </TabsTrigger>
             <TabsTrigger
+              onClick={
+                () => setSelectedTab("permissions")
+              }
               value="permissions"
               className="[data-state=active]:border-b-2 rounded-full px-4 py-2 [data-state=active]:bg-transparent"
 

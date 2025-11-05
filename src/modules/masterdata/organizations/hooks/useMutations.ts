@@ -13,7 +13,7 @@ export function useOrganizationMutations() {
         mutationFn: async ({ organizationData, onClose, search, pageSize }: { organizationData: IOrganization; onClose: () => void; search: string; pageSize: number }) => {
             const data = await organizationsApi.addOrganization(organizationData);
             if (data.status !== 201) {
-                toast.error(data.data?.message || t('toast.error.creating'));
+                toast.error(data.data?.message || t('toast.error.general'));
                 return null;
             }
             onClose();
@@ -54,7 +54,7 @@ export function useOrganizationMutations() {
         mutationFn: async ({ id, organizationData, onClose, search, pageSize }: { id: number; organizationData: IOrganization; onClose: () => void; search: string; pageSize: number }) => {
             const data = await organizationsApi.updateOrganization(id, organizationData);
             if (data.status !== 200) {
-                toast.error(data.data?.message || t('toast.error.updating'));
+                toast.error(data.data?.message || t('toast.error.general'));
                 return null;
             }
             onClose();
@@ -97,11 +97,11 @@ export function useOrganizationMutations() {
         mutationFn: async (id: number) => {
             const response = await organizationsApi.deleteOrganization(id);
             if (response?.status === 409) {
-                toast.error(response.data?.message || t('toast.error.deleting'));
+                toast.error(response.data?.message || t('toast.error.foreignKeyConstraint'));
                 return null;
             }
             if (response?.status !== 200) {
-                toast.error(response.data?.message || t('toast.error.deleting'));
+                toast.error(response.data?.message || t('toast.error.general'));
                 return null;
             }
             return response;
@@ -112,7 +112,7 @@ export function useOrganizationMutations() {
             queryClient.invalidateQueries({ queryKey: ["organizations"] });
         },
         onError: (error) => {
-            toast.error(t('toast.error.deleting'));
+            toast.error(t('toast.error.general'));
             console.error("Error deleting organization:", error);
         },
     });
@@ -120,11 +120,11 @@ export function useOrganizationMutations() {
         mutationFn: async (ids: number[]) => {
             const response = await organizationsApi.deleteOrganizations(ids);
             if (response?.status === 409) {
-                toast.error(response.data?.message || t('toast.error.deletingMultiple'));
+                toast.error(response.data?.message || t('toast.error.foreignKeyConstraint'));
                 return null;
             }
             if (response?.status !== 200) {
-                toast.error(response.data?.message || t('toast.error.deletingMultiple'));
+                toast.error(response.data?.message || t('toast.error.general'));
                 return null;
             }
             return response;
@@ -135,7 +135,7 @@ export function useOrganizationMutations() {
             queryClient.invalidateQueries({ queryKey: ["organizations"] });
         },
         onError: (error) => {
-            toast.error(t('toast.error.deletingMultiple'));
+            toast.error(t('toast.error.general'));
             console.error("Error deleting organizations:", error);
         },
     });

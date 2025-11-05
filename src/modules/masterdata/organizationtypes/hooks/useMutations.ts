@@ -33,7 +33,7 @@ export function useOrganizationTypeMutations() {
         refinedOrganizationTypeData
       );
       if (data.status !== 201) {
-        toast.error(data.data?.message || t("toast.error.creating"));
+        toast.error(data.data?.message || t("toast.error.general"));
         return null;
       }
       onClose();
@@ -49,9 +49,7 @@ export function useOrganizationTypeMutations() {
     },
     onSuccess: (data) => {
       if (!data) return;
-      toast.success(
-        t("toast.success.organizationTypeAdded")
-      );
+      toast.success(t("toast.success.created"));
       queryClient.setQueryData(
         ["organizationtypes", data.search ?? "", data.pageSize ?? 5],
         (oldData: any) => {
@@ -73,9 +71,7 @@ export function useOrganizationTypeMutations() {
       queryClient.invalidateQueries({ queryKey: ["organizationtypes"] });
     },
     onError: (error) => {
-      toast.error(
-        t("toast.error.organizationTypeAddError")
-      );
+      toast.error(t("toast.error.general"));
       console.error("Error creating organization type:", error);
     },
   });
@@ -99,7 +95,7 @@ export function useOrganizationTypeMutations() {
         organizationTypeData
       );
       if (data.status !== 200) {
-        toast.error(data.data?.message || t("toast.error.updating"));
+        toast.error(data.data?.message || t("toast.error.general"));
         return null;
       }
       onClose();
@@ -115,9 +111,7 @@ export function useOrganizationTypeMutations() {
     },
     onSuccess: (data) => {
       if (!data) return;
-      toast.success(
-        t(".toast.success.organizationTypeUpdated")
-      );
+      toast.success(t("toast.success.updated"));
       queryClient.setQueryData(
         ["organizationtypes", data.search ?? "", data.pageSize ?? 5],
         (oldData: any) => {
@@ -127,14 +121,14 @@ export function useOrganizationTypeMutations() {
               ...page,
               data: Array.isArray(page.data)
                 ? page.data.map((organizationType: IOrganizationType) => {
-                    const organizationTypeId =
-                      organizationType.organization_type_id;
-                    const updatedId =
-                      data.data.organization_type_id ?? data.data.id;
-                    return organizationTypeId === updatedId
-                      ? { ...organizationType, ...data.data }
-                      : organizationType;
-                  })
+                  const organizationTypeId =
+                    organizationType.organization_type_id;
+                  const updatedId =
+                    data.data.organization_type_id ?? data.data.id;
+                  return organizationTypeId === updatedId
+                    ? { ...organizationType, ...data.data }
+                    : organizationType;
+                })
                 : page.data,
             }));
             return { ...oldData, pages: updatedPages };
@@ -145,11 +139,7 @@ export function useOrganizationTypeMutations() {
       queryClient.invalidateQueries({ queryKey: ["organizationtypes"] });
     },
     onError: (error) => {
-      toast.error(
-        t(
-          "toast.error.organizationTypeUpdateError"
-        )
-      );
+      toast.error(t("toast.error.general"));
       console.error("Error updating organization type:", error);
     },
   });
@@ -160,9 +150,7 @@ export function useOrganizationTypeMutations() {
       return { data, id };
     },
     onSuccess: ({ id }) => {
-      toast.success(
-        t("toast.success.organizationTypeDeleted")
-      );
+      toast.success(t("toast.success.deleted"));
       queryClient.setQueriesData(
         { queryKey: ["organizationtypes"] },
         (oldData: any) => {
@@ -172,9 +160,9 @@ export function useOrganizationTypeMutations() {
             ...page,
             data: Array.isArray(page.data)
               ? page.data.filter(
-                  (organizationType: IOrganizationType) =>
-                    organizationType.organization_type_id !== id
-                )
+                (organizationType: IOrganizationType) =>
+                  organizationType.organization_type_id !== id
+              )
               : page.data,
           }));
 
@@ -184,11 +172,7 @@ export function useOrganizationTypeMutations() {
       queryClient.invalidateQueries({ queryKey: ["organizationtypes"] });
     },
     onError: (error) => {
-      toast.error(
-        t(
-          "toast.error.organizationTypeDeleteError"
-        )
-      );
+      toast.error(t("toast.error.general"));
       console.error("Error deleting organization type:", error);
     },
   });
@@ -197,17 +181,11 @@ export function useOrganizationTypeMutations() {
     mutationFn: async (ids: number[]) => {
       const data = await organizationTypesApi.deleteOrganizationTypes(ids);
       if (data.status === 409) {
-        toast.error(
-          t(
-            "toast.error.organizationTypeDeleteError"
-          )
-        );
+        toast.error(t("toast.error.conflict"));
         return null;
       }
       if (data.status !== 200) {
-        toast.error(
-          data.data?.message || "Error deleting selected organization types."
-        );
+        toast.error(data.data?.message || t("toast.error.general"));
         return null;
       }
       return { data, ids };
@@ -215,11 +193,7 @@ export function useOrganizationTypeMutations() {
     onSuccess: (data) => {
       if (!data) return;
       const { ids } = data;
-      toast.success(
-        t(
-          "toast.success.organizationTypeMultipleDelete"
-        )
-      );
+      toast.success(t("toast.success.deletedMultiple"));
       queryClient.setQueriesData(
         { queryKey: ["organizationtypes"] },
         (oldData: any) => {
@@ -229,9 +203,9 @@ export function useOrganizationTypeMutations() {
             ...page,
             data: Array.isArray(page.data)
               ? page.data.filter(
-                  (organizationType: IOrganizationType) =>
-                    !ids.includes(organizationType.organization_type_id)
-                )
+                (organizationType: IOrganizationType) =>
+                  !ids.includes(organizationType.organization_type_id)
+              )
               : page.data,
           }));
 
@@ -241,11 +215,7 @@ export function useOrganizationTypeMutations() {
       queryClient.invalidateQueries({ queryKey: ["organizationtypes"] });
     },
     onError: (error) => {
-      toast.error(
-        t(
-          "toast.error.organizationTypeMultipleDeleteError"
-        )
-      );
+      toast.error(t("toast.error.general"));
       console.error("Error deleting selected organization types:", error);
     },
   });

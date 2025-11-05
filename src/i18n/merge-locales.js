@@ -5,6 +5,7 @@ const root = __dirname;
 const localesDir = path.join(root, "locales");
 
 const fileToNamespace = new Map([
+  ["message.json", "messages"],
   ["common.json", "common"],
   ["auth.json", "auth"],
   ["dashboard.json", "dashboard"],

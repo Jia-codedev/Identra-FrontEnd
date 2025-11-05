@@ -1,4 +1,10 @@
 {
+  "messages": {
+    "confirm": {
+      "delete": "Are you sure you want to delete this item? This action cannot be undone.",
+      "deleteMultiple": "Are you sure you want to delete {count} selected items? This action cannot be undone."
+    }
+  },
   "common": {
     "dashboard": "Workforce Analytics",
     "masterData": "Master Data",
@@ -775,11 +781,16 @@
     "success": {
       "general": "Operation completed successfully",
       "saved": "Data saved successfully",
-      "created": "created successfully"
+      "created": "created successfully",
+      "deleted": "deleted successfully",
+      "deletedMultiple": "Selected items deleted successfully",
+      "updated": "updated successfully"
     },
     "error": {
       "general": "An error occurred. Please try again.",
-      "passwordExpired": "Password has expired."
+      "passwordExpired": "Password has expired.",
+      "conflict": "Data conflict. Please verify and try again.",
+      "foreignKeyConstraint": "Cannot delete due to related data existing."
     }
   },
   "workflow": {
