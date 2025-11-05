@@ -1,6 +1,7 @@
 import React from "react";
 import { LogIn, LogOut, Clock, Sun } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "@/hooks/use-translations";
 
 interface ViolationData {
     missedIn?: number;
@@ -18,6 +19,8 @@ function Violation({
     isLoading,
     data = { missedIn: 0, missedOut: 0, late: 0, early: 0 },
 }: ViolationProps) {
+    const { t } = useTranslations();
+    
     return (
         <div className={
             cn("bg-card border rounded-xl p-6 w-full h-full",
@@ -25,7 +28,7 @@ function Violation({
             )
         }>
             <h3 className="text-xl font-semibold text-foreground text-center mb-6">
-                Violations
+                {t("dashboard.violations")}
             </h3>
             <div className="grid grid-cols-4 gap-4">
                 <div className="bg-muted/50 border-2 border-blue-500/30 rounded-xl p-4 relative">
@@ -38,7 +41,7 @@ function Violation({
                         <div className="text-3xl font-bold text-foreground mb-1">
                             {data.missedIn ? data.missedIn : 0}
                         </div>
-                        <p className="text-muted-foreground text-xs">Missed In</p>
+                        <p className="text-muted-foreground text-xs">{t("dashboard.missedIn")}</p>
                     </div>
                 </div>
                 <div className="bg-muted/50 border-2 border-teal-500/30 rounded-xl p-4 relative">
@@ -51,7 +54,7 @@ function Violation({
                         <div className="text-3xl font-bold text-foreground mb-1">
                             {data.missedOut ? data.missedOut : 0}
                         </div>
-                        <p className="text-muted-foreground text-xs">Missed Out</p>
+                        <p className="text-muted-foreground text-xs">{t("dashboard.missedOut")}</p>
                     </div>
                 </div>
                 <div className="bg-muted/50 border-2 border-purple-500/30 rounded-xl p-4 relative">
@@ -64,7 +67,7 @@ function Violation({
                         <div className="text-3xl font-bold text-foreground mb-1">
                             {data.late ? data.late : 0}
                         </div>
-                        <p className="text-muted-foreground text-xs">Late</p>
+                        <p className="text-muted-foreground text-xs">{t("dashboard.late")}</p>
                     </div>
                 </div>
                 <div className="bg-muted/50 border-2 border-orange-500/30 rounded-xl p-4 relative">
@@ -77,7 +80,7 @@ function Violation({
                         <div className="text-3xl font-bold text-foreground mb-1">
                             {data.early ? data.early : 0}
                         </div>
-                        <p className="text-muted-foreground text-xs">Early</p>
+                        <p className="text-muted-foreground text-xs">{t("dashboard.early")}</p>
                     </div>
                 </div>
             </div>

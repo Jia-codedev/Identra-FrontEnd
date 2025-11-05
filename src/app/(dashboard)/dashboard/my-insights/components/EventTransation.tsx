@@ -2,6 +2,7 @@
 import React from "react";
 import { LogIn, LogOut, Clock, Loader2 } from "lucide-react";
 import { useEventTransaction } from "../hooks/useEventTransaction";
+import { useTranslations } from "@/hooks/use-translations";
 
 function EventTransation() {
     const {
@@ -17,6 +18,8 @@ function EventTransation() {
         handleCheckIn,
         handleCheckOut,
     } = useEventTransaction();
+    
+    const { t } = useTranslations();
 
     // Force re-render by logging state changes
     React.useEffect(() => {
@@ -37,7 +40,7 @@ function EventTransation() {
         }
     };
 
-    const primaryLabel = isCheckedIn ? "Check Out" : "Check In";
+    const primaryLabel = isCheckedIn ? t("dashboard.checkOut") : t("dashboard.checkIn");
     const PrimaryIcon = isCheckedIn ? LogOut : LogIn;
 
     return (
@@ -77,7 +80,7 @@ function EventTransation() {
                     <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/20">
                         <div className="flex items-center gap-1.5 mb-1">
                             <LogIn className="w-3.5 h-3.5 text-white/80" />
-                            <span className="text-white/80 text-xs">Check In</span>
+                            <span className="text-white/80 text-xs">{t("dashboard.checkIn")}</span>
                         </div>
                         <div className="text-white text-lg font-bold font-mono">
                             {checkInTime}
@@ -87,7 +90,7 @@ function EventTransation() {
                     <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/20">
                         <div className="flex items-center gap-1.5 mb-1">
                             <LogOut className="w-3.5 h-3.5 text-white/80" />
-                            <span className="text-white/80 text-xs">Check Out</span>
+                            <span className="text-white/80 text-xs">{t("dashboard.checkOut")}</span>
                         </div>
                         <div className="text-white text-lg font-bold font-mono">
                             {checkOutTime}
@@ -96,14 +99,14 @@ function EventTransation() {
                 </div>
                 <div className="grid grid-cols-2 gap-2 mb-4">
                     <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/20">
-                        <div className="text-white/80 text-xs mb-0.5">Remaining</div>
+                        <div className="text-white/80 text-xs mb-0.5">{t("dashboard.remaining")}</div>
                         <div className="text-white text-base font-semibold font-mono">
                             {remainingTime}
                         </div>
                     </div>
 
                     <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/20">
-                        <div className="text-white/80 text-xs mb-0.5">Overtime</div>
+                        <div className="text-white/80 text-xs mb-0.5">{t("dashboard.overtime")}</div>
                         <div className="text-white text-base font-semibold font-mono">
                             {overtimeTime}
                         </div>

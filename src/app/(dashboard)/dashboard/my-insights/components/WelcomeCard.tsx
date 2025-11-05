@@ -1,6 +1,7 @@
 import React from "react";
 import { Mail, Building2, UserCircle } from "lucide-react";
 import { useLanguage } from "@/providers/language-provider";
+import { useTranslations } from "@/hooks/use-translations";
 
 interface WelcomeCardProps {
     isLoading: boolean;
@@ -25,13 +26,15 @@ function WelcomeCard({
         organization_arb,
         role,
     },
-    greeting = "Welcome",
+    greeting,
 
 }: WelcomeCardProps) {
-    const { isRTL } = useLanguage()
+    const { isRTL } = useLanguage();
+    const { t } = useTranslations();
+    
     return (
         <div className="bg-card border rounded-xl p-6 h-full">
-            <p className="text-muted-foreground text-sm mb-1">{greeting},</p>
+            <p className="text-muted-foreground text-sm mb-1">{greeting || t("dashboard.welcome")},</p>
             <h2 className="text-xl font-bold text-foreground mb-6">{
                 !isRTL ? `${firstname_eng || ""} ${lastname_eng || ""}` : `${lastname_eng || ""} ${firstname_eng || ""}`
             }</h2>
@@ -41,7 +44,7 @@ function WelcomeCard({
                         <Mail className="w-4 h-4 text-blue-500" />
                     </div>
                     <div className="min-w-0">
-                        <p className="text-xs text-muted-foreground mb-0.5">Email</p>
+                        <p className="text-xs text-muted-foreground mb-0.5">{t("dashboard.email")}</p>
                         <p className="text-sm text-foreground font-medium truncate">
                             {email}
                         </p>
@@ -52,7 +55,7 @@ function WelcomeCard({
                         <Building2 className="w-4 h-4 text-purple-500" />
                     </div>
                     <div className="min-w-0">
-                        <p className="text-xs text-muted-foreground mb-0.5">Organization</p>
+                        <p className="text-xs text-muted-foreground mb-0.5">{t("dashboard.organization")}</p>
                         <p className="text-sm text-foreground font-medium truncate">
                             {
                                 !isRTL ? organization_eng : organization_arb
@@ -65,7 +68,7 @@ function WelcomeCard({
                         <UserCircle className="w-4 h-4 text-green-500" />
                     </div>
                     <div className="min-w-0">
-                        <p className="text-xs text-muted-foreground mb-0.5">Role</p>
+                        <p className="text-xs text-muted-foreground mb-0.5">{t("dashboard.role")}</p>
                         <p className="text-sm text-foreground font-medium truncate">
                             {role}
                         </p>
