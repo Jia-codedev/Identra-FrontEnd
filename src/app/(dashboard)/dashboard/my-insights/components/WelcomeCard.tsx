@@ -1,25 +1,40 @@
 import React from "react";
 import { Mail, Building2, UserCircle } from "lucide-react";
+import { useLanguage } from "@/providers/language-provider";
 
 interface WelcomeCardProps {
-    name?: string;
-    email?: string;
-    organization?: string;
-    role?: string;
+    isLoading: boolean;
+    profile: {
+        firstname_eng?: string;
+        lastname_eng?: string;
+        email?: string;
+        organization_eng?: string;
+        organization_arb?: string;
+        role?: string;
+    }
     greeting?: string;
 }
 
 function WelcomeCard({
-    name = "User",
-    email = "user@example.com",
-    organization = "Organization",
-    role = "Employee",
-    greeting = "Welcome back",
+    isLoading,
+    profile: {
+        firstname_eng,
+        lastname_eng,
+        email,
+        organization_eng,
+        organization_arb,
+        role,
+    },
+    greeting = "Welcome",
+
 }: WelcomeCardProps) {
+    const { isRTL } = useLanguage()
     return (
         <div className="bg-card border rounded-xl p-6 h-full">
             <p className="text-muted-foreground text-sm mb-1">{greeting},</p>
-            <h2 className="text-3xl font-bold text-foreground mb-6">{name}</h2>
+            <h2 className="text-xl font-bold text-foreground mb-6">{
+                !isRTL ? `${firstname_eng || ""} ${lastname_eng || ""}` : `${lastname_eng || ""} ${firstname_eng || ""}`
+            }</h2>
             <div className="grid grid-cols-1 gap-4">
                 <div className="flex items-start gap-3">
                     <div className="bg-blue-500/10 p-2.5 rounded-lg shrink-0">
@@ -39,7 +54,9 @@ function WelcomeCard({
                     <div className="min-w-0">
                         <p className="text-xs text-muted-foreground mb-0.5">Organization</p>
                         <p className="text-sm text-foreground font-medium truncate">
-                            {organization}
+                            {
+                                !isRTL ? organization_eng : organization_arb
+                            }
                         </p>
                     </div>
                 </div>

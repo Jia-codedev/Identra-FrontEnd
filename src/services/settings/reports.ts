@@ -9,13 +9,24 @@ export interface ReportFilters {
   offset?: number;
 }
 
+export interface NewReportFilters extends ReportFilters {
+  organizationId?: number;
+}
+
 class ReportsApi {
   getFilteredReport(filters: ReportFilters = {}) {
     return apiClient.get("/report", { params: filters });
   }
 
-  getNewReport() {
-    return apiClient.get("/report/new");
+  getNewReport(filters: NewReportFilters = {}) {
+    return apiClient.get("/report/new", { params: filters });
+  }
+
+  exportNewReportCSV(filters: NewReportFilters = {}) {
+    return apiClient.get("/report/new/export", {
+      params: filters,
+      responseType: "blob",
+    });
   }
 }
 

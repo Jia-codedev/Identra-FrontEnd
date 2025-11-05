@@ -19,7 +19,7 @@ INSERT INTO sec_modules (
 ('user-security', 1, GETDATE(), 1, GETDATE()),
 ('app-settings', 1, GETDATE(), 1, GETDATE()),
 ('alert-centre', 1, GETDATE(), 1, GETDATE()),
-('workforce', 1, GETDATE(), 1, GETDATE()),
+('workforce', 1, GETDATE(), 1, GETDATE());
 
 -- Footer Menu Items
--- ('support-centre', 1, GETDATE(), 1, GETDATE());
+-- ('support-centre', 1, GETDATE(), 1, GETDATE())

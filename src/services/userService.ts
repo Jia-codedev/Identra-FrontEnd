@@ -45,9 +45,7 @@ class UserService {
         return false;
       }
 
-      let response = await apiClient.post(`/auth/me`, {
-        userId: currentUser.userId,
-      });
+      let response = await apiClient.get(`/auth/me`);
 
       if (response.status === 200 && response.data.success) {
         const userData = response.data.data;
