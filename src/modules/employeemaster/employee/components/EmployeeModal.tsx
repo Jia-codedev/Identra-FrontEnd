@@ -10,6 +10,12 @@ import { cn } from "@/lib/utils";
 import { IEmployee } from "../types";
 import employeeApi from "@/services/employeemaster/employee";
 import countriesApi from "@/services/masterdata/countries";
+import organizationsApi from "@/services/masterdata/organizations";
+import gradesApi from "@/services/masterdata/grades";
+import designationsApi from "@/services/masterdata/designation";
+import nationalitiesApi from "@/services/masterdata/nationalities";
+import employeeTypeApi from "@/services/employeemaster/employeeType";
+import locationsApi from "@/services/masterdata/locations";
 import { toast } from "sonner";
 import { EmployeeFormFields, DropdownOption } from "./types";
 import { EmployeeBasicInfoStep } from "./EmployeeBasicInfoStep";
@@ -151,12 +157,12 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
     },
     ...(mode === "add"
       ? [
-          {
-            id: "login",
-            title: t("employeeMaster.employee.loginCredentials"),
-            description: t("employeeMaster.employee.loginCredentialsDesc"),
-          },
-        ]
+        {
+          id: "login",
+          title: t("employeeMaster.employee.loginCredentials"),
+          description: t("employeeMaster.employee.loginCredentialsDesc"),
+        },
+      ]
       : []),
   ];
 
@@ -166,14 +172,6 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
     const fetchDropdownData = async () => {
       setIsLoadingData(true);
       try {
-        const [lookupDataResults, countriesRes] = await Promise.all([
-          employeeApi.getEmployeeLookupData(),
-          countriesApi.getCountriesWithoutPagination().catch((err) => {
-            console.warn("Countries API failed, using fallback:", err);
-            return { data: { success: false, data: [] } };
-          }),
-        ]);
-
         const [
           orgRes,
           gradeRes,
@@ -181,9 +179,39 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
           nationalityRes,
           employeeTypeRes,
           locationRes,
-        ] = lookupDataResults;
+          countriesRes
+        ] = await Promise.all([
+          organizationsApi.getOrganizationsWithoutPagination().catch((err) => {
+            console.warn("Organizations API failed:", err);
+            return { data: { success: false, data: [] } };
+          }),
+          gradesApi.getGradesWithoutPagination().catch((err) => {
+            console.warn("Grades API failed:", err);
+            return { data: { success: false, data: [] } };
+          }),
+          designationsApi.getDesignationsWithoutPagination().catch((err) => {
+            console.warn("Designations API failed:", err);
+            return { data: { success: false, data: [] } };
+          }),
+          nationalitiesApi.getNationalitiesWithoutPagination().catch((err) => {
+            console.warn("Nationalities API failed:", err);
+            return { data: { success: false, data: [] } };
+          }),
+          employeeTypeApi.getEmployeeTypesWithoutPagination().catch((err) => {
+            console.warn("Employee Types API failed:", err);
+            return { data: { success: false, data: [] } };
+          }),
+          locationsApi.getLocationsWithoutPagination().catch((err) => {
+            console.warn("Locations API failed:", err);
+            return { data: { success: false, data: [] } };
+          }),
+          countriesApi.getCountriesWithoutPagination().catch((err) => {
+            console.warn("Countries API failed:", err);
+            return { data: { success: false, data: [] } };
+          }),
+        ]);
 
-        if (orgRes.data?.success) {
+        if (orgRes.data?.success && Array.isArray(orgRes.data.data)) {
           setOrganizations(
             orgRes.data.data.map((org: any) => ({
               label: isRTL
@@ -192,9 +220,12 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
               value: org.organization_id,
             }))
           );
+        } else {
+          console.warn("Organizations API response issue:", orgRes.data);
+          setOrganizations([]);
         }
 
-        if (gradeRes.data?.success) {
+        if (gradeRes.data?.success && Array.isArray(gradeRes.data.data)) {
           setGrades(
             gradeRes.data.data.map((grade: any) => ({
               label: isRTL
@@ -203,9 +234,12 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
               value: grade.grade_id,
             }))
           );
+        } else {
+          console.warn("Grades API response issue:", gradeRes.data);
+          setGrades([]);
         }
 
-        if (designationRes.data?.success) {
+        if (designationRes.data?.success && Array.isArray(designationRes.data.data)) {
           setDesignations(
             designationRes.data.data.map((des: any) => ({
               label: isRTL
@@ -214,8 +248,12 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
               value: des.designation_id,
             }))
           );
+        } else {
+          console.warn("Designations API response issue:", designationRes.data);
+          setDesignations([]);
         }
-        if (nationalityRes.data?.success) {
+
+        if (nationalityRes.data?.success && Array.isArray(nationalityRes.data.data)) {
           setNationalities(
             nationalityRes.data.data.map((nat: any) => ({
               label: isRTL
@@ -224,9 +262,12 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
               value: nat.citizenship_id,
             }))
           );
+        } else {
+          console.warn("Nationalities API response issue:", nationalityRes.data);
+          setNationalities([]);
         }
 
-        if (countriesRes.data?.success) {
+        if (countriesRes.data?.success && Array.isArray(countriesRes.data.data)) {
           setCountries(
             countriesRes.data.data.map((country: any) => ({
               label: isRTL
@@ -243,7 +284,7 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
           setCountries([]);
         }
 
-        if (employeeTypeRes.data?.success) {
+        if (employeeTypeRes.data?.success && Array.isArray(employeeTypeRes.data.data)) {
           setEmployeeTypes(
             employeeTypeRes.data.data.map((et: any) => ({
               label: isRTL
@@ -252,9 +293,12 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
               value: et.employee_type_id,
             }))
           );
+        } else {
+          console.warn("Employee Types API response issue:", employeeTypeRes.data);
+          setEmployeeTypes([]);
         }
 
-        if (locationRes.data?.success) {
+        if (locationRes.data?.success && Array.isArray(locationRes.data.data)) {
           setLocations(
             locationRes.data.data.map((loc: any) => ({
               label: isRTL
@@ -263,10 +307,153 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
               value: loc.location_id,
             }))
           );
+        } else {
+          console.warn("Locations API response issue:", locationRes.data);
+          setLocations([]);
         }
 
         if (mode === "edit" && employee) {
-          setTimeout(() => {
+          // If we have employee_id, fetch the full employee data
+          if (employee.employee_id) {
+            try {
+              const employeeResponse = await employeeApi.getEmployeeById(employee.employee_id);
+              const fullEmployeeData = employeeResponse.data?.data || employee;
+
+              setFormData({
+                emp_no: fullEmployeeData.emp_no || "",
+                firstname_eng: fullEmployeeData.firstname_eng || "",
+                lastname_eng: fullEmployeeData.lastname_eng || "",
+                firstname_arb: fullEmployeeData.firstname_arb || "",
+                lastname_arb: fullEmployeeData.lastname_arb || "",
+                card_number: fullEmployeeData.card_number || "",
+                pin: fullEmployeeData.pin || "",
+                organization_id: fullEmployeeData.organization_id || null,
+                grade_id: fullEmployeeData.grade_id || null,
+                designation_id: fullEmployeeData.designation_id || null,
+                employee_type_id: fullEmployeeData.employee_type_id || null,
+                location_id: fullEmployeeData.location_id || null,
+                manager_id: fullEmployeeData.manager_id || null,
+                citizenship_id: fullEmployeeData.citizenship_id || null,
+                national_id: fullEmployeeData.national_id || "",
+                national_id_expiry_date: fullEmployeeData.national_id_expiry_date
+                  ? new Date(fullEmployeeData.national_id_expiry_date)
+                  : null,
+                passport_number: fullEmployeeData.passport_number || "",
+                passport_expiry_date: fullEmployeeData.passport_expiry_date
+                  ? new Date(fullEmployeeData.passport_expiry_date)
+                  : null,
+                passport_issue_country_id:
+                  fullEmployeeData.passport_issue_country_id || null,
+                mobile: fullEmployeeData.mobile || "",
+                email: fullEmployeeData.email || "",
+                gender: fullEmployeeData.gender || "",
+                join_date: fullEmployeeData.join_date
+                  ? new Date(fullEmployeeData.join_date)
+                  : null,
+                active_date: fullEmployeeData.active_date
+                  ? new Date(fullEmployeeData.active_date)
+                  : null,
+                inactive_date: fullEmployeeData.inactive_date
+                  ? new Date(fullEmployeeData.inactive_date)
+                  : null,
+                active_flag: fullEmployeeData.active_flag ?? true,
+                local_flag: fullEmployeeData.local_flag ?? false,
+                punch_flag: fullEmployeeData.punch_flag ?? true,
+                on_reports_flag: fullEmployeeData.on_reports_flag ?? true,
+                email_notifications_flag:
+                  fullEmployeeData.email_notifications_flag ?? false,
+                include_email_flag: fullEmployeeData.include_email_flag ?? false,
+                open_shift_flag: fullEmployeeData.open_shift_flag ?? false,
+                overtime_flag: fullEmployeeData.overtime_flag ?? false,
+                web_punch_flag: fullEmployeeData.web_punch_flag ?? false,
+                shift_flag: fullEmployeeData.shift_flag ?? true,
+                check_inout_selfie_flag:
+                  fullEmployeeData.check_inout_selfie_flag ?? false,
+                calculate_monthly_missed_hrs_flag:
+                  fullEmployeeData.calculate_monthly_missed_hrs_flag ?? false,
+                exclude_from_integration_flag:
+                  fullEmployeeData.exclude_from_integration_flag ?? false,
+                manager_flag: fullEmployeeData.manager_flag ?? false,
+                inpayroll_flag: fullEmployeeData.inpayroll_flag ?? true,
+                share_roster_flag: fullEmployeeData.share_roster_flag ?? false,
+                geofence_flag: fullEmployeeData.geofence_flag ?? false,
+                login_id: "",
+                password: "",
+                confirm_password: "",
+                remarks: fullEmployeeData.remarks || "",
+                role_id: null,
+              });
+            } catch (error) {
+              console.error("Error fetching employee data:", error);
+              toast.error(t("messages.error.fetchingData"));
+              // Fallback to using the passed employee object
+              setFormData({
+                emp_no: employee.emp_no || "",
+                firstname_eng: employee.firstname_eng || "",
+                lastname_eng: employee.lastname_eng || "",
+                firstname_arb: employee.firstname_arb || "",
+                lastname_arb: employee.lastname_arb || "",
+                card_number: employee.card_number || "",
+                pin: employee.pin || "",
+                organization_id: employee.organization_id || null,
+                grade_id: employee.grade_id || null,
+                designation_id: employee.designation_id || null,
+                employee_type_id: employee.employee_type_id || null,
+                location_id: employee.location_id || null,
+                manager_id: employee.manager_id || null,
+                citizenship_id: employee.citizenship_id || null,
+                national_id: employee.national_id || "",
+                national_id_expiry_date: employee.national_id_expiry_date
+                  ? new Date(employee.national_id_expiry_date)
+                  : null,
+                passport_number: employee.passport_number || "",
+                passport_expiry_date: employee.passport_expiry_date
+                  ? new Date(employee.passport_expiry_date)
+                  : null,
+                passport_issue_country_id:
+                  employee.passport_issue_country_id || null,
+                mobile: employee.mobile || "",
+                email: employee.email || "",
+                gender: employee.gender || "",
+                join_date: employee.join_date
+                  ? new Date(employee.join_date)
+                  : null,
+                active_date: employee.active_date
+                  ? new Date(employee.active_date)
+                  : null,
+                inactive_date: employee.inactive_date
+                  ? new Date(employee.inactive_date)
+                  : null,
+                active_flag: employee.active_flag ?? true,
+                local_flag: employee.local_flag ?? false,
+                punch_flag: employee.punch_flag ?? true,
+                on_reports_flag: employee.on_reports_flag ?? true,
+                email_notifications_flag:
+                  employee.email_notifications_flag ?? false,
+                include_email_flag: employee.include_email_flag ?? false,
+                open_shift_flag: employee.open_shift_flag ?? false,
+                overtime_flag: employee.overtime_flag ?? false,
+                web_punch_flag: employee.web_punch_flag ?? false,
+                shift_flag: employee.shift_flag ?? true,
+                check_inout_selfie_flag:
+                  employee.check_inout_selfie_flag ?? false,
+                calculate_monthly_missed_hrs_flag:
+                  employee.calculate_monthly_missed_hrs_flag ?? false,
+                exclude_from_integration_flag:
+                  employee.exclude_from_integration_flag ?? false,
+                manager_flag: employee.manager_flag ?? false,
+                inpayroll_flag: employee.inpayroll_flag ?? true,
+                share_roster_flag: employee.share_roster_flag ?? false,
+                geofence_flag: employee.geofence_flag ?? false,
+                login_id: "",
+                password: "",
+                confirm_password: "",
+                remarks: employee.remarks || "",
+                role_id: null,
+              });
+            }
+          } else {
+            // If no employee_id, use the employee object as is
             setFormData({
               emp_no: employee.emp_no || "",
               firstname_eng: employee.firstname_eng || "",
@@ -325,19 +512,36 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
               inpayroll_flag: employee.inpayroll_flag ?? true,
               share_roster_flag: employee.share_roster_flag ?? false,
               geofence_flag: employee.geofence_flag ?? false,
-              login_id: (employee as any).login_id || "",
+              login_id: "",
               password: "",
               confirm_password: "",
               remarks: employee.remarks || "",
-              role_id: (employee as any).role_id || null,
+              role_id: null,
             });
-          }, 100);
+          }
         } else if (mode === "add") {
           setFormData(initialForm);
           setCurrentStep(0);
         }
       } catch (error) {
-        toast.error(t("messages.error.network"));
+        console.error("Error fetching dropdown data:", error);
+        
+        // Log which specific API calls failed
+        if (error instanceof Error) {
+          console.error("Error message:", error.message);
+          console.error("Error stack:", error.stack);
+        }
+        
+        // Set empty arrays for all dropdowns as fallback
+        setOrganizations([]);
+        setGrades([]);
+        setDesignations([]);
+        setNationalities([]);
+        setCountries([]);
+        setEmployeeTypes([]);
+        setLocations([]);
+        
+        toast.error(t("messages.error.network") || "Failed to load dropdown data");
       } finally {
         setIsLoadingData(false);
       }
@@ -382,15 +586,8 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
         break;
 
       case 1:
-        if (!formData.organization_id) {
-          stepErrors.organization_id = t("validation.required");
-        }
-        if (!formData.designation_id) {
-          stepErrors.designation_id = t("validation.required");
-        }
-        if (!formData.employee_type_id) {
-          stepErrors.employee_type_id = t("validation.required");
-        }
+        // Organization step - only validate if in add mode or if values were changed
+        // In edit mode, allow empty values as they may be optional
         break;
 
       case 2:
@@ -398,9 +595,8 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
           stepErrors.citizenship_id = t("validation.required");
         }
 
-        if (!formData.email || !formData.email.trim()) {
-          stepErrors.email = t("validation.required");
-        } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+        // Email is optional, but if provided, must be valid
+        if (formData.email && formData.email.trim() && !/\S+@\S+\.\S+/.test(formData.email)) {
           stepErrors.email = t("validation.invalidEmail");
         }
         break;
@@ -416,6 +612,9 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
 
       case 5:
         if (mode === "add") {
+          if (!formData.role_id) {
+            stepErrors.role_id = t("validation.required");
+          }
           if (!formData.login_id.trim()) {
             stepErrors.login_id = t("validation.required");
           }
@@ -463,8 +662,24 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
       return;
     }
 
-    const employeeData: Partial<IEmployee> = {
-      ...formData,
+    // Helper function to format dates to ISO string
+    const formatDate = (date: Date | null | undefined): string | undefined => {
+      if (!date) return undefined;
+      try {
+        return date instanceof Date ? date.toISOString() : new Date(date).toISOString();
+      } catch {
+        return undefined;
+      }
+    };
+
+    const employeeData: any = {
+      emp_no: formData.emp_no,
+      firstname_eng: formData.firstname_eng || formData.firstname_arb || "",
+      lastname_eng: formData.lastname_eng || formData.lastname_arb || "",
+      firstname_arb: formData.firstname_arb || formData.firstname_eng || "",
+      lastname_arb: formData.lastname_arb || formData.lastname_eng || "",
+      card_number: formData.card_number || undefined,
+      pin: formData.pin || undefined,
       organization_id: formData.organization_id || undefined,
       grade_id: formData.grade_id || undefined,
       designation_id: formData.designation_id || undefined,
@@ -472,13 +687,35 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
       location_id: formData.location_id || undefined,
       manager_id: formData.manager_id || undefined,
       citizenship_id: formData.citizenship_id || undefined,
-      passport_issue_country_id:
-        formData.passport_issue_country_id || undefined,
-      national_id_expiry_date: formData.national_id_expiry_date || undefined,
-      passport_expiry_date: formData.passport_expiry_date || undefined,
-      join_date: formData.join_date || undefined,
-      active_date: formData.active_date || undefined,
-      inactive_date: formData.inactive_date || undefined,
+      passport_issue_country_id: formData.passport_issue_country_id || undefined,
+      national_id: formData.national_id || undefined,
+      national_id_expiry_date: formatDate(formData.national_id_expiry_date),
+      passport_number: formData.passport_number || undefined,
+      passport_expiry_date: formatDate(formData.passport_expiry_date),
+      mobile: formData.mobile || undefined,
+      email: formData.email || undefined,
+      gender: formData.gender || undefined,
+      join_date: formatDate(formData.join_date),
+      active_date: formatDate(formData.active_date),
+      inactive_date: formatDate(formData.inactive_date),
+      active_flag: formData.active_flag ?? true,
+      local_flag: formData.local_flag ?? false,
+      punch_flag: formData.punch_flag ?? true,
+      on_reports_flag: formData.on_reports_flag ?? true,
+      email_notifications_flag: formData.email_notifications_flag ?? false,
+      include_email_flag: formData.include_email_flag ?? false,
+      open_shift_flag: formData.open_shift_flag ?? false,
+      overtime_flag: formData.overtime_flag ?? false,
+      web_punch_flag: formData.web_punch_flag ?? false,
+      shift_flag: formData.shift_flag ?? true,
+      check_inout_selfie_flag: formData.check_inout_selfie_flag ?? false,
+      calculate_monthly_missed_hrs_flag: formData.calculate_monthly_missed_hrs_flag ?? false,
+      exclude_from_integration_flag: formData.exclude_from_integration_flag ?? false,
+      manager_flag: formData.manager_flag ?? false,
+      inpayroll_flag: formData.inpayroll_flag ?? true,
+      share_roster_flag: formData.share_roster_flag ?? false,
+      geofence_flag: formData.geofence_flag ?? false,
+      remarks: formData.remarks || undefined,
     };
 
     if (!employeeData.emp_no || employeeData.emp_no.toString().trim() === "") {
@@ -487,10 +724,7 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
       return;
     }
 
-    if (
-      !employeeData.firstname_eng ||
-      employeeData.firstname_eng.toString().trim() === ""
-    ) {
+    if (!employeeData.firstname_eng || employeeData.firstname_eng.toString().trim() === "") {
       console.error("First name is missing or empty");
       toast.error("First name is required");
       return;
@@ -498,22 +732,27 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
 
     try {
       if (mode === "add") {
-        const result = await createEmployee({
-          ...employeeData,
-          login: formData.login_id,
-          password: formData.password,
-        } as IEmployee);
+        // Add login credentials for new employees
+        if (formData.login_id && formData.password) {
+          employeeData.login = formData.login_id;
+          employeeData.password = formData.password;
+          employeeData.role_id = formData.role_id || undefined;
+        }
 
-        onSave(employeeData as IEmployee);
+        const result = await createEmployee(employeeData);
+        onSave(result as IEmployee);
+        onClose();
       } else if (employee?.employee_id) {
         await updateEmployee({
           id: employee.employee_id,
-          employeeData: employeeData as IEmployee,
+          employeeData: employeeData,
         });
         onSave(employeeData as IEmployee);
+        onClose();
       }
     } catch (error) {
       console.error("Error saving employee:", error);
+      // Error is already handled in the mutation hook
     }
   };
 
@@ -650,9 +889,8 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
               </div>
 
               <div
-                className={`flex gap-3 ${
-                  isRTL ? "flex-row-reverse" : "flex-row"
-                }`}
+                className={`flex gap-3 ${isRTL ? "flex-row-reverse" : "flex-row"
+                  }`}
               >
                 <Button
                   type="button"
@@ -711,7 +949,7 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
                     className="min-w-20"
                   >
                     {createEmployeeMutation.isPending ||
-                    updateEmployeeMutation.isPending
+                      updateEmployeeMutation.isPending
                       ? t("common.saving")
                       : t("common.save")}
                   </Button>

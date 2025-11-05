@@ -44,7 +44,7 @@ export const CustomPagination: React.FC<PaginationProps> = ({
 
   const getPageNumbers = () => {
     const pages = [];
-    const maxVisible = 5;
+    const maxVisible = 3;
 
     if (totalPages <= maxVisible) {
       for (let i = 1; i <= totalPages; i++) {
@@ -84,8 +84,10 @@ export const CustomPagination: React.FC<PaginationProps> = ({
             <PaginationItem key={pageNum}>
               <PaginationLink
                 isActive={currentPage === pageNum}
-                onClick={() => handlePageChange(pageNum)}
-                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handlePageChange(pageNum);
+                }}
                 className="cursor-pointer"
               >
                 {pageNum}

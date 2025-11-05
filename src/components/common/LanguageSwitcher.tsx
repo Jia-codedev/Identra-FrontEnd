@@ -37,13 +37,13 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
 
   if (variant === 'mobile') {
     return (
-      <div className={`flex flex-col bg-background space-y-2 ${className}`}>
+      <div className={`flex flex-col bg-background space-y-2  ${className}`}>
         <span className="text-xs text-muted-foreground bg-background">
           {t('common.language')}
         </span>
         <DropdownMenu>
           <DropdownMenuTrigger
-          asChild>
+            asChild>
             <button
               className="flex items-center gap-2 px-3 py-2 rounded-md border text-sm bg-background text-foreground hover:bg-muted focus:outline-none focus:ring-2 focus:ring-primary transition-colors"
               aria-label={t('common.language')}
@@ -59,7 +59,7 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
                 />
                 <span className="text-sm">{currentLanguage?.label}</span>
               </span>
-              <ChevronDown size={14} className="ml-auto" />
+              <ChevronDown size={14} className="ml-4" />
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-40">
@@ -67,9 +67,8 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
               <DropdownMenuItem
                 key={lang.code}
                 onClick={() => handleLanguageChange(lang.code)}
-                className={`flex items-center gap-2 ${
-                  currentLocale === lang.code ? 'font-semibold bg-muted' : ''
-                }`}
+                className={`flex items-center gap-2 ${currentLocale === lang.code ? 'font-semibold bg-muted' : ''
+                  }`}
               >
                 <Image
                   src={lang.image}
@@ -89,7 +88,9 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
+      <DropdownMenuTrigger
+        className=''
+        asChild>
         <button
           className={`flex items-center gap-1 px-2 py-1.5 rounded-md border text-xs bg-background text-foreground hover:bg-muted focus:outline-none focus:ring-2 focus:ring-primary transition-colors ${className}`}
           aria-label={t('common.language')}
@@ -105,7 +106,7 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
             />
             <span className="text-xs">{currentLanguage?.label}</span>
           </span>
-          <ChevronDown size={14} />
+          <ChevronDown size={14} className='ml-4' />
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-32">
@@ -113,9 +114,8 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
           <DropdownMenuItem
             key={lang.code}
             onClick={() => handleLanguageChange(lang.code)}
-            className={`flex items-center gap-2 ${
-              currentLocale === lang.code ? 'font-semibold bg-muted' : ''
-            }`}
+            className={`flex items-center gap-2 ${currentLocale === lang.code ? 'font-semibold bg-muted' : ''
+              }`}
           >
             <Image
               src={lang.image}

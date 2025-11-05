@@ -36,16 +36,13 @@ function Schedule({
     apiData,
 }: ScheduleProps) {
     const { t } = useTranslations();
-    
-    // If apiData is provided, normalize values
+
     let normExpected = expectedHours;
     let normWorked = worked;
     let normPending = pending;
     let normOvertime = overtime;
     if (apiData) {
-        // DayReqdHrs and TotalMonthlyExpectedWrkHrs can be number or string (hours)
         normExpected = Number(apiData.DayReqdHrs ?? apiData.TotalMonthlyExpectedWrkHrs ?? 0);
-        // TotalWorkedHrs and PendingWorkHrs are strings like "00:00"
         const parseHrs = (val: string | null | undefined) => {
             if (!val) return 0;
             const [h, m] = val.split(":").map(Number);
@@ -53,7 +50,6 @@ function Schedule({
         };
         normWorked = parseHrs(apiData.TotalWorkedHrs);
         normPending = parseHrs(apiData.PendingWorkHrs);
-        // Overtime: worked - expected, if positive
         normOvertime = Math.max(0, normWorked - normExpected);
     }
     const totalHours = normWorked + normOvertime + normPending;

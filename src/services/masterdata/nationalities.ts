@@ -33,6 +33,10 @@ class NationalitiesApi {
   deleteNationalities(ids: number[]) {
     return apiClient.delete("/citizenship/delete", { data: { ids } });
   }
+
+  getNationalitiesWithoutPagination() {
+    return apiClient.get("/citizenship");
+  }
 }
 
 const nationalitiesApi = new NationalitiesApi();

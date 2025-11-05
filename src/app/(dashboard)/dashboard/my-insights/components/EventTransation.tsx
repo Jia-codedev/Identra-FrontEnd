@@ -21,17 +21,6 @@ function EventTransation() {
     
     const { t } = useTranslations();
 
-    // Force re-render by logging state changes
-    React.useEffect(() => {
-        console.log("🔄 Component Re-render:", { 
-            workingDuration, 
-            isCheckedIn, 
-            checkInTime,
-            checkOutTime,
-            renderKey 
-        });
-    }, [workingDuration, isCheckedIn, checkInTime]);
-
     const handlePrimaryAction = () => {
         if (isCheckedIn) {
             handleCheckOut();
@@ -80,7 +69,7 @@ function EventTransation() {
                     <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/20">
                         <div className="flex items-center gap-1.5 mb-1">
                             <LogIn className="w-3.5 h-3.5 text-white/80" />
-                            <span className="text-white/80 text-xs">{t("dashboard.checkIn")}</span>
+                            <span className="text-white/80 text-xs">{t("dashboard.lastPunchIn")}</span>
                         </div>
                         <div className="text-white text-lg font-bold font-mono">
                             {checkInTime}
@@ -90,7 +79,7 @@ function EventTransation() {
                     <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/20">
                         <div className="flex items-center gap-1.5 mb-1">
                             <LogOut className="w-3.5 h-3.5 text-white/80" />
-                            <span className="text-white/80 text-xs">{t("dashboard.checkOut")}</span>
+                            <span className="text-white/80 text-xs">{t("dashboard.lastPunchOut")}</span>
                         </div>
                         <div className="text-white text-lg font-bold font-mono">
                             {checkOutTime}

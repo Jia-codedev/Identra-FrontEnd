@@ -47,9 +47,12 @@ class EmployeeApi {
   }
 
   addEmployee(data: Partial<IEmployee>) {
-    return apiClient.post("/employee/add", data).catch((err) => {
+    // Clean the data before sending
+    const cleanedData = this.cleanEmployeeData(data);
+    
+    return apiClient.post("/employee/add", cleanedData).catch((err) => {
       try {
-        console.error("addEmployee payload:", data);
+        console.error("addEmployee payload:", cleanedData);
         console.error(
           "addEmployee error response:",
           err?.response?.data || err.message
@@ -70,7 +73,34 @@ class EmployeeApi {
   }
 
   updateEmployee(id: number, data: Partial<IEmployee>) {
-    return apiClient.put(`/employee/edit/${id}`, data);
+    // Clean the data before sending
+    const cleanedData = this.cleanEmployeeData(data);
+    return apiClient.put(`/employee/edit/${id}`, cleanedData);
+  }
+
+  // Helper method to clean employee data
+  private cleanEmployeeData(data: Partial<IEmployee>): any {
+    const cleaned: any = {};
+    
+    // Process each field
+    Object.keys(data).forEach((key) => {
+      const value = (data as any)[key];
+      
+      // Skip undefined and null values
+      if (value === undefined || value === null) {
+        return;
+      }
+      
+      // Convert empty strings to undefined for optional fields
+      if (typeof value === 'string' && value.trim() === '' && key !== 'emp_no' && !key.includes('firstname') && !key.includes('lastname')) {
+        return;
+      }
+      
+      // Keep the value
+      cleaned[key] = value;
+    });
+    
+    return cleaned;
   }
 
   deleteEmployee(id: number) {

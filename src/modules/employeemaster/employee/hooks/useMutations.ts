@@ -24,26 +24,12 @@ export function useEmployeeMutations() {
       if (!data) return;
       toast.success(t('toast.success.created'));
       
-      queryClient.setQueriesData(
-        { queryKey: ["employees"] },
-        (oldData: any) => {
-          if (!oldData || !oldData.pages) return oldData;
-          
-          const newPages = [...oldData.pages];
-          if (newPages[0] && newPages[0].data) {
-            newPages[0] = {
-              ...newPages[0],
-              data: [data.data || data, ...newPages[0].data],
-              total: (newPages[0].total || 0) + 1
-            };
-          }
-          
-          return {
-            ...oldData,
-            pages: newPages
-          };
-        }
-      );
+      queryClient.invalidateQueries({ queryKey: ["employees"] });
+      
+      // Also set the single employee query cache
+      if (data.data?.employee_id) {
+        queryClient.setQueryData(["employee", data.data.employee_id], data.data);
+      }
     },
     onError: (error: any) => {
       console.error("Error creating employee:", error);
@@ -56,6 +42,8 @@ export function useEmployeeMutations() {
           toast.error(t('employee.errors.duplicateEmail') || 'Email address already exists. Please use a different email.');
         } else if (conflictMessage?.toLowerCase().includes('card_number')) {
           toast.error(t('employee.errors.duplicateCardNumber') || 'Card number already exists. Please use a different card number.');
+        } else if (conflictMessage?.toLowerCase().includes('login')) {
+          toast.error(t('employee.errors.duplicateLogin') || 'Login ID already exists. Please use a different login ID.');
         } else {
           toast.error(conflictMessage || t('employee.errors.duplicateEntry') || 'Duplicate entry found. Please check your data and try again.');
         }
@@ -83,28 +71,12 @@ export function useEmployeeMutations() {
     onSuccess: ({ id, data }) => {
       toast.success(t('toast.success.updated'));
       
-      queryClient.setQueryData(["employee", id], data.data || data);
+      // Invalidate queries to refetch fresh data
+      queryClient.invalidateQueries({ queryKey: ["employees"] });
+      queryClient.invalidateQueries({ queryKey: ["employee", id] });
       
-      queryClient.setQueriesData(
-        { queryKey: ["employees"] },
-        (oldData: any) => {
-          if (!oldData || !oldData.pages) return oldData;
-          
-          const updatedPages = oldData.pages.map((page: any) => ({
-            ...page,
-            data: page.data?.map((employee: IEmployee) => 
-              employee.employee_id === id 
-                ? { ...employee, ...(data.data || data) }
-                : employee
-            ) || []
-          }));
-          
-          return {
-            ...oldData,
-            pages: updatedPages
-          };
-        }
-      );
+      // Also update the cache directly
+      queryClient.setQueryData(["employee", id], data.data || data);
     },
     onError: (error: any) => {
       console.error("Error updating employee:", error);

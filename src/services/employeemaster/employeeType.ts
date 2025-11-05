@@ -34,6 +34,10 @@ class EmployeeTypeApi {
   deleteEmployeeTypes(ids: number[]) {
     return apiClient.delete("/employeeType/delete", { data: { ids } });
   }
+
+  getEmployeeTypesWithoutPagination() {
+    return apiClient.get("/employeeType");
+  }
 }
 const employeeTypeApi = new EmployeeTypeApi();
 export default employeeTypeApi;

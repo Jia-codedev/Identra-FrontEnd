@@ -28,6 +28,10 @@ class GradesApi {
   deleteGrades(ids: number[]) {
     return apiClient.delete("/grade/delete", { data: { ids } });
   }
+
+  getGradesWithoutPagination() {
+    return apiClient.get("/grade");
+  }
 }
 const gradesApi = new GradesApi();
 export default gradesApi;
