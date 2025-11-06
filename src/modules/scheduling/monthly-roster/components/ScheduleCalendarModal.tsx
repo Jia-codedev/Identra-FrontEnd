@@ -436,7 +436,7 @@ export const ScheduleCalendarModal: React.FC<ScheduleCalendarModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-[95vw] min-w-[80vw] max-h-[90vh] overflow-hidden flex flex-col">
+      <DialogContent className="max-w-[95vw] min-w-[80vw] max-h-[90vh] overflow-hidden flex flex-col will-change-transform">
         <DialogHeader className="flex-shrink-0">
           <DialogTitle className="flex items-center justify-between">
             <div className="text-lg font-semibold">
@@ -546,10 +546,10 @@ export const ScheduleCalendarModal: React.FC<ScheduleCalendarModalProps> = ({
               </div>
 
               {/* Calendar days */}
-              <div className="grid grid-cols-7 border border-border rounded-lg overflow-hidden bg-card shadow-sm">
-                {calendarDays.map((dayData, index) => (
-                  <TooltipProvider key={index}>
-                    <Tooltip>
+              <TooltipProvider>
+                <div className="grid grid-cols-7 border border-border rounded-lg overflow-hidden bg-card shadow-sm">
+                  {calendarDays.map((dayData, index) => (
+                    <Tooltip key={index}>
                       <TooltipTrigger asChild>
                         <div
                           className={cn(
@@ -706,9 +706,9 @@ export const ScheduleCalendarModal: React.FC<ScheduleCalendarModalProps> = ({
                         </TooltipContent>
                       )}
                     </Tooltip>
-                  </TooltipProvider>
-                ))}
-              </div>
+                  ))}
+                </div>
+              </TooltipProvider>
             </div>
           </div>
         </div>

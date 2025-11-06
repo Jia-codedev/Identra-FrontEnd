@@ -74,12 +74,25 @@ export const MonthlyRosterHeader: React.FC<MonthlyRosterHeaderProps> = ({
   const [yearOpen, setYearOpen] = useState(false);
   const [dayOpen, setDayOpen] = useState(false);
 
+  // Clear dependent filters when organization changes
+  useEffect(() => {
+    if (!filters.organization_id) {
+      onFiltersChange({
+        employee_group_id: undefined,
+        manager_id: undefined,
+        employee_id: undefined,
+        schedule_id: undefined,
+      });
+    }
+  }, [filters.organization_id]);
+
   useEffect(() => {
     const loadOrgs = async () => {
       try {
         setOrgLoading(true);
         const res = await organizationsApi.getOrganizationsForDropdown({
-          name: orgSearch,
+          search: orgSearch,
+          limit: 40,
         });
         setOrgs(res?.data?.data || []);
       } finally {
@@ -106,30 +119,47 @@ export const MonthlyRosterHeader: React.FC<MonthlyRosterHeaderProps> = ({
 
   useEffect(() => {
     const loadManagers = async () => {
+      if (!filters.organization_id) {
+        setManagers([]);
+        return;
+      }
       try {
         setManagerLoading(true);
-        // Load 10 records by default, or search results
-        const res = await employeeApi.searchEmployees(managerSearch, 10);
+        const res = await employeeApi.getEmployees({
+          offset: 1,
+          limit: 10,
+          search: managerSearch,
+          organization_id: filters.organization_id,
+        });
         setManagers(res?.data?.data || []);
       } finally {
         setManagerLoading(false);
       }
     };
     loadManagers();
-  }, [managerSearch]);
+  }, [managerSearch, filters.organization_id]);
 
   useEffect(() => {
     const loadEmployees = async () => {
+      if (!filters.organization_id) {
+        setEmployees([]);
+        return;
+      }
       try {
         setEmployeeLoading(true);
-        const res = await employeeApi.searchEmployees(employeeSearch, 10);
+        const res = await employeeApi.getEmployees({
+          offset: 1,
+          limit: 10,
+          search: employeeSearch,
+          organization_id: filters.organization_id,
+        });
         setEmployees(res?.data?.data || []);
       } finally {
         setEmployeeLoading(false);
       }
     };
     loadEmployees();
-  }, [employeeSearch]);
+  }, [employeeSearch, filters.organization_id]);
 
   useEffect(() => {
     const loadSchedules = async () => {
@@ -352,7 +382,11 @@ export const MonthlyRosterHeader: React.FC<MonthlyRosterHeaderProps> = ({
           {/* Employee group filter */}
           <Popover open={egOpen} onOpenChange={setEgOpen}>
             <PopoverTrigger asChild>
-              <Button variant="outline" className="w-[220px] justify-between">
+              <Button
+                variant="outline"
+                className="w-[220px] justify-between"
+                disabled={!filters.organization_id}
+              >
                 <div className="flex items-center gap-2">
                   <Users className="h-4 w-4" />
                   {selectedEg
@@ -415,7 +449,11 @@ export const MonthlyRosterHeader: React.FC<MonthlyRosterHeaderProps> = ({
           {/* Manager filter */}
           <Popover open={managerOpen} onOpenChange={setManagerOpen}>
             <PopoverTrigger asChild>
-              <Button variant="outline" className="w-[200px] justify-between">
+              <Button
+                variant="outline"
+                className="w-[200px] justify-between"
+                disabled={!filters.organization_id}
+              >
                 <div className="flex items-center gap-2">
                   <User className="h-4 w-4" />
                   {selectedManager
@@ -476,7 +514,11 @@ export const MonthlyRosterHeader: React.FC<MonthlyRosterHeaderProps> = ({
           {/* Employee filter */}
           <Popover open={employeeOpen} onOpenChange={setEmployeeOpen}>
             <PopoverTrigger asChild>
-              <Button variant="outline" className="w-[200px] justify-between">
+              <Button
+                variant="outline"
+                className="w-[200px] justify-between"
+                disabled={!filters.organization_id}
+              >
                 <div className="flex items-center gap-2">
                   <User className="h-4 w-4" />
                   {selectedEmployee
@@ -537,7 +579,11 @@ export const MonthlyRosterHeader: React.FC<MonthlyRosterHeaderProps> = ({
           {/* Schedule filter */}
           <Popover open={scheduleOpen} onOpenChange={setScheduleOpen}>
             <PopoverTrigger asChild>
-              <Button variant="outline" className="w-[200px] justify-between">
+              <Button
+                variant="outline"
+                className="w-[200px] justify-between"
+                disabled={!filters.organization_id}
+              >
                 <div className="flex items-center gap-2">
                   <Clock className="h-4 w-4" />
                   {selectedSchedule
@@ -604,7 +650,11 @@ export const MonthlyRosterHeader: React.FC<MonthlyRosterHeaderProps> = ({
           {/* Version No filter */}
           <Popover open={versionOpen} onOpenChange={setVersionOpen}>
             <PopoverTrigger asChild>
-              <Button variant="outline" className="w-[180px] justify-between">
+              <Button
+                variant="outline"
+                className="w-[180px] justify-between"
+                disabled={!filters.organization_id}
+              >
                 <div className="flex items-center gap-2">
                   <Calendar className="h-4 w-4" />
                   {filters.version_no
@@ -653,6 +703,7 @@ export const MonthlyRosterHeader: React.FC<MonthlyRosterHeaderProps> = ({
                   onFiltersChange({ version_no: undefined });
                 }
               }}
+              disabled={!filters.organization_id}
             />
             <Label
               htmlFor="applyVersionFilter"
@@ -665,7 +716,11 @@ export const MonthlyRosterHeader: React.FC<MonthlyRosterHeaderProps> = ({
           {/* Day filter */}
           <Popover open={dayOpen} onOpenChange={setDayOpen}>
             <PopoverTrigger asChild>
-              <Button variant="outline" className="w-[140px] justify-between">
+              <Button
+                variant="outline"
+                className="w-[140px] justify-between"
+                disabled={!filters.organization_id}
+              >
                 <div className="flex items-center gap-2">
                   <Calendar className="h-4 w-4" />
                   {filters.day ? `Day ${filters.day}` : "Choose Day"}
@@ -704,7 +759,11 @@ export const MonthlyRosterHeader: React.FC<MonthlyRosterHeaderProps> = ({
           {/* Month */}
           <Popover open={monthOpen} onOpenChange={setMonthOpen}>
             <PopoverTrigger asChild>
-              <Button variant="outline" className="w-[160px] justify-between">
+              <Button
+                variant="outline"
+                className="w-[160px] justify-between"
+                disabled={!filters.organization_id}
+              >
                 <div className="flex items-center gap-2">
                   <Calendar className="h-4 w-4" />
                   {months.find((m) => m.value === filters.month)?.label ||
@@ -734,7 +793,11 @@ export const MonthlyRosterHeader: React.FC<MonthlyRosterHeaderProps> = ({
           {/* Year */}
           <Popover open={yearOpen} onOpenChange={setYearOpen}>
             <PopoverTrigger asChild>
-              <Button variant="outline" className="w-[140px] justify-between">
+              <Button
+                variant="outline"
+                className="w-[140px] justify-between"
+                disabled={!filters.organization_id}
+              >
                 <div className="flex items-center gap-2">
                   <Calendar className="h-4 w-4" />
                   {filters.year || new Date().getFullYear()}
