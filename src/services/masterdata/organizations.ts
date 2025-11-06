@@ -18,7 +18,7 @@ class OrganizationsApi {
     });
   }
   getOrganizationById(id: number) {
-    return apiClient.get(`/organization/${id}`);
+    return apiClient.get(`/organization/get/${id}`);
   }
   getOrganizationsWithoutPagination() {
     return apiClient.get("/organization");
@@ -35,17 +35,17 @@ class OrganizationsApi {
   deleteOrganizations(ids: number[]) {
     return apiClient.delete("/organization/delete", { data: { ids } });
   }
-  
+
   getOrganizationStructure() {
     return apiClient.get("/organization/structure");
   }
 
   getOrganizationsForDropdown(params?: {
-    name?: string;
+    search?: string;
     limit?: number;
     offset?: number;
   }) {
-    return apiClient.get("/organization", { params });
+    return apiClient.get("/organization/all", { params });
   }
 }
 const organizationsApi = new OrganizationsApi();

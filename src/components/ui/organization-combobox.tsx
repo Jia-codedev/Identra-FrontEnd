@@ -2,43 +2,41 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { Combobox, type ComboboxOption } from "@/components/ui/combobox";
-import employeeApi from "@/services/employeemaster/employee";
+import organizationsApi from "@/services/masterdata/organizations";
 import { useTranslations } from "@/hooks/use-translations";
+import { useLanguage } from "@/providers/language-provider";
 
-interface EmployeeComboboxProps {
+interface OrganizationComboboxProps {
   value?: number | null;
   onChange: (val: number | null) => void;
   placeholder?: string;
   className?: string;
   limit?: number;
   emptyMessage?: string;
-  organizationId?: number | null;
 }
 
-export const EmployeeCombobox: React.FC<EmployeeComboboxProps> = ({
+export const OrganizationCombobox: React.FC<OrganizationComboboxProps> = ({
   value,
   onChange,
   placeholder,
   className,
-  limit = 10,
+  limit = 20,
   emptyMessage,
-  organizationId,
 }) => {
   const { t } = useTranslations();
   const [options, setOptions] = useState<ComboboxOption[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const searchRef = useRef("");
-
+  const { isRTL } = useLanguage();
   const load = React.useCallback(
     async (q: string) => {
       setIsLoading(true);
       try {
         let resp: any;
-        resp = await employeeApi.getEmployees({
+        resp = await organizationsApi.getOrganizations({
           offset: 1,
           limit,
           ...(q ? { search: q } : {}),
-          ...(organizationId ? { organization_id: organizationId } : {}),
         });
 
         const status = resp?.status;
@@ -47,7 +45,7 @@ export const EmployeeCombobox: React.FC<EmployeeComboboxProps> = ({
 
         if (status !== 200 && status !== 201) {
           console.warn(
-            "EmployeeCombobox: unexpected response status",
+            "OrganizationCombobox: unexpected response status",
             status,
             raw
           );
@@ -56,23 +54,35 @@ export const EmployeeCombobox: React.FC<EmployeeComboboxProps> = ({
         }
 
         if (Array.isArray(data)) {
-          const opts = data.map((emp: any) => ({
-            label: `${emp.firstname_eng || ""} ${emp.lastname_eng || ""} (${
-              emp.emp_no || emp.employee_id || ""
-            })`,
-            value: String(emp.employee_id),
+          const opts = data.map((org: any) => ({
+            label: !isRTL
+              ? `${org.organization_eng || ""} ${
+                  org.organization_code ? `(${org.organization_code})` : ""
+                }`
+              : `${org.organization_arb || ""} ${
+                  org.organization_code ? `(${org.organization_code})` : ""
+                }`,
+            value: String(org.organization_id),
           }));
           setOptions(opts);
         } else {
           if (data && typeof data === "object") {
             const single = data;
-            if (single.employee_id) {
+            if (single.organization_id) {
               setOptions([
                 {
-                  label: `${single.firstname_eng || ""} ${
-                    single.lastname_eng || ""
-                  } (${single.emp_no || single.employee_id || ""})`,
-                  value: String(single.employee_id),
+                  label: !isRTL
+                    ? `${single.organization_eng || ""} ${
+                        single.organization_code
+                          ? `(${single.organization_code})`
+                          : ""
+                      }`
+                    : `${single.organization_arb || ""} ${
+                        single.organization_code
+                          ? `(${single.organization_code})`
+                          : ""
+                      }`,
+                  value: String(single.organization_id),
                 },
               ]);
               return;
@@ -81,12 +91,13 @@ export const EmployeeCombobox: React.FC<EmployeeComboboxProps> = ({
           setOptions([]);
         }
       } catch (e) {
+        console.error("OrganizationCombobox error", e);
         setOptions([]);
       } finally {
         setIsLoading(false);
       }
     },
-    [limit, organizationId]
+    [limit, isRTL]
   );
 
   const debouncedSearch = React.useCallback(
@@ -105,37 +116,47 @@ export const EmployeeCombobox: React.FC<EmployeeComboboxProps> = ({
     (async () => {
       if (value && typeof value === "number") {
         try {
-          const resp = await employeeApi.getEmployeeById(Number(value));
+          const resp = await organizationsApi.getOrganizationById(
+            Number(value)
+          );
           const status = resp?.status;
           const raw = resp?.data;
-          const emp = raw?.data ?? raw;
+          const org = raw?.data ?? raw;
           if (mounted) {
-            if (status === 200 && emp) {
+            if (status === 200 && org) {
               setOptions((prev) => {
                 const exists = prev.some(
-                  (opt) => opt.value === String(emp.employee_id)
+                  (opt) => opt.value === String(org.organization_id)
                 );
                 if (exists) return prev;
                 return [
                   {
-                    label: `${emp.firstname_eng || ""} ${
-                      emp.lastname_eng || ""
-                    } (${emp.emp_no || emp.employee_id || ""})`,
-                    value: String(emp.employee_id),
+                    label: !isRTL
+                      ? `${org.organization_eng || ""} ${
+                          org.organization_code
+                            ? `(${org.organization_code})`
+                            : ""
+                        }`
+                      : `${org.organization_arb || ""} ${
+                          org.organization_code
+                            ? `(${org.organization_code})`
+                            : ""
+                        }`,
+                    value: String(org.organization_id),
                   },
                   ...prev,
                 ];
               });
             } else {
               console.warn(
-                "EmployeeCombobox preload: unexpected response",
+                "OrganizationCombobox preload: unexpected response",
                 status,
                 raw
               );
             }
           }
         } catch (e) {
-          console.error("EmployeeCombobox preload error", e);
+          console.error("OrganizationCombobox preload error", e);
         }
       } else {
         if (mounted) {
@@ -167,4 +188,4 @@ export const EmployeeCombobox: React.FC<EmployeeComboboxProps> = ({
   );
 };
 
-export default EmployeeCombobox;
+export default OrganizationCombobox;
