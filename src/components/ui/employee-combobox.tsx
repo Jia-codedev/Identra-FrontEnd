@@ -108,14 +108,21 @@ export const EmployeeCombobox: React.FC<EmployeeComboboxProps> = ({
           const emp = raw?.data ?? raw;
           if (mounted) {
             if (status === 200 && emp) {
-              setOptions([
-                {
-                  label: `${emp.firstname_eng || ""} ${
-                    emp.lastname_eng || ""
-                  } (${emp.emp_no || emp.employee_id || ""})`,
-                  value: String(emp.employee_id),
-                },
-              ]);
+              setOptions((prev) => {
+                const exists = prev.some(
+                  (opt) => opt.value === String(emp.employee_id)
+                );
+                if (exists) return prev;
+                return [
+                  {
+                    label: `${emp.firstname_eng || ""} ${
+                      emp.lastname_eng || ""
+                    } (${emp.emp_no || emp.employee_id || ""})`,
+                    value: String(emp.employee_id),
+                  },
+                  ...prev,
+                ];
+              });
             } else {
               console.warn(
                 "EmployeeCombobox preload: unexpected response",
@@ -127,12 +134,16 @@ export const EmployeeCombobox: React.FC<EmployeeComboboxProps> = ({
         } catch (e) {
           console.error("EmployeeCombobox preload error", e);
         }
+      } else {
+        if (mounted) {
+          load("");
+        }
       }
     })();
     return () => {
       mounted = false;
     };
-  }, [value]);
+  }, [value, load]);
 
   useEffect(() => {
     load("");

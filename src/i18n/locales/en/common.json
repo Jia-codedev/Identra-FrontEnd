@@ -120,5 +120,14 @@
     "november": "November",
     "december": "December"
   },
+  "dayNames": {
+    "sun": "Sun",
+    "mon": "Mon",
+    "tue": "Tue",
+    "wed": "Wed",
+    "thu": "Thu",
+    "fri": "Fri",
+    "sat": "Sat"
+  },
   "level": "Level"
 }

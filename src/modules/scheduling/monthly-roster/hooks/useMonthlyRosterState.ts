@@ -1,17 +1,21 @@
-import { useState } from 'react';
-import { MonthlyRosterFilters } from '../types';
+import { useState } from "react";
+import { MonthlyRosterFilters } from "../types";
 
 export const useMonthlyRosterState = () => {
   const [selected, setSelected] = useState<number[]>([]);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const [filters, setFilters] = useState<MonthlyRosterFilters>({});
+
+  // Initialize with current month and year
+  const currentDate = new Date();
+  const [filters, setFilters] = useState<MonthlyRosterFilters>({
+    month: currentDate.getMonth() + 1, // JavaScript months are 0-indexed
+    year: currentDate.getFullYear(),
+  });
 
   const selectMonthlyRoster = (id: number) => {
-    setSelected(prev =>
-      prev.includes(id)
-        ? prev.filter(item => item !== id)
-        : [...prev, id]
+    setSelected((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
   };
 
@@ -22,7 +26,7 @@ export const useMonthlyRosterState = () => {
   const allChecked = selected.length > 0 && selected.length === pageSize;
 
   const onFiltersChange = (newFilters: Partial<MonthlyRosterFilters>) => {
-    setFilters(prev => ({ ...prev, ...newFilters }));
+    setFilters((prev) => ({ ...prev, ...newFilters }));
     setPage(1);
   };
 

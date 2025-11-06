@@ -127,6 +127,15 @@
       "november": "November",
       "december": "December"
     },
+    "dayNames": {
+      "sun": "Sun",
+      "mon": "Mon",
+      "tue": "Tue",
+      "wed": "Wed",
+      "thu": "Thu",
+      "fri": "Fri",
+      "sat": "Sat"
+    },
     "level": "Level"
   },
   "auth": {
@@ -605,12 +614,24 @@
       },
       "table": {
         "noData": "No monthly roster data found",
+        "selectOrganization": "Please select an organization to view roster data",
         "selectOrgMonthYear": "Make sure to select Organization, Month, and Year filters",
         "dataLength": "Data array length: {{count}}",
         "empNo": "Emp No",
+        "viewSchedule": "View Schedule",
         "finalize": "Finalize",
         "finalized": "Finalized",
         "finalizeFailed": "Failed to finalize"
+      },
+      "calendar": {
+        "title": "Monthly Schedule",
+        "legend": "Schedule Types",
+        "availableSchedules": "Available Schedules",
+        "noSchedules": "No schedules available",
+        "dragInstruction": "Drag schedules to calendar days",
+        "scheduleUpdated": "Schedule updated successfully",
+        "scheduleRemoved": "Schedule removed successfully",
+        "updateFailed": "Failed to update schedule"
       }
     },
     "weeklyRoster": {

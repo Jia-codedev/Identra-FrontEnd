@@ -16,15 +16,9 @@ import { useSubModulePrivileges } from "@/hooks/security/useSubModulePrivileges"
 
 export default function MonthlyRosterPage() {
   const { t } = useTranslations();
-  
-  const {
-    page,
-    setPage,
-    pageSize,
-    setPageSize,
-    filters,
-    onFiltersChange,
-  } = useMonthlyRosterState();
+
+  const { page, setPage, pageSize, setPageSize, filters, onFiltersChange } =
+    useMonthlyRosterState();
 
   const [data, setData] = useState<MonthlyRosterRow[]>([]);
   const [total, setTotal] = useState(0);
@@ -37,36 +31,42 @@ export default function MonthlyRosterPage() {
   const currentUserId = useUserId();
 
   const fetchData = async () => {
+    // Don't fetch if organization is not selected (mandatory filter)
+    if (!filters.organization_id) {
+      setData([]);
+      setTotal(0);
+      setIsLoading(false);
+      return;
+    }
+
     setIsLoading(true);
     try {
-      const baseParams: any = {
-        organization_id: filters.organization_id,
-        employee_group_id: filters.employee_group_id,
-        employee_id: filters.employee_id,
-        manager_id: filters.manager_id,
-        schedule_id: filters.schedule_id,
-        finalize_flag: filters.finalize_flag,
+      const params: any = {
         limit: pageSize,
-        offset: (page - 1) * pageSize,
-        orderBy: "created_date desc",
+        offset: page,
       };
 
-      let resp: any;
-      if (filters.month && filters.year) {
-        const params = {
-          ...baseParams,
-          month: filters.month,
-          year: filters.year,
-        };
-        resp = await employeeMonthlyRosterApi.filter({ ...params });
-      } else {
-        resp = await employeeMonthlyRosterApi.getAll(baseParams);
-      }
-      
+      // Add filters
+      if (filters.organization_id)
+        params.organization_id = filters.organization_id;
+      if (filters.employee_group_id)
+        params.employee_group_id = filters.employee_group_id;
+      if (filters.employee_id) params.employee_id = filters.employee_id;
+      if (filters.manager_id) params.manager_id = filters.manager_id;
+      if (filters.schedule_id) params.schedule_id = filters.schedule_id;
+      if (filters.version_no) params.version_no = filters.version_no;
+      if (filters.day) params.day = filters.day;
+      if (filters.finalize_flag !== undefined)
+        params.finalize_flag = filters.finalize_flag;
+      if (filters.month) params.month = filters.month;
+      if (filters.year) params.year = filters.year;
+
+      const resp = await employeeMonthlyRosterApi.getAll(params);
+
       const payload = resp?.data ?? resp;
       let items: any[] | undefined;
       let totalCount: number | undefined;
-      
+
       if (Array.isArray(payload)) {
         items = payload as any[];
       } else if (payload && Array.isArray(payload.data)) {
@@ -100,12 +100,11 @@ export default function MonthlyRosterPage() {
     fetchData();
   }, [filters, page, pageSize]);
 
-    const { canView, canCreate, canEdit, canDelete } = useSubModulePrivileges(
+  const { canView, canCreate, canEdit, canDelete } = useSubModulePrivileges(
     "roster-management",
     "monthly-roster"
   );
   console.log("Privileges:", { canView, canCreate, canEdit, canDelete });
-
 
   const handleFinalize = async (row: MonthlyRosterRow) => {
     try {
@@ -144,7 +143,7 @@ export default function MonthlyRosterPage() {
   return (
     <div className="p-6 space-y-4">
       <MonthlyRosterHeader
-        canCreate={canCreate} 
+        canCreate={canCreate}
         canDelete={canDelete}
         filters={filters}
         onFiltersChange={onFiltersChange}
@@ -153,15 +152,22 @@ export default function MonthlyRosterPage() {
         }}
         selectedIds={[]}
       />
-      
+
       <MonthlyRosterTable
-        canEdit={canEdit} 
+        canEdit={canEdit}
         canDelete={canDelete}
         data={data}
         isLoading={isLoading}
         onEdit={handleEdit}
         onFinalize={handleFinalize}
         onDelete={handleDelete}
+        onRefetch={fetchData}
+        noDataMessage={
+          !filters.organization_id
+            ? t("scheduling.monthlyRoster.table.selectOrganization") ||
+              "Please select an organization to view roster data"
+            : undefined
+        }
       />
 
       {/* Pagination */}

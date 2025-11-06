@@ -32,10 +32,11 @@ export const useScheduleMutations = () => {
       queryClient.invalidateQueries({ queryKey: ["parentSchedules"] });
       queryClient.invalidateQueries({ queryKey: ["organizations-search"] });
       queryClient.invalidateQueries({ queryKey: ["locations-search"] });
-      toast.success(t("toast.success.scheduleCreated"));
+      toast.success(t("toast.success.created"));
     },
     onError: (error: any) => {
-      const message = error?.response?.data?.message || t("toast.error.scheduleCreateFailed");
+      const message =
+        error?.response?.data?.message || t("toast.error.general");
       toast.error(message);
       console.error("Error creating schedule:", error);
     },
@@ -50,10 +51,11 @@ export const useScheduleMutations = () => {
       queryClient.invalidateQueries({ queryKey: ["parentSchedules"] });
       queryClient.invalidateQueries({ queryKey: ["organizations-search"] });
       queryClient.invalidateQueries({ queryKey: ["locations-search"] });
-      toast.success(t("toast.success.scheduleUpdated"));
+      toast.success(t("toast.success.updated"));
     },
     onError: (error: any) => {
-      const message = error?.response?.data?.message || t("toast.error.scheduleUpdateError");
+      const message =
+        error?.response?.data?.message || t("toast.error.general");
       toast.error(message);
       console.error("Error updating schedule:", error);
     },
@@ -65,10 +67,11 @@ export const useScheduleMutations = () => {
       queryClient.invalidateQueries({ queryKey: ["schedules"] });
       queryClient.invalidateQueries({ queryKey: ["parent-schedules-search"] });
       queryClient.invalidateQueries({ queryKey: ["parentSchedules"] });
-      toast.success(t("toast.success.scheduleDeleted"));
+      toast.success(t("toast.success.deleted"));
     },
     onError: (error: any) => {
-      const message = error?.response?.data?.message || t("toast.error.scheduleDeleteError");
+      const message =
+        error?.response?.data?.message || t("toast.error.general");
       toast.error(message);
       console.error("Error deleting schedule:", error);
     },
@@ -78,10 +81,18 @@ export const useScheduleMutations = () => {
     mutationFn: (ids: number[]) => schedulesApi.deleteMultipleSchedules(ids),
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ["schedules"] });
-      toast.success(t("toast.success.schedulesDeleted", { count: variables.length }));
+      // Use provided toast.json key; include count in message if translation supports it
+      try {
+        toast.success(
+          t("toast.success.deletedMultiple", { count: variables.length })
+        );
+      } catch {
+        toast.success(t("toast.success.deletedMultiple"));
+      }
     },
     onError: (error: any) => {
-      const message = error?.response?.data?.message || t("toast.error.schedulesDeleteError");
+      const message =
+        error?.response?.data?.message || t("toast.error.general");
       toast.error(message);
       console.error("Error deleting schedules:", error);
     },
@@ -96,11 +107,14 @@ export const useScheduleMutations = () => {
       });
     },
     updateSchedule: (params: UpdateMutationParams) => {
-      updateSchedule.mutate({ id: params.id, data: params.scheduleData }, {
-        onSuccess: () => {
-          params.onClose?.();
-        },
-      });
+      updateSchedule.mutate(
+        { id: params.id, data: params.scheduleData },
+        {
+          onSuccess: () => {
+            params.onClose?.();
+          },
+        }
+      );
     },
     deleteSchedule: (id: number) => {
       deleteSchedule.mutate(id);

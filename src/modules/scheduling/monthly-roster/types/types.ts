@@ -1,4 +1,4 @@
-export * from './types';
+export * from "./types";
 
 export interface MonthlyRosterFilters {
   organization_id?: number;
@@ -6,6 +6,8 @@ export interface MonthlyRosterFilters {
   employee_id?: number;
   manager_id?: number;
   schedule_id?: number;
+  version_no?: number;
+  day?: number;
   finalize_flag?: boolean;
   month?: number;
   year?: number;
