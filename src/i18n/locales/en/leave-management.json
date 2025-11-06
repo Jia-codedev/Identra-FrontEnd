@@ -4,6 +4,7 @@
   "leaves": {
     "title": "Leave Management",
     "noData": "No leaves found",
+    "noAttachment": "No attachments found",
     "actions": {
       "add": "Add Leave Request"
     },
@@ -15,7 +16,8 @@
       "remarks": "Remarks",
       "reference": "Reference",
       "start": "From Date",
-      "end": "To Date"
+      "end": "To Date",
+      "attachments": "Attachments"
     }
   },
   "permissionTypes": {

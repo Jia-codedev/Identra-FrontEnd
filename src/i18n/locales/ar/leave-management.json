@@ -4,6 +4,7 @@
   "leaves": {
     "title": "إدارة الإجازات",
     "noData": "لم يتم العثور على إجازات",
+    "noAttachment": "لا توجد مرفقات",
     "actions": {
       "add": "إضافة طلب إجازة"
     },
@@ -15,7 +16,8 @@
       "remarks": "الملاحظات",
       "reference": "المرجع",
       "start": "من تاريخ",
-      "end": "إلى تاريخ"
+      "end": "إلى تاريخ",
+      "attachments": "المرفقات"
     }
   },
   "permissionTypes": {

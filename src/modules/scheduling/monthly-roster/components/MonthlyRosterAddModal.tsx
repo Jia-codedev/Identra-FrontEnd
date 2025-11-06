@@ -9,8 +9,10 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/Input";
-import EmployeeCombobox from "@/components/ui/employee-combobox";
-import OrganizationCombobox from "@/components/ui/organization-combobox";
+// replaced custom comboboxes with SearchCombobox instances
+import { SearchCombobox } from "@/components/ui/search-combobox";
+import organizationsApi from "@/services/masterdata/organizations";
+import employeeApi from "@/services/employeemaster/employee";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/Checkbox";
 import { Calendar } from "@/components/ui/calendar";
@@ -55,6 +57,12 @@ export const MonthlyRosterAddModal: React.FC<MonthlyRosterAddModalProps> = ({
   const [selectedOrganizationId, setSelectedOrganizationId] = useState<
     number | null
   >(null);
+  const [orgOptions, setOrgOptions] = useState<
+    { label: string; value: number }[]
+  >([]);
+  const [empOptions, setEmpOptions] = useState<
+    { label: string; value: number }[]
+  >([]);
 
   useEffect(() => {
     if (initialData) {
@@ -134,12 +142,44 @@ export const MonthlyRosterAddModal: React.FC<MonthlyRosterAddModalProps> = ({
             <Label htmlFor="organization_id">
               {t("common.organization") || "Organization"}
             </Label>
-            <OrganizationCombobox
-              value={selectedOrganizationId}
-              onChange={(v) => {
-                setSelectedOrganizationId(v);
-                // Clear employee selection when organization changes
-                setFormData((prev) => ({ ...prev, employee_id: undefined }));
+            <SearchCombobox
+              options={orgOptions}
+              value={selectedOrganizationId ?? null}
+              onValueChange={(val) => {
+                const num = val === null ? null : Number(val);
+                setSelectedOrganizationId(num);
+                setFormData((prev) => ({
+                  ...prev,
+                  employee_id: undefined,
+                  manager_id: undefined,
+                }));
+              }}
+              onSearch={async (q: string) => {
+                try {
+                  const res =
+                    await organizationsApi.getOrganizationDropdownList();
+                  let data = res?.data?.data || res?.data || [];
+                  if (Array.isArray(data)) {
+                    const filtered = q
+                      ? data.filter((org: any) =>
+                          (org.organization_eng || "")
+                            .toString()
+                            .toLowerCase()
+                            .includes(q.toLowerCase())
+                        )
+                      : data;
+                    setOrgOptions(
+                      filtered.map((o: any) => ({
+                        label: o.organization_eng || o.organization_arb || "",
+                        value: o.organization_id,
+                      }))
+                    );
+                  } else {
+                    setOrgOptions([]);
+                  }
+                } catch (e) {
+                  setOrgOptions([]);
+                }
               }}
               placeholder={
                 t("common.selectOrganization") || "Select organization"
@@ -149,16 +189,44 @@ export const MonthlyRosterAddModal: React.FC<MonthlyRosterAddModalProps> = ({
 
           <div className="space-y-2">
             <Label htmlFor="employee_id">{t("common.name")}</Label>
-            <EmployeeCombobox
+            <SearchCombobox
+              options={empOptions}
               value={formData.employee_id ?? null}
-              onChange={(v) =>
+              onValueChange={(val) =>
                 setFormData((prev) => ({
                   ...prev,
-                  employee_id: v ?? undefined,
+                  employee_id: val === null ? undefined : Number(val),
                 }))
               }
-              placeholder="Select employee"
-              organizationId={selectedOrganizationId}
+              onSearch={async (q: string) => {
+                try {
+                  const resp = await employeeApi.getEmployees({
+                    offset: 1,
+                    limit: 50,
+                    ...(q ? { search: q } : {}),
+                    ...(selectedOrganizationId
+                      ? { organization_id: selectedOrganizationId }
+                      : {}),
+                  });
+                  const raw = resp?.data;
+                  const data = raw?.data ?? raw;
+                  if (Array.isArray(data)) {
+                    setEmpOptions(
+                      data.map((emp: any) => ({
+                        label: `${emp.firstname_eng || ""} ${
+                          emp.lastname_eng || ""
+                        } (${emp.emp_no || emp.employee_id || ""})`,
+                        value: emp.employee_id,
+                      }))
+                    );
+                  } else {
+                    setEmpOptions([]);
+                  }
+                } catch (e) {
+                  setEmpOptions([]);
+                }
+              }}
+              placeholder={t("common.selectEmployee") || "Select employee"}
             />
           </div>
 
@@ -239,11 +307,43 @@ export const MonthlyRosterAddModal: React.FC<MonthlyRosterAddModalProps> = ({
               {t("scheduling.monthlyRoster.modal.manager") ||
                 "Manager (Optional)"}
             </Label>
-            <EmployeeCombobox
+            <SearchCombobox
+              options={empOptions}
               value={formData.manager_id ?? null}
-              onChange={(v) =>
-                setFormData((prev) => ({ ...prev, manager_id: v ?? undefined }))
+              onValueChange={(val) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  manager_id: val === null ? undefined : Number(val),
+                }))
               }
+              onSearch={async (q: string) => {
+                try {
+                  const resp = await employeeApi.getEmployees({
+                    offset: 1,
+                    limit: 50,
+                    ...(q ? { search: q } : {}),
+                    ...(selectedOrganizationId
+                      ? { organization_id: selectedOrganizationId }
+                      : {}),
+                  });
+                  const raw = resp?.data;
+                  const data = raw?.data ?? raw;
+                  if (Array.isArray(data)) {
+                    setEmpOptions(
+                      data.map((emp: any) => ({
+                        label: `${emp.firstname_eng || ""} ${
+                          emp.lastname_eng || ""
+                        } (${emp.emp_no || emp.employee_id || ""})`,
+                        value: emp.employee_id,
+                      }))
+                    );
+                  } else {
+                    setEmpOptions([]);
+                  }
+                } catch (e) {
+                  setEmpOptions([]);
+                }
+              }}
               placeholder="Select manager"
             />
           </div>

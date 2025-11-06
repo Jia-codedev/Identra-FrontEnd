@@ -82,7 +82,11 @@ class EmployeeLeavesApi {
   }
 
   add(data: any) {
-    return apiClient.post("/employeeLeave/add", data);
+    return apiClient.post("/employeeLeave/add", data, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
   }
 
   edit(id: number, data: any) {

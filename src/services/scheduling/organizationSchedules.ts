@@ -58,7 +58,10 @@ class OrganizationSchedulesApi {
     return apiClient.post("/organizationSchedule/add", data);
   }
 
-  updateOrganizationSchedule(id: number, data: Partial<CreateOrganizationScheduleRequest>) {
+  updateOrganizationSchedule(
+    id: number,
+    data: Partial<CreateOrganizationScheduleRequest>
+  ) {
     return apiClient.put(`/organizationSchedule/edit/${id}`, data);
   }
 
@@ -66,7 +69,15 @@ class OrganizationSchedulesApi {
     return apiClient.delete(`/organizationSchedule/delete/${id}`);
   }
 
-  filterOrganizationSchedules(filters: OrganizationScheduleFilters) {
+  deleteMany(ids: number[]) {
+    return apiClient.delete("/organizationSchedule/delete-many", {
+      data: { ids },
+    });
+  }
+
+  filterOrganizationSchedules(
+    filters: OrganizationScheduleFilters & { offset?: number; limit?: number }
+  ) {
     return apiClient.get("/organizationSchedule/filter", { params: filters });
   }
 }

@@ -36,6 +36,8 @@
   "pickDate": "اختر تاريخ",
   "selectDate": "اختر تاريخ",
   "selectAll": "اختيار الكل",
+  "startDate": "تاريخ البدء",
+  "endDate": "تاريخ الانتهاء",
   "selectedCount": "{count} مختار",
   "deleteSelected": "حذف المحدد",
   "all": "الكل",
@@ -106,6 +108,9 @@
   "overtime": "العمل الإضافي",
   "device": "الجهاز",
   "org": "المؤسسة",
+  "selectOrganization": "اختر المؤسسة",
+  "apply": "تطبيق",
+  "download": "تنزيل",
   "months": {
     "january": "يناير",
     "february": "فبراير",

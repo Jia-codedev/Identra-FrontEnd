@@ -1,35 +1,44 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import groupSchedulesApi, { ICreateGroupSchedule, IUpdateGroupSchedule } from '@/services/scheduling/groupSchedules';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import organizationSchedulesApi, {
+  CreateOrganizationScheduleRequest,
+} from "@/services/scheduling/organizationSchedules";
 
 export const useMutations = () => {
   const queryClient = useQueryClient();
 
   const createMutation = useMutation({
-    mutationFn: (data: ICreateGroupSchedule) => groupSchedulesApi.create(data),
+    mutationFn: (data: CreateOrganizationScheduleRequest) =>
+      organizationSchedulesApi.createOrganizationSchedule(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['weekly-roster'] });
+      queryClient.invalidateQueries({ queryKey: ["weekly-roster"] });
     },
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, data }: { id: number; data: IUpdateGroupSchedule }) => 
-      groupSchedulesApi.update(id, data),
+    mutationFn: ({
+      id,
+      data,
+    }: {
+      id: number;
+      data: Partial<CreateOrganizationScheduleRequest>;
+    }) => organizationSchedulesApi.updateOrganizationSchedule(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['weekly-roster'] });
+      queryClient.invalidateQueries({ queryKey: ["weekly-roster"] });
     },
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id: number) => groupSchedulesApi.delete(id),
+    mutationFn: (id: number) =>
+      organizationSchedulesApi.deleteOrganizationSchedule(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['weekly-roster'] });
+      queryClient.invalidateQueries({ queryKey: ["weekly-roster"] });
     },
   });
 
   const deleteManyMutation = useMutation({
-    mutationFn: (ids: number[]) => groupSchedulesApi.deleteMany(ids),
+    mutationFn: (ids: number[]) => organizationSchedulesApi.deleteMany(ids),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['weekly-roster'] });
+      queryClient.invalidateQueries({ queryKey: ["weekly-roster"] });
     },
   });
 

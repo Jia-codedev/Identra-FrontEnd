@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -36,21 +36,13 @@ import {
 } from "@/components/ui/popover";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { OptimizedParentScheduleSelect } from "@/modules/scheduling/scheduletypes/components/OptimizedParentScheduleSelect";
-import {
-  IGroupSchedule,
-  ICreateGroupSchedule,
-  IUpdateGroupSchedule,
-} from "@/services/scheduling/groupSchedules";
-import employeeGroupApi from "@/services/employeemaster/employeeGroup";
-import {
-  EmployeeGroup,
-  CreateWeeklyRosterRequest,
-  WeeklyRosterData,
-} from "../types";
+import { SearchCombobox } from "@/components/ui/search-combobox";
+import schedulesApi from "@/services/scheduling/schedules";
+import { OrganizationSchedule, OrganizationScheduleCreate } from "../types";
+import organizationsApi from "@/services/masterdata/organizations";
 
 interface FormData {
-  employee_group_id: number;
+  organization_id: number;
   from_date: Date;
   to_date: Date;
   monday_schedule_id: number | null;
@@ -65,10 +57,8 @@ interface FormData {
 interface WeeklyRosterModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (
-    data: ICreateGroupSchedule | IUpdateGroupSchedule
-  ) => Promise<void>;
-  groupSchedule?: IGroupSchedule;
+  onSubmit: (data: OrganizationScheduleCreate) => Promise<void>;
+  groupSchedule?: OrganizationSchedule;
   mode: "create" | "edit";
   isLoading?: boolean;
 }
@@ -83,6 +73,44 @@ const DAYS_OF_WEEK = [
   { key: "sunday", label: "Sunday", field: "sunday_schedule_id" },
 ] as const;
 
+const DAY_TRANSLATION_KEYS: Record<
+  string,
+  { fieldKey: string; placeholderKey: string }
+> = {
+  monday: {
+    fieldKey: "scheduling.weeklyRoster.fields.monday",
+    placeholderKey: "scheduling.weeklyRoster.placeholders.selectMondaySchedule",
+  },
+  tuesday: {
+    fieldKey: "scheduling.weeklyRoster.fields.tuesday",
+    placeholderKey:
+      "scheduling.weeklyRoster.placeholders.selectTuesdaySchedule",
+  },
+  wednesday: {
+    fieldKey: "scheduling.weeklyRoster.fields.wednesday",
+    placeholderKey:
+      "scheduling.weeklyRoster.placeholders.selectWednesdaySchedule",
+  },
+  thursday: {
+    fieldKey: "scheduling.weeklyRoster.fields.thursday",
+    placeholderKey:
+      "scheduling.weeklyRoster.placeholders.selectThursdaySchedule",
+  },
+  friday: {
+    fieldKey: "scheduling.weeklyRoster.fields.friday",
+    placeholderKey: "scheduling.weeklyRoster.placeholders.selectFridaySchedule",
+  },
+  saturday: {
+    fieldKey: "scheduling.weeklyRoster.fields.saturday",
+    placeholderKey:
+      "scheduling.weeklyRoster.placeholders.selectSaturdaySchedule",
+  },
+  sunday: {
+    fieldKey: "scheduling.weeklyRoster.fields.sunday",
+    placeholderKey: "scheduling.weeklyRoster.placeholders.selectSundaySchedule",
+  },
+};
+
 export function WeeklyRosterModal({
   isOpen,
   onClose,
@@ -95,19 +123,17 @@ export function WeeklyRosterModal({
   const { currentLocale } = useLanguage();
   const isRTL = currentLocale === "ar";
 
-  const [employeeGroups, setEmployeeGroups] = useState<EmployeeGroup[]>([]);
-  const [employeeGroupSearch, setEmployeeGroupSearch] = useState("");
-  const [isEmployeeGroupOpen, setIsEmployeeGroupOpen] = useState(false);
-  const [isLoadingGroups, setIsLoadingGroups] = useState(false);
+  const [organizations, setOrganizations] = useState<any[]>([]);
+  const [organizationSearch, setOrganizationSearch] = useState("");
 
   const [startDateOpen, setStartDateOpen] = useState(false);
   const [endDateOpen, setEndDateOpen] = useState(false);
 
   const formSchema = z
     .object({
-      employee_group_id: z
+      organization_id: z
         .number()
-        .min(1, t("scheduling.weeklyRoster.validation.employeeGroupRequired")),
+        .min(1, t("scheduling.weeklyRoster.validation.organizationRequired")),
       from_date: z.date(),
       to_date: z.date(),
       monday_schedule_id: z.number().nullable(),
@@ -126,7 +152,7 @@ export function WeeklyRosterModal({
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      employee_group_id: 0,
+      organization_id: 0,
       from_date: new Date(),
       to_date: new Date(),
       monday_schedule_id: null,
@@ -139,42 +165,49 @@ export function WeeklyRosterModal({
     },
   });
 
-  const loadEmployeeGroups = async (searchTerm: string = "") => {
+  const loadOrganizations = async (searchTerm: string = "") => {
     try {
-      setIsLoadingGroups(true);
-      const response = await employeeGroupApi.getEmployeeGroupsForDropdown(
-        searchTerm
-      );
-      setEmployeeGroups(response.data.data);
+      const response = await organizationsApi.getOrganizationDropdownList();
+      const orgData = response?.data?.data || response?.data || [];
+
+      if (Array.isArray(orgData)) {
+        const filteredOrgs = searchTerm
+          ? orgData.filter((org: any) =>
+              (isRTL ? org.organization_arb : org.organization_eng)
+                ?.toLowerCase()
+                .includes(searchTerm.toLowerCase())
+            )
+          : orgData;
+        setOrganizations(filteredOrgs);
+      }
     } catch (error) {
-      console.error("Failed to load employee groups:", error);
-    } finally {
-      setIsLoadingGroups(false);
+      console.error("Failed to load organizations:", error);
+      setOrganizations([]);
     }
   };
 
   useEffect(() => {
     if (isOpen) {
-      loadEmployeeGroups();
+      loadOrganizations();
     }
   }, [isOpen]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      if (isEmployeeGroupOpen) {
-        loadEmployeeGroups(employeeGroupSearch);
-      }
+      loadOrganizations(organizationSearch);
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [employeeGroupSearch, isEmployeeGroupOpen]);
+  }, [organizationSearch]);
 
   useEffect(() => {
     if (groupSchedule && mode === "edit") {
       form.reset({
-        employee_group_id: groupSchedule.employee_group_id,
+        organization_id: groupSchedule.organization_id,
         from_date: new Date(groupSchedule.from_date),
-        to_date: new Date(groupSchedule.to_date),
+        to_date: groupSchedule.to_date
+          ? new Date(groupSchedule.to_date)
+          : new Date(),
         monday_schedule_id: groupSchedule.monday_schedule_id || null,
         tuesday_schedule_id: groupSchedule.tuesday_schedule_id || null,
         wednesday_schedule_id: groupSchedule.wednesday_schedule_id || null,
@@ -185,7 +218,7 @@ export function WeeklyRosterModal({
       });
     } else if (mode === "create") {
       form.reset({
-        employee_group_id: 0,
+        organization_id: 0,
         from_date: new Date(),
         to_date: new Date(),
         monday_schedule_id: null,
@@ -201,17 +234,15 @@ export function WeeklyRosterModal({
 
   const handleClose = () => {
     form.reset();
-    setEmployeeGroupSearch("");
+    setOrganizationSearch("");
     onClose();
   };
 
   const handleFormSubmit = async (data: FormData) => {
     try {
-      if (!data.employee_group_id || data.employee_group_id <= 0) {
-        form.setError("employee_group_id", {
-          message: t(
-            "scheduling.weeklyRoster.validation.employeeGroupRequired"
-          ),
+      if (!data.organization_id || data.organization_id <= 0) {
+        form.setError("organization_id", {
+          message: t("scheduling.weeklyRoster.validation.organizationRequired"),
         });
         return;
       }
@@ -221,19 +252,99 @@ export function WeeklyRosterModal({
         from_date: data.from_date.toISOString(),
         to_date: data.to_date.toISOString(),
         created_id: 1,
-        last_updated_id: 1
+        last_updated_id: 1,
       };
 
-      await onSubmit(submitData as ICreateGroupSchedule | IUpdateGroupSchedule);
+      await onSubmit(submitData as any);
       handleClose();
     } catch (error) {
       console.error("Failed to submit form:", error);
     }
   };
 
-  const selectedEmployeeGroup = employeeGroups?.find(
-    (group) => group.employee_group_id === form.watch("employee_group_id")
-  );
+  const organizationOptions = useMemo(() => {
+    return organizations.map((org: any) => ({
+      label: (isRTL ? org.organization_arb : org.organization_eng) ?? "",
+      value: org.organization_id,
+    }));
+  }, [organizations, isRTL]);
+
+  // Day schedule searchable combobox component
+  const DayScheduleSearchCombobox: React.FC<{
+    value?: number | null;
+    onValueChange: (val: number | null) => void;
+    placeholder?: string;
+    organizationId?: number;
+    disabled?: boolean;
+  }> = ({ value, onValueChange, placeholder, organizationId, disabled }) => {
+    const [options, setOptions] = useState<{ label: string; value: number }[]>(
+      []
+    );
+    const [search, setSearch] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+      let mounted = true;
+      const timer = setTimeout(async () => {
+        try {
+          setIsLoading(true);
+          const res = await schedulesApi.getSchedulesForDropdown({
+            status_flag: true,
+            organization_id: organizationId,
+          });
+          let data = res?.data?.data || res?.data || [];
+
+          if (Array.isArray(data)) {
+            // client-side filter by search
+            if (search) {
+              data = data.filter((sch: any) =>
+                (sch.schedule_code || "")
+                  .toString()
+                  .toLowerCase()
+                  .includes(search.toLowerCase())
+              );
+            }
+
+            const mapped = data.slice(0, 100).map((sch: any) => ({
+              label: `${sch.schedule_code}${
+                sch.in_time && sch.out_time
+                  ? ` — ${sch.in_time}–${sch.out_time}`
+                  : ""
+              }`,
+              value: sch.schedule_id,
+            }));
+
+            if (mounted) setOptions(mapped);
+          }
+        } catch (err) {
+          if (mounted) setOptions([]);
+        } finally {
+          if (mounted) setIsLoading(false);
+        }
+      }, 300);
+
+      return () => {
+        mounted = false;
+        clearTimeout(timer);
+      };
+    }, [search, organizationId]);
+
+    return (
+      <SearchCombobox
+        className="relative"
+        options={options}
+        value={value ?? null}
+        onValueChange={(val) =>
+          onValueChange(val === null ? null : Number(val))
+        }
+        placeholder={placeholder}
+        disabled={disabled}
+        onSearch={(q) => setSearch(q)}
+        isLoading={isLoading}
+        emptyMessage={"No schedules found"}
+      />
+    );
+  };
 
   const getModalTitle = () => {
     return mode === "create"
@@ -243,7 +354,7 @@ export function WeeklyRosterModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-[900px] min-w-[60vw] w-full max-h-[90vh] ">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-lg sm:text-xl">
             <CalendarDays className="h-5 w-5" />
@@ -259,97 +370,28 @@ export function WeeklyRosterModal({
             <div className="grid gap-6">
               <FormField
                 control={form.control}
-                name="employee_group_id"
+                name="organization_id"
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
-                    <FormLabel className="text-sm sm:text-base">
-                      {t("scheduling.weeklyRoster.fields.employeeGroup")} *
+                    <FormLabel className="text-sm font-medium">
+                      {t("scheduling.weeklyRoster.fields.organization")} *
                     </FormLabel>
-                    <Popover
-                      open={isEmployeeGroupOpen}
-                      onOpenChange={setIsEmployeeGroupOpen}
-                    >
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            variant="outline"
-                            role="combobox"
-                            aria-expanded={isEmployeeGroupOpen}
-                            className={cn(
-                              "w-full justify-between text-sm sm:text-base h-10",
-                              !field.value && "text-muted-foreground"
-                            )}
-                          >
-                            {selectedEmployeeGroup ? (
-                              <div className="flex flex-col items-start">
-                                <span className="font-medium">
-                                  {isRTL
-                                    ? selectedEmployeeGroup.group_name_arb
-                                    : selectedEmployeeGroup.group_name_eng}
-                                </span>
-                                {selectedEmployeeGroup.group_code && (
-                                  <span className="text-xs text-muted-foreground">
-                                    {selectedEmployeeGroup.group_code}
-                                  </span>
-                                )}
-                              </div>
-                            ) : (
-                              t("scheduling.weeklyRoster.selectEmployeeGroup")
-                            )}
-                            <Users className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-full p-0" align="start">
-                        <div className="p-2">
-                          <Input
-                            placeholder={t("common.search")}
-                            value={employeeGroupSearch}
-                            onChange={(e) =>
-                              setEmployeeGroupSearch(e.target.value)
-                            }
-                            className="h-8"
-                          />
-                        </div>
-                        <div className="max-h-[200px] overflow-auto">
-                          {isLoadingGroups ? (
-                            <div className="p-4 text-center text-sm text-muted-foreground">
-                              {t("common.loading")}
-                            </div>
-                          ) : !employeeGroups || employeeGroups.length === 0 ? (
-                            <div className="p-4 text-center text-sm text-muted-foreground">
-                              {t("common.noResults")}
-                            </div>
-                          ) : (
-                            employeeGroups.map((group) => (
-                              <Button
-                                key={group.employee_group_id}
-                                variant="ghost"
-                                className="w-full justify-start h-auto p-2"
-                                onClick={() => {
-                                  field.onChange(group.employee_group_id);
-                                  setIsEmployeeGroupOpen(false);
-                                  setEmployeeGroupSearch("");
-                                }}
-                              >
-                                <div className="flex flex-col items-start w-full">
-                                  <span className="font-medium">
-                                    {isRTL
-                                      ? group.group_name_arb
-                                      : group.group_name_eng}
-                                  </span>
-                                  {group.group_code && (
-                                    <span className="text-xs text-muted-foreground">
-                                      {group.group_code}
-                                    </span>
-                                  )}
-                                </div>
-                              </Button>
-                            ))
-                          )}
-                        </div>
-                      </PopoverContent>
-                    </Popover>
+                    <FormControl>
+                      <SearchCombobox
+                        onSearch={(searchTerm: string) => {
+                          setOrganizationSearch(searchTerm);
+                        }}
+                        onValueChange={(val: string | number | null) =>
+                          field.onChange(val)
+                        }
+                        options={organizationOptions}
+                        value={field.value ?? ""}
+                        placeholder={t(
+                          "scheduling.weeklyRoster.selectOrganization"
+                        )}
+                        disabled={isLoading}
+                      />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -363,7 +405,7 @@ export function WeeklyRosterModal({
                   name="from_date"
                   render={({ field }) => (
                     <FormItem className="flex flex-col">
-                      <FormLabel className="text-sm sm:text-base">
+                      <FormLabel className="text-sm font-medium">
                         {t("common.startDate")} *
                       </FormLabel>
                       <Popover
@@ -412,7 +454,7 @@ export function WeeklyRosterModal({
                   name="to_date"
                   render={({ field }) => (
                     <FormItem className="flex flex-col">
-                      <FormLabel className="text-sm sm:text-base">
+                      <FormLabel className="text-sm font-medium">
                         {t("common.endDate")} *
                       </FormLabel>
                       <Popover open={endDateOpen} onOpenChange={setEndDateOpen}>
@@ -470,7 +512,7 @@ export function WeeklyRosterModal({
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 items-start">
                     {DAYS_OF_WEEK.map((day) => (
                       <FormField
                         key={day.key}
@@ -478,23 +520,34 @@ export function WeeklyRosterModal({
                         name={day.field as keyof FormData}
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-sm font-medium">
-                              {t(`scheduling.weeklyRoster.fields.${day.key}`)}
-                            </FormLabel>
-                            <FormControl>
-                              <div className="w-full max-w-full overflow-hidden">
-                                <OptimizedParentScheduleSelect
-                                  value={Number(field.value) || undefined}
-                                  onValueChange={(value: number | undefined) =>
-                                    field.onChange(value || null)
-                                  }
-                                  placeholder={t(
-                                    `scheduling.weeklyRoster.placeholders.select${day.label}Schedule`
-                                  )}
-                                />
+                            <div className="p-3 border rounded-lg bg-muted/5 min-h-[88px]">
+                              <div className="flex items-center justify-between mb-2">
+                                <FormLabel className="text-sm font-medium m-0">
+                                  {t(DAY_TRANSLATION_KEYS[day.key].fieldKey)}
+                                </FormLabel>
                               </div>
-                            </FormControl>
-                            <FormMessage className="text-xs" />
+                              <FormControl>
+                                <div className="w-full relative">
+                                  <DayScheduleSearchCombobox
+                                    value={
+                                      typeof field.value === "number"
+                                        ? field.value
+                                        : null
+                                    }
+                                    onValueChange={(v) => field.onChange(v)}
+                                    placeholder={t(
+                                      DAY_TRANSLATION_KEYS[day.key]
+                                        .placeholderKey
+                                    )}
+                                    organizationId={
+                                      form.watch("organization_id") || undefined
+                                    }
+                                    disabled={isLoading}
+                                  />
+                                </div>
+                              </FormControl>
+                              <FormMessage className="text-xs mt-2" />
+                            </div>
                           </FormItem>
                         )}
                       />
@@ -504,8 +557,9 @@ export function WeeklyRosterModal({
               </Card>
             </div>
 
-            <DialogFooter className="gap-2 sm:gap-0">
+            <div className="space-x-2 flex flex-col">
               <Button
+                className="w-full"
                 type="button"
                 variant="outline"
                 onClick={handleClose}
@@ -513,14 +567,18 @@ export function WeeklyRosterModal({
               >
                 {t("common.cancel")}
               </Button>
-              <Button type="submit" disabled={isLoading}>
+              <Button
+                className="w-full mt-2"
+                type="submit"
+                disabled={isLoading}
+              >
                 {isLoading
                   ? t("common.saving")
                   : mode === "create"
                   ? t("common.create")
                   : t("common.update")}
               </Button>
-            </DialogFooter>
+            </div>
           </form>
         </Form>
       </DialogContent>

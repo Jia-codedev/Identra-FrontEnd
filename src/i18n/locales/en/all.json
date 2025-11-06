@@ -43,6 +43,8 @@
     "pickDate": "Pick Date",
     "selectDate": "Select Date",
     "selectAll": "Select All",
+    "startDate": "Start Date",
+    "endDate": "End Date",
     "selectedCount": "{count} selected",
     "deleteSelected": "Delete Selected",
     "all": "All",
@@ -113,6 +115,9 @@
     "overtime": "Overtime",
     "device": "Device",
     "org": "Org",
+    "selectOrganization": "Select Organization",
+    "apply": "Apply",
+    "download": "Download",
     "months": {
       "january": "January",
       "february": "February",
@@ -319,6 +324,7 @@
       "editOrganization": "Edit Organization",
       "organizationName": "Organization Name",
       "organizationNameEnglish": "Organization Name (English)",
+      "organizationNameArabic": "Organization Name (Arabic)",
       "organizationCode": "Organization Code",
       "enterOrganizationName": "Enter organization name",
       "enterOrganizationNameArabic": "Enter organization name in Arabic",
@@ -330,10 +336,16 @@
       },
       "organizationType": "Organization Type",
       "selectOrganizationType": "Select organization type",
+      "parentOrganizationType": "Parent Organization Type",
+      "selectParentType": "Select parent organization type",
       "parentOrganization": "Parent Organization",
+      "selectParentOrganization": "Select parent organization",
+      "selectParentTypeFirst": "Please select parent type first",
+      "noChildTypesAvailable": "No child organization types available",
       "root": "Root",
       "location": "Location",
-      "selectLocation": "Select location"
+      "selectLocation": "Select location",
+      "leaveEmptyForRoot": "Leave empty to create a root organization"
     },
     "organizationTypes": {
       "title": "Organization Type Management",
@@ -639,11 +651,13 @@
       "description": "Manage weekly schedules for employee groups",
       "addRoster": "Add Weekly Roster",
       "editRoster": "Edit Weekly Roster",
+      "selectOrganization": "Select Organization",
       "searchPlaceholder": "Search weekly rosters...",
       "selectEmployeeGroup": "Select Employee Group",
       "noData": "No weekly roster data found",
       "fields": {
         "employeeGroup": "Employee Group",
+        "organization": "Organization",
         "dateRange": "Date Range",
         "monday": "Mon",
         "tuesday": "Tue",
@@ -663,6 +677,7 @@
       },
       "validation": {
         "employeeGroupRequired": "Employee group is required",
+        "organizationRequired": "Organization is required",
         "endDateAfterStartDate": "End date must be after start date"
       },
       "placeholders": {
@@ -1148,6 +1163,7 @@
     "leaves": {
       "title": "Leave Management",
       "noData": "No leaves found",
+      "noAttachment": "No attachments found",
       "actions": {
         "add": "Add Leave Request"
       },
@@ -1159,7 +1175,8 @@
         "remarks": "Remarks",
         "reference": "Reference",
         "start": "From Date",
-        "end": "To Date"
+        "end": "To Date",
+        "attachments": "Attachments"
       }
     },
     "permissionTypes": {

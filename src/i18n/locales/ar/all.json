@@ -43,6 +43,8 @@
     "pickDate": "اختر تاريخ",
     "selectDate": "اختر تاريخ",
     "selectAll": "اختيار الكل",
+    "startDate": "تاريخ البدء",
+    "endDate": "تاريخ الانتهاء",
     "selectedCount": "{count} مختار",
     "deleteSelected": "حذف المحدد",
     "all": "الكل",
@@ -113,6 +115,9 @@
     "overtime": "العمل الإضافي",
     "device": "الجهاز",
     "org": "المؤسسة",
+    "selectOrganization": "اختر المؤسسة",
+    "apply": "تطبيق",
+    "download": "تنزيل",
     "months": {
       "january": "يناير",
       "february": "فبراير",
@@ -316,22 +321,29 @@
       "addOrganization": "إضافة مؤسسة",
       "editOrganization": "تعديل مؤسسة",
       "organizationName": "اسم المؤسسة",
+      "organizationNameEnglish": "اسم المؤسسة (بالإنجليزية)",
+      "organizationNameArabic": "اسم المؤسسة (بالعربية)",
       "organizationCode": "رمز المؤسسة",
       "enterOrganizationName": "أدخل اسم المؤسسة",
       "enterOrganizationNameArabic": "أدخل اسم المؤسسة بالعربية",
+      "enterOrganizationNameEnglish": "أدخل اسم المؤسسة بالإنجليزية",
       "enterOrganizationCode": "أدخل رمز المؤسسة",
       "noOrganizationsFound": "لم يتم العثور على مؤسسات.",
       "structure": {
         "title": "هيكل الرسم البياني"
       },
-      "organizationNameEnglish": "اسم المؤسسة (بالإنجليزية)",
-      "enterOrganizationNameEnglish": "أدخل اسم المؤسسة بالإنجليزية",
       "organizationType": "نوع المؤسسة",
       "selectOrganizationType": "اختر نوع المؤسسة",
+      "parentOrganizationType": "نوع المؤسسة الأم",
+      "selectParentType": "اختر نوع المؤسسة الأم",
       "parentOrganization": "المؤسسة الأم",
+      "selectParentOrganization": "اختر المؤسسة الأم",
+      "selectParentTypeFirst": "يرجى اختيار نوع المؤسسة الأم أولاً",
+      "noChildTypesAvailable": "لا توجد أنواع مؤسسات فرعية متاحة",
       "root": "الجذر",
       "location": "الموقع",
-      "selectLocation": "اختر الموقع"
+      "selectLocation": "اختر الموقع",
+      "leaveEmptyForRoot": "اتركه فارغاً لإنشاء مؤسسة جذرية"
     },
     "organizationTypes": {
       "title": "إدارة أنواع المؤسسات",
@@ -637,11 +649,13 @@
       "description": "إدارة الجداول الأسبوعية لمجموعات الموظفين",
       "addRoster": "إضافة جدول أسبوعي",
       "editRoster": "تعديل الجدول الأسبوعي",
+      "selectOrganization": "اختر المؤسسة",
       "searchPlaceholder": "البحث عن الجداول الأسبوعية...",
       "selectEmployeeGroup": "اختر مجموعة الموظفين",
       "noData": "لم يتم العثور على بيانات الجدول الأسبوعي",
       "fields": {
         "employeeGroup": "مجموعة الموظفين",
+        "organization": "المؤسسة",
         "dateRange": "نطاق التاريخ",
         "monday": "الاثنين",
         "tuesday": "الثلاثاء",
@@ -661,6 +675,7 @@
       },
       "validation": {
         "employeeGroupRequired": "مجموعة الموظفين مطلوبة",
+        "organizationRequired": "المؤسسة مطلوبة",
         "endDateAfterStartDate": "تاريخ النهاية يجب أن يكون بعد تاريخ البداية"
       },
       "placeholders": {
@@ -1108,6 +1123,7 @@
     "leaves": {
       "title": "إدارة الإجازات",
       "noData": "لم يتم العثور على إجازات",
+      "noAttachment": "لا توجد مرفقات",
       "actions": {
         "add": "إضافة طلب إجازة"
       },
@@ -1119,7 +1135,8 @@
         "remarks": "الملاحظات",
         "reference": "المرجع",
         "start": "من تاريخ",
-        "end": "إلى تاريخ"
+        "end": "إلى تاريخ",
+        "attachments": "المرفقات"
       }
     },
     "permissionTypes": {
