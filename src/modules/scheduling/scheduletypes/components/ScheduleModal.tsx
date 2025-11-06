@@ -229,7 +229,7 @@ export const ScheduleModal: React.FC<ScheduleModalProps> = ({
     }
   }, [isOpen]);
 
-    const onSubmit = (rawData: any) => {
+  const onSubmit = (rawData: any) => {
     const hasObjectValues =
       typeof rawData.sch_parent_id === "object" ||
       typeof rawData.schedule_location === "object";
@@ -645,31 +645,6 @@ export const ScheduleModal: React.FC<ScheduleModalProps> = ({
             </TabsContent>
 
             <TabsContent value="advanced" className="space-y-4">
-              {/* Parent Schedule */}
-              <div className="space-y-2">
-                <Label htmlFor="sch_parent_id">
-                  {t("scheduling.schedules.parentSchedule")}
-                </Label>
-                <Controller
-                  name="sch_parent_id"
-                  control={control}
-                  render={({ field }) => (
-                    <OptimizedParentScheduleSelect
-                      value={field.value}
-                      onValueChange={(value) => {
-                        field.onChange(value);
-                      }}
-                      placeholder={t(
-                        "scheduling.schedules.selectParentSchedule"
-                      )}
-                      organizationId={watchedValues.organization_id}
-                      excludeScheduleId={schedule?.schedule_id}
-                      refreshTrigger={refreshTrigger}
-                    />
-                  )}
-                />
-              </div>
-
               {/* Inactive Date */}
               <div className="space-y-2">
                 <Label htmlFor="inactive_date">

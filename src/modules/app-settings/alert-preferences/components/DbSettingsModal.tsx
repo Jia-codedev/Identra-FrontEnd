@@ -39,7 +39,14 @@ export const DbSettingsModal: React.FC<DbSettingsModalProps> = ({
   onSave,
   isLoading = false,
 }) => {
-  const { register, handleSubmit, reset, setValue, watch, formState: { errors } } = useForm<CreateChronDbSettingRequest>();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm<CreateChronDbSettingRequest>();
 
   const connectDbFlag = watch("connect_db_flag");
 
@@ -93,7 +100,9 @@ export const DbSettingsModal: React.FC<DbSettingsModalProps> = ({
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="db_databasetype">Database Type</Label>
-              <Select onValueChange={(value) => setValue("db_databasetype", value)}>
+              <Select
+                onValueChange={(value) => setValue("db_databasetype", value)}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Select database type" />
                 </SelectTrigger>
@@ -106,7 +115,9 @@ export const DbSettingsModal: React.FC<DbSettingsModalProps> = ({
                 </SelectContent>
               </Select>
               {errors.db_databasetype && (
-                <p className="text-sm text-red-500">Database type is required</p>
+                <p className="text-sm text-red-500">
+                  Database type is required
+                </p>
               )}
             </div>
 
@@ -114,11 +125,15 @@ export const DbSettingsModal: React.FC<DbSettingsModalProps> = ({
               <Label htmlFor="db_databasename">Database Name</Label>
               <Input
                 id="db_databasename"
-                placeholder="e.g., chronexaDB"
-                {...register("db_databasename", { required: "Database name is required" })}
+                placeholder="e.g., IndentraDB"
+                {...register("db_databasename", {
+                  required: "Database name is required",
+                })}
               />
               {errors.db_databasename && (
-                <p className="text-sm text-red-500">{errors.db_databasename.message}</p>
+                <p className="text-sm text-red-500">
+                  {errors.db_databasename.message}
+                </p>
               )}
             </div>
           </div>
@@ -129,10 +144,14 @@ export const DbSettingsModal: React.FC<DbSettingsModalProps> = ({
               <Input
                 id="db_host_name"
                 placeholder="e.g., localhost"
-                {...register("db_host_name", { required: "Host name is required" })}
+                {...register("db_host_name", {
+                  required: "Host name is required",
+                })}
               />
               {errors.db_host_name && (
-                <p className="text-sm text-red-500">{errors.db_host_name.message}</p>
+                <p className="text-sm text-red-500">
+                  {errors.db_host_name.message}
+                </p>
               )}
             </div>
 
@@ -141,10 +160,14 @@ export const DbSettingsModal: React.FC<DbSettingsModalProps> = ({
               <Input
                 id="db_port_no"
                 placeholder="e.g., 1433"
-                {...register("db_port_no", { required: "Port number is required" })}
+                {...register("db_port_no", {
+                  required: "Port number is required",
+                })}
               />
               {errors.db_port_no && (
-                <p className="text-sm text-red-500">{errors.db_port_no.message}</p>
+                <p className="text-sm text-red-500">
+                  {errors.db_port_no.message}
+                </p>
               )}
             </div>
           </div>
@@ -188,7 +211,11 @@ export const DbSettingsModal: React.FC<DbSettingsModalProps> = ({
               Cancel
             </Button>
             <Button type="submit" disabled={isLoading}>
-              {isLoading ? "Saving..." : mode === "add" ? "Add Setting" : "Update Setting"}
+              {isLoading
+                ? "Saving..."
+                : mode === "add"
+                ? "Add Setting"
+                : "Update Setting"}
             </Button>
           </DialogFooter>
         </form>

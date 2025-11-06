@@ -12,8 +12,8 @@ import { Toaster } from "@/components/ui/sonner";
 import React from "react";
 
 export const metadata: Metadata = {
-  title: "Chronexa",
-  description: "Chronexa - Your Chronological Experience",
+  title: "Identra - Your Employee Management System",
+  description: "Identra - Your Employee Management System",
 };
 const roboto = Roboto({
   subsets: ["latin"],

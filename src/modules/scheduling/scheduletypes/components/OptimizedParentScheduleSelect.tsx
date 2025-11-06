@@ -265,7 +265,7 @@ export const OptimizedParentScheduleSelect: React.FC<OptimizedParentScheduleSele
                                 </>
                               )}
                             </div>
-                          </div>
+                          </div>``
                         </div>
                       </CommandItem>
                     ))}

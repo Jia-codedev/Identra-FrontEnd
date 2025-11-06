@@ -1,6 +1,6 @@
 -- =====================================================================================
 -- APPLICATION PRIVILEGES DATA INSERTION SCRIPT
--- This script inserts role-based privileges for the Chronologix application
+-- This script inserts role-based privileges for the Identra application
 -- =====================================================================================
 
 -- First, let's ensure we have all the privileges in the system

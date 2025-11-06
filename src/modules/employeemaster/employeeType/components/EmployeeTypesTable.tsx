@@ -56,6 +56,8 @@ export const EmployeeTypesTable: React.FC<EmployeeTypesTableProps> = ({
 
   return (
     <GenericTable
+      canEdit={canEdit}
+      canDelete={canDelete}
       data={employeeTypes}
       columns={columns}
       selected={selected}

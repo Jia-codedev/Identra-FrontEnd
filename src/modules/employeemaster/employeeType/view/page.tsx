@@ -198,8 +198,8 @@ export default function EmployeeTypesPage() {
                 {deleteDialog.type === "single"
                   ? t("messages.confirm.delete")
                   : t("messages.confirm.deleteMultiple", {
-                    count: selected.length,
-                  })}
+                      count: selected.length,
+                    })}
               </DialogDescription>
               <div className="flex justify-end space-x-2 mt-4">
                 <Button variant="outline" onClick={handleCancelDelete}>

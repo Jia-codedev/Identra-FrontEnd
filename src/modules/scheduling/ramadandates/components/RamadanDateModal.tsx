@@ -150,8 +150,10 @@ const RamadanDateModal: React.FC<RamadanDateModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
+      <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto p-2">
+        <DialogHeader
+        className="py-2 px-2"
+        >
           <DialogTitle>
             {ramadanDate
               ? t("scheduling.ramadanDates.editRamadanDate")
@@ -162,7 +164,7 @@ const RamadanDateModal: React.FC<RamadanDateModalProps> = ({
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(handleSubmit)}
-            className="space-y-4"
+            className="space-y-4 dark:bg-white/5 bg-black/5 rounded-xl p-2"
           >
             <div className="grid grid-cols-1 gap-4">
               {/* Name Field - Language Specific */}
