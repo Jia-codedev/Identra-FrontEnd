@@ -71,12 +71,24 @@
     },
     "table": {
       "noData": "لم يتم العثور على بيانات الجدول الشهري",
+      "selectOrganization": "يرجى تحديد مؤسسة لعرض بيانات الجدول",
       "selectOrgMonthYear": "تأكد من تحديد المؤسسة والشهر والسنة",
       "dataLength": "طول مصفوفة البيانات: {{count}}",
       "empNo": "رقم الموظف",
+      "viewSchedule": "عرض الجدول",
       "finalize": "إنهاء",
       "finalized": "تم الإنهاء",
       "finalizeFailed": "فشل في الإنهاء"
+    },
+    "calendar": {
+      "title": "الجدول الشهري",
+      "legend": "أنواع الجداول",
+      "availableSchedules": "الجداول المتاحة",
+      "noSchedules": "لا توجد جداول متاحة",
+      "dragInstruction": "اسحب الجداول إلى أيام التقويم",
+      "scheduleUpdated": "تم تحديث الجدول بنجاح",
+      "scheduleRemoved": "تم إزالة الجدول بنجاح",
+      "updateFailed": "فشل في تحديث الجدول"
     }
   },
   "weeklyRoster": {
