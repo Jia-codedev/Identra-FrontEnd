@@ -57,12 +57,12 @@ export default function HolidaysPage() {
 
   const [viewMode, setViewMode] = useState<"table" | "calendar">("table");
 
-    const { canView, canCreate, canEdit, canDelete } = useSubModulePrivileges(
-      "roster-management",
-      "holiday-calendar"
-    );
-    console.log("Privileges:", { canView, canCreate, canEdit, canDelete });
-  
+  const { canView, canCreate, canEdit, canDelete } = useSubModulePrivileges(
+    "roster-management",
+    "holiday-calendar"
+  );
+  console.log("Privileges:", { canView, canCreate, canEdit, canDelete });
+
   const handleAddHoliday = () => {
     setModalState({
       isOpen: true,
@@ -196,10 +196,10 @@ export default function HolidaysPage() {
             <div className="bg-black/5 p-4 rounded-lg dark:bg-white/5">
               <DialogDescription>
                 {deleteDialog.type === "single" || selected.length === 1
-                  ? t("messages.confirmDeleteSingleDescription", {
+                  ? t("messages.confirm.delete", {
                       deleteType: "holiday",
                     })
-                  : t("messages.confirmDeleteMultipleDescription", {
+                  : t("messages.confirm.deleteMultiple", {
                       count: selected.length,
                       deleteType: "holidays",
                     })}

@@ -18,7 +18,7 @@ class FrontendSettings {
       this.socketUrl = "";
     }
 
-    this.appName = process.env.NEXT_PUBLIC_APP_NAME || "Chronologix";
+    this.appName = process.env.NEXT_PUBLIC_APP_NAME || "Identra";
   }
 
   private validateEnvVar(name: string, fallback?: string): string {

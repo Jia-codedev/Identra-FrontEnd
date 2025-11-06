@@ -45,14 +45,9 @@ const RamadanDatesHeader: React.FC<RamadanDatesHeaderProps> = ({
   const debouncedOnSearch = useDebouncedCallback((val: string) => {
     onSearchChange(val);
   }, 400);
-
-  // Local state for immediate typing responsiveness
   const [localSearch, setLocalSearch] = useState<string>(search || "");
-
-  // Sync incoming `search` prop to local state when it changes externally
   useEffect(() => {
     if (search !== localSearch) setLocalSearch(search || "");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search]);
 
   const currentYear = new Date().getFullYear();
@@ -105,14 +100,12 @@ const RamadanDatesHeader: React.FC<RamadanDatesHeaderProps> = ({
   return (
     <div className="sticky top-0 z-10 bg-background/80 rounded-t-3xl px-2 sm:px-4 py-4 sm:py-8 ">
       <div className="flex flex-col gap-4 sm:gap-6">
-        {/* Title and Description */}
         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4 sm:gap-6">
           <div className="flex-1">
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-primary tracking-tight leading-tight mb-1">
               {t("scheduling.ramadanDates.title")}
             </h1>
           </div>
-          {/* Search */}
           <div
             className={`flex items-center gap-2 bg-card/80 border border-border rounded-xl px-2 py-1 ${
               isRTL ? "flex-row-reverse" : "flex-row"
@@ -135,18 +128,16 @@ const RamadanDatesHeader: React.FC<RamadanDatesHeaderProps> = ({
               }}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
-                  // trigger immediate search
                   onSearchChange(localSearch);
                 }
               }}
               onBlur={() => {
-                // ensure search is applied on blur
                 onSearchChange(localSearch);
               }}
               className="border-0 bg-transparent shadow-none focus-visible:ring-0 text-sm sm:text-base placeholder:text-muted-foreground/70"
             />
             <div className="flex flex-col sm:flex-row gap-2">
-              {selectedCount > 0  &&  canDelete && (
+              {selectedCount > 0 && canDelete ? (
                 <Button
                   variant="destructive"
                   size="sm"
@@ -155,15 +146,16 @@ const RamadanDatesHeader: React.FC<RamadanDatesHeaderProps> = ({
                 >
                   {t("common.deleteSelected")}
                 </Button>
+              ) : (
+                <Button
+                  disabled={!canCreate}
+                  onClick={onAddNew}
+                  className="gap-2 text-xs sm:text-sm h-8 sm:h-9"
+                >
+                  +<span className="hidden sm:inline">{t("common.add")}</span>
+                  <span className="sm:hidden">{t("common.add")}</span>
+                </Button>
               )}
-              <Button
-                disabled={!canCreate}
-                onClick={onAddNew}
-                className="gap-2 text-xs sm:text-sm h-8 sm:h-9"
-              >
-                +<span className="hidden sm:inline">{t("common.add")}</span>
-                <span className="sm:hidden">{t("common.add")}</span>
-              </Button>
             </div>
           </div>
         </div>

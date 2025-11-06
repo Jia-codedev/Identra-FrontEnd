@@ -22,12 +22,7 @@ export const useRamadanDates = () => {
     },
   });
 
-  const {
-    data,
-    isLoading,
-    refetch,
-    error
-  } = useQuery({
+  const { data, isLoading, refetch, error } = useQuery({
     queryKey: ["ramadanDates", state.filters],
     queryFn: () =>
       ramadanDatesApi
@@ -40,17 +35,18 @@ export const useRamadanDates = () => {
 
   const { ramadanDates, pageCount } = useMemo(() => {
     let filteredData: IRamadanDate[] = [];
-    
+
     if (data && data.success && Array.isArray(data.data)) {
       filteredData = data.data;
-      
+
       if (state.search) {
         const searchLower = state.search.toLowerCase();
         filteredData = filteredData.filter(
           (ramadanDate) =>
             ramadanDate.ramadan_name_eng.toLowerCase().includes(searchLower) ||
             ramadanDate.ramadan_name_arb.toLowerCase().includes(searchLower) ||
-            (ramadanDate.remarks && ramadanDate.remarks.toLowerCase().includes(searchLower))
+            (ramadanDate.remarks &&
+              ramadanDate.remarks.toLowerCase().includes(searchLower))
         );
       }
     }
@@ -83,11 +79,13 @@ export const useRamadanDates = () => {
   }, []);
 
   const setFilters = useCallback((filters: Partial<RamadanDateFilters>) => {
-    setState((prev) => ({ 
-      ...prev, 
-      filters: { ...prev.filters, ...filters },
-      page: 1 
-    }));
+    setState((prev) => {
+      const nextFilters = { ...prev.filters, ...filters } as RamadanDateFilters;
+      if (nextFilters.month && !nextFilters.year) {
+        nextFilters.year = new Date().getFullYear();
+      }
+      return { ...prev, filters: nextFilters, page: 1 };
+    });
   }, []);
 
   const selectRamadanDate = useCallback((id: number) => {
@@ -109,7 +107,8 @@ export const useRamadanDates = () => {
     }));
   }, [ramadanDates]);
 
-  const allChecked = ramadanDates.length > 0 && state.selected.length === ramadanDates.length;
+  const allChecked =
+    ramadanDates.length > 0 && state.selected.length === ramadanDates.length;
 
   return {
     ramadanDates,

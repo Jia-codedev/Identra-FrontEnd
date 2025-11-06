@@ -38,9 +38,9 @@ class AuthService {
         throw new Error("adlogin() must be called client-side");
       }
 
-      const loginUrl = `${baseURL.replace(/\/$/, "")}/auth/azure/login`;
+      const loginUrl = `${baseURL.replace(/\/$/, "")}/auth/azure`;
       try {
-        new URL(loginUrl);
+        window.location.href = loginUrl;
       } catch (urlError) {
         console.error("Invalid login URL:", loginUrl, urlError);
         throw urlError;

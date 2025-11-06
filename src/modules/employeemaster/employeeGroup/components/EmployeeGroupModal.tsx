@@ -10,9 +10,7 @@ import { DatePicker } from "@/components/ui/date-picker";
 import { useTranslations } from "@/hooks/use-translations";
 import { useLanguage } from "@/providers/language-provider";
 import { IEmployeeGroup } from "../types";
-import { EmployeeSearchResponse } from "../../employee/types";
-import employeeApi from "@/services/employeemaster/employee";
-import { debounce } from "lodash";
+import EmployeeCombobox from "@/components/ui/employee-combobox";
 interface EmployeeGroupModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -38,16 +36,6 @@ export const EmployeeGroupModal: React.FC<EmployeeGroupModalProps> = ({
 }) => {
   const { t } = useTranslations();
   const { isRTL } = useLanguage();
-  const [searchResults, setSearchResults] = useState<EmployeeSearchResponse[]>(
-    []
-  );
-  const [selectedEmployee, setSelectedEmployee] =
-    useState<EmployeeSearchResponse | null>(null);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [isSearching, setIsSearching] = useState(false);
-  const [totalResults, setTotalResults] = useState(0);
-  const [displayLimit] = useState(10);
-  const [highlightedIndex, setHighlightedIndex] = useState(-1);
 
   const [formData, setFormData] = useState({
     employee_group_id: undefined as number | undefined,
@@ -61,38 +49,7 @@ export const EmployeeGroupModal: React.FC<EmployeeGroupModalProps> = ({
     reporting_person_id: "",
   });
 
-  const searchEmployees = async (query: string) => {
-    const response = await employeeApi.searchEmployees(query);
-    return response.data.data;
-  };
-
-  const debouncedSearch = React.useMemo(
-    () =>
-      debounce(async (query: string) => {
-        if (query && query.length > 1) {
-          setIsSearching(true);
-          try {
-            const results = await searchEmployees(query);
-            
-            const validResults = Array.isArray(results) ? results : [];
-            setTotalResults(validResults.length);
-            const limitedResults = validResults.slice(0, displayLimit);
-            setSearchResults(limitedResults);
-          } catch (error) {
-            console.error("Error searching employees:", error);
-            setSearchResults([]);
-            setTotalResults(0);
-          } finally {
-            setIsSearching(false);
-          }
-        } else {
-          setSearchResults([]);
-          setTotalResults(0);
-          setIsSearching(false);
-        }
-      }, 1000),
-    [displayLimit]
-  );
+  // We use EmployeeCombobox for reporting person searching and selection.
   useEffect(() => {
     if (employeeGroup && mode === "edit") {
       setFormData({
@@ -119,83 +76,16 @@ export const EmployeeGroupModal: React.FC<EmployeeGroupModalProps> = ({
           ? String((employeeGroup as any).reporting_person_id)
           : "",
       });
-
-      if ((employeeGroup as any).reporting_person_id) {
-        setSearchQuery(
-          `Employee ID: ${(employeeGroup as any).reporting_person_id}`
-        );
-      }
-    } else {
-      setSelectedEmployee(null);
-      setSearchQuery("");
-      setSearchResults([]);
-      setTotalResults(0);
-      setIsSearching(false);
     }
   }, [employeeGroup, mode, isOpen]);
-
-  useEffect(() => {
-    return () => {
-      debouncedSearch.cancel();
-    };
-  }, [debouncedSearch]);
 
   const handleChange = (field: string, value: any) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleEmployeeSelect = (employee: EmployeeSearchResponse) => {
-    setSelectedEmployee(employee);
-    setFormData((prev) => ({
-      ...prev,
-      reporting_person_id: String(employee.employee_id),
-    }));
-    setSearchQuery(`${employee.firstname_eng} ${employee.lastname_eng}`);
-    setHighlightedIndex(-1);
-    setSearchResults([]);
-    setTotalResults(0);
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (!searchResults.length) return;
-
-    switch (e.key) {
-      case 'ArrowDown':
-        e.preventDefault();
-        setHighlightedIndex(prev => 
-          prev < searchResults.length - 1 ? prev + 1 : 0
-        );
-        break;
-      case 'ArrowUp':
-        e.preventDefault();
-        setHighlightedIndex(prev => 
-          prev > 0 ? prev - 1 : searchResults.length - 1
-        );
-        break;
-      case 'Enter':
-        e.preventDefault();
-        if (highlightedIndex >= 0 && searchResults[highlightedIndex]) {
-          handleEmployeeSelect(searchResults[highlightedIndex]);
-        }
-        break;
-      case 'Escape':
-        setSearchResults([]);
-        setHighlightedIndex(-1);
-        break;
-    }
-  };
-
+  // handleClearEmployee only clears the selected reporting_person_id
   const handleClearEmployee = () => {
-    setSelectedEmployee(null);
-    setFormData((prev) => ({
-      ...prev,
-      reporting_person_id: "",
-    }));
-    setSearchQuery("");
-    setSearchResults([]);
-    setTotalResults(0);
-    setIsSearching(false);
-    setHighlightedIndex(-1);
+    setFormData((prev) => ({ ...prev, reporting_person_id: "" }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -231,11 +121,6 @@ export const EmployeeGroupModal: React.FC<EmployeeGroupModalProps> = ({
       group_end_date: "",
       reporting_person_id: "",
     });
-    setSelectedEmployee(null);
-    setSearchQuery("");
-    setSearchResults([]);
-    setTotalResults(0);
-    setIsSearching(false);
   };
 
   if (!isOpen) return null;
@@ -410,114 +295,24 @@ export const EmployeeGroupModal: React.FC<EmployeeGroupModalProps> = ({
                 <Label className="mb-2">
                   {t("employeeMaster.employeeGroups.reportingPerson")} *
                 </Label>
-                <div className="relative">
-                  <Input
-                    type="text"
+                <div>
+                  <EmployeeCombobox
+                    value={
+                      formData.reporting_person_id
+                        ? Number(formData.reporting_person_id)
+                        : null
+                    }
+                    onChange={(val: number | null) => {
+                      handleChange(
+                        "reporting_person_id",
+                        val ? String(val) : ""
+                      );
+                    }}
                     placeholder={t(
                       "employeeMaster.employeeGroups.searchReportingPerson"
                     )}
-                    value={searchQuery}
-                    onChange={(e) => {
-                      setSearchQuery(e.target.value);
-                      setHighlightedIndex(-1); 
-                      debouncedSearch(e.target.value);
-                    }}
-                    onKeyDown={handleKeyDown}
-                    className="w-full-md p-2 bg-background pr-8"
-                    autoComplete="off"
+                    className="w-full"
                   />
-                  {selectedEmployee && (
-                    <button
-                      type="button"
-                      onClick={handleClearEmployee}
-                      className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                    >
-                      <X className="h-4 w-4" />
-                    </button>
-                  )}
-
-                  {/* Loading indicator */}
-                  {isSearching && (
-                    <div className="absolute z-50 w-full mt-1 bg-white-md shadow-lg">
-                      <div className="p-3 text-gray-500 text-sm flex items-center gap-2">
-                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-900"></div>
-                        Searching...
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Show dropdown only when there are search results and not searching */}
-                  {!isSearching && Array.isArray(searchResults) && searchResults.length > 0 && (
-                    <div className="absolute z-50 w-full mt-1 bg-white-md shadow-lg max-h-72 overflow-hidden">
-                      {/* Results counter header */}
-                      <div className="px-3 py-2 bg-gray-50 border-b text-xs text-gray-600 font-medium">
-                        <div className="flex justify-between items-center">
-                          <span>
-                            Showing {searchResults.length} of {totalResults} results
-                            {totalResults > displayLimit && (
-                              <span className="ml-1 text-amber-600">
-                                (Type more to narrow down)
-                              </span>
-                            )}
-                          </span>
-                          <span className="text-gray-400">
-                            ↑↓ Navigate • Enter Select • Esc Close
-                          </span>
-                        </div>
-                      </div>
-                      
-                      {/* Scrollable results */}
-                      <div className="max-h-60 overflow-y-auto">
-                        {searchResults.map((person, index) => (
-                          <div
-                            key={person.employee_id}
-                            onClick={() => handleEmployeeSelect(person)}
-                            className={`p-3 cursor-pointer border-b last:border-b-0 transition-colors duration-150 ${
-                              index === highlightedIndex 
-                                ? 'bg-blue-100 border-blue-200' 
-                                : 'hover:bg-blue-50'
-                            }`}
-                          >
-                            <div className="flex justify-between items-start">
-                              <div className="flex-1">
-                                <div className={`font-medium ${
-                                  index === highlightedIndex ? 'text-blue-900' : 'text-gray-900'
-                                }`}>
-                                  {person.firstname_eng} {person.lastname_eng}
-                                </div>
-                                <div className={`text-sm ${
-                                  index === highlightedIndex ? 'text-blue-600' : 'text-gray-500'
-                                }`}>
-                                  ID: {person.employee_id}
-                                </div>
-                                {person.firstname_arb && person.lastname_arb && (
-                                  <div className={`text-sm mt-1 ${
-                                    index === highlightedIndex ? 'text-blue-500' : 'text-gray-400'
-                                  }`}>
-                                    {person.firstname_arb} {person.lastname_arb}
-                                  </div>
-                                )}
-                              </div>
-                              <div className={`text-xs ml-2 ${
-                                index === highlightedIndex ? 'text-blue-500' : 'text-gray-400'
-                              }`}>
-                                #{index + 1}
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                      
-                      {/* Footer with more results indicator */}
-                      {totalResults > displayLimit && (
-                        <div className="px-3 py-2 bg-gray-50 border-t text-xs text-center text-gray-500">
-                          {totalResults - displayLimit} more results available. 
-                          <br />
-                          Type more characters to narrow your search.
-                        </div>
-                      )}
-                    </div>
-                  )}
                 </div>
               </div>
             )}

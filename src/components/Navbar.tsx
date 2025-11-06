@@ -21,10 +21,8 @@ const Navbar = () => {
 
   // read saved language once
   useEffect(() => {
-    const saved = (typeof window !== "undefined" && localStorage.getItem("lang")) as
-      | "en"
-      | "ar"
-      | null;
+    const saved = (typeof window !== "undefined" &&
+      localStorage.getItem("lang")) as "en" | "ar" | null;
     if (saved && (saved === "en" || saved === "ar")) {
       setLang(saved);
     }
@@ -50,10 +48,8 @@ const Navbar = () => {
         <div className="flex items-center space-x-6">
           <div className="flex items-center space-x-2">
             {/* replace with your logo path */}
-            <img src="/logo.png" alt="Chronologix Logo" className="h-6" />
-            <span className="text-lg font-semibold text-gray-800">
-              Chronologix
-            </span>
+            <img src="/logo.png" alt="Identra Logo" className="h-6" />
+            <span className="text-lg font-semibold text-gray-800">Identra</span>
           </div>
 
           {/* Primary Navigation Links */}
@@ -67,10 +63,11 @@ const Navbar = () => {
           ].map((menu) => (
             <button
               key={menu}
-              className={`px-3 py-2 rounded-lg font-semibold ${activeMenu === menu
-                ? "bg-purple-600 text-white"
-                : "text-gray-700 hover:text-purple-500"
-                }`}
+              className={`px-3 py-2 rounded-lg font-semibold ${
+                activeMenu === menu
+                  ? "bg-purple-600 text-white"
+                  : "text-gray-700 hover:text-purple-500"
+              }`}
               onClick={() => setActiveMenu(menu)}
             >
               {menu}
@@ -107,8 +104,11 @@ const Navbar = () => {
                       setLang(l.code as "en" | "ar");
                       setIsLangOpen(false);
                     }}
-                    className={`w-full px-4 py-2 text-left text-sm hover:bg-gray-100 ${lang === l.code ? "text-purple-600 font-medium" : "text-gray-700"
-                      }`}
+                    className={`w-full px-4 py-2 text-left text-sm hover:bg-gray-100 ${
+                      lang === l.code
+                        ? "text-purple-600 font-medium"
+                        : "text-gray-700"
+                    }`}
                   >
                     {l.code === "en" ? "🇺🇸 " : "🇸🇦 "}
                     {l.label}
@@ -361,8 +361,9 @@ const NavItem = ({
 }) => (
   <Link
     href={href}
-    className={`hover:text-purple-500 ${pathname === href ? "text-purple-500 font-bold" : ""
-      }`}
+    className={`hover:text-purple-500 ${
+      pathname === href ? "text-purple-500 font-bold" : ""
+    }`}
   >
     {children}
   </Link>

@@ -15,8 +15,7 @@ import { Checkbox } from "@/components/ui/Checkbox";
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "@/hooks/use-translations";
 import { useLanguage } from "@/providers/language-provider";
-import Loader from "./loader";
-import { ScrollArea } from "../ui/scroll-area";
+import { Skeleton } from "../ui/skeleton";
 
 export interface TableColumn<T> {
   key: string;
@@ -71,18 +70,105 @@ export function GenericTable<T>({
 }: GenericTableProps<T>) {
   const { t } = useTranslations();
   const { isRTL } = useLanguage();
-
-  if (data.length === 0) {
+  // Show skeleton while loading irrespective of data length
+  if (isLoading) {
+    const skeletonRows = Array.from(
+      { length: Math.max(3, Math.min(8, pageSize || 5)) },
+      (_, i) => i
+    );
     return (
       <div className="overflow-x-auto rounded-md">
         <div className="backdrop-blur-xl mt-4 bg-card/70 border border-border rounded-lg overflow-hidden">
-          {isLoading ? (
-            <Loader />
-          ) : (
-            <div className="p-4 text-center text-muted-foreground">
-              {noDataMessage}
-            </div>
-          )}
+          <Table>
+            <TableHeader>
+              <TableRow
+                className={`bg-gradient-to-${
+                  isRTL ? "l" : "r"
+                } from-primary/10 to-background/80 backdrop-blur-md`}
+              >
+                <TableHead className="w-12 text-center">
+                  <Checkbox
+                    checked={allChecked}
+                    onCheckedChange={onSelectAll}
+                    aria-label={t("common.selectAll")}
+                  />
+                </TableHead>
+                {columns.map((column) => (
+                  <TableHead
+                    key={column.key}
+                    className={`text-base font-bold text-primary drop-shadow-sm tracking-wide ${
+                      column.width || ""
+                    } ${column.className || ""}`}
+                  >
+                    {column.header}
+                  </TableHead>
+                ))}
+                {(onEditItem ||
+                  onDeleteItem ||
+                  actions ||
+                  canEdit ||
+                  canDelete) && (
+                  <TableHead className="w-32 text-center text-base font-bold text-primary drop-shadow-sm tracking-wide">
+                    {t("common.actions")}
+                  </TableHead>
+                )}
+              </TableRow>
+            </TableHeader>
+            <TableBody className="oberflow-y-auto max-h-[60vh]">
+              <AnimatePresence>
+                {skeletonRows.map((idx) => (
+                  <TableRow
+                    key={`skeleton-${idx}`}
+                    className={
+                      ((page - 1) * (pageSize || 5) + idx) % 2 === 0
+                        ? "bg-card/60"
+                        : "bg-card/40"
+                    }
+                    style={{ backdropFilter: "blur(8px)" }}
+                  >
+                    <TableCell className="text-center">
+                      <Skeleton className="h-4 w-4 rounded-sm mx-auto" />
+                    </TableCell>
+                    {columns.map((column) => (
+                      <TableCell
+                        key={`skeleton-cell-${column.key}-${idx}`}
+                        className="text-foreground text-md drop-shadow-sm"
+                      >
+                        <Skeleton className="h-4 w-3/5" />
+                      </TableCell>
+                    ))}
+                    {(onEditItem ||
+                      onDeleteItem ||
+                      actions ||
+                      canDelete ||
+                      canEdit) && (
+                      <TableCell
+                        className={`text-center flex ${
+                          isRTL ? "flex-row-reverse" : "flex-row"
+                        } gap-2 justify-center`}
+                      >
+                        <Skeleton className="h-8 w-8 rounded-full" />
+                        {(onDeleteItem || canDelete) && (
+                          <Skeleton className="h-8 w-8 rounded-full" />
+                        )}
+                      </TableCell>
+                    )}
+                  </TableRow>
+                ))}
+              </AnimatePresence>
+            </TableBody>
+          </Table>
+        </div>
+      </div>
+    );
+  }
+  if (data.length === 0) {
+    return (
+      <div className="overflow-x-auto rounded-md">
+        <div className="backdrop-blur-xl mt-4 bg-card/70 border border-border rounded-lg overflow-hidden min-h-56 flex items-center justify-center">
+          <div className="p-4 text-center text-muted-foreground">
+            {noDataMessage}
+          </div>
         </div>
       </div>
     );

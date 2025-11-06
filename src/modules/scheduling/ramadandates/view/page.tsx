@@ -7,16 +7,8 @@ import RamadanDatesHeader from "../components/RamadanDatesHeader";
 import { RamadanDatesTable } from "../components/RamadanDatesTable";
 import RamadanDateModal from "../components/RamadanDateModal";
 import { useRamadanDates } from "../hooks/useRamadanDates";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
 import { CommonDeleteModal } from "@/components/common/CommonDeleteModal";
 import { useSubModulePrivileges } from "@/hooks/security/useSubModulePrivileges";
-import { Button } from "@/components/ui/button";
 import {
   useCreateRamadanDate,
   useUpdateRamadanDate,
@@ -27,6 +19,7 @@ import {
   CreateRamadanDateRequest,
   UpdateRamadanDateRequest,
 } from "../types";
+import { CustomPagination } from "@/components/common/dashboard/Pagination";
 
 const RamadanDatesPage: React.FC = () => {
   const { t } = useTranslations();
@@ -44,9 +37,11 @@ const RamadanDatesPage: React.FC = () => {
     selected,
     search,
     page,
+    pageCount,
     setPage,
     setPageSize,
     pageSize,
+    pageSizeOptions,
     filters,
     allChecked,
     setSearch,
@@ -153,7 +148,7 @@ const RamadanDatesPage: React.FC = () => {
     <div className="px-4 py-6 space-y-6-lg">
       <RamadanDatesHeader
         canDelete={canDelete}
-        canCreate={canCreate} 
+        canCreate={canCreate}
         search={search}
         onSearchChange={setSearch}
         onAddNew={handleAddNew}
@@ -182,6 +177,15 @@ const RamadanDatesPage: React.FC = () => {
         onPageSizeChange={setPageSize}
       />
 
+      <CustomPagination
+        currentPage={page}
+        totalPages={pageCount}
+        onPageChange={setPage}
+        pageSize={pageSize}
+        pageSizeOptions={pageSizeOptions}
+        onPageSizeChange={setPageSize}
+      />
+
       <RamadanDateModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
@@ -189,47 +193,15 @@ const RamadanDatesPage: React.FC = () => {
         ramadanDate={selectedRamadanDate}
         isLoading={isMutating}
       />
-
-      {/* <Dialog
-        open={deleteDialog.open}
-        onOpenChange={(open) => !open && handleCancelDelete()}
-      >
-        <DialogContent className="p-0">
-          <DialogHeader className="p-2">
-            <DialogTitle className="mb-1 p-2">
-              {t("common.confirmDelete")}
-            </DialogTitle>
-            <div className="bg-black/5 p-4 rounded-lg dark:bg-white/5">
-              <DialogDescription>
-                {deleteDialog.type === "single" || selected.length === 1
-                  ? t("scheduling.holidays.confirmDeleteSingle", {
-                      id: deleteDialog.id,
-                    })
-                  : t("scheduling.holidays.confirmDeleteMulitple", {
-                      count: selected.length,
-                    })}
-              </DialogDescription>
-              <div className="flex justify-end space-x-2 mt-4">
-                <Button variant="outline" onClick={handleCancelDelete}>
-                  {t("common.cancel")}
-                </Button>
-                <Button variant="destructive" onClick={handleConfirmDelete}>
-                  {t("common.delete")}
-                </Button>
-              </div>
-            </div>
-          </DialogHeader>
-        </DialogContent>
-      </Dialog> */}
       <CommonDeleteModal
         open={deleteDialog.open}
         dialogTitle={t("common.confirmDelete")}
         dialogDescription={
           deleteDialog.type === "single" || selected.length === 1
-            ? t("messages.confirmDeleteSingleDescription", {
+            ? t("messages.confirm.delete", {
                 deleteType: "ramadan date",
               })
-            : t("messages.confirmDeleteMultipleDescription", {
+            : t("messages.confirm.deleteMultiple", {
                 count: selected.length,
                 deleteType: "ramadan dates",
               })

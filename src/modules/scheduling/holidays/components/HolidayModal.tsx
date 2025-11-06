@@ -168,7 +168,7 @@ export const HolidayModal: React.FC<HolidayModalProps> = ({
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-4  px-4"
+            className="space-y-4 px-4 dark:bg-white/5 bg-black/5 rounded-xl p-2"
           >
             <div className="grid grid-cols-1 gap-4">
               {isRTL ? (
@@ -383,21 +383,16 @@ export const HolidayModal: React.FC<HolidayModalProps> = ({
             </div>
 
             {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row justify-end gap-2 sm:gap-3 pt-4">
+            <div className="grid grid-cols-2 gap-4 relative">
               <Button
                 type="button"
                 variant="outline"
                 onClick={handleClose}
-                className="w-full sm:w-auto text-sm sm:text-base h-9 sm:h-10"
+                className="text-sm sm:text-base w-full"
               >
-                <X size={16} className="mr-2" />
                 {t("common.cancel")}
               </Button>
-              <Button
-                type="submit"
-                className="w-full sm:w-auto text-sm sm:text-base h-9 sm:h-10"
-              >
-                <Save size={16} className="mr-2" />
+              <Button type="submit" className=" text-sm sm:text-base w-full">
                 {mode === "add" ? t("common.create") : t("common.update")}
               </Button>
             </div>
