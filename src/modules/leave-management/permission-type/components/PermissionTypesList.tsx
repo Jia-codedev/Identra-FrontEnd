@@ -19,6 +19,8 @@ type Props = {
   onPageSizeChange: (size: number) => void;
   onEditItem?: (item: PermissionType) => void;
   onDeleteItem?: (id: string | number) => void;
+  canEdit?: boolean;
+  canDelete?: boolean;
 };
 
 const formatDateTime = (dt?: string) => {
@@ -43,6 +45,8 @@ const PermissionTypesList: React.FC<Props> = ({
   onPageSizeChange,
   onEditItem,
   onDeleteItem,
+  canEdit,
+  canDelete
 }) => {
   const { t } = useTranslations();
 
@@ -99,6 +103,8 @@ const PermissionTypesList: React.FC<Props> = ({
 
   return (
     <GenericTable
+      canEdit={canEdit}
+      canDelete={canDelete}
       data={permissionTypes}
       columns={columns}
       selected={selected}

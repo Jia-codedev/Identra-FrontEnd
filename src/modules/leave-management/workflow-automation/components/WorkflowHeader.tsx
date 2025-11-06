@@ -14,6 +14,8 @@ interface WorkflowHeaderProps {
   onExport?: () => void;
   onImport?: () => void;
   onSettings?: () => void;
+  canCreate?: boolean;  
+  canDelete?: boolean;
 }
 
 export default function WorkflowHeader({
@@ -23,6 +25,8 @@ export default function WorkflowHeader({
   onExport,
   onImport,
   onSettings,
+  canCreate,
+  canDelete,
 }: WorkflowHeaderProps) {
   const { t } = useTranslations();
   const { isRTL } = useLanguage();
@@ -110,6 +114,7 @@ export default function WorkflowHeader({
 
             {onAddNew && (
               <Button
+                  disabled={!canCreate}
                 onClick={onAddNew}
                 className="font-semibold text-base px-4 py-2 rounded-lg bg-primary hover:bg-primary/90 transition-all shadow-none"
                 variant="default"

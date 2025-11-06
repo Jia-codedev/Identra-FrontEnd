@@ -13,6 +13,8 @@ interface PermissionTypesHeaderProps {
   onAdd: () => void;
   selectedCount: number;
   onDeleteSelected?: () => void;
+  canCreate?: boolean;  
+  canDelete?: boolean;
 }
 
 export const PermissionTypesHeader: React.FC<PermissionTypesHeaderProps> = ({ 
@@ -20,7 +22,9 @@ export const PermissionTypesHeader: React.FC<PermissionTypesHeaderProps> = ({
   onSearchChange, 
   onAdd, 
   selectedCount, 
-  onDeleteSelected 
+  onDeleteSelected ,
+  canCreate,
+  canDelete
 }) => {
   const { t } = useTranslations();
   const { isRTL } = useLanguage();
@@ -53,13 +57,13 @@ export const PermissionTypesHeader: React.FC<PermissionTypesHeaderProps> = ({
               className="border-0 bg-transparent rounded-lg focus:ring-0 focus-visible:ring-0 shadow-none text-base px-2"
             />
             <span className="mx-2 h-6 w-px bg-border" />
-            {selectedCount > 0 && onDeleteSelected ? (
+            {selectedCount > 0 && onDeleteSelected && canDelete ? (
               <Button onClick={onDeleteSelected} className="font-semibold text-base px-4 py-2 rounded-lg bg-destructive hover:bg-destructive/90 transition-all shadow-none" variant="destructive">
                 <span className="hidden sm:inline">{t('common.delete')}</span>
                 <span className="sm:hidden text-xl leading-none">🗑️</span>
               </Button>
             ) : (
-                <Button onClick={onAdd} className="font-semibold text-base px-4 py-2 rounded-lg bg-primary hover:bg-primary/90 transition-all shadow-none" variant="default">
+                <Button disabled={!canCreate} onClick={onAdd} className="font-semibold text-base px-4 py-2 rounded-lg bg-primary hover:bg-primary/90 transition-all shadow-none" variant="default">
                 <span className="hidden sm:inline">+ {t('common.add')}</span>
                 <span className="sm:hidden text-xl leading-none">+</span>
               </Button>

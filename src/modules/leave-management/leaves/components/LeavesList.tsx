@@ -21,6 +21,8 @@ type Props = {
   onPageSizeChange: (size: number) => void;
   onEditItem?: (item: Leave) => void;
   onDeleteItem?: (id: number) => void;
+  canDelete?: boolean;
+  canEdit?: boolean;
 };
 
 const statusMap: Record<string, { label: string; color: string }> = {
@@ -51,6 +53,8 @@ const LeavesList: React.FC<Props> = ({
   onPageSizeChange,
   onEditItem,
   onDeleteItem,
+  canDelete,
+  canEdit,
 }) => {
   const { t } = useTranslations();
 
@@ -145,6 +149,8 @@ const LeavesList: React.FC<Props> = ({
 
   return (
     <GenericTable
+      canEdit={canEdit} 
+      canDelete={canDelete}
       data={leaves}
       columns={columns}
       selected={selected}
