@@ -96,11 +96,13 @@
     "description": "إدارة الجداول الأسبوعية لمجموعات الموظفين",
     "addRoster": "إضافة جدول أسبوعي",
     "editRoster": "تعديل الجدول الأسبوعي",
+    "selectOrganization": "اختر المؤسسة",
     "searchPlaceholder": "البحث عن الجداول الأسبوعية...",
     "selectEmployeeGroup": "اختر مجموعة الموظفين",
     "noData": "لم يتم العثور على بيانات الجدول الأسبوعي",
     "fields": {
       "employeeGroup": "مجموعة الموظفين",
+      "organization": "المؤسسة",
       "dateRange": "نطاق التاريخ",
       "monday": "الاثنين",
       "tuesday": "الثلاثاء",
@@ -120,6 +122,7 @@
     },
     "validation": {
       "employeeGroupRequired": "مجموعة الموظفين مطلوبة",
+      "organizationRequired": "المؤسسة مطلوبة",
       "endDateAfterStartDate": "تاريخ النهاية يجب أن يكون بعد تاريخ البداية"
     },
     "placeholders": {

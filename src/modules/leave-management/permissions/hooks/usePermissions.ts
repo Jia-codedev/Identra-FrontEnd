@@ -1,98 +1,167 @@
 "use client";
 
+import lodash from "lodash";
 import { useState, useMemo, useCallback } from "react";
-import { useQuery } from "@tanstack/react-query";
-import employeeShortPermissionsApi, { ListPermissionsRequest } from "@/services/leaveManagement/employeeShortPermissions";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import employeeShortPermissionsApi, {
+  ListPermissionsRequest,
+} from "@/services/leaveManagement/employeeShortPermissions";
+import { IPermission, PermissionsState } from "../types";
 
-const DEFAULT_PAGE_SIZE = 10;
+const PAGE_SIZE = 10;
+const PAGE_SIZE_OPTIONS = [10, 20, 50, 100];
 
-export const usePermissions = () => {
-  const [search, setSearch] = useState("");
-  const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
-  const [selected, setSelected] = useState<number[]>([]);
+interface UsePermissionsOptions {
+  employeeId?: number;
+}
 
-  const params: ListPermissionsRequest = useMemo(() => ({
-    limit: pageSize,
-    offset: (page - 1) * pageSize,
-    ...(search ? { employee_name: search } : {}),
-  }), [page, pageSize, search]);
-
-  const { data, isLoading, refetch } = useQuery({
-    queryKey: ["permissions", params],
-    queryFn: () => employeeShortPermissionsApi.list(params).then(res => res.data),
+export const usePermissions = (options?: UsePermissionsOptions) => {
+  const [state, setState] = useState<PermissionsState>({
+    permissions: [],
+    selected: [],
+    search: "",
+    page: 1,
+    pageSize: PAGE_SIZE,
+    loading: false,
+    error: null,
   });
 
+  const employeeId = options?.employeeId;
+
+  const { data, isLoading, refetch, fetchNextPage, hasNextPage } =
+    useInfiniteQuery({
+      queryKey: ["permissions", employeeId, state.search, state.pageSize],
+      queryFn: ({ pageParam = 1 }) =>
+        employeeShortPermissionsApi
+          .getPermissions({
+            offset: pageParam,
+            limit: state.pageSize,
+            employee_id: employeeId,
+            employee_name: state.search || undefined,
+          })
+          .then((response) => response.data),
+      getNextPageParam: (lastPage, allPages) => {
+        if (
+          lastPage &&
+          Array.isArray(lastPage.data) &&
+          lastPage.data.length === state.pageSize
+        ) {
+          return allPages.length + 1;
+        }
+        return undefined;
+      },
+      initialPageParam: 1,
+      enabled: employeeId !== undefined && employeeId > 0,
+    });
+
   const permissions = useMemo(() => {
-    const items: any[] = Array.isArray((data as any)?.data) ? (data as any).data : [];
-    return items.map(it => ({
-      id: it.employee_short_permission_id,
-      employee_id: it.employee_id,
-      employee_name: it.employee_name || `${it.firstname_eng || ''} ${it.lastname_eng || ''}`.trim(),
-      permission_type: it.permission_type_name || it.permission_type || String(it.permission_type_id || ''),
-      from_date: it.from_date,
-      to_date: it.to_date,
-      from_time: it.from_time,
-      to_time: it.to_time,
-      status: it.status || it.approve_reject_flag_name || 'pending',
-      remarks: it.remarks,
-      created_date: it.created_date,
-      raw: it,
+    if (data && data.pages && data.pages[state.page - 1]) {
+      return (data.pages[state.page - 1].data || []).map((item: any) => ({
+        ...item,
+        // Map API field to frontend field for backwards compatibility
+        employee_short_permission_id:
+          item.short_permission_id || item.employee_short_permission_id,
+        employee_name: item.employee_master
+          ? `${item.employee_master.firstname_eng || ""} ${
+              item.employee_master.lastname_eng || ""
+            }`.trim()
+          : "N/A",
+        permission_type_name:
+          item.permission_types?.permission_type_eng ||
+          item.permission_types?.permission_type_code ||
+          "N/A",
+      }));
+    }
+    return [];
+  }, [data, state.page]);
+
+  const total = data?.pages?.[0]?.total ?? 0;
+  const pageCount =
+    total > 0 ? Math.ceil(total / state.pageSize) : data?.pages?.length || 1;
+
+  const allIds = permissions
+    .filter(
+      (p: any) =>
+        p &&
+        (p.employee_short_permission_id !== undefined ||
+          p.short_permission_id !== undefined)
+    )
+    .map((p: any) => p.employee_short_permission_id || p.short_permission_id);
+  const allChecked =
+    allIds.length > 0 &&
+    allIds.every((id: number) => state.selected.includes(id));
+
+  const debouncedRefetch = useMemo(
+    () => lodash.debounce(refetch, 500),
+    [refetch]
+  );
+
+  const setSearch = useCallback(
+    (search: string) => {
+      setState((prev) => ({ ...prev, search, page: 1 }));
+      debouncedRefetch();
+    },
+    [debouncedRefetch]
+  );
+
+  const setPageSize = useCallback(
+    (size: number) => {
+      setState((prev) => ({ ...prev, pageSize: size, page: 1 }));
+      refetch();
+    },
+    [refetch]
+  );
+
+  const setPage = useCallback(
+    async (page: number) => {
+      if (page >= 1 && page <= pageCount) {
+        if (data && data.pages && !data.pages[page - 1] && hasNextPage) {
+          await fetchNextPage();
+        }
+        setState((prev) => ({ ...prev, page }));
+      }
+    },
+    [pageCount, data, hasNextPage, fetchNextPage]
+  );
+
+  const selectItem = useCallback((id: number) => {
+    setState((prev) => ({
+      ...prev,
+      selected: prev.selected.includes(id)
+        ? prev.selected.filter((i) => i !== id)
+        : [...prev.selected, id],
     }));
-  }, [data]);
+  }, []);
 
-  const total = (data as any)?.total ?? 0;
-  const hasNext = (data as any)?.hasNext ?? false;
-  const pageCount = useMemo(() => {
-    if (hasNext) {
-      return page + 1;
-    } else {
-      return page;
-    }
-  }, [page, hasNext]);
+  const selectAll = useCallback(() => {
+    setState((prev) => ({
+      ...prev,
+      selected: allChecked ? [] : allIds,
+    }));
+  }, [allChecked, allIds]);
 
-  const selectItem = useCallback((id: number) => setSelected(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]), []);
-  const selectAll = useCallback(() => setSelected(prev => prev.length === permissions.length ? [] : permissions.map(p => p.id)), [permissions]);
-  const clearSelection = useCallback(() => setSelected([]), []);
-
-  const goToNextPage = useCallback(() => {
-    if (hasNext) {
-      setPage(prev => prev + 1);
-    }
-  }, [hasNext]);
-
-  const goToPrevPage = useCallback(() => {
-    if (page > 1) {
-      setPage(prev => prev - 1);
-    }
-  }, [page]);
-
-  const goToPage = useCallback((pageNum: number) => {
-    if (pageNum >= 1 && (pageNum <= pageCount || hasNext)) {
-      setPage(pageNum);
-    }
-  }, [pageCount, hasNext]);
+  const clearSelection = useCallback(() => {
+    setState((prev) => ({ ...prev, selected: [] }));
+  }, []);
 
   return {
     permissions,
-    isLoading,
-    refetch,
-    page,
-    pageSize,
+    selected: state.selected,
+    search: state.search,
+    page: state.page,
     pageCount,
-    total,
-    hasNext,
+    pageSize: state.pageSize,
+    pageSizeOptions: PAGE_SIZE_OPTIONS,
+    allChecked,
+    setSearch,
     setPage,
     setPageSize,
-    search,
-    setSearch,
-    selected,
     selectItem,
     selectAll,
     clearSelection,
-    goToNextPage,
-    goToPrevPage,
-    goToPage,
+    isLoading,
+    refetch,
+    total,
   };
 };
 

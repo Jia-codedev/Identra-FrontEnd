@@ -52,19 +52,6 @@ export default function LeavesTypePage() {
   } = useLeaves();
 
   const mutations = useLeaveTypeMutations();
-  const formatDateTime = (dt?: string) => {
-    if (!dt) return "-";
-    try {
-      return format(parseISO(dt), "dd MMM yyyy, hh:mm a");
-    } catch {
-      return dt;
-    }
-  };
-
-  const getItemId = (item: LeaveType) => item.id;
-  const getItemDisplayName = (item: LeaveType) =>
-    item.leave_type || String(item.id);
-
   const debouncedSetSearch = debounce((v: string) => setSearch(v), 300);
   const handleSearchChange = (value: string) => {
     debouncedSetSearch(value);

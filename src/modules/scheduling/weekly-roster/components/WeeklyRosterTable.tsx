@@ -5,14 +5,18 @@ import { GenericTable, TableColumn } from "@/components/common/GenericTable";
 import { Badge } from "@/components/ui/badge";
 import { useTranslations } from "@/hooks/use-translations";
 import { useLanguage } from "@/providers/language-provider";
-import { IGroupSchedule } from "@/services/scheduling/groupSchedules";
+import { OrganizationSchedule } from "../types";
 import { format } from "date-fns";
 
 interface WeeklyRosterTableProps {
-  data: IGroupSchedule[];
+  data: OrganizationSchedule[];
   selectedItems: number[];
+  page: number;
+  pageSize: number;
+  onPageChange: (page: number) => void;
+  onPageSizeChange: (size: number) => void;
   onSelectionChange: (ids: number[]) => void;
-  onEdit: (item: IGroupSchedule) => void;
+  onEdit: (item: OrganizationSchedule) => void;
   onDelete: (id: number) => void;
   isLoading?: boolean;
   isDeleting?: boolean;
@@ -32,7 +36,7 @@ const ScheduleCell: React.FC<{
     ramadan_flag?: boolean;
   };
   isRTL: boolean;
-}> = ({ schedule, isRTL }) => {
+}> = ({ schedule }) => {
   const { t } = useTranslations();
 
   if (!schedule) {
@@ -51,21 +55,15 @@ const ScheduleCell: React.FC<{
   const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
   const textColor = luminance > 0.6 ? "#000" : "#fff";
 
-  const shiftLabel = schedule.ramadan_flag
-    ? t("scheduling.weeklyRoster.shift.ramadan") || "Ramadan"
-    : schedule.night_shift_flag
-    ? t("scheduling.weeklyRoster.shift.night") || "Night"
-    : schedule.open_shift_flag
-    ? t("scheduling.weeklyRoster.shift.open") || "Open"
-    : t("scheduling.weeklyRoster.shift.regular") || "Regular";
-
   return (
     <div className="flex items-center">
       <div
-        className="p-2 rounded-md w-full text-center"
+        className="p-2 rounded-md w-full text-center "
         style={{ backgroundColor: bg, color: textColor }}
       >
-        <div className="text-sm font-semibold truncate">{shiftLabel}</div>
+        <div className="text-xs font-semibold truncate mb-1">
+          {schedule.schedule_code}
+        </div>
       </div>
     </div>
   );
@@ -74,6 +72,10 @@ const ScheduleCell: React.FC<{
 export const WeeklyRosterTable: React.FC<WeeklyRosterTableProps> = ({
   data,
   selectedItems,
+  page,
+  pageSize,
+  onPageChange,
+  onPageSizeChange,
   onSelectionChange,
   onEdit,
   onDelete,
@@ -81,28 +83,21 @@ export const WeeklyRosterTable: React.FC<WeeklyRosterTableProps> = ({
   isDeleting = false,
   canEdit,
   canDelete,
-
-
 }) => {
   const { t } = useTranslations();
-  const { isRTL } = useLanguage();
-
-  const columns: TableColumn<IGroupSchedule>[] = [
+  const columns: TableColumn<OrganizationSchedule>[] = [
     {
-      key: "employee_group",
-      header: t("scheduling.weeklyRoster.fields.employeeGroup"),
+      key: "organization",
+      header: t("common.organization") || "Organization",
       accessor: (item, isRTL) => (
         <div className="flex flex-col">
           <span className="font-medium">
-            {item.employee_group
+            {item.organizations
               ? (isRTL
-                  ? item.employee_group.group_arb
-                  : item.employee_group.group_eng) ||
-                `Group #${item.employee_group_id}`
-              : `Group #${item.employee_group_id}`}
-          </span>
-          <span className="text-xs text-muted-foreground">
-            ID: {item.employee_group_id}
+                  ? item.organizations.organization_arb
+                  : item.organizations.organization_eng) ||
+                item.organizations.organization_code
+              : `Org #${item.organization_id}`}
           </span>
         </div>
       ),
@@ -110,15 +105,17 @@ export const WeeklyRosterTable: React.FC<WeeklyRosterTableProps> = ({
     },
     {
       key: "date_range",
-      header: t("scheduling.weeklyRoster.fields.dateRange"),
+      header: t("scheduling.weeklyRoster.fields.dateRange") || "Date Range",
       accessor: (item) => (
         <div className="flex flex-col">
           <span className="text-sm">
             {format(new Date(item.from_date), "MMM dd, yyyy")}
           </span>
-          <span className="text-xs text-muted-foreground">
-            to {format(new Date(item.to_date), "MMM dd, yyyy")}
-          </span>
+          {item.to_date && (
+            <span className="text-xs text-muted-foreground">
+              to {format(new Date(item.to_date), "MMM dd, yyyy")}
+            </span>
+          )}
         </div>
       ),
       width: "180px",
@@ -189,7 +186,7 @@ export const WeeklyRosterTable: React.FC<WeeklyRosterTableProps> = ({
   };
 
   const handleSelectAll = () => {
-    const allIds = data.map((item) => item.group_schedule_id!);
+    const allIds = data.map((item) => item.organization_schedule_id!);
     const newSelection = selectedItems.length === data.length ? [] : allIds;
     onSelectionChange(newSelection);
   };
@@ -206,14 +203,14 @@ export const WeeklyRosterTable: React.FC<WeeklyRosterTableProps> = ({
       page={1}
       pageSize={data.length}
       allChecked={allChecked}
-      getItemId={(item) => item.group_schedule_id!}
+      getItemId={(item) => item.organization_schedule_id!}
       getItemDisplayName={(item, isRTL) =>
-        item.employee_group
+        item.organizations
           ? (isRTL
-              ? item.employee_group.group_arb
-              : item.employee_group.group_eng) ||
-            `Group #${item.employee_group_id}`
-          : `Group #${item.employee_group_id}`
+              ? item.organizations.organization_arb
+              : item.organizations.organization_eng) ||
+            `Org #${item.organization_id}`
+          : `Org #${item.organization_id}`
       }
       onSelectItem={(id) => handleSelectItem(Number(id))}
       onSelectAll={handleSelectAll}

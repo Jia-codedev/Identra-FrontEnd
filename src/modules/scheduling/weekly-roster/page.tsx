@@ -1,22 +1,27 @@
 "use client";
 
-import React, { useState } from 'react';
-import { useTranslations } from '@/hooks/use-translations';
-import { WeeklyRosterHeader } from './components/WeeklyRosterHeader';
-import { WeeklyRosterTable } from './components/WeeklyRosterTable';
-import { WeeklyRosterModal } from './components/WeeklyRosterModal';
-import { useWeeklyRoster } from './hooks/useWeeklyRoster';
-import { useWeeklyRosterState } from './hooks/useWeeklyRosterState';
-import { useMutations } from './hooks/useMutations';
-import { IGroupSchedule, ICreateGroupSchedule, IUpdateGroupSchedule } from '@/services/scheduling/groupSchedules';
-import { WeeklyRosterFilters } from './types';
-import { toast } from 'sonner';
-import { useSubModulePrivileges } from '@/hooks/security/useSubModulePrivileges';
+import React, { useState } from "react";
+import { useTranslations } from "@/hooks/use-translations";
+import { CustomPagination } from "@/components/common/dashboard/Pagination";
+import { WeeklyRosterHeader } from "./components/WeeklyRosterHeader";
+import { WeeklyRosterTable } from "./components/WeeklyRosterTable";
+import { WeeklyRosterModal } from "./components/WeeklyRosterModal";
+import { useWeeklyRoster } from "./hooks/useWeeklyRoster";
+import { useWeeklyRosterState } from "./hooks/useWeeklyRosterState";
+import { useMutations } from "./hooks/useMutations";
+import {
+  OrganizationSchedule,
+  OrganizationScheduleCreate,
+  WeeklyRosterFilters,
+} from "./types";
+import { toast } from "sonner";
+import { useSubModulePrivileges } from "@/hooks/security/useSubModulePrivileges";
 
 export default function WeeklyRosterPage() {
   const { t } = useTranslations();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingSchedule, setEditingSchedule] = useState<IGroupSchedule | null>(null);
+  const [editingSchedule, setEditingSchedule] =
+    useState<OrganizationSchedule | null>(null);
 
   const {
     weeklyRosters,
@@ -40,18 +45,16 @@ export default function WeeklyRosterPage() {
     data: weeklySchedulesResp,
     isLoading,
     error,
-    refetch
+    refetch,
   } = useWeeklyRoster({ page, pageSize, filters, search });
 
   const weeklySchedules = weeklySchedulesResp?.data ?? [];
   const total = weeklySchedulesResp?.total ?? 0;
+  const pageCount = Math.ceil(total / pageSize);
+  const pageSizeOptions = [10, 20, 50, 100];
 
-  const {
-    createMutation,
-    updateMutation,
-    deleteMutation,
-    deleteManyMutation
-  } = useMutations();
+  const { createMutation, updateMutation, deleteMutation, deleteManyMutation } =
+    useMutations();
 
   const { canView, canCreate, canEdit, canDelete } = useSubModulePrivileges(
     "roster-management",
@@ -64,7 +67,7 @@ export default function WeeklyRosterPage() {
     setIsModalOpen(true);
   };
 
-  const handleEdit = (schedule: IGroupSchedule) => {
+  const handleEdit = (schedule: OrganizationSchedule) => {
     setEditingSchedule(schedule);
     setIsModalOpen(true);
   };
@@ -72,45 +75,49 @@ export default function WeeklyRosterPage() {
   const handleDelete = async (id: number) => {
     try {
       await deleteMutation.mutateAsync(id);
-      toast.success(t('toast.success.weeklyRoasterDeleted'));
+      toast.success(t("toast.success.weeklyRoasterDeleted"));
       refetch();
     } catch (error) {
-      toast.error(t('toast.error.weeklyRoasterDeleteError'));
+      toast.error(t("toast.error.weeklyRoasterDeleteError"));
     }
   };
 
   const handleDeleteMany = async () => {
     if (selected.length === 0) {
-      toast.warning(t('common.selectItemsToDelete'));
+      toast.warning(t("common.selectItemsToDelete"));
       return;
     }
 
     try {
       await deleteManyMutation.mutateAsync(selected);
-      toast.success(t('common.deleteSuccess'));
+      toast.success(t("common.deleteSuccess"));
       refetch();
     } catch (error) {
-      toast.error(t('common.deleteError'));
+      toast.error(t("common.deleteError"));
     }
   };
 
-  const handleSave = async (data: ICreateGroupSchedule | IUpdateGroupSchedule) => {
+  const handleSave = async (data: OrganizationScheduleCreate) => {
     try {
       if (editingSchedule) {
         await updateMutation.mutateAsync({
-          id: editingSchedule.group_schedule_id!,
-          data: data as IUpdateGroupSchedule
+          id: editingSchedule.organization_schedule_id!,
+          data: data,
         });
-        toast.success(t('toast.success.weeklyRoasterUpdated'));
+        toast.success(t("toast.success.weeklyRoasterUpdated"));
       } else {
-        await createMutation.mutateAsync(data as ICreateGroupSchedule);
-        toast.success(t('toast.success.weeklyRoasterAdded'));
+        await createMutation.mutateAsync(data);
+        toast.success(t("toast.success.weeklyRoasterAdded"));
       }
       setIsModalOpen(false);
       setEditingSchedule(null);
       refetch();
     } catch (error) {
-      toast.error(editingSchedule ? t('toast.error.weeklyRoasterUpdateError') : t('toast.error.weeklyRoasterAddError'));
+      toast.error(
+        editingSchedule
+          ? t("toast.error.weeklyRoasterUpdateError")
+          : t("toast.error.weeklyRoasterAddError")
+      );
     }
   };
 
@@ -123,12 +130,12 @@ export default function WeeklyRosterPage() {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
-          <p className="text-destructive mb-4">{t('common.errorLoading')}</p>
+          <p className="text-destructive mb-4">{t("common.errorLoading")}</p>
           <button
             onClick={() => refetch()}
             className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
           >
-            {t('common.retry')}
+            {t("common.retry")}
           </button>
         </div>
       </div>
@@ -156,12 +163,12 @@ export default function WeeklyRosterPage() {
         isLoading={isLoading || stateLoading}
         selectedItems={selected}
         onSelectionChange={(selectedIds: number[]) => {
-          selectedIds.forEach(id => {
+          selectedIds.forEach((id) => {
             if (!selected.includes(id)) {
               selectWeeklyRoster(id);
             }
           });
-          selected.forEach(id => {
+          selected.forEach((id) => {
             if (!selectedIds.includes(id)) {
               selectWeeklyRoster(id);
             }
@@ -170,14 +177,29 @@ export default function WeeklyRosterPage() {
         onEdit={handleEdit}
         onDelete={handleDelete}
         isDeleting={deleteMutation.isPending}
+        page={page}
+        pageSize={pageSize}
+        onPageChange={setPage}
+        onPageSizeChange={setPageSize}
       />
+
+      {weeklySchedules.length > 0 && (
+        <CustomPagination
+          currentPage={page}
+          totalPages={pageCount}
+          pageSize={pageSize}
+          pageSizeOptions={pageSizeOptions}
+          onPageChange={setPage}
+          onPageSizeChange={setPageSize}
+        />
+      )}
 
       <WeeklyRosterModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
         onSubmit={handleSave}
         groupSchedule={editingSchedule || undefined}
-        mode={editingSchedule ? 'edit' : 'create'}
+        mode={editingSchedule ? "edit" : "create"}
         isLoading={createMutation.isPending || updateMutation.isPending}
       />
     </div>

@@ -1,3 +1,67 @@
+export interface OrganizationSchedule {
+  organization_schedule_id: number;
+  organization_id: number;
+  from_date: string;
+  to_date?: string;
+  monday_schedule_id?: number;
+  tuesday_schedule_id?: number;
+  wednesday_schedule_id?: number;
+  thursday_schedule_id?: number;
+  friday_schedule_id?: number;
+  saturday_schedule_id?: number;
+  sunday_schedule_id?: number;
+  created_id: number;
+  created_date?: string;
+  last_updated_id: number;
+  last_updated_date?: string;
+
+  monday_schedule?: ScheduleInfo;
+  tuesday_schedule?: ScheduleInfo;
+  wednesday_schedule?: ScheduleInfo;
+  thursday_schedule?: ScheduleInfo;
+  friday_schedule?: ScheduleInfo;
+  saturday_schedule?: ScheduleInfo;
+  sunday_schedule?: ScheduleInfo;
+
+  organizations?: {
+    organization_id: number;
+    organization_code: string;
+    organization_eng: string;
+    organization_arb: string;
+  };
+}
+
+export interface ScheduleInfo {
+  schedule_id: number;
+  schedule_code: string;
+  in_time: string;
+  out_time: string;
+  sch_color: string;
+  open_shift_flag?: boolean;
+  night_shift_flag?: boolean;
+  ramadan_flag?: boolean;
+}
+
+export interface OrganizationScheduleCreate {
+  organization_id: number;
+  from_date: string;
+  to_date?: string;
+  monday_schedule_id?: number;
+  tuesday_schedule_id?: number;
+  wednesday_schedule_id?: number;
+  thursday_schedule_id?: number;
+  friday_schedule_id?: number;
+  saturday_schedule_id?: number;
+  sunday_schedule_id?: number;
+}
+
+export interface WeeklyRosterFilters {
+  organization_id?: number;
+  from_date?: Date;
+  to_date?: Date;
+}
+
+// Keep old interfaces for backward compatibility if needed
 export interface GroupSchedule {
   id: number;
   group_name: string;
@@ -14,7 +78,7 @@ export interface GroupSchedule {
   sunday_schedule_id?: number;
   created_at?: string;
   updated_at?: string;
-  
+
   monday_schedule?: ScheduleInfo;
   tuesday_schedule?: ScheduleInfo;
   wednesday_schedule?: ScheduleInfo;
@@ -22,7 +86,7 @@ export interface GroupSchedule {
   friday_schedule?: ScheduleInfo;
   saturday_schedule?: ScheduleInfo;
   sunday_schedule?: ScheduleInfo;
-  
+
   employee_group?: {
     id: number;
     group_name: string;
@@ -91,7 +155,14 @@ export interface GroupScheduleListParams {
   is_active?: boolean;
 }
 
-export type DayKey = 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday';
+export type DayKey =
+  | "monday"
+  | "tuesday"
+  | "wednesday"
+  | "thursday"
+  | "friday"
+  | "saturday"
+  | "sunday";
 
 export interface DayInfo {
   key: DayKey;
@@ -100,13 +171,13 @@ export interface DayInfo {
 }
 
 export const DAYS_OF_WEEK: DayInfo[] = [
-  { key: 'monday', label: 'Monday', field: 'monday_schedule_id' },
-  { key: 'tuesday', label: 'Tuesday', field: 'tuesday_schedule_id' },
-  { key: 'wednesday', label: 'Wednesday', field: 'wednesday_schedule_id' },
-  { key: 'thursday', label: 'Thursday', field: 'thursday_schedule_id' },
-  { key: 'friday', label: 'Friday', field: 'friday_schedule_id' },
-  { key: 'saturday', label: 'Saturday', field: 'saturday_schedule_id' },
-  { key: 'sunday', label: 'Sunday', field: 'sunday_schedule_id' },
+  { key: "monday", label: "Monday", field: "monday_schedule_id" },
+  { key: "tuesday", label: "Tuesday", field: "tuesday_schedule_id" },
+  { key: "wednesday", label: "Wednesday", field: "wednesday_schedule_id" },
+  { key: "thursday", label: "Thursday", field: "thursday_schedule_id" },
+  { key: "friday", label: "Friday", field: "friday_schedule_id" },
+  { key: "saturday", label: "Saturday", field: "saturday_schedule_id" },
+  { key: "sunday", label: "Sunday", field: "sunday_schedule_id" },
 ];
 
 export interface WeeklyRosterFilters {

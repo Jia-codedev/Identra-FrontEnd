@@ -3,6 +3,8 @@ import { Badge } from "@/components/ui/badge";
 import { format, parseISO } from "date-fns";
 import { GenericTable, TableColumn } from "@/components/common/GenericTable";
 import { useTranslations } from "@/hooks/use-translations";
+import apiClient from "@/configs/api/Axios";
+import { cn } from "@/lib/utils";
 
 type Leave = any;
 
@@ -109,11 +111,37 @@ const LeavesList: React.FC<Props> = ({
       ),
     },
     {
-      key: "reference",
-      header: t("leaveManagement.leaves.columns.reference") || "Reference",
+      key: "attachments",
+      header: t("leaveManagement.leaves.columns.attachments") || "Attachments",
       accessor: (leave) => (
-        <div className="text-xs text-gray-500 font-mono">
-          {leave.leave_unique_ref_no || "-"}
+        <div
+          onClick={async () => {
+            const downloadLink = document.createElement("a");
+            const res = await apiClient.get(leave.leave_doc_filename_path, {
+              responseType: "blob",
+            });
+            const url = window.URL.createObjectURL(new Blob([res.data]));
+            downloadLink.href = url;
+            downloadLink.setAttribute(
+              "download",
+              leave.leave_doc_filename_path
+                ? leave.leave_doc_filename_path.split("/").pop() || "file"
+                : "file"
+            );
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+          }}
+          className={cn(
+            "bg-muted rounded-4xl p-0.5 w-fit px-4",
+            leave.leave_doc_filename_path
+              ? "cursor-pointer bg-green-600/10 text-green-500"
+              : "cursor-default bg-gray-200/50 text-gray-400"
+          )}
+        >
+          {leave.leave_doc_filename_path
+            ? t("common.download") || "Download"
+            : t("leaveManagement.leaves.noAttachment") || "No Attachment"}
         </div>
       ),
     },

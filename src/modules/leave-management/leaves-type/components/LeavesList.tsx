@@ -54,8 +54,8 @@ const LeavesList: React.FC<Props> = ({
   canDelete,
   canEdit,
 }) => {
+  console.log("LeavesList rendered with leaves:", leaves);
   const { t } = useTranslations();
-
   const columns: TableColumn<Leave>[] = [
     {
       key: "code",
@@ -73,7 +73,7 @@ const LeavesList: React.FC<Props> = ({
       accessor: (leave) => (
         <Badge
           className={
-            (leave.status ? "bg-card text-green-800" : "bg-destructive") +
+            (leave.status ? "bg-card text-green-800" : "text-destructive") +
             " px-2 py-0.5 rounded text-xs font-medium"
           }
           variant="outline"
@@ -93,7 +93,7 @@ const LeavesList: React.FC<Props> = ({
 
   return (
     <GenericTable
-      canEdit={canEdit} 
+      canEdit={canEdit}
       canDelete={canDelete}
       data={leaves}
       columns={columns}

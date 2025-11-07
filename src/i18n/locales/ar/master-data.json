@@ -75,22 +75,29 @@
     "addOrganization": "إضافة مؤسسة",
     "editOrganization": "تعديل مؤسسة",
     "organizationName": "اسم المؤسسة",
+    "organizationNameEnglish": "اسم المؤسسة (بالإنجليزية)",
+    "organizationNameArabic": "اسم المؤسسة (بالعربية)",
     "organizationCode": "رمز المؤسسة",
     "enterOrganizationName": "أدخل اسم المؤسسة",
     "enterOrganizationNameArabic": "أدخل اسم المؤسسة بالعربية",
+    "enterOrganizationNameEnglish": "أدخل اسم المؤسسة بالإنجليزية",
     "enterOrganizationCode": "أدخل رمز المؤسسة",
     "noOrganizationsFound": "لم يتم العثور على مؤسسات.",
     "structure": {
       "title": "هيكل الرسم البياني"
     },
-    "organizationNameEnglish": "اسم المؤسسة (بالإنجليزية)",
-    "enterOrganizationNameEnglish": "أدخل اسم المؤسسة بالإنجليزية",
     "organizationType": "نوع المؤسسة",
     "selectOrganizationType": "اختر نوع المؤسسة",
+    "parentOrganizationType": "نوع المؤسسة الأم",
+    "selectParentType": "اختر نوع المؤسسة الأم",
     "parentOrganization": "المؤسسة الأم",
+    "selectParentOrganization": "اختر المؤسسة الأم",
+    "selectParentTypeFirst": "يرجى اختيار نوع المؤسسة الأم أولاً",
+    "noChildTypesAvailable": "لا توجد أنواع مؤسسات فرعية متاحة",
     "root": "الجذر",
     "location": "الموقع",
-    "selectLocation": "اختر الموقع"
+    "selectLocation": "اختر الموقع",
+    "leaveEmptyForRoot": "اتركه فارغاً لإنشاء مؤسسة جذرية"
   },
   "organizationTypes": {
     "title": "إدارة أنواع المؤسسات",

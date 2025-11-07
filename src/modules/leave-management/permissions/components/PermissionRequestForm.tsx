@@ -4,24 +4,42 @@ import React, { useState, useEffect } from "react";
 import { useTranslations } from "@/hooks/use-translations";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/Input";
+import { Label } from "@/components/ui/label";
 import { DatePicker } from "@/components/ui/date-picker";
 import { TimeSelect } from "@/components/ui/time-select";
-import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
-import { DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/Textarea";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import permissionTypesApi from "@/services/leaveManagement/permissionTypes";
 import { useUserId } from "@/store/userStore";
 import usePermissionMutations from "../hooks/useMutations";
+import { IPermission } from "../types";
 
 interface Props {
-  permission?: any;
+  permission?: IPermission | null;
   onClose: (refresh?: boolean) => void;
 }
 
 const PermissionRequestForm: React.FC<Props> = ({ permission, onClose }) => {
   const { t } = useTranslations();
   const userId = useUserId();
-  const mutations = usePermissionMutations();
-  const [type, setType] = useState(permission?.permission_type_id?.toString() || "");
+  const { createPermission, updatePermission } = usePermissionMutations();
+
+  const [type, setType] = useState(
+    permission?.permission_type_id?.toString() || ""
+  );
   const [permissionTypes, setPermissionTypes] = useState<any[]>([]);
   const [fromDate, setFromDate] = useState<Date | undefined>(
     permission?.from_date ? new Date(permission.from_date) : undefined
@@ -38,11 +56,9 @@ const PermissionRequestForm: React.FC<Props> = ({ permission, onClose }) => {
     permissionTypesApi.getActive().then((res: any) => {
       let types = [];
       if (Array.isArray(res.data)) {
-        types = res.data;
+        types = res.data.filter((pt: any) => pt.status_flag === true);
       } else if (res.data && Array.isArray(res.data.data)) {
-        types = res.data.data;
-      } else if (res.data && Array.isArray(res.data.result)) {
-        types = res.data.result;
+        types = res.data.data.filter((pt: any) => pt.status_flag === true);
       }
       setPermissionTypes(types);
     });
@@ -51,32 +67,34 @@ const PermissionRequestForm: React.FC<Props> = ({ permission, onClose }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    
+
     if (!type) {
       setError("Please select a permission type");
       return;
     }
-    
+
     if (!fromDate) {
       setError("Please select a from date");
       return;
     }
-    
+
     if (!fromTime) {
       setError("Please select a from time");
       return;
     }
-    
+
     if (!toTime) {
       setError("Please select a to time");
       return;
     }
-    
+
     try {
       const permission_type_id = type ? Number(type) : undefined;
       const from_date = fromDate ? fromDate.toISOString().split("T")[0] : "";
-      const to_date_value = toDate ? toDate.toISOString().split("T")[0] : from_date;
-      
+      const to_date_value = toDate
+        ? toDate.toISOString().split("T")[0]
+        : from_date;
+
       const payload = {
         employee_id: userId,
         permission_type_id,
@@ -87,127 +105,176 @@ const PermissionRequestForm: React.FC<Props> = ({ permission, onClose }) => {
         remarks,
       };
 
-      if (permission?.id) {
-        await mutations.update.mutateAsync({ id: permission.id, data: payload });
+      if (permission?.employee_short_permission_id) {
+        updatePermission.mutate({
+          id: permission.employee_short_permission_id,
+          permissionData: payload,
+          onClose: () => onClose(true),
+          search: "",
+          pageSize: 10,
+        });
       } else {
-        await mutations.create.mutateAsync(payload);
+        createPermission.mutate({
+          permissionData: payload,
+          onClose: () => onClose(true),
+          search: "",
+          pageSize: 10,
+        });
       }
-      
-      onClose(true);
     } catch (err: any) {
       setError(err?.message || "Failed to submit request");
     }
   };
 
-  const isLoading = mutations.create.isPending || mutations.update.isPending;
+  const isLoading = createPermission.isPending || updatePermission.isPending;
 
   return (
-    <DialogContent className="max-w-4xl">
-      <DialogHeader>
-        <DialogTitle>
-          {permission?.id 
-            ? t('leaveManagement.permissions.actions.edit')
-            : t('leaveManagement.permissions.actions.add')
-          }
-        </DialogTitle>
-      </DialogHeader>
-      
-      <form onSubmit={handleSubmit} className="space-y-4">
-        {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
-            {error}
+    <Dialog open={true} onOpenChange={() => onClose()}>
+      <DialogContent className="max-w-4xl w-full p-0 bg-background rounded-xl shadow-2xl border border-border">
+        <div className="w-full p-4">
+          <div className="flex items-center justify-between mb-6 px-2">
+            <DialogTitle className="text-xl font-semibold text-foreground">
+              {permission?.employee_short_permission_id
+                ? t("leaveManagement.permissions.actions.edit") ||
+                  "Edit Permission"
+                : t("leaveManagement.permissions.actions.add") ||
+                  "Add Permission"}
+            </DialogTitle>
           </div>
-        )}
-        
-        <div>
-          <label className="block mb-1 font-medium">
-            {t('leaveManagement.permissions.columns.type')} <span className="text-red-500">*</span>
-          </label>
-          <Select value={type} onValueChange={setType} required>
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder={t('leaveManagement.permissions.columns.type')} />
-            </SelectTrigger>
-            <SelectContent>
-              {permissionTypes.map((pt) => (
-                <SelectItem key={pt.permission_type_id} value={String(pt.permission_type_id)}>
-                  {pt.permission_type_eng || pt.permission_type_code}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block mb-1 font-medium">
-              {t('leaveManagement.permissions.columns.from')} <span className="text-red-500">*</span>
-            </label>
-            <DatePicker
-              selected={fromDate}
-              onSelect={setFromDate}
-              placeholder="Select from date"
-            />
-          </div>
-          <div>
-            <label className="block mb-1 font-medium">
-              {t('leaveManagement.permissions.columns.to')}
-            </label>
-            <DatePicker
-              selected={toDate}
-              onSelect={setToDate}
-              placeholder="Select to date"
-            />
-          </div>
-        </div>
+          <ScrollArea className="max-h-[60vh] w-full">
+            <div className="p-2">
+              <form onSubmit={handleSubmit} className="space-y-6">
+                {error && (
+                  <div className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 px-4 py-3 rounded">
+                    {error}
+                  </div>
+                )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block mb-1 font-medium">
-              From Time <span className="text-red-500">*</span>
-            </label>
-            <TimeSelect
-              value={fromTime}
-              onChange={setFromTime}
-            />
-          </div>
-          <div>
-            <label className="block mb-1 font-medium">
-              To Time <span className="text-red-500">*</span>
-            </label>
-            <TimeSelect
-              value={toTime}
-              onChange={setToTime}
-            />
-          </div>
-        </div>
+                <div>
+                  <Label
+                    htmlFor="permission_type"
+                    className="block mb-2 font-medium text-sm"
+                  >
+                    {t("leaveManagement.permissions.columns.type") ||
+                      "Permission Type"}{" "}
+                    <span className="text-red-500">*</span>
+                  </Label>
+                  <Select value={type} onValueChange={setType} required>
+                    <SelectTrigger className="w-full">
+                      <SelectValue
+                        placeholder={
+                          t("leaveManagement.permissions.columns.type") ||
+                          "Select Type"
+                        }
+                      />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {permissionTypes.map((pt) => (
+                        <SelectItem
+                          key={pt.permission_type_id}
+                          value={String(pt.permission_type_id)}
+                        >
+                          {pt.permission_type_eng || pt.permission_type_code}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
 
-        <div>
-          <label className="block mb-1 font-medium">
-            {t('leaveManagement.permissions.columns.remarks')}
-          </label>
-          <Input
-            value={remarks}
-            onChange={(e) => setRemarks(e.target.value)}
-            placeholder="Enter remarks"
-            className="w-full"
-          />
-        </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label
+                      htmlFor="from_date"
+                      className="block mb-2 font-medium text-sm"
+                    >
+                      {t("leaveManagement.permissions.columns.from") ||
+                        "From Date"}{" "}
+                      <span className="text-red-500">*</span>
+                    </Label>
+                    <DatePicker
+                      selected={fromDate}
+                      onSelect={setFromDate}
+                      placeholder="Select from date"
+                    />
+                  </div>
+                  <div>
+                    <Label
+                      htmlFor="to_date"
+                      className="block mb-2 font-medium text-sm"
+                    >
+                      {t("leaveManagement.permissions.columns.to") || "To Date"}
+                    </Label>
+                    <DatePicker
+                      selected={toDate}
+                      onSelect={setToDate}
+                      placeholder="Select to date (optional)"
+                    />
+                  </div>
+                </div>
 
-        <div className="flex gap-2 justify-end">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => onClose()}
-            disabled={isLoading}
-          >
-            {t('common.cancel')}
-          </Button>
-          <Button type="submit" disabled={isLoading}>
-            {isLoading ? (t('common.saving') || 'Submitting...') : permission?.id ? t('common.update') : t('common.save')}
-          </Button>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label
+                      htmlFor="from_time"
+                      className="block mb-2 font-medium text-sm"
+                    >
+                      From Time <span className="text-red-500">*</span>
+                    </Label>
+                    <TimeSelect value={fromTime} onChange={setFromTime} />
+                  </div>
+                  <div>
+                    <Label
+                      htmlFor="to_time"
+                      className="block mb-2 font-medium text-sm"
+                    >
+                      To Time <span className="text-red-500">*</span>
+                    </Label>
+                    <TimeSelect value={toTime} onChange={setToTime} />
+                  </div>
+                </div>
+
+                <div>
+                  <Label
+                    htmlFor="remarks"
+                    className="block mb-2 font-medium text-sm"
+                  >
+                    {t("leaveManagement.permissions.columns.remarks") ||
+                      "Remarks"}
+                  </Label>
+                  <Textarea
+                    id="remarks"
+                    value={remarks}
+                    onChange={(e) => setRemarks(e.target.value)}
+                    placeholder="Enter remarks (optional)"
+                    className="w-full min-h-[80px]"
+                  />
+                </div>
+
+                <div className="flex gap-3 pt-4">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => onClose()}
+                    disabled={isLoading}
+                    className="flex-1"
+                  >
+                    {t("common.cancel") || "Cancel"}
+                  </Button>
+                  <Button type="submit" disabled={isLoading} className="flex-1">
+                    {isLoading
+                      ? t("common.saving") || "Submitting..."
+                      : permission?.employee_short_permission_id
+                      ? t("common.update") || "Update"
+                      : t("common.save") || "Save"}
+                  </Button>
+                </div>
+              </form>
+            </div>
+          </ScrollArea>
         </div>
-      </form>
-    </DialogContent>
+      </DialogContent>
+    </Dialog>
   );
 };
 

@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import ReactDOM from 'react-dom';
-import { Input } from "@/components/ui/Input"
+import ReactDOM from "react-dom";
+import { Input } from "@/components/ui/Input";
 import { X, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -39,17 +39,29 @@ export const Combobox: React.FC<ComboboxProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
+  const [inputValue, setInputValue] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const [dropdownStyle, setDropdownStyle] = useState<{ left: number; top: number; width: number } | null>(null);
+  const [dropdownStyle, setDropdownStyle] = useState<{
+    left: number;
+    top: number;
+    width: number;
+  } | null>(null);
 
   // Find selected option
   const selectedOption = options.find((option) => option.value === value);
   const displayValue = selectedOption ? selectedOption.label : "";
 
+  // Sync input value with selected option or search query
+  useEffect(() => {
+    if (!isOpen) {
+      setInputValue(displayValue);
+    }
+  }, [displayValue, isOpen]);
+
   // Filter options based on search query (only if local filtering is enabled)
-  const filteredOptions = disableLocalFiltering 
-    ? options 
+  const filteredOptions = disableLocalFiltering
+    ? options
     : options.filter((option) =>
         option.label.toLowerCase().includes(searchQuery.toLowerCase())
       );
@@ -59,6 +71,7 @@ export const Combobox: React.FC<ComboboxProps> = ({
     if (!disabled) {
       setIsOpen(true);
       setSearchQuery("");
+      setInputValue("");
       setHighlightedIndex(-1);
     }
   };
@@ -67,8 +80,12 @@ export const Combobox: React.FC<ComboboxProps> = ({
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value;
     setSearchQuery(query);
+    setInputValue(query);
     setHighlightedIndex(-1);
-    setIsOpen(true);
+
+    if (!isOpen) {
+      setIsOpen(true);
+    }
 
     if (onSearch) {
       onSearch(query);
@@ -79,6 +96,7 @@ export const Combobox: React.FC<ComboboxProps> = ({
   const handleOptionSelect = (option: ComboboxOption) => {
     onValueChange(option.value);
     setSearchQuery("");
+    setInputValue(option.label);
     setIsOpen(false);
     setHighlightedIndex(-1);
     inputRef.current?.blur();
@@ -89,6 +107,7 @@ export const Combobox: React.FC<ComboboxProps> = ({
     e.stopPropagation();
     onValueChange(null);
     setSearchQuery("");
+    setInputValue("");
     setIsOpen(false);
     setHighlightedIndex(-1);
     inputRef.current?.focus();
@@ -161,18 +180,22 @@ export const Combobox: React.FC<ComboboxProps> = ({
     const el = inputRef.current;
     if (!el) return setDropdownStyle(null);
     const rect = el.getBoundingClientRect();
-    setDropdownStyle({ left: rect.left + window.scrollX, top: rect.bottom + window.scrollY, width: rect.width });
+    setDropdownStyle({
+      left: rect.left + window.scrollX,
+      top: rect.bottom + window.scrollY,
+      width: rect.width,
+    });
   };
 
   useEffect(() => {
     if (isOpen) {
       updateDropdownPosition();
-      window.addEventListener('resize', updateDropdownPosition);
-      window.addEventListener('scroll', updateDropdownPosition, true);
+      window.addEventListener("resize", updateDropdownPosition);
+      window.addEventListener("scroll", updateDropdownPosition, true);
     }
     return () => {
-      window.removeEventListener('resize', updateDropdownPosition);
-      window.removeEventListener('scroll', updateDropdownPosition, true);
+      window.removeEventListener("resize", updateDropdownPosition);
+      window.removeEventListener("scroll", updateDropdownPosition, true);
     };
   }, [isOpen]);
 
@@ -181,7 +204,7 @@ export const Combobox: React.FC<ComboboxProps> = ({
       <div className="relative">
         <Input
           ref={inputRef}
-          value={isOpen ? searchQuery : displayValue}
+          value={inputValue}
           onChange={handleInputChange}
           onFocus={handleInputFocus}
           onKeyDown={handleKeyDown}
@@ -210,43 +233,68 @@ export const Combobox: React.FC<ComboboxProps> = ({
       </div>
 
       {/* Dropdown (rendered in a portal to avoid clipping) */}
-      {isOpen && dropdownStyle && ReactDOM.createPortal(
-        <div
-          ref={dropdownRef}
-          style={{ left: dropdownStyle.left, top: dropdownStyle.top, width: dropdownStyle.width, pointerEvents: 'auto', zIndex: 2147483647 }}
-          className="absolute bg-popover text-popover-foreground border border-border rounded-md shadow-sm max-h-48 overflow-hidden"
-        >
-          {isLoading ? (
-            <div className="p-2 text-muted-foreground text-sm flex items-center gap-2">
-              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current"></div>
-              {"Loading..."}
-            </div>
-          ) : filteredOptions.length > 0 ? (
-            <div className="max-h-48 overflow-y-auto">
-              {filteredOptions.map((option, index) => (
-                <div
-                  key={option.value}
-                  onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); handleOptionSelect(option); }}
-                  onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleOptionSelect(option); }}
-                  role="button"
-                  tabIndex={0}
-                  className={cn(
-                    "px-2 py-2 cursor-pointer border-b last:border-b-0 transition-colors duration-150 text-sm",
-                    index === highlightedIndex
-                      ? "bg-accent text-accent-foreground"
-                      : "hover:bg-accent/10"
-                  )}
-                >
-                  <div className={cn("text-sm font-medium", index === highlightedIndex ? "" : "")}>{option.label}</div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="p-2 text-muted-foreground text-sm">{emptyMessage}</div>
-          )}
-        </div>,
-        document.body
-      )}
+      {isOpen &&
+        dropdownStyle &&
+        ReactDOM.createPortal(
+          <div
+            ref={dropdownRef}
+            style={{
+              left: dropdownStyle.left,
+              top: dropdownStyle.top,
+              width: dropdownStyle.width,
+              pointerEvents: "auto",
+              zIndex: 2147483647,
+            }}
+            className="absolute bg-popover text-popover-foreground border border-border rounded-md shadow-sm max-h-48 overflow-hidden"
+          >
+            {isLoading ? (
+              <div className="p-2 text-muted-foreground text-sm flex items-center gap-2">
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current"></div>
+                {"Loading..."}
+              </div>
+            ) : filteredOptions.length > 0 ? (
+              <div className="max-h-48 overflow-y-auto">
+                {filteredOptions.map((option, index) => (
+                  <div
+                    key={option.value}
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handleOptionSelect(option);
+                    }}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handleOptionSelect(option);
+                    }}
+                    role="button"
+                    tabIndex={0}
+                    className={cn(
+                      "px-2 py-2 cursor-pointer border-b last:border-b-0 transition-colors duration-150 text-sm",
+                      index === highlightedIndex
+                        ? "bg-accent text-accent-foreground"
+                        : "hover:bg-accent/10"
+                    )}
+                  >
+                    <div
+                      className={cn(
+                        "text-sm font-medium",
+                        index === highlightedIndex ? "" : ""
+                      )}
+                    >
+                      {option.label}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="p-2 text-muted-foreground text-sm">
+                {emptyMessage}
+              </div>
+            )}
+          </div>,
+          document.body
+        )}
     </div>
   );
 };

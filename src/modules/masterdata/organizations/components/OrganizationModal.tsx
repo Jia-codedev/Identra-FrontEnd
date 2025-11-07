@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -13,12 +13,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Combobox } from "@/components/ui/combobox";
+import { SearchCombobox } from "@/components/ui/search-combobox";
 import { useTranslations } from "@/hooks/use-translations";
 import { useLanguage } from "@/providers/language-provider";
-import { IOrganization } from "../types";
 import organizationTypesApi from "@/services/masterdata/organizationTypes";
-import siteApi from "@/services/masterdata/site";
 import organizationsApi from "@/services/masterdata/organizations";
 
 interface OrganizationModalProps {
@@ -30,250 +28,156 @@ interface OrganizationModalProps {
   isLoading?: boolean;
 }
 
+interface IOrganizationType {
+  organization_type_id?: number;
+  organization_type_arb?: string;
+  organization_type_eng?: string;
+  org_type_level?: number;
+  created_id?: number;
+  created_date?: string;
+  last_updated_id?: number;
+  last_updated_date?: string;
+  organization_types: {
+    organization_type_id?: number;
+    organization_type_arb?: string;
+    organization_type_eng?: string;
+    org_type_level?: number;
+    created_id?: number;
+    created_date?: string;
+    last_updated_id?: number;
+    last_updated_date?: string;
+  };
+}
+
+interface IOrganization {
+  organization_id: number; // Remove the '?' or '| undefined'
+  organization_code?: string;
+  organization_arb?: string;
+  organization_eng?: string;
+  parent_id?: number;
+  organization_type_id?: number;
+  oraganization_types?: IOrganizationType;
+}
+
 export const OrganizationModal: React.FC<OrganizationModalProps> = ({
-  isOpen,
   onClose,
   onSave,
   organization,
   mode,
   isLoading = false,
+  isOpen,
 }) => {
   const { t } = useTranslations();
   const { isRTL } = useLanguage();
-
-  type OrganizationFormFields = {
-    organization_eng: string | undefined;
-    organization_arb: string | undefined;
-    organization_code: string;
-    organization_type_id: number;
-    parent_id?: number;
-    location_id?: number;
-  };
-
-  const initialForm: OrganizationFormFields = {
-    organization_eng: "",
-    organization_arb: "",
-    organization_code: "",
-    organization_type_id: 0,
-  };
-
-  const [formData, setFormData] = useState<OrganizationFormFields>(initialForm);
   const [organizationTypes, setOrganizationTypes] = useState<
-    { label: string; value: number }[]
+    IOrganizationType[]
   >([]);
-  const [locations, setLocations] = useState<
-    { label: string; value: number }[]
-  >([]);
-  const [parentOrganizations, setParentOrganizations] = useState<
-    { label: string; value: number }[]
-  >([]);
-  const [isLoadingData, setIsLoadingData] = useState(false);
-  const [isLoadingLocations, setIsLoadingLocations] = useState(false);
-  const [isLoadingParents, setIsLoadingParents] = useState(false);
-  const [errors, setErrors] = useState<
-    Partial<Record<keyof OrganizationFormFields, string>>
-  >({});
-  const [dropdownsLoaded, setDropdownsLoaded] = useState(false);
-
-  // Fetch organization types when modal opens
+  const [organizationList, setOrganizationList] = useState<IOrganization[]>([]);
+  const [form, setForm] = useState<Partial<IOrganization>>({
+    parent_id: organization?.parent_id ?? undefined,
+    organization_code: organization?.organization_code || "",
+    organization_arb: organization?.organization_arb || "",
+    organization_eng: organization?.organization_eng || "",
+    organization_type_id: organization?.organization_type_id ?? undefined,
+  });
+  const [parentOrgOptions, setParentOrgOptions] = useState<any[]>([]);
+  const [locationOptions, setLocationOptions] = useState<any[]>([]);
+  const [parentOrgTypeId, setParentOrgTypeId] = useState<number | null>(null);
+  const [ParentOrganizationSearch, setParentOrganizationSearch] =
+    useState<string>("");
   useEffect(() => {
-    const fetchDropdownData = async () => {
-      if (!isOpen) return;
-
-      setIsLoadingData(true);
-      setDropdownsLoaded(false);
+    const fetchOrganizationTypes = async () => {
       try {
-        // Only fetch organization types (small dataset)
-        const orgTypesRes = await organizationTypesApi.getOrganizationTypesWithoutPagination();
-
-        if (orgTypesRes.data?.success) {
-          setOrganizationTypes(
-            orgTypesRes.data.data.map((ot: any) => ({
-              label: isRTL
-                ? ot.organization_type_arb || ot.organization_type_eng
-                : ot.organization_type_eng,
-              value: ot.organization_type_id,
-            }))
-          );
-        }
-
-        setDropdownsLoaded(true);
+        const response =
+          await organizationTypesApi.getOrganizationTypesWithoutPagination();
+        setOrganizationTypes(response.data.data);
       } catch (error) {
-        console.error("Failed to fetch dropdown data", error);
-      } finally {
-        setIsLoadingData(false);
+        console.error("Failed to fetch organization types:", error);
       }
     };
-
-    fetchDropdownData();
-  }, [isOpen, isRTL]);
-
-  // Initialize form data when modal opens and after dropdowns are loaded
-  useEffect(() => {
-    if (!isOpen || !dropdownsLoaded) return;
-
-    if (organization && mode === "edit") {
-      setFormData({
-        organization_eng: organization.organization_eng || "",
-        organization_arb: organization.organization_arb || "",
-        organization_code: organization.organization_code || "",
-        organization_type_id: organization.organization_type_id || 0,
-        parent_id: organization.parent_id,
-        location_id: organization.location_id,
-      });
-    } else if (mode === "add") {
-      setFormData(initialForm);
-    }
-    setErrors({});
-  }, [organization, mode, isOpen, dropdownsLoaded]);
-
-  // Memoize disable button logic
-  const disableButton = React.useMemo(() => {
-    // Check if data has changed
-    const hasChanges = mode === "add" || (
-      formData.organization_type_id !== organization?.organization_type_id ||
-      formData.organization_code !== organization?.organization_code ||
-      formData.organization_arb !== organization?.organization_arb ||
-      formData.organization_eng !== organization?.organization_eng ||
-      formData.parent_id !== organization?.parent_id ||
-      formData.location_id !== organization?.location_id
-    );
-
-    // Check if required fields are filled
-    const requiredFieldsFilled = 
-      formData.organization_type_id !== 0 &&
-      Boolean(formData.organization_code) &&
-      (Boolean(formData.organization_arb) || Boolean(formData.organization_eng));
-
-    return !hasChanges || !requiredFieldsFilled;
-  }, [formData, organization, mode]);
-
-  // Fetch locations with search and debouncing
-  const handleLocationSearch = useCallback((searchQuery: string) => {
-    setIsLoadingLocations(true);
-    const timer = setTimeout(async () => {
-      try {
-        const response = await siteApi.getLocationsForDropdown({
-          name: searchQuery,
-          limit: 50,
-        });
-
-        if (response.data?.success && response.data.data) {
-          setLocations(
-            response.data.data.map((loc: any) => ({
-              label: isRTL
-                ? loc.location_arb || loc.location_eng
-                : loc.location_eng,
-              value: loc.location_id,
-            }))
-          );
-        }
-      } catch (error) {
-        console.error("Failed to fetch locations", error);
-      } finally {
-        setIsLoadingLocations(false);
-      }
-    }, 300);
-
-    return () => clearTimeout(timer);
-  }, [isRTL]);
-
-  // Fetch parent organizations with search and debouncing
-  const handleParentSearch = useCallback((searchQuery: string) => {
-    setIsLoadingParents(true);
-    const timer = setTimeout(async () => {
-      try {
-        const response = await organizationsApi.getOrganizationsForDropdown({
-          name: searchQuery,
-          limit: 50,
-        });
-
-        if (response.data?.success) {
-          setParentOrganizations(
-            response.data.data
-              .filter((org: any) =>
-                mode === "edit"
-                  ? org.organization_id !== organization?.organization_id
-                  : true
-              )
-              .map((org: any) => ({
-                label: isRTL
-                  ? org.organization_arb || org.organization_eng
-                  : org.organization_eng,
-                value: org.organization_id,
-              }))
-          );
-        }
-      } catch (error) {
-        console.error("Failed to fetch parent organizations", error);
-      } finally {
-        setIsLoadingParents(false);
-      }
-    }, 300);
-
-    return () => clearTimeout(timer);
-  }, [isRTL, mode, organization]);
+    fetchOrganizationTypes();
+  }, []);
 
   useEffect(() => {
-    if (isOpen) {
-      handleLocationSearch("");
-      handleParentSearch("");
-    }
-  }, [isOpen, handleLocationSearch, handleParentSearch]);
+    const fetchParentOrganizations = async () => {
+      if (!parentOrgTypeId) {
+        setParentOrgOptions([]);
+        return;
+      }
 
-  const validateForm = (): boolean => {
-    const newErrors: Partial<Record<keyof OrganizationFormFields, string>> = {};
+      try {
+        const response =
+          await organizationsApi.getOrganizationsWithoutPagination();
 
-    if (!formData.organization_code?.trim()) {
-      newErrors.organization_code = t("validation.required");
-    }
-    if (!formData.organization_eng?.trim()) {
-      newErrors.organization_eng = t("validation.required");
-    }
-    if (!formData.organization_type_id || formData.organization_type_id === 0) {
-      newErrors.organization_type_id = t("validation.required");
-    }
+        console.log("Organizations response:", response);
+        const orgData = response?.data?.data || response?.data || [];
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+        if (!Array.isArray(orgData)) {
+          console.error("Organization data is not an array:", orgData);
+          setParentOrgOptions([]);
+          return;
+        }
+
+        setOrganizationList(orgData);
+        const filteredOrgs = orgData
+          .filter(
+            (org: IOrganization) => org.organization_type_id === parentOrgTypeId
+          )
+          .map((org: IOrganization) => ({
+            label: (isRTL ? org.organization_arb : org.organization_eng) ?? "",
+            value: org.organization_id ?? 0,
+          }));
+        setParentOrgOptions(filteredOrgs);
+      } catch (error) {
+        console.error("Failed to fetch parent organizations:", error);
+        setParentOrgOptions([]);
+      }
+    };
+    fetchParentOrganizations();
+  }, [parentOrgTypeId, isRTL]);
+
+  const handleChange = (
+    field: keyof IOrganization,
+    value: string | number | null
+  ) => {
+    setForm((prev) => ({
+      ...prev,
+      [field]: value === null ? undefined : value,
+    }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validateForm()) return;
-
-    try {
-      const submitData: Partial<IOrganization> = {
-        ...formData,
-        organization_eng: formData.organization_eng || formData.organization_arb || "",
-        organization_arb: formData.organization_arb || formData.organization_eng || "",
-      };
-      
-      // Remove undefined optional fields
-      if (!submitData.parent_id) delete submitData.parent_id;
-      if (!submitData.location_id) delete submitData.location_id;
-
-      await onSave(submitData);
-      onClose();
-    } catch (error) {
-      console.error("Failed to save organization:", error);
-    }
+    await onSave(form);
+    onClose();
   };
-
-  const handleInputChange = useCallback((
-    field: keyof OrganizationFormFields,
-    value: string | number | undefined
-  ) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-    setErrors((prev) => {
-      if (!prev[field]) return prev;
-      const { [field]: _, ...rest } = prev;
-      return rest;
-    });
-  }, []);
-
+  const parentOrgOptionsMemo = useMemo(() => {
+    if (!parentOrgTypeId) {
+      return organizationList.map((org: IOrganization) => ({
+        label: (isRTL ? org.organization_arb : org.organization_eng) ?? "",
+        value: org.organization_id,
+      }));
+    }
+    const filteredOrgs = organizationList
+      .filter(
+        (org: IOrganization) => org.organization_type_id === parentOrgTypeId
+      )
+      .map((org: IOrganization) => ({
+        label: (isRTL ? org.organization_arb : org.organization_eng) ?? "",
+        value: org.organization_id,
+      }));
+    return filteredOrgs;
+  }, [parentOrgTypeId, organizationList, isRTL]);
   if (!isOpen) return null;
-
+  const getHierarchyByTypeId = (
+    typeId: number | null | undefined
+  ): number | null => {
+    if (!typeId) return null;
+    const hierarchy = organizationTypes.find(
+      (type) => type.organization_type_id === typeId
+    )?.organization_types.org_type_level;
+    return typeof hierarchy === "number" ? hierarchy : null;
+  };
   return (
     <AnimatePresence>
       <motion.div
@@ -307,9 +211,121 @@ export const OrganizationModal: React.FC<OrganizationModalProps> = ({
           </div>
 
           <form
-            onSubmit={handleSubmit}
             className="space-y-4 bg-black/5 p-2 rounded-lg dark:bg-white/5"
+            onSubmit={handleSubmit}
           >
+            <div>
+              <Label className="text-sm font-medium">
+                {t("masterData.organizations.parentOrganizationType")}
+              </Label>
+              <Select
+                value={parentOrgTypeId?.toString() ?? ""}
+                onValueChange={(val) => {
+                  const typeId = val ? Number(val) : null;
+                  setParentOrgTypeId(typeId);
+                  handleChange("parent_id", null);
+                }}
+                disabled={isLoading}
+              >
+                <SelectTrigger className="w-full mt-1">
+                  <SelectValue
+                    placeholder={t(
+                      "masterData.organizations.selectParentOrganizationType"
+                    )}
+                  />
+                </SelectTrigger>
+                <SelectContent>
+                  {organizationTypes.map((type) => (
+                    <SelectItem
+                      key={type.organization_type_id}
+                      value={type.organization_type_id?.toString() || ""}
+                    >
+                      {isRTL
+                        ? type.organization_type_arb
+                        : type.organization_type_eng}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Parent Organization Combobox */}
+            <div>
+              <Label htmlFor="parent_id" className="text-sm font-medium">
+                {t("masterData.organizations.parentOrganization")}
+              </Label>
+              <SearchCombobox
+                onSearch={() => {
+                  const filteredOptions = parentOrgOptionsMemo.filter(
+                    (option) =>
+                      typeof option.label === "string" &&
+                      option.label
+                        .toLowerCase()
+                        .includes(ParentOrganizationSearch.toLowerCase())
+                  );
+                  setParentOrgOptions(filteredOptions);
+                }}
+                onValueChange={(val: string | number | null) =>
+                  handleChange("parent_id", val)
+                }
+                options={parentOrgOptionsMemo}
+                value={form.parent_id ?? ""}
+                placeholder={t(
+                  "masterData.organizations.selectParentOrganization"
+                )}
+                className="mt-1"
+                disabled={isLoading || !parentOrgTypeId}
+              />
+            </div>
+
+            {/* Organization Type */}
+            <div>
+              <Label
+                htmlFor="organization_type_id"
+                className="text-sm font-medium"
+              >
+                {t("masterData.organizations.organizationType")} *
+              </Label>
+              <Select
+                value={form.organization_type_id?.toString() ?? ""}
+                onValueChange={(val) =>
+                  handleChange("organization_type_id", val ? Number(val) : null)
+                }
+                disabled={isLoading}
+              >
+                <SelectTrigger className="w-full mt-1">
+                  <SelectValue
+                    placeholder={t(
+                      "masterData.organizations.selectOrganizationType"
+                    )}
+                  />
+                </SelectTrigger>
+                <SelectContent>
+                  {organizationTypes.map((type) => {
+                    if (parentOrgTypeId) {
+                      if (
+                        Number(type.organization_type_id) <=
+                        Number(parentOrgTypeId)
+                      ) {
+                        return null;
+                      }
+                    }
+                    return (
+                      <SelectItem
+                        key={type.organization_type_id}
+                        value={type.organization_type_id?.toString() || ""}
+                      >
+                        {isRTL
+                          ? type.organization_type_arb
+                          : type.organization_type_eng}
+                      </SelectItem>
+                    );
+                  })}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Organization Code */}
             <div>
               <Label
                 htmlFor="organization_code"
@@ -319,177 +335,48 @@ export const OrganizationModal: React.FC<OrganizationModalProps> = ({
               </Label>
               <Input
                 id="organization_code"
-                value={formData.organization_code}
+                value={form.organization_code}
                 onChange={(e) =>
-                  handleInputChange(
-                    "organization_code",
-                    e.target.value.toUpperCase()
-                  )
+                  handleChange("organization_code", e.target.value)
                 }
                 placeholder={t(
                   "masterData.organizations.enterOrganizationCode"
                 )}
-                className={`mt-1 ${
-                  errors.organization_code ? "border-red-500" : ""
-                }`}
+                className="mt-1"
                 disabled={isLoading}
               />
-              {errors.organization_code && (
-                <p className="text-red-500 text-xs mt-1">
-                  {errors.organization_code}
-                </p>
-              )}
             </div>
-            {isRTL ? (
-              <div>
-                <Label
-                  htmlFor="organization_arb"
-                  className="text-sm font-medium"
-                >
-                  {t("masterData.organizations.organizationNameArabic")}
-                </Label>
-                <Input
-                  id="organization_arb"
-                  value={formData.organization_arb}
-                  onChange={(e) =>
-                    handleInputChange("organization_arb", e.target.value)
-                  }
-                  placeholder={t(
-                    "masterData.organizations.enterOrganizationNameArabic"
-                  )}
-                />
-                {errors[isRTL ? "organization_arb" : "organization_eng"] && (
-                  <p className="text-red-500 text-xs mt-1">
-                    {errors[isRTL ? "organization_arb" : "organization_eng"]}
-                  </p>
-                )}
-              </div>
-            ) : (
-              <div>
-                <Label
-                  htmlFor={"organization_eng"}
-                  className="text-sm font-medium"
-                >
-                  {t("masterData.organizations.organizationNameEnglish")}
-                </Label>
-                <Input
-                  id={"organization_eng"}
-                  value={formData.organization_eng}
-                  onChange={(e) =>
-                    handleInputChange("organization_eng", e.target.value)
-                  }
-                  placeholder={t(
-                    "masterData.organizations.enterOrganizationNameEnglish"
-                  )}
-                />
-                {errors["organization_eng"] && (
-                  <p className="text-red-500 text-xs mt-1">
-                    {errors["organization_eng"]}
-                  </p>
-                )}
-              </div>
-            )}
+
+            {/* Organization Name (Arabic/English based on language) */}
             <div>
               <Label
-                htmlFor="organization_type_id"
+                htmlFor={isRTL ? "organization_arb" : "organization_eng"}
                 className="text-sm font-medium"
               >
-                {t("masterData.organizations.organizationType")} *
+                {isRTL
+                  ? t("masterData.organizations.organizationNameArabic")
+                  : t("masterData.organizations.organizationNameEnglish")}
               </Label>
-              <Select
-                value={
-                  formData.organization_type_id
-                    ? formData.organization_type_id.toString()
-                    : ""
-                }
-                onValueChange={(value) =>
-                  handleInputChange("organization_type_id", parseInt(value))
-                }
-                disabled={isLoading || isLoadingData}
-              >
-                <SelectTrigger
-                  className={`w-full mt-1 ${
-                    errors.organization_type_id ? "border-red-500" : ""
-                  }`}
-                >
-                  <SelectValue
-                    placeholder={
-                      isLoadingData
-                        ? t("common.loading")
-                        : t("masterData.organizations.selectOrganizationType")
-                    }
-                  />
-                </SelectTrigger>
-                <SelectContent>
-                  {organizationTypes.map((option) => (
-                    <SelectItem
-                      key={option.value}
-                      value={option.value.toString()}
-                    >
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              {errors.organization_type_id && (
-                <p className="text-red-500 text-xs mt-1">
-                  {errors.organization_type_id}
-                </p>
-              )}
-            </div>
-            <div>
-              <Label htmlFor="parent_id" className="text-sm font-medium">
-                {t("masterData.organizations.parentOrganization")}
-              </Label>
-              <Combobox
-                options={[
-                  { label: t("masterData.organizations.root"), value: 0 },
-                  ...parentOrganizations,
-                ]}
-                value={formData.parent_id ?? 0}
-                onValueChange={(value) =>
-                  handleInputChange(
-                    "parent_id",
-                    value === 0 ? undefined : (value as number)
+              <Input
+                id={isRTL ? "organization_arb" : "organization_eng"}
+                value={isRTL ? form.organization_arb : form.organization_eng}
+                onChange={(e) =>
+                  handleChange(
+                    isRTL ? "organization_arb" : "organization_eng",
+                    e.target.value
                   )
                 }
                 placeholder={
-                  isLoadingParents
-                    ? t("common.loading")
-                    : t("masterData.organizations.selectParentOrganization")
+                  isRTL
+                    ? t("masterData.organizations.enterOrganizationNameArabic")
+                    : t("masterData.organizations.enterOrganizationNameEnglish")
                 }
-                disabled={isLoading || isLoadingParents}
-                onSearch={handleParentSearch}
-                isLoading={isLoadingParents}
-                disableLocalFiltering={true}
+                disabled={isLoading}
                 className="mt-1"
               />
             </div>
-            <div>
-              <Label htmlFor="location_id" className="text-sm font-medium">
-                {t("masterData.organizations.location")}
-              </Label>
-              <Combobox
-                options={locations}
-                value={formData.location_id ?? null}
-                onValueChange={(value) =>
-                  handleInputChange(
-                    "location_id",
-                    value ? (value as number) : undefined
-                  )
-                }
-                placeholder={
-                  isLoadingLocations
-                    ? t("common.loading")
-                    : t("masterData.organizations.selectLocation")
-                }
-                disabled={isLoading || isLoadingLocations}
-                onSearch={handleLocationSearch}
-                isLoading={isLoadingLocations}
-                disableLocalFiltering={true}
-                className="mt-1"
-              />
-            </div>
+
+            {/* Action Buttons */}
             <div
               className={`flex gap-3 pt-4 ${
                 isRTL ? "flex-row-reverse" : "flex-row"
@@ -504,11 +391,7 @@ export const OrganizationModal: React.FC<OrganizationModalProps> = ({
               >
                 {t("common.cancel")}
               </Button>
-              <Button
-                type="submit"
-                className="flex-1"
-                disabled={isLoading || isLoadingData || disableButton}
-              >
+              <Button type="submit" className="flex-1" disabled={isLoading}>
                 {isLoading ? t("common.saving") : t("common.save")}
               </Button>
             </div>

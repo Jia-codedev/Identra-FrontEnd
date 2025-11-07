@@ -1,7 +1,13 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Search, Calendar, Filter, CalendarDays, Users } from "lucide-react";
+import {
+  Search,
+  Calendar,
+  Filter,
+  CalendarDays,
+  Building2,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/Input";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
@@ -14,9 +20,9 @@ import { useTranslations } from "@/hooks/use-translations";
 import { useLanguage } from "@/providers/language-provider";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
-import employeeGroupApi from "@/services/employeemaster/employeeGroup";
-import { WeeklyRosterFilters, EmployeeGroup } from "../types";
-import { ca } from "date-fns/locale";
+import organizationsApi from "@/services/masterdata/organizations";
+import { SearchCombobox } from "@/components/ui/search-combobox";
+import { WeeklyRosterFilters } from "../types";
 
 interface WeeklyRosterHeaderProps {
   search: string;
@@ -44,45 +50,95 @@ export const WeeklyRosterHeader: React.FC<WeeklyRosterHeaderProps> = ({
   const { t } = useTranslations();
   const { isRTL } = useLanguage();
 
-  const [employeeGroups, setEmployeeGroups] = useState<EmployeeGroup[]>([]);
-  const [employeeGroupSearch, setEmployeeGroupSearch] = useState("");
-  const [isEmployeeGroupOpen, setIsEmployeeGroupOpen] = useState(false);
-  const [isLoadingGroups, setIsLoadingGroups] = useState(false);
+  const [organizations, setOrganizations] = useState<any[]>([]);
+  const [organizationSearch, setOrganizationSearch] = useState("");
+  // popover replaced by SearchCombobox
+  const [isLoadingOrgs, setIsLoadingOrgs] = useState(false);
 
-  const [startDateOpen, setStartDateOpen] = useState(false);
-  const [endDateOpen, setEndDateOpen] = useState(false);
+  const [fromDateOpen, setFromDateOpen] = useState(false);
+  const [toDateOpen, setToDateOpen] = useState(false);
 
-  const loadEmployeeGroups = async (searchTerm: string = "") => {
+  const loadOrganizations = async () => {
     try {
-      setIsLoadingGroups(true);
-      const response = await employeeGroupApi.getEmployeeGroupsForDropdown(
-        searchTerm
-      );
-      setEmployeeGroups(response.data.data);
+      setIsLoadingOrgs(true);
+      // Use server-side dropdown API when available. Try dropdown-list first,
+      // fall back to the paginated dropdown if needed.
+      let response: any;
+      try {
+        response = await organizationsApi.getOrganizationDropdownList();
+      } catch (err) {
+        // fallback to generic dropdown with no params
+        response = await organizationsApi.getOrganizationsForDropdown();
+      }
+      const data = response?.data?.data || response?.data || [];
+      // Ensure we always set an array
+      setOrganizations(Array.isArray(data) ? data : []);
     } catch (error) {
-      console.error("Failed to load employee groups:", error);
+      console.error("Failed to load organizations:", error);
+      setOrganizations([]);
     } finally {
-      setIsLoadingGroups(false);
+      setIsLoadingOrgs(false);
     }
   };
 
   useEffect(() => {
-    loadEmployeeGroups();
+    loadOrganizations();
   }, []);
-
+  // Debounced server-side search for organizations when the search term changes
   useEffect(() => {
-    const timer = setTimeout(() => {
-      if (isEmployeeGroupOpen) {
-        loadEmployeeGroups(employeeGroupSearch);
-      }
+    const t = setTimeout(() => {
+      const fetchOrgs = async () => {
+        try {
+          setIsLoadingOrgs(true);
+          // Prefer the search-capable endpoint if available
+          const resp = await organizationsApi.getOrganizationDropdownList();
+          const d = resp?.data?.data || resp?.data || [];
+          setOrganizations(Array.isArray(d) ? d : []);
+        } catch (err) {
+          // As a fallback try the simple dropdown list
+          try {
+            const resp2 = await organizationsApi.getOrganizationDropdownList();
+            const d2 = resp2?.data?.data || resp2?.data || [];
+            setOrganizations(Array.isArray(d2) ? d2 : []);
+          } catch (e) {
+            console.error("Failed to search organizations:", e);
+            setOrganizations([]);
+          }
+        } finally {
+          setIsLoadingOrgs(false);
+        }
+      };
+
+      // Only run fetch if there's a search term or to refresh results
+      fetchOrgs();
     }, 300);
 
-    return () => clearTimeout(timer);
-  }, [employeeGroupSearch, isEmployeeGroupOpen]);
+    return () => clearTimeout(t);
+  }, [organizationSearch]);
+  const filteredOrganizations = Array.isArray(organizations)
+    ? organizations.filter((org) => {
+        if (!organizationSearch) return true;
+        const searchLower = organizationSearch.toLowerCase();
+        const engMatch = org.organization_eng
+          ?.toLowerCase()
+          .includes(searchLower);
+        const arbMatch = org.organization_arb
+          ?.toLowerCase()
+          .includes(searchLower);
+        return engMatch || arbMatch;
+      })
+    : [];
 
-  const selectedEmployeeGroup = employeeGroups?.find(
-    (group) => group.employee_group_id === filters.employee_group_id
+  const selectedOrganization = organizations?.find(
+    (org) => org.organization_id === filters.organization_id
   );
+
+  const orgOptions = filteredOrganizations.map((org) => ({
+    label: isRTL
+      ? org.organization_arb || org.organization_eng
+      : org.organization_eng || org.organization_arb || "",
+    value: org.organization_id,
+  }));
 
   return (
     <div className="sticky top-0 z-10 bg-background/80 rounded-t-3xl px-2 sm:px-4 py-4 sm:py-8 ">
@@ -100,7 +156,6 @@ export const WeeklyRosterHeader: React.FC<WeeklyRosterHeaderProps> = ({
             )}
           </div>
 
-          {/* Search + Action Buttons (Ramadan-style) */}
           <div
             className={`flex items-center gap-2 bg-card/80 border border-border rounded-xl px-2 py-1 ${
               isRTL ? "flex-row-reverse" : "flex-row"
@@ -150,128 +205,65 @@ export const WeeklyRosterHeader: React.FC<WeeklyRosterHeaderProps> = ({
           {onFiltersChange && (
             <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
               <div className="flex flex-wrap gap-2">
-                {/* Employee Group Filter */}
+                {/* Organization Filter */}
                 <div className="flex items-center gap-1">
-                  <Users
+                  <Building2
                     size={14}
                     className="sm:size-4 text-muted-foreground hidden sm:block"
                   />
-                  <Popover
-                    open={isEmployeeGroupOpen}
-                    onOpenChange={setIsEmployeeGroupOpen}
-                  >
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        role="combobox"
-                        aria-expanded={isEmployeeGroupOpen}
-                        className="w-[200px] sm:w-[250px] h-8 sm:h-9 justify-between text-xs sm:text-sm"
-                      >
-                        {selectedEmployeeGroup
-                          ? isRTL
-                            ? selectedEmployeeGroup.group_name_arb
-                            : selectedEmployeeGroup.group_name_eng
-                          : t("scheduling.weeklyRoster.selectEmployeeGroup")}
-                        <Users className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-[250px] p-0">
-                      <div className="p-2">
-                        <Input
-                          placeholder={t("common.search")}
-                          value={employeeGroupSearch}
-                          onChange={(e) =>
-                            setEmployeeGroupSearch(e.target.value)
-                          }
-                          className="h-8 text-xs"
-                        />
-                      </div>
-                      <div className="max-h-[200px] overflow-auto">
-                        {isLoadingGroups ? (
-                          <div className="p-2 text-center text-sm text-muted-foreground">
-                            {t("common.loading")}
-                          </div>
-                        ) : !employeeGroups || employeeGroups.length === 0 ? (
-                          <div className="p-2 text-center text-sm text-muted-foreground">
-                            {t("common.noResults")}
-                          </div>
-                        ) : (
-                          <>
-                            <Button
-                              variant="ghost"
-                              className="w-full justify-start h-8 text-xs"
-                              onClick={() => {
-                                onFiltersChange({
-                                  employee_group_id: undefined,
-                                });
-                                setIsEmployeeGroupOpen(false);
-                              }}
-                            >
-                              {t("common.all")}
-                            </Button>
-                            {employeeGroups.map((group) => (
-                              <Button
-                                key={group.employee_group_id}
-                                variant="ghost"
-                                className="w-full justify-start h-8 text-xs"
-                                onClick={() => {
-                                  onFiltersChange({
-                                    employee_group_id: group.employee_group_id,
-                                  });
-                                  setIsEmployeeGroupOpen(false);
-                                }}
-                              >
-                                <div className="flex flex-col items-start">
-                                  <span className="font-medium">
-                                    {isRTL
-                                      ? group.group_name_arb
-                                      : group.group_name_eng}
-                                  </span>
-                                  {group.group_code && (
-                                    <span className="text-xs text-muted-foreground">
-                                      {group.group_code}
-                                    </span>
-                                  )}
-                                </div>
-                              </Button>
-                            ))}
-                          </>
-                        )}
-                      </div>
-                    </PopoverContent>
-                  </Popover>
+                  <div className="w-[200px] sm:w-[250px]">
+                    <SearchCombobox
+                      options={orgOptions}
+                      value={
+                        selectedOrganization
+                          ? selectedOrganization.organization_id
+                          : null
+                      }
+                      onValueChange={(val) => {
+                        const num = val === null ? undefined : Number(val);
+                        onFiltersChange &&
+                          onFiltersChange({ organization_id: num });
+                      }}
+                      onSearch={(q) => setOrganizationSearch(q)}
+                      placeholder={
+                        t("common.selectOrganization") || "Select Organization"
+                      }
+                      isLoading={isLoadingOrgs}
+                      emptyMessage={t("common.noResults")}
+                    />
+                  </div>
                 </div>
 
-                {/* Start Date Filter */}
+                {/* From Date Filter */}
                 <div className="flex items-center gap-1">
                   <Calendar
                     size={14}
                     className="sm:size-4 text-muted-foreground hidden sm:block"
                   />
-                  <Popover open={startDateOpen} onOpenChange={setStartDateOpen}>
+                  <Popover open={fromDateOpen} onOpenChange={setFromDateOpen}>
                     <PopoverTrigger asChild>
                       <Button
                         variant="outline"
                         className={cn(
                           "w-[140px] sm:w-[180px] h-8 sm:h-9 justify-start text-left font-normal text-xs sm:text-sm",
-                          !filters.start_date && "text-muted-foreground"
+                          !filters.from_date && "text-muted-foreground"
                         )}
                       >
                         <CalendarDays className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
-                        {filters.start_date ? (
-                          format(filters.start_date, "MMM dd, yyyy")
+                        {filters.from_date ? (
+                          format(filters.from_date, "MMM dd, yyyy")
                         ) : (
-                          <span>{t("common.startDate")}</span>
+                          <span>{t("common.fromDate")}</span>
                         )}
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0" align="start">
                       <CalendarComponent
                         mode="single"
-                        selected={filters.start_date}
+                        selected={filters.from_date}
                         onSelect={(date) => {
-                          onFiltersChange({ start_date: date });
-                          setStartDateOpen(false);
+                          onFiltersChange({ from_date: date });
+                          setFromDateOpen(false);
                         }}
                         disabled={(date) => date < new Date("1900-01-01")}
                         initialFocus
@@ -280,40 +272,40 @@ export const WeeklyRosterHeader: React.FC<WeeklyRosterHeaderProps> = ({
                   </Popover>
                 </div>
 
-                {/* End Date Filter */}
+                {/* To Date Filter */}
                 <div className="flex items-center gap-1">
                   <Calendar
                     size={14}
                     className="sm:size-4 text-muted-foreground hidden sm:block"
                   />
-                  <Popover open={endDateOpen} onOpenChange={setEndDateOpen}>
+                  <Popover open={toDateOpen} onOpenChange={setToDateOpen}>
                     <PopoverTrigger asChild>
                       <Button
                         variant="outline"
                         className={cn(
                           "w-[140px] sm:w-[180px] h-8 sm:h-9 justify-start text-left font-normal text-xs sm:text-sm",
-                          !filters.end_date && "text-muted-foreground"
+                          !filters.to_date && "text-muted-foreground"
                         )}
                       >
                         <CalendarDays className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
-                        {filters.end_date ? (
-                          format(filters.end_date, "MMM dd, yyyy")
+                        {filters.to_date ? (
+                          format(filters.to_date, "MMM dd, yyyy")
                         ) : (
-                          <span>{t("common.endDate")}</span>
+                          <span>{t("common.toDate")}</span>
                         )}
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0" align="start">
                       <CalendarComponent
                         mode="single"
-                        selected={filters.end_date}
+                        selected={filters.to_date}
                         onSelect={(date) => {
-                          onFiltersChange({ end_date: date });
-                          setEndDateOpen(false);
+                          onFiltersChange({ to_date: date });
+                          setToDateOpen(false);
                         }}
                         disabled={(date) => {
                           if (date < new Date("1900-01-01")) return true;
-                          if (filters.start_date && date < filters.start_date)
+                          if (filters.from_date && date < filters.from_date)
                             return true;
                           return false;
                         }}
@@ -324,17 +316,17 @@ export const WeeklyRosterHeader: React.FC<WeeklyRosterHeaderProps> = ({
                 </div>
 
                 {/* Clear Filters */}
-                {(filters.employee_group_id ||
-                  filters.start_date ||
-                  filters.end_date) && (
+                {(filters.organization_id ||
+                  filters.from_date ||
+                  filters.to_date) && (
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={() =>
                       onFiltersChange({
-                        employee_group_id: undefined,
-                        start_date: undefined,
-                        end_date: undefined,
+                        organization_id: undefined,
+                        from_date: undefined,
+                        to_date: undefined,
                       })
                     }
                     className="h-8 sm:h-9 text-xs sm:text-sm text-muted-foreground hover:text-foreground"

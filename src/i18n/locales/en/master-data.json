@@ -76,6 +76,7 @@
     "editOrganization": "Edit Organization",
     "organizationName": "Organization Name",
     "organizationNameEnglish": "Organization Name (English)",
+    "organizationNameArabic": "Organization Name (Arabic)",
     "organizationCode": "Organization Code",
     "enterOrganizationName": "Enter organization name",
     "enterOrganizationNameArabic": "Enter organization name in Arabic",
@@ -87,10 +88,16 @@
     },
     "organizationType": "Organization Type",
     "selectOrganizationType": "Select organization type",
+    "parentOrganizationType": "Parent Organization Type",
+    "selectParentType": "Select parent organization type",
     "parentOrganization": "Parent Organization",
+    "selectParentOrganization": "Select parent organization",
+    "selectParentTypeFirst": "Please select parent type first",
+    "noChildTypesAvailable": "No child organization types available",
     "root": "Root",
     "location": "Location",
-    "selectLocation": "Select location"
+    "selectLocation": "Select location",
+    "leaveEmptyForRoot": "Leave empty to create a root organization"
   },
   "organizationTypes": {
     "title": "Organization Type Management",

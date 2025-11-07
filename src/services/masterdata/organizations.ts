@@ -47,6 +47,10 @@ class OrganizationsApi {
   }) {
     return apiClient.get("/organization/all", { params });
   }
+
+  getOrganizationDropdownList() {
+    return apiClient.get("/organization/dropdown-list");
+  }
 }
 const organizationsApi = new OrganizationsApi();
 export default organizationsApi;

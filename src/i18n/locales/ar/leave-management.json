@@ -4,6 +4,7 @@
   "leaves": {
     "title": "إدارة الإجازات",
     "noData": "لم يتم العثور على إجازات",
+    "noAttachment": "لا توجد مرفقات",
     "actions": {
       "add": "إضافة طلب إجازة"
     },
@@ -15,7 +16,8 @@
       "remarks": "الملاحظات",
       "reference": "المرجع",
       "start": "من تاريخ",
-      "end": "إلى تاريخ"
+      "end": "إلى تاريخ",
+      "attachments": "المرفقات"
     }
   },
   "permissionTypes": {
@@ -31,11 +33,32 @@
       "add": "إضافة نوع تصريح",
       "edit": "تعديل نوع التصريح"
     },
+    "sections": {
+      "limits": "حدود التصاريح",
+      "configuration": "الإعدادات",
+      "flags": "علامات التصريح"
+    },
     "fields": {
       "code": "الرمز",
       "status": "الحالة",
       "nameEng": "الاسم (بالإنجليزية)",
-      "nameArb": "الاسم (بالعربية)"
+      "nameArb": "الاسم (بالعربية)",
+      "specificGender": "جنس محدد",
+      "maxPermPerDay": "الحد الأقصى للتصاريح في اليوم",
+      "maxMinutesPerDay": "الحد الأقصى للدقائق في اليوم",
+      "maxPermPerMonth": "الحد الأقصى للتصاريح في الشهر",
+      "maxMinutesPerMonth": "الحد الأقصى للدقائق في الشهر",
+      "workflowId": "رقم سير العمل",
+      "groupApplyFlag": "تطبيق جماعي",
+      "officialFlag": "رسمي",
+      "fullDayPermissionFlag": "تصريح يوم كامل",
+      "medicalPassFlag": "تصريح طبي",
+      "mandatoryCommentsFlag": "التعليقات إلزامية",
+      "mandatoryAttachmentFlag": "المرفقات إلزامية",
+      "applyRamadanRestrictionFlag": "تطبيق قيود رمضان",
+      "minutesPermissionFlag": "تصريح بالدقائق",
+      "fromToTimePermissionFlag": "تصريح من وقت إلى وقت",
+      "weekdaysPermissionFlag": "تصريح أيام الأسبوع"
     }
   },
   "permissions": {
