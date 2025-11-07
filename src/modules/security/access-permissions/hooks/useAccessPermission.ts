@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef, useMemo } from "react";
+import { useState, useEffect, useCallback } from "react";
 import rolesApi from "@/services/security/rolesService";
 import securityPermissionsApi from "@/services/security/securityPermissions";
 import securitySubModulesApi from "@/services/security/securitySubModules";
@@ -14,40 +14,16 @@ export function useAccessPermission() {
   >({});
   const [rolePrivileges, setRolePrivileges] = useState<Record<string, any>>({});
   const [isLoading, setIsLoading] = useState(false);
-  const tabsCacheRef = useRef<Record<number, any[]>>({});
-  const allTabsFetchedRef = useRef<boolean>(false);
+  const [tabsBySubModule, setTabsBySubModule] = useState<Record<number, any[]>>(
+    {}
+  );
 
-  // Fetch all tabs once and cache
-  const fetchAllTabsOnce = useCallback(async () => {
-    if (allTabsFetchedRef.current) return;
-    try {
-      const res = await apiClient.get(`/secTabs/all`, {
-        params: { limit: 1000, offset: 1 },
-      });
-      const all = res.data?.data || [];
-      const map: Record<number, any[]> = {};
-      all.forEach((t: any) => {
-        const sid = t.sub_module_id;
-        if (!map[sid]) map[sid] = [];
-        map[sid].push(t);
-      });
-      tabsCacheRef.current = map;
-    } catch (err) {
-      tabsCacheRef.current = {};
-    } finally {
-      allTabsFetchedRef.current = true;
-    }
-  }, []);
-
-  // Get tabs for a submodule (cached)
+  // Optimized: Get tabs directly from state (already loaded from /secRolePrivilege API)
   const getTabs = useCallback(
     async (subModuleId: number) => {
-      if (tabsCacheRef.current[subModuleId])
-        return tabsCacheRef.current[subModuleId];
-      await fetchAllTabsOnce();
-      return tabsCacheRef.current[subModuleId] || [];
+      return tabsBySubModule[subModuleId] || [];
     },
-    [fetchAllTabsOnce]
+    [tabsBySubModule]
   );
 
   // Initial load: roles, modules, submodules
@@ -114,6 +90,10 @@ export function useAccessPermission() {
         });
         const tree = resp.data?.data || {};
         const map: Record<string, any> = {};
+        const tabsMap: Record<number, any[]> = {};
+
+        console.log("🔍 Raw API Response Tree:", tree);
+
         Object.keys(tree).forEach((moduleName) => {
           const moduleTreeEntry = tree[moduleName];
           if (!moduleTreeEntry || !Array.isArray(moduleTreeEntry.subModules))
@@ -149,6 +129,16 @@ export function useAccessPermission() {
                 }
               }
             }
+
+            // Store tabs for this submodule
+            if (Array.isArray(sub.tabs) && resolvedSubModuleId) {
+              tabsMap[resolvedSubModuleId] = sub.tabs;
+              console.log(
+                `📋 Tabs for submodule ${resolvedSubModuleId} (${sub.sub_module_name}):`,
+                sub.tabs
+              );
+            }
+
             if (sub.privileges) {
               Object.keys(sub.privileges).forEach((perm) => {
                 if (sub.privileges[perm]) {
@@ -194,7 +184,19 @@ export function useAccessPermission() {
             }
           });
         });
-        if (mounted) setRolePrivileges(map);
+
+        if (mounted) {
+          setRolePrivileges(map);
+          setTabsBySubModule(tabsMap);
+          console.log("✅ Tabs loaded and stored:", tabsMap);
+          console.log(
+            "✅ Total tabs count:",
+            Object.keys(tabsMap).reduce(
+              (sum, key) => sum + tabsMap[Number(key)].length,
+              0
+            )
+          );
+        }
       } catch {
         toast.error("Failed to load role privileges");
       } finally {

@@ -8,12 +8,19 @@ type Privilege = {
   delete: boolean;
 };
 
+type Tab = {
+  tab_id: number;
+  tab_name: string;
+  allowed: boolean;
+  privileges: Privilege;
+};
+
 type SubModule = {
   path: string;
   sub_module_name: string;
   allowed: boolean;
   privileges: Privilege;
-  tabs: any[];
+  tabs: Tab[];
 };
 
 type Module = {
@@ -78,4 +85,4 @@ export const usePrivilegesLoading = () =>
   usePrivileges((state) => state.isLoading);
 export const usePrivilegesError = () => usePrivileges((state) => state.error);
 
-export type { Privilege, SubModule, Module };
+export type { Privilege, SubModule, Module, Tab };
