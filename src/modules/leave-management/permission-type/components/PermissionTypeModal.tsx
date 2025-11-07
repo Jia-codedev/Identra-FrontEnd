@@ -3,7 +3,12 @@
 import React, { useEffect, useState } from "react";
 import { useTranslations } from "@/hooks/use-translations";
 import { useLanguage } from "@/providers/language-provider";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/Input";
 import {
@@ -14,8 +19,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/Checkbox";
-import permissionTypeApi from "@/services/leaveManagement/permissionType";
+import workflowApi from "@/services/workforce/workflowService";
+import {
+  SearchCombobox,
+  SearchComboboxOption,
+} from "@/components/ui/search-combobox";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import usePermissionTypeMutations from "../hooks/usePermissionTypeMutations";
 
 interface PermissionTypePayload {
   permission_type_code: string;
@@ -56,8 +66,8 @@ const PermissionTypeModal: React.FC<Props> = ({
   onCancel,
 }) => {
   const { t } = useTranslations();
-  const { currentLocale } = useLanguage();
-  const isEnglish = currentLocale === "en";
+  const { isRTL } = useLanguage();
+  const mutations = usePermissionTypeMutations();
 
   // Basic fields
   const [code, setCode] = useState("");
@@ -72,10 +82,10 @@ const PermissionTypeModal: React.FC<Props> = ({
   const [maxMinutesPerMonth, setMaxMinutesPerMonth] = useState<number | string>(
     ""
   );
-  const [workflowId, setWorkflowId] = useState<number | string>("");
+  const [workflowId, setWorkflowId] = useState<number | null>(null);
 
   // Gender
-  const [specificGender, setSpecificGender] = useState<string>("");
+  const [specificGender, setSpecificGender] = useState<string>("Any");
 
   // Boolean flags
   const [groupApplyFlag, setGroupApplyFlag] = useState(false);
@@ -91,9 +101,11 @@ const PermissionTypeModal: React.FC<Props> = ({
     useState(false);
   const [weekdaysPermissionFlag, setWeekdaysPermissionFlag] = useState(false);
 
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const [workflows, setWorkflows] = useState<any[]>([]);
+  const [wfLoading, setWfLoading] = useState(false);
+  const [wfOptions, setWfOptions] = useState<SearchComboboxOption[]>([]);
   useEffect(() => {
     if (initialData) {
       setCode(initialData.permission_type_code || "");
@@ -106,7 +118,7 @@ const PermissionTypeModal: React.FC<Props> = ({
       setMaxMinutesPerDay(initialData.max_minutes_per_day ?? "");
       setMaxPermPerMonth(initialData.max_perm_per_month ?? "");
       setMaxMinutesPerMonth(initialData.max_minutes_per_month ?? "");
-      setWorkflowId(initialData.workflow_id ?? "");
+      setWorkflowId(initialData.workflow_id ?? null);
 
       // Gender
       setSpecificGender(initialData.specific_gender || "NONE");
@@ -138,7 +150,7 @@ const PermissionTypeModal: React.FC<Props> = ({
       setMaxMinutesPerDay("");
       setMaxPermPerMonth("");
       setMaxMinutesPerMonth("");
-      setWorkflowId("");
+      setWorkflowId(null);
       setSpecificGender("NONE");
       setGroupApplyFlag(false);
       setOfficialFlag(false);
@@ -153,9 +165,68 @@ const PermissionTypeModal: React.FC<Props> = ({
     }
   }, [initialData, open]);
 
+  useEffect(() => {
+    // Fetch initial workflows for combobox when modal opens
+    if (!open) return;
+    let mounted = true;
+    const fetch = async () => {
+      setWfLoading(true);
+      try {
+        const res = await workflowApi.getWorkflows({
+          offset: 1,
+          limit: 10,
+          search: "",
+        });
+        const items = res?.data?.data || [];
+        if (mounted) {
+          setWorkflows(items);
+          const opts = items.map((w: any) => ({
+            label: isRTL
+              ? w.workflow_name_arb || w.workflow_name_eng
+              : w.workflow_name_eng || w.workflow_name_arb,
+            value: w.workflow_id,
+          }));
+          setWfOptions(opts);
+        }
+      } catch (err) {
+        console.error("Failed to load workflows", err);
+      } finally {
+        if (mounted) setWfLoading(false);
+      }
+    };
+    fetch();
+    return () => {
+      mounted = false;
+    };
+  }, [open, isRTL]);
+
+  const handleSearchWorkflows = async (query: string) => {
+    setWfLoading(true);
+    try {
+      const res = await workflowApi.getWorkflows({
+        offset: 1,
+        limit: 20,
+        search: query,
+      });
+      const items = res?.data?.data || [];
+      setWorkflows(items);
+      const opts = items.map((w: any) => ({
+        label: isRTL
+          ? w.workflow_name_arb || w.workflow_name_eng
+          : w.workflow_name_eng || w.workflow_name_arb,
+        value: w.workflow_id,
+      }));
+      setWfOptions(opts);
+    } catch (err) {
+      console.error("Workflow search failed", err);
+      setWfOptions([]);
+    } finally {
+      setWfLoading(false);
+    }
+  };
+
   const handleSubmit = async (e?: React.FormEvent) => {
     e?.preventDefault();
-    setLoading(true);
     setError("");
 
     const payload: PermissionTypePayload = {
@@ -186,12 +257,12 @@ const PermissionTypeModal: React.FC<Props> = ({
 
     try {
       if (initialData && initialData.permission_type_id) {
-        await permissionTypeApi.update(
-          initialData.permission_type_id,
-          payload as any
-        );
+        await mutations.update.mutateAsync({
+          id: initialData.permission_type_id,
+          data: payload,
+        });
       } else {
-        await permissionTypeApi.create(payload as any);
+        await mutations.create.mutateAsync(payload);
       }
       onSuccess();
     } catch (err: any) {
@@ -200,8 +271,6 @@ const PermissionTypeModal: React.FC<Props> = ({
           err?.message ||
           "Failed to save permission type"
       );
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -218,8 +287,8 @@ const PermissionTypeModal: React.FC<Props> = ({
                   "Add Permission Type"}
             </DialogTitle>
           </div>
-          <ScrollArea className="max-h-[60vh] w-full">
-            <div className="p-2">
+          <ScrollArea className="h-[60vh] w-full">
+            <div className="p-2 pr-4">
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-4">
                   <div className="border-b pb-2 mb-4">
@@ -255,7 +324,7 @@ const PermissionTypeModal: React.FC<Props> = ({
                         value={String(status)}
                         onValueChange={(v: string) => setStatus(v === "true")}
                       >
-                        <SelectTrigger className="h-10">
+                        <SelectTrigger className=" w-full h-10">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -279,7 +348,7 @@ const PermissionTypeModal: React.FC<Props> = ({
                         value={specificGender || "NONE"}
                         onValueChange={(v: string) => setSpecificGender(v)}
                       >
-                        <SelectTrigger className="h-10">
+                        <SelectTrigger className=" w-full h-10">
                           <SelectValue placeholder="Any" />
                         </SelectTrigger>
                         <SelectContent>
@@ -297,36 +366,42 @@ const PermissionTypeModal: React.FC<Props> = ({
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block mb-2 font-medium text-sm">
-                        {t("leaveManagement.permissionTypes.fields.nameEng") ||
-                          "Name (English)"}
-                      </label>
-                      <Input
-                        value={nameEn}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                          setNameEn(e.target.value)
-                        }
-                        placeholder="Permission type name in English"
-                        className="h-10"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block mb-2 font-medium text-sm">
-                        {t("leaveManagement.permissionTypes.fields.nameArb") ||
-                          "Name (Arabic)"}
-                      </label>
-                      <Input
-                        value={nameAr}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                          setNameAr(e.target.value)
-                        }
-                        placeholder="Permission type name in Arabic"
-                        className="h-10"
-                      />
-                    </div>
+                  <div>
+                    {isRTL ? (
+                      <div>
+                        <label className="block mb-2 font-medium text-sm">
+                          {t(
+                            "leaveManagement.permissionTypes.fields.nameArb"
+                          ) || "Name (Arabic)"}
+                        </label>
+                        <Input
+                          value={nameAr}
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                            setNameAr(e.target.value)
+                          }
+                          placeholder="اسم نوع الإذن بالعربية"
+                          className="h-10"
+                          dir="rtl"
+                        />
+                      </div>
+                    ) : (
+                      <div>
+                        <label className="block mb-2 font-medium text-sm">
+                          {t(
+                            "leaveManagement.permissionTypes.fields.nameEng"
+                          ) || "Name (English)"}
+                        </label>
+                        <Input
+                          value={nameEn}
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                            setNameEn(e.target.value)
+                          }
+                          placeholder="Permission type name in English"
+                          className="h-10"
+                          dir="ltr"
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -429,17 +504,25 @@ const PermissionTypeModal: React.FC<Props> = ({
                       <label className="block mb-2 font-medium text-sm">
                         {t(
                           "leaveManagement.permissionTypes.fields.workflowId"
-                        ) || "Workflow ID"}
+                        ) || "Workflow"}
                       </label>
-                      <Input
-                        type="number"
-                        min="1"
-                        value={workflowId}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                          setWorkflowId(e.target.value)
+                      <SearchCombobox
+                        options={wfOptions}
+                        value={workflowId ? String(workflowId) : ""}
+                        onValueChange={(v: string | number | null) => {
+                          setWorkflowId(v ? Number(v) : null);
+                        }}
+                        onSearch={handleSearchWorkflows}
+                        placeholder={
+                          t(
+                            "leaveManagement.permissionTypes.fields.workflowPlaceholder"
+                          ) || "Search workflow..."
                         }
-                        placeholder="Optional workflow ID"
-                        className="h-10"
+                        emptyMessage={
+                          t("common.noResults") || "No workflows found"
+                        }
+                        isLoading={wfLoading}
+                        className="w-full"
                       />
                     </div>
                   </div>
@@ -645,25 +728,33 @@ const PermissionTypeModal: React.FC<Props> = ({
                     </div>
                   </div>
                 )}
-
-                <div className="flex gap-3 pt-4">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={onCancel}
-                    disabled={loading}
-                    className="flex-1"
-                  >
-                    {t("common.cancel") || "Cancel"}
-                  </Button>
-                  <Button type="submit" disabled={loading} className="flex-1">
-                    {loading ? "Saving..." : t("common.save") || "Save"}
-                  </Button>
-                </div>
               </form>
             </div>
           </ScrollArea>
         </div>
+        <DialogFooter className="border-t w-full py-2 flex items-center justify-center">
+          <div className="flex gap-3 w-full px-4">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onCancel}
+              disabled={mutations.isCreating || mutations.isUpdating}
+              className="flex-1"
+            >
+              {t("common.cancel") || "Cancel"}
+            </Button>
+            <Button
+              type="button"
+              onClick={handleSubmit}
+              disabled={mutations.isCreating || mutations.isUpdating}
+              className="flex-1"
+            >
+              {mutations.isCreating || mutations.isUpdating
+                ? "Saving..."
+                : t("common.save") || "Save"}
+            </Button>
+          </div>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

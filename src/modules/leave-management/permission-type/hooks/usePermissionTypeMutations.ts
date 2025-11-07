@@ -14,7 +14,8 @@ export const usePermissionTypeMutations = () => {
       toast.success("Permission type created successfully");
     },
     onError: (error: any) => {
-      const message = error?.response?.data?.message || "Failed to create permission type";
+      const message =
+        error?.response?.data?.message || "Failed to create permission type";
       toast.error(message);
     },
   });
@@ -26,7 +27,8 @@ export const usePermissionTypeMutations = () => {
       toast.success("Permission type updated successfully");
     },
     onError: (error: any) => {
-      const message = error?.response?.data?.message || "Failed to update permission type";
+      const message =
+        error?.response?.data?.message || "Failed to update permission type";
       toast.error(message);
     },
   });
@@ -37,8 +39,10 @@ export const usePermissionTypeMutations = () => {
       toast.success("Permission type deleted successfully");
     },
     onError: (error: any) => {
-      const message = error?.response?.data?.message || "Failed to delete permission type";
-      toast.error(message);
+      const message =
+        error?.response?.data?.message || "Failed to delete permission type";
+      toast.error(message, { duration: 5000 });
+      throw error;
     },
   });
   const bulkDeleteMutation = useMutation({
@@ -48,8 +52,10 @@ export const usePermissionTypeMutations = () => {
       toast.success(`${ids.length} permission type(s) deleted successfully`);
     },
     onError: (error: any) => {
-      const message = error?.response?.data?.message || "Failed to delete permission types";
-      toast.error(message);
+      const message =
+        error?.response?.data?.message || "Failed to delete permission types";
+      toast.error(message, { duration: 5000 });
+      throw error;
     },
   });
 

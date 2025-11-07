@@ -79,21 +79,15 @@ const TreeNode: React.FC<TreeNodeProps> = ({ organization, level }) => {
   };
 
   return (
-    <div
-      className={cn(
-        "border-l-2 border-muted",
-        isRTL && "border-l-0 border-r-2"
-      )}
-    >
+    <div>
       <Collapsible open={isOpen} onOpenChange={setIsOpen}>
         <div
           className={cn(
-            "group relative flex items-center gap-2 py-1.5 px-2 text-sm transition-colors",
+            "group relative flex items-center gap-2 border mt-2 rounded-2xl px-2 text-sm transition-colors py-4",
             getBgColor(level),
             isRTL ? "flex-row-reverse" : ""
           )}
         >
-          {/* Expand/Collapse Button */}
           {hasChildren ? (
             <CollapsibleTrigger asChild>
               <button className="shrink-0 hover:bg-background/50 rounded p-0.5 transition-colors">

@@ -22,7 +22,7 @@ interface LeaveTypePayload {
   leave_type_code: string;
   leave_type_eng?: string;
   leave_type_arb?: string;
-  status_Flag: boolean;
+  status_flag: boolean;
   need_approval_flag?: boolean;
   official_flag?: boolean;
   allow_attachment_flag?: boolean;
@@ -41,7 +41,7 @@ interface LeaveTypePayload {
   leave_by_overtime_flag?: boolean;
   carryforward_flag?: boolean;
   specific_gender?: string;
-  workflow_Id?: number;
+  workflow_id?: number;
 }
 
 interface WorkflowType {
@@ -106,8 +106,8 @@ const LeaveTypeModal: React.FC<Props> = ({
       setNameEn(initialData.leave_type_eng || "");
       setNameAr(initialData.leave_type_arb || "");
       setStatus(
-        typeof initialData.status_Flag === "boolean"
-          ? initialData.status_Flag
+        typeof initialData.status_flag === "boolean"
+          ? initialData.status_flag
           : true
       );
       setNeedApproval(initialData.need_approval_flag || false);
@@ -134,7 +134,7 @@ const LeaveTypeModal: React.FC<Props> = ({
       setSpecificGender(
         initialData.specific_gender ? initialData.specific_gender : "ALL"
       );
-      setWorkflowId(initialData.workflow_Id ?? undefined);
+      setWorkflowId(initialData.workflow_id ?? undefined);
     } else {
       setCode("");
       setNameEn("");
@@ -187,7 +187,7 @@ const LeaveTypeModal: React.FC<Props> = ({
       leave_type_code: String(code).trim(),
       leave_type_eng: String(nameEn).trim() || undefined,
       leave_type_arb: String(nameAr).trim() || undefined,
-      status_Flag: !!status,
+      status_flag: !!status,
       need_approval_flag: needApproval,
       official_flag: official,
       allow_attachment_flag: allowAttachment,
@@ -222,7 +222,7 @@ const LeaveTypeModal: React.FC<Props> = ({
       leave_by_overtime_flag: leaveByOvertime,
       carryforward_flag: carryforward,
       specific_gender: specificGender === "ALL" ? undefined : specificGender,
-      workflow_Id:
+      workflow_id:
         typeof workflowId === "number" && !Number.isNaN(workflowId)
           ? workflowId
           : undefined,
@@ -239,7 +239,8 @@ const LeaveTypeModal: React.FC<Props> = ({
       setError(
         err?.response?.data?.message ||
           err?.message ||
-          (t("leaveManagement.leaveTypes.messages.saveError") || "Failed to save leave type")
+          t("leaveManagement.leaveTypes.messages.saveError") ||
+          "Failed to save leave type"
       );
     } finally {
       setLoading(false);
@@ -248,156 +249,160 @@ const LeaveTypeModal: React.FC<Props> = ({
 
   return (
     <Dialog open={open} onOpenChange={onCancel}>
-      <DialogContent className="max-w-sm sm:max-w-md md:max-w-lg lg:max-w-2xl xl:max-w-4xl w-full p-0 bg-background rounded-xl shadow-2xl border border-border text-foreground flex flex-col items-center justify-center max-h-[90vh]">
-        <div className="w-full p-2 sm:p-4">
-          <div className="flex items-center justify-between mb-4 sm:mb-6 px-2">
-            <DialogTitle className="text-lg sm:text-xl font-semibold text-foreground">
-              {initialData
-                ? t("leaveManagement.leaveTypes.actions.edit") ||
-                  "Edit Leave Type"
-                : t("leaveManagement.leaveTypes.actions.add") ||
-                  "Add Leave Type"}
-            </DialogTitle>
-          </div>
-          <ScrollArea className="max-h-[70vh] sm:max-h-[75vh] overflow-y-auto w-full">
-            <form onSubmit={handleSubmit} className="px-2 sm:px-4">
-              <div className="space-y-4 sm:space-y-6">
-                <div className="border-b pb-2 mb-2">
-                  <h3 className="text-base md:text-lg font-semibold text-primary">
-                    {t("leaveManagement.leaveTypes.modal.basicInformation") || "Basic Information"}
-                  </h3>
+      <DialogContent className="max-w-sm sm:max-w-md md:max-w-lg lg:max-w-2xl xl:max-w-4xl w-full p-0 bg-background rounded-xl shadow-2xl border border-border text-foreground max-h-[90vh] flex flex-col">
+        <div className="flex items-center justify-between p-4 sm:p-6 border-b flex-shrink-0">
+          <DialogTitle className="text-lg sm:text-xl font-semibold text-foreground">
+            {initialData
+              ? t("leaveManagement.leaveTypes.actions.edit") ||
+                "Edit Leave Type"
+              : t("leaveManagement.leaveTypes.actions.add") || "Add Leave Type"}
+          </DialogTitle>
+        </div>
+
+        <ScrollArea className="flex-1 overflow-y-auto">
+          <div className="px-4 sm:px-6 py-4">
+            <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+              <div className="border-b pb-2 mb-2">
+                <h3 className="text-base md:text-lg font-semibold text-primary">
+                  {t("leaveManagement.leaveTypes.modal.basicInformation") ||
+                    "Basic Information"}
+                </h3>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6">
+                <div className="min-w-0">
+                  <label className="block mb-1 sm:mb-2 font-medium text-xs sm:text-sm break-words">
+                    {t("leaveManagement.leaveTypes.fields.code") || "Code"}{" "}
+                    <span className="text-red-500">*</span>
+                  </label>
+                  <Input
+                    value={code}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setCode(e.target.value)
+                    }
+                    placeholder="e.g., AL, SL, ML"
+                    required
+                    className="h-9 sm:h-10 text-sm"
+                  />
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6">
-                  <div className="min-w-0">
-                    <label className="block mb-1 sm:mb-2 font-medium text-xs sm:text-sm break-words">
-                      {t("leaveManagement.leaveTypes.fields.code") || "Code"}{" "}
-                      <span className="text-red-500">*</span>
-                    </label>
-                    <Input
-                      value={code}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        setCode(e.target.value)
-                      }
-                      placeholder="e.g., AL, SL, ML"
-                      required
-                      className="h-9 sm:h-10 text-sm"
-                    />
-                  </div>
-
-                  <div className="min-w-0">
-                    <label className="block mb-1 sm:mb-2 font-medium text-xs sm:text-sm break-words">
-                      {t("leaveManagement.leaveTypes.fields.status") ||
-                        "Status"}
-                    </label>
-                    <Select
-                      value={String(status)}
-                      onValueChange={(v: string) => setStatus(v === "true")}
-                    >
-                      <SelectTrigger className="h-9 sm:h-10">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="true">
-                          {t("common.active") || "Active"}
-                        </SelectItem>
-                        <SelectItem value="false">
-                          {t("common.inactive") || "Inactive"}
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="min-w-0 sm:col-span-2 lg:col-span-1">
-                    <label className="block mb-1 sm:mb-2 font-medium text-xs sm:text-sm break-words">
-                      {t("leaveManagement.leaveTypes.fields.workflowId") ||
-                        "Workflow"}
-                    </label>
-                    <Select
-                      value={workflowId ? String(workflowId) : "none"}
-                      onValueChange={(v: string) =>
-                        setWorkflowId(
-                          v && v !== "-1" && v !== "none" ? Number(v) : undefined
-                        )
-                      }
-                    >
-                      <SelectTrigger className="h-9 sm:h-10">
-                        <SelectValue
-                          placeholder={
-                            workflowLoading
-                              ? t("common.loading") || "Loading..."
-                              : t("common.select") || "Select"
-                          }
-                        />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="none">None</SelectItem>
-                        {workflowLoading && (
-                          <SelectItem value="-1">{t("common.loading") || "Loading..."}</SelectItem>
-                        )}
-                        {!workflowLoading && workflowTypes.length === 0 && (
-                          <SelectItem value="-1">{t("leaveManagement.leaveTypes.modal.noWorkflows") || "No workflows"}</SelectItem>
-                        )}
-                        {workflowTypes.map((wf) => (
-                          <SelectItem
-                            key={wf.workflow_id}
-                            value={String(wf.workflow_id)}
-                          >
-                            {wf.workflow_name_eng ||
-                              wf.workflow_name_arb ||
-                              wf.workflow_code}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    {workflowError && (
-                      <div className="text-xs text-destructive mt-1">
-                        {workflowError}
-                      </div>
-                    )}
-                  </div>
+                <div className="min-w-0">
+                  <label className="block mb-1 sm:mb-2 font-medium text-xs sm:text-sm break-words">
+                    {t("leaveManagement.leaveTypes.fields.status") || "Status"}
+                  </label>
+                  <Select
+                    value={String(status)}
+                    onValueChange={(v: string) => setStatus(v === "true")}
+                  >
+                    <SelectTrigger className="w-full h-9 sm:h-10">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="true">
+                        {t("common.active") || "Active"}
+                      </SelectItem>
+                      <SelectItem value="false">
+                        {t("common.inactive") || "Inactive"}
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
 
-                <div className="grid grid-cols-1 gap-3 sm:gap-4 lg:gap-6">
-                  <div className="min-w-0">
-                    <label className="block mb-1 sm:mb-2 font-medium text-xs sm:text-sm break-words">
-                      {t("leaveManagement.leaveTypes.fields.nameEng") ||
-                        "Name (English)"}
-                    </label>
-                    <Input
-                      value={nameEn}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        setNameEn(e.target.value)
-                      }
-                      placeholder="Leave type name in English"
-                      className="h-9 sm:h-10 text-sm"
-                    />
-                  </div>
-
-                  {!isEnglish && (
-                    <div className="min-w-0">
-                      <label className="block mb-1 sm:mb-2 font-medium text-xs sm:text-sm break-words">
-                        {t("leaveManagement.leaveTypes.fields.nameArb") ||
-                          "Name (Arabic)"}
-                      </label>
-                      <Input
-                        value={nameAr}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                          setNameAr(e.target.value)
+                <div className="min-w-0 sm:col-span-2 lg:col-span-1">
+                  <label className="block mb-1 sm:mb-2 font-medium text-xs sm:text-sm break-words">
+                    {t("leaveManagement.leaveTypes.fields.workflowId") ||
+                      "Workflow"}
+                  </label>
+                  <Select
+                    value={workflowId ? String(workflowId) : "none"}
+                    onValueChange={(v: string) =>
+                      setWorkflowId(
+                        v && v !== "-1" && v !== "none" ? Number(v) : undefined
+                      )
+                    }
+                  >
+                    <SelectTrigger className=" w-full h-9 sm:h-10">
+                      <SelectValue
+                        placeholder={
+                          workflowLoading
+                            ? t("common.loading") || "Loading..."
+                            : t("common.select") || "Select"
                         }
-                        placeholder="Leave type name in Arabic"
-                        className="h-9 sm:h-10 text-sm"
                       />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="none">None</SelectItem>
+                      {workflowLoading && (
+                        <SelectItem value="-1">
+                          {t("common.loading") || "Loading..."}
+                        </SelectItem>
+                      )}
+                      {!workflowLoading && workflowTypes.length === 0 && (
+                        <SelectItem value="-1">
+                          {t("leaveManagement.leaveTypes.modal.noWorkflows") ||
+                            "No workflows"}
+                        </SelectItem>
+                      )}
+                      {workflowTypes.map((wf) => (
+                        <SelectItem
+                          key={wf.workflow_id}
+                          value={String(wf.workflow_id)}
+                        >
+                          {wf.workflow_name_eng ||
+                            wf.workflow_name_arb ||
+                            wf.workflow_code}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  {workflowError && (
+                    <div className="text-xs text-destructive mt-1">
+                      {workflowError}
                     </div>
                   )}
                 </div>
+              </div>
+
+              <div className="grid grid-cols-1 gap-3 sm:gap-4 lg:gap-6">
+                <div className="min-w-0">
+                  <label className="block mb-1 sm:mb-2 font-medium text-xs sm:text-sm break-words">
+                    {t("leaveManagement.leaveTypes.fields.nameEng") ||
+                      "Name (English)"}
+                  </label>
+                  <Input
+                    value={nameEn}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setNameEn(e.target.value)
+                    }
+                    placeholder="Leave type name in English"
+                    className="h-9 sm:h-10 text-sm"
+                  />
+                </div>
+
+                {!isEnglish && (
+                  <div className="min-w-0">
+                    <label className="block mb-1 sm:mb-2 font-medium text-xs sm:text-sm break-words">
+                      {t("leaveManagement.leaveTypes.fields.nameArb") ||
+                        "Name (Arabic)"}
+                    </label>
+                    <Input
+                      value={nameAr}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        setNameAr(e.target.value)
+                      }
+                      placeholder="Leave type name in Arabic"
+                      className="h-9 sm:h-10 text-sm"
+                    />
+                  </div>
+                )}
               </div>
 
               {/* Leave Configuration Section */}
               <div className="space-y-4">
                 <div className="border-b pb-2 mb-2">
                   <h3 className="text-base md:text-lg font-semibold text-primary">
-                    {t("leaveManagement.leaveTypes.modal.leaveConfiguration") || "Leave Configuration"}
+                    {t("leaveManagement.leaveTypes.modal.leaveConfiguration") ||
+                      "Leave Configuration"}
                   </h3>
                 </div>
 
@@ -530,13 +535,29 @@ const LeaveTypeModal: React.FC<Props> = ({
                         setSpecificGender(value === "ALL" ? "" : value)
                       }
                     >
-                      <SelectTrigger className="h-9 sm:h-10">
-                        <SelectValue placeholder={t("leaveManagement.leaveTypes.genderOptions.selectRestriction") || "Select gender restriction"} />
+                      <SelectTrigger className=" w-full h-9 sm:h-10">
+                        <SelectValue
+                          placeholder={
+                            t(
+                              "leaveManagement.leaveTypes.genderOptions.selectRestriction"
+                            ) || "Select gender restriction"
+                          }
+                        />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="ALL">{t("leaveManagement.leaveTypes.genderOptions.all") || "All"}</SelectItem>
-                        <SelectItem value="M">{t("leaveManagement.leaveTypes.genderOptions.male") || "Male"}</SelectItem>
-                        <SelectItem value="F">{t("leaveManagement.leaveTypes.genderOptions.female") || "Female"}</SelectItem>
+                        <SelectItem value="ALL">
+                          {t("leaveManagement.leaveTypes.genderOptions.all") ||
+                            "All"}
+                        </SelectItem>
+                        <SelectItem value="M">
+                          {t("leaveManagement.leaveTypes.genderOptions.male") ||
+                            "Male"}
+                        </SelectItem>
+                        <SelectItem value="F">
+                          {t(
+                            "leaveManagement.leaveTypes.genderOptions.female"
+                          ) || "Female"}
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -547,7 +568,8 @@ const LeaveTypeModal: React.FC<Props> = ({
               <div className="space-y-4">
                 <div className="border-b pb-2 mb-2">
                   <h3 className="text-base md:text-lg font-semibold text-primary">
-                    {t("leaveManagement.leaveTypes.modal.approvalProcessing") || "Approval & Processing"}
+                    {t("leaveManagement.leaveTypes.modal.approvalProcessing") ||
+                      "Approval & Processing"}
                   </h3>
                 </div>
 
@@ -627,7 +649,8 @@ const LeaveTypeModal: React.FC<Props> = ({
               <div className="space-y-4">
                 <div className="border-b pb-2 mb-2">
                   <h3 className="text-base md:text-lg font-semibold text-primary">
-                    {t("leaveManagement.leaveTypes.modal.specialFlags") || "Special Flags"}
+                    {t("leaveManagement.leaveTypes.modal.specialFlags") ||
+                      "Special Flags"}
                   </h3>
                 </div>
 
@@ -723,22 +746,30 @@ const LeaveTypeModal: React.FC<Props> = ({
                   </div>
                 </div>
               )}
-              <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-4 sm:pt-6">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={onCancel}
-                  disabled={loading}
-                  className="flex-1 h-9 sm:h-10 text-sm"
-                >
-                  {t("common.cancel") || "Cancel"}
-                </Button>
-                <Button type="submit" disabled={loading} className="flex-1 h-9 sm:h-10 text-sm">
-                  {loading ? (t("common.saving") || "Saving...") : t("common.save") || "Save"}
-                </Button>
-              </div>
             </form>
-          </ScrollArea>
+          </div>
+        </ScrollArea>
+
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 p-4 sm:p-6 border-t bg-muted/30 flex-shrink-0">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onCancel}
+            disabled={loading}
+            className="flex-1 h-9 sm:h-10 text-sm"
+          >
+            {t("common.cancel") || "Cancel"}
+          </Button>
+          <Button
+            type="submit"
+            disabled={loading}
+            onClick={handleSubmit}
+            className="flex-1 h-9 sm:h-10 text-sm"
+          >
+            {loading
+              ? t("common.saving") || "Saving..."
+              : t("common.save") || "Save"}
+          </Button>
         </div>
       </DialogContent>
     </Dialog>

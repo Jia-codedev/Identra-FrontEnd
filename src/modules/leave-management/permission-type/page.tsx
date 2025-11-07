@@ -47,6 +47,7 @@ export default function PermissionTypesPage() {
     selected,
     selectItem,
     selectAll,
+    clearSelection,
     refetch,
   } = usePermissionTypes();
 
@@ -66,12 +67,11 @@ export default function PermissionTypesPage() {
     id?: number;
   }>({ open: false, type: null });
 
-    const { canView, canCreate, canEdit, canDelete } = useSubModulePrivileges(
+  const { canView, canCreate, canEdit, canDelete } = useSubModulePrivileges(
     "self-services",
     "permission-types"
   );
   console.log("Privileges:", { canView, canCreate, canEdit, canDelete });
-
 
   const handleAdd = () => {
     setEditingItem(null);
@@ -93,14 +93,18 @@ export default function PermissionTypesPage() {
     setDeleteDialog({ open: true, type: "bulk" });
   };
 
-  const handleConfirmDelete = () => {
-    if (deleteDialog.type === "single" && deleteDialog.id !== undefined) {
-      mutations.delete.mutateAsync(deleteDialog.id);
-    } else if (deleteDialog.type === "bulk" && selected.length > 0) {
-      mutations.bulkDelete.mutateAsync(selected);
-      selectAll();
+  const handleConfirmDelete = async () => {
+    try {
+      if (deleteDialog.type === "single" && deleteDialog.id !== undefined) {
+        await mutations.delete.mutateAsync(deleteDialog.id);
+      } else if (deleteDialog.type === "bulk" && selected.length > 0) {
+        await mutations.bulkDelete.mutateAsync(selected);
+      }
+      clearSelection();
+      setDeleteDialog({ open: false, type: null });
+    } catch (error) {
+      // Error is handled by mutation's onError, keep dialog open
     }
-    setDeleteDialog({ open: false, type: null });
   };
 
   const handleCancelDelete = () => {
