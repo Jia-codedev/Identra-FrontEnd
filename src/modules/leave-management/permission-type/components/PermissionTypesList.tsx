@@ -46,10 +46,14 @@ const PermissionTypesList: React.FC<Props> = ({
   onEditItem,
   onDeleteItem,
   canEdit,
-  canDelete
+  canDelete,
 }) => {
   const { t } = useTranslations();
-
+  console.log("PermissionTypesList render", {
+    permissionTypes,
+    loading,
+    selected,
+  });
   const columns: TableColumn<PermissionType>[] = [
     {
       key: "code",
@@ -67,10 +71,8 @@ const PermissionTypesList: React.FC<Props> = ({
       accessor: (item) => (
         <Badge
           className={
-            (item.status
-              ? "bg-green-100 text-green-800"
-              : "bg-gray-100 text-gray-700") +
-            " px-2 py-1 rounded text-xs font-medium"
+            (item.status ? "bg-card text-green-800" : "text-destructive") +
+            " px-2 py-0.5 rounded text-xs font-medium"
           }
           variant="outline"
         >

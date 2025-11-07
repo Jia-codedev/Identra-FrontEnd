@@ -2,31 +2,53 @@
 
 import React, { useState } from "react";
 import { useTranslations } from "@/hooks/use-translations";
-import { Dialog } from "@/components/ui/dialog";
+import { useAuth } from "@/hooks/use-auth";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import PermissionsHeader from "./components/PermissionsHeader";
 import PermissionsList from "./components/PermissionsList";
 import PermissionRequestForm from "./components/PermissionRequestForm";
 import usePermissions from "./hooks/usePermissions";
 import usePermissionMutations from "./hooks/useMutations";
 import { useSubModulePrivileges } from "@/hooks/security/useSubModulePrivileges";
+import { IPermission } from "./types";
+import { CustomPagination } from "@/components/common/dashboard/Pagination";
 
 export default function PermissionsPage() {
   const { t } = useTranslations();
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [editingPermission, setEditingPermission] = useState<any>(null);
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const mutations = usePermissionMutations();
+  const { user } = useAuth();
+  const {
+    createPermission,
+    updatePermission,
+    deletePermission,
+    deletePermissions,
+  } = usePermissionMutations();
 
-  const { 
-    permissions, 
+  const {
+    permissions,
     page,
     pageSize,
     pageCount,
+    pageSizeOptions,
     total,
     isLoading,
-    selected, 
+    selected,
     selectItem,
     selectAll,
     clearSelection,
@@ -34,62 +56,121 @@ export default function PermissionsPage() {
     setPageSize,
     search,
     setSearch,
-    refetch
-  } = usePermissions();
+    allChecked,
+    refetch,
+  } = usePermissions({ employeeId: user?.employeenumber });
 
-    const { canView, canCreate, canEdit, canDelete } = useSubModulePrivileges(
+  const { canView, canCreate, canEdit, canDelete } = useSubModulePrivileges(
     "self-services",
     "permission-management"
   );
-  console.log("Privileges:", { canView, canCreate, canEdit, canDelete });
 
+  const [modalState, setModalState] = useState<{
+    isOpen: boolean;
+    mode: "add" | "edit";
+    permission: IPermission | null;
+  }>({
+    isOpen: false,
+    mode: "add",
+    permission: null,
+  });
+
+  const [deleteDialog, setDeleteDialog] = useState<{
+    open: boolean;
+    type: "single" | "bulk" | null;
+    id?: number;
+  }>({ open: false, type: null });
 
   const handleAddNew = () => {
-    setEditingPermission(null);
-    setIsAddModalOpen(true);
+    setModalState({
+      isOpen: true,
+      mode: "add",
+      permission: null,
+    });
   };
 
-  const handleEdit = (permission: any) => {
-    setEditingPermission(permission);
-    setIsAddModalOpen(true);
+  const handleEdit = (permission: IPermission) => {
+    setModalState({
+      isOpen: true,
+      mode: "edit",
+      permission,
+    });
   };
 
-  const handleCloseModal = (refresh?: boolean) => {
-    setIsAddModalOpen(false);
-    setEditingPermission(null);
-    if (refresh) {
-      refetch();
+  const handleCloseModal = () => {
+    setModalState({
+      isOpen: false,
+      mode: "add",
+      permission: null,
+    });
+  };
+
+  const handleSavePermission = (data: any) => {
+    if (modalState.mode === "add") {
+      createPermission.mutate({
+        permissionData: data,
+        onClose: handleCloseModal,
+        search,
+        pageSize,
+      });
+    } else if (modalState.mode === "edit" && modalState.permission) {
+      const permissionId =
+        modalState.permission.employee_short_permission_id ||
+        modalState.permission.short_permission_id;
+
+      if (!permissionId) {
+        console.error("Permission ID is missing");
+        return;
+      }
+
+      updatePermission.mutate({
+        id: permissionId,
+        permissionData: data,
+        onClose: handleCloseModal,
+        search,
+        pageSize,
+      });
     }
+  };
+
+  const handleDeletePermission = (id: number) => {
+    if (!canDelete) {
+      return;
+    }
+    setDeleteDialog({ open: true, type: "single", id });
   };
 
   const handleDeleteSelected = () => {
-    if (selected.length === 0) {
+    if (!canDelete) {
       return;
     }
-    setShowDeleteConfirm(true);
+    if (selected.length === 0) return;
+    setDeleteDialog({ open: true, type: "bulk" });
   };
 
-  const confirmDelete = async () => {
-    try {
-      for (const permissionId of selected) {
-        await mutations.remove.mutateAsync(permissionId);
-      }
-      clearSelection();
-      setShowDeleteConfirm(false);
-    } catch (error) {
-      console.error('Error deleting permissions:', error);
+  const handleConfirmDelete = () => {
+    if (!canDelete) {
+      return;
     }
+    if (deleteDialog.type === "single" && deleteDialog.id !== undefined) {
+      deletePermission.mutate(deleteDialog.id);
+    } else if (deleteDialog.type === "bulk" && selected.length > 0) {
+      deletePermissions.mutate(selected);
+    }
+    setDeleteDialog({ open: false, type: null });
   };
 
-  const allChecked = selected.length > 0 && selected.length === permissions.length;
+  const handleCancelDelete = () => {
+    setDeleteDialog({ open: false, type: null });
+  };
 
   return (
     <div className="w-full h-full flex flex-col items-center justify-start">
       <div className="w-full relative">
-        <div className="py-4 border-border bg-background/90 p-4">
+        <div className="py-4 border-border bg-background/90">
           <PermissionsHeader
             canCreate={canCreate}
-            canDelete={canDelete} 
+            canDelete={canDelete}
             search={search}
             onSearchChange={setSearch}
             onAdd={handleAddNew}
@@ -97,68 +178,83 @@ export default function PermissionsPage() {
             onDeleteSelected={handleDeleteSelected}
             onRefresh={refetch}
           />
-          <div className="w-full mt-4">
-            <PermissionsList
-              canEdit={canEdit}
-              canView={canView}
-              permissions={permissions}
-              loading={isLoading}
-              selected={selected}
-              onSelectItem={selectItem}
-              onSelectAll={selectAll}
-              allChecked={allChecked}
-              onRefresh={refetch}
-              onEdit={handleEdit}
-              currentPage={page}
-              totalPages={pageCount}
-              onPageChange={setPage}
-              pageSize={pageSize}
-              onPageSizeChange={setPageSize}
-              total={total}
-            />
-          </div>
+
+          <PermissionsList
+            canEdit={canEdit}
+            canDelete={canDelete}
+            permissions={permissions}
+            selected={selected}
+            page={page}
+            pageSize={pageSize}
+            allChecked={allChecked}
+            onSelectItem={selectItem}
+            onSelectAll={selectAll}
+            isLoading={isLoading}
+            onEdit={handleEdit}
+            onDeletePermission={handleDeletePermission}
+            onPageChange={setPage}
+            onPageSizeChange={setPageSize}
+          />
+
+          <CustomPagination
+            currentPage={page}
+            totalPages={pageCount}
+            onPageChange={setPage}
+            pageSize={pageSize}
+            pageSizeOptions={pageSizeOptions}
+            onPageSizeChange={setPageSize}
+          />
         </div>
       </div>
 
       {/* Add/Edit Permission Modal */}
-      <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
+      {modalState.isOpen && (
         <PermissionRequestForm
-          permission={editingPermission}
+          permission={modalState.permission}
           onClose={handleCloseModal}
         />
-      </Dialog>
+      )}
 
       {/* Delete Confirmation Dialog */}
-      <AlertDialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>
-              {t('common.confirmDelete') || 'Confirm Delete'}
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              {selected.length === 1 
-                ? (t('leaveManagement.permissions.confirmDeleteSingle') || 'Are you sure you want to delete this permission? This action cannot be undone.')
-                : (t('leaveManagement.permissions.confirmDeleteMultiple')?.replace('{count}', selected.length.toString()) || `Are you sure you want to delete ${selected.length} permissions? This action cannot be undone.`)
-              }
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>
-              {t('common.cancel') || 'Cancel'}
-            </AlertDialogCancel>
-            <AlertDialogAction
-              onClick={confirmDelete}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-              disabled={mutations.remove.isPending}
-            >
-              {mutations.remove.isPending 
-                ? (t('common.deleting') || 'Deleting...') 
-                : (t('common.delete') || 'Delete')
-              }
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <Dialog
+        open={deleteDialog.open}
+        onOpenChange={(open) => !open && handleCancelDelete()}
+      >
+        <DialogContent className="p-0">
+          <DialogHeader className="p-2">
+            <DialogTitle className="mb-1 p-2">
+              {t("common.confirmDelete")}
+            </DialogTitle>
+            <div className="bg-black/5 p-4 rounded-lg dark:bg-white/5">
+              <DialogDescription>
+                {deleteDialog.type === "single"
+                  ? t("messages.confirm.delete") ||
+                    "Are you sure you want to delete this permission? This action cannot be undone."
+                  : t("messages.confirm.deleteMultiple", {
+                      count: selected.length,
+                    }) ||
+                    `Are you sure you want to delete ${selected.length} permissions? This action cannot be undone.`}
+              </DialogDescription>
+              <div className="flex justify-end space-x-2 mt-4">
+                <Button variant="outline" onClick={handleCancelDelete}>
+                  {t("common.cancel")}
+                </Button>
+                <Button
+                  variant="destructive"
+                  onClick={handleConfirmDelete}
+                  disabled={
+                    deletePermission.isPending || deletePermissions.isPending
+                  }
+                >
+                  {deletePermission.isPending || deletePermissions.isPending
+                    ? t("common.deleting") || "Deleting..."
+                    : t("common.delete") || "Delete"}
+                </Button>
+              </div>
+            </div>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

@@ -33,11 +33,32 @@
       "add": "Add Permission Type",
       "edit": "Edit Permission Type"
     },
+    "sections": {
+      "limits": "Permission Limits",
+      "configuration": "Configuration",
+      "flags": "Permission Flags"
+    },
     "fields": {
       "code": "Code",
       "status": "Status",
       "nameEng": "Name (English)",
-      "nameArb": "Name (Arabic)"
+      "nameArb": "Name (Arabic)",
+      "specificGender": "Specific Gender",
+      "maxPermPerDay": "Max Permissions Per Day",
+      "maxMinutesPerDay": "Max Minutes Per Day",
+      "maxPermPerMonth": "Max Permissions Per Month",
+      "maxMinutesPerMonth": "Max Minutes Per Month",
+      "workflowId": "Workflow ID",
+      "groupApplyFlag": "Group Apply",
+      "officialFlag": "Official",
+      "fullDayPermissionFlag": "Full Day Permission",
+      "medicalPassFlag": "Medical Pass",
+      "mandatoryCommentsFlag": "Mandatory Comments",
+      "mandatoryAttachmentFlag": "Mandatory Attachment",
+      "applyRamadanRestrictionFlag": "Apply Ramadan Restriction",
+      "minutesPermissionFlag": "Minutes Permission",
+      "fromToTimePermissionFlag": "From-To Time Permission",
+      "weekdaysPermissionFlag": "Weekdays Permission"
     }
   },
   "permissions": {

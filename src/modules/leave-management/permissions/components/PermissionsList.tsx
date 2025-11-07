@@ -5,34 +5,29 @@ import { Badge } from "@/components/ui/badge";
 import { format, parseISO } from "date-fns";
 import { useTranslations } from "@/hooks/use-translations";
 import { GenericTable, TableColumn } from "@/components/common/GenericTable";
-import PermissionActions from "./PermissionActions";
-
-type Permission = any;
+import { IPermission } from "../types";
 
 interface Props {
-  permissions: Permission[];
-  loading?: boolean;
+  permissions: IPermission[];
   selected: number[];
-  onSelectItem: (id: number) => void;
-  onSelectAll: () => void;
-  allChecked: boolean;
-  onEdit: (permission: Permission) => void;
-  onRefresh: () => void;
-  currentPage: number;
+  page: number;
   pageSize: number;
-  totalPages: number;
-  total: number;
+  allChecked: boolean;
   onPageChange: (page: number) => void;
   onPageSizeChange: (size: number) => void;
-  canEdit?: boolean;
-  canDelete?: boolean;
-  canView?: boolean;
+  onSelectItem: (id: number) => void;
+  onSelectAll: () => void;
+  onEdit: (permission: IPermission) => void;
+  onDeletePermission: (id: number) => void;
+  isLoading?: boolean;
+  canEdit: boolean;
+  canDelete: boolean;
 }
 
-const formatDateTime = (dt: string) => {
+const formatDate = (dt: string) => {
   if (!dt) return "-";
   try {
-    return format(parseISO(dt), "dd MMM yyyy, hh:mm a");
+    return format(parseISO(dt), "dd MMM yyyy");
   } catch {
     return dt;
   }
@@ -41,6 +36,10 @@ const formatDateTime = (dt: string) => {
 const formatTime = (time: string) => {
   if (!time) return "-";
   try {
+    // Handle if time already includes date
+    if (time.includes("T")) {
+      return format(parseISO(time), "hh:mm a");
+    }
     return format(parseISO(`2000-01-01T${time}`), "hh:mm a");
   } catch {
     return time;
@@ -48,24 +47,33 @@ const formatTime = (time: string) => {
 };
 
 const statusMap: Record<number, { label: string; color: string }> = {
-  0: { label: "Pending", color: "bg-yellow-100 text-yellow-800" },
-  1: { label: "Approved", color: "bg-green-100 text-green-800" },
-  2: { label: "Rejected", color: "bg-red-100 text-red-800" },
+  0: {
+    label: "Pending",
+    color:
+      "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400",
+  },
+  1: {
+    label: "Approved",
+    color:
+      "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400",
+  },
+  2: {
+    label: "Rejected",
+    color: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400",
+  },
 };
 
-const PermissionsList: React.FC<Props> = ({
+export const PermissionsList: React.FC<Props> = ({
   permissions,
-  loading = false,
   selected,
+  page,
+  pageSize,
+  allChecked,
   onSelectItem,
   onSelectAll,
-  allChecked,
   onEdit,
-  onRefresh,
-  currentPage,
-  pageSize,
-  totalPages,
-  total,
+  onDeletePermission,
+  isLoading,
   onPageChange,
   onPageSizeChange,
   canEdit,
@@ -73,38 +81,52 @@ const PermissionsList: React.FC<Props> = ({
 }) => {
   const { t } = useTranslations();
 
-  const columns: TableColumn<Permission>[] = [
+  const columns: TableColumn<IPermission>[] = [
     {
       key: "employee",
       header: t("leaveManagement.permissions.columns.employee") || "Employee",
-      accessor: (permission) => (
-        <div>
-          <div className="font-medium">
-            {permission.employee?.employee_name || "N/A"}
+      accessor: (permission: any) => {
+        const empName =
+          permission.employee_name ||
+          (permission.employee_master
+            ? `${permission.employee_master.firstname_eng || ""} ${
+                permission.employee_master.lastname_eng || ""
+              }`.trim()
+            : "N/A");
+        const empNo = permission.employee_master?.emp_no || "N/A";
+        return (
+          <div>
+            <div className="font-medium">{empName}</div>
+            <div className="text-sm text-muted-foreground">{empNo}</div>
           </div>
-          <div className="text-sm text-gray-500">
-            {permission.employee?.employee_no || "N/A"}
-          </div>
-        </div>
-      ),
+        );
+      },
     },
     {
       key: "type",
       header: t("leaveManagement.permissions.columns.type") || "Type",
-      accessor: (permission) =>
-        permission.permission_type?.permission_type_eng ||
-        permission.permission_type_id ||
-        "N/A",
+      accessor: (permission: any, isRTL) => {
+        if (permission.permission_type_name)
+          return permission.permission_type_name;
+        if (permission.permission_types) {
+          return isRTL
+            ? permission.permission_types.permission_type_arb ||
+                permission.permission_types.permission_type_eng
+            : permission.permission_types.permission_type_eng ||
+                permission.permission_types.permission_type_arb;
+        }
+        return permission.permission_type_id || "N/A";
+      },
     },
     {
       key: "fromDate",
       header: t("leaveManagement.permissions.columns.from") || "From",
-      accessor: (permission) => formatDateTime(permission.from_date),
+      accessor: (permission) => formatDate(permission.from_date),
     },
     {
       key: "toDate",
       header: t("leaveManagement.permissions.columns.to") || "To",
-      accessor: (permission) => formatDateTime(permission.to_date),
+      accessor: (permission) => formatDate(permission.to_date),
     },
     {
       key: "time",
@@ -124,7 +146,7 @@ const PermissionsList: React.FC<Props> = ({
           statusMap[permission.approve_reject_flag] || statusMap[0];
         return (
           <Badge
-            className={status.color + " px-2 py-1 rounded text-xs font-medium"}
+            className={`${status.color} px-2 py-1 rounded text-xs font-medium`}
             variant="outline"
           >
             {status.label}
@@ -145,41 +167,38 @@ const PermissionsList: React.FC<Props> = ({
 
   return (
     <GenericTable
-    canEdit={canEdit}
-    canDelete={canDelete}
+      canEdit={canEdit}
+      canDelete={canDelete}
       data={permissions}
       columns={columns}
       selected={selected}
-      page={currentPage}
+      page={page}
       pageSize={pageSize}
       allChecked={allChecked}
-      getItemId={(item) => item.single_permissions_id || item.id}
-      getItemDisplayName={(item) =>
-        `${item.permission_type?.permission_type_eng || "Permission"} - ${
-          item.employee?.employee_name || "Unknown"
-        }`
+      getItemId={(item) =>
+        item.employee_short_permission_id || item.short_permission_id
       }
-      onSelectItem={(id) => {
-        if (typeof id === "string") {
-          id = parseInt(id, 10);
-        }
-        onSelectItem(id);
+      getItemDisplayName={(item: any, isRTL) => {
+        const empName =
+          item.employee_name ||
+          (item.employee_master
+            ? `${item.employee_master.firstname_eng || ""} ${
+                item.employee_master.lastname_eng || ""
+              }`.trim()
+            : "Permission");
+        return empName;
       }}
+      onSelectItem={(id) => onSelectItem(Number(id))}
       onSelectAll={onSelectAll}
       onEditItem={onEdit}
-      actions={(permission) => (
-        <PermissionActions
-          permission={permission}
-          onEdit={() => onEdit(permission)}
-          onRefresh={onRefresh}
-        />
-      )}
-      noDataMessage={
-        t("leaveManagement.permissions.noData") || "No permissions found"
-      }
-      isLoading={loading}
+      onDeleteItem={(id) => onDeletePermission(Number(id))}
       onPageChange={onPageChange}
       onPageSizeChange={onPageSizeChange}
+      noDataMessage={
+        t("leaveManagement.permissions.noPermissionsFound") ||
+        "No permissions found"
+      }
+      isLoading={isLoading}
     />
   );
 };
