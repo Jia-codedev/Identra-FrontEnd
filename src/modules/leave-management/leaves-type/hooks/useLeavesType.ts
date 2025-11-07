@@ -32,7 +32,7 @@ export const useLeaves = () => {
       : [];
     return items.map((it) => ({
       id: it.leave_type_id,
-      code: it.code || it.leave_type_code,
+      code: it.leave_type_code,
       leave_type:
         it.leave_type_eng || it.leave_type_name || it.leave_type_arb || "",
       status: it.status_flag,

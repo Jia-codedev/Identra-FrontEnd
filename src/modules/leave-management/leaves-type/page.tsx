@@ -21,6 +21,7 @@ import useLeaves from "./hooks/useLeavesType";
 import useLeaveTypeMutations from "./hooks/useMutations";
 import { format, parseISO } from "date-fns";
 import { useSubModulePrivileges } from "@/hooks/security/useSubModulePrivileges";
+import { toast } from "sonner";
 
 type LeaveType = {
   id: number;
@@ -48,6 +49,7 @@ export default function LeavesTypePage() {
     selected,
     selectItem,
     selectAll,
+    clearSelection,
     refetch,
   } = useLeaves();
 
@@ -66,12 +68,11 @@ export default function LeavesTypePage() {
     id?: number;
   }>({ open: false, type: null });
 
-    const { canView, canCreate, canEdit, canDelete } = useSubModulePrivileges(
+  const { canView, canCreate, canEdit, canDelete } = useSubModulePrivileges(
     "self-services",
     "leave-types"
   );
   console.log("Privileges:", { canView, canCreate, canEdit, canDelete });
-
 
   const handleAdd = () => {
     setEditingItem(null);
@@ -90,14 +91,21 @@ export default function LeavesTypePage() {
     setDeleteDialog({ open: true, type: "bulk" });
   };
 
-  const handleConfirmDelete = () => {
-    if (deleteDialog.type === "single" && deleteDialog.id !== undefined) {
-      mutations.delete.mutateAsync(deleteDialog.id);
-    } else if (deleteDialog.type === "bulk" && selected.length > 0) {
-      mutations.bulkDelete.mutateAsync(selected);
-      selectAll();
+  const handleConfirmDelete = async () => {
+    try {
+      if (deleteDialog.type === "single" && deleteDialog.id !== undefined) {
+        const res = await mutations.delete.mutateAsync(deleteDialog.id);
+
+        clearSelection();
+      } else if (deleteDialog.type === "bulk" && selected.length > 0) {
+        const res = await mutations.bulkDelete.mutateAsync(selected);
+
+        clearSelection();
+      }
+      setDeleteDialog({ open: false, type: null });
+    } catch (error) {
+      console.error("Delete failed:", error);
     }
-    setDeleteDialog({ open: false, type: null });
   };
 
   const handleCancelDelete = () => {
@@ -115,7 +123,7 @@ export default function LeavesTypePage() {
       <div className="w-full relative">
         <div className="py-4 border-border bg-background/90 p-4">
           <LeavesHeader
-            canCreate={canCreate} 
+            canCreate={canCreate}
             canDelete={canDelete}
             search={search}
             onSearchChange={handleSearchChange}
@@ -126,8 +134,8 @@ export default function LeavesTypePage() {
 
           <div className="w-full mt-4">
             <LeavesList
-              canEdit={canEdit} 
-              canDelete={canDelete} 
+              canEdit={canEdit}
+              canDelete={canDelete}
               leaves={data}
               loading={isLoading}
               selected={selected}

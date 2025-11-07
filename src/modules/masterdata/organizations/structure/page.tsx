@@ -4,13 +4,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import {
-  Building2,
-  RefreshCw,
-  Download,
-  AlertCircle,
-  Languages,
-} from "lucide-react";
+import { Building2, RefreshCw, AlertCircle } from "lucide-react";
 import { useTranslations } from "@/hooks/use-translations";
 import { useLanguage } from "@/providers/language-provider";
 import { useOrganizationStructure } from "../hooks/useOrganizationStructure";
@@ -108,8 +102,26 @@ const OrganizationStructurePage: React.FC = () => {
             {t("masterData.organizations.structure.title")}
           </h1>
         </div>
+
+        {/* Refresh Button */}
+        <div className={`flex gap-2 ${isRTL ? "flex-row-reverse" : ""}`}>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleRefresh}
+            disabled={isRefetching}
+            className={`${isRTL ? "flex-row-reverse" : ""}`}
+          >
+            <RefreshCw
+              className={`h-4 w-4 ${isRTL ? "ml-2" : "mr-2"} ${
+                isRefetching ? "animate-spin" : ""
+              }`}
+            />
+            {t("common.refresh")}
+          </Button>
+        </div>
       </div>
-      <div className="border rounded p-1">
+      <div className="">
         {/* Main Content */}
         {isLoading ? (
           <div className="">
