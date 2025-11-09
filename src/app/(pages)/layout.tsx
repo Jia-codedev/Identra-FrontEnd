@@ -4,13 +4,6 @@ import localFont from "next/font/local";
 import "../globals.css";
 import Navbar from "@/components/Navbar";
 import { ThemeProvider } from "../providers/ThemeProvider";
-const helveticaLTPro = localFont({
-  src: [
-    { path: "../../lib/fonts/HelveticaLTPro-Bold.otf", style: "bold" },
-    { path: "../../lib/fonts/HelveticaLTPro-Roman.otf", style: "roman" },
-  ],
-});
-
 const ns = Nunito_Sans({ subsets: ["latin"], display: "swap" });
 
 export const metadata: Metadata = {
