@@ -13,6 +13,7 @@ export function middleware(request: NextRequest) {
     path.startsWith("/public/") ||
     path.startsWith("/forgot-password") ||
     path.startsWith("/reset-password") ||
+    path.startsWith("/auth/azure/success") ||
     PUBLIC_FILE.test(path);
   if (isPublicAsset) {
     return NextResponse.next();

@@ -336,6 +336,7 @@
       "enterOrganizationNameEnglish": "Enter organization name in English",
       "enterOrganizationCode": "Enter organization code",
       "noOrganizationsFound": "No organizations found.",
+      "selectParentOrganizationType": " select parent organization type",
       "structure": {
         "title": "Structure Chart"
       },

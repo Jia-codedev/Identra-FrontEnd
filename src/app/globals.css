@@ -133,3 +133,7 @@
     @apply cursor-pointer;
   }
 }
+
+input:not([disabled]) {
+  @apply bg-white dark:bg-input;
+}
