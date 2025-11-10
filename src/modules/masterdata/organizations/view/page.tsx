@@ -20,7 +20,6 @@ import {
 import { CustomPagination } from "@/components/common/dashboard/Pagination";
 import { useSubModulePrivileges } from "@/hooks/security/useSubModulePrivileges";
 
-
 export default function OrganizationsPage() {
   const { t } = useTranslations();
   const {
@@ -66,7 +65,6 @@ export default function OrganizationsPage() {
     "organization",
     "organizations"
   );
-
 
   const handleAddOrganization = () => {
     if (!canCreate) {
@@ -214,13 +212,13 @@ export default function OrganizationsPage() {
             <div className="bg-black/5 p-4 rounded-lg dark:bg-white/5">
               <DialogDescription>
                 {selected?.length === 1 || deleteDialog.type === "single"
-                  ? t("common.messages.confirmDeleteSingleDescription", {
-                    deleteType: "Organization",
-                  })
-                  : t("common.messages.confirmDeleteMultipleDescription", {
-                    count: selected?.length,
-                    deleteType: "Organizations",
-                  })}
+                  ? t("messages.confirm.delete", {
+                      deleteType: "Organization",
+                    })
+                  : t("messages.confirm.deleteMultiple", {
+                      count: selected?.length,
+                      deleteType: "Organizations",
+                    })}
               </DialogDescription>
               <div className="flex justify-end space-x-2 mt-4">
                 <Button variant="outline" onClick={handleCancelDelete}>
