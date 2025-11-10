@@ -17,7 +17,9 @@ export const useEmployeePermissions = (
     () => ({
       limit: pageSize,
       offset: page,
-      ...(search ? { employee_id: search } : {}),
+      ...(search && !isNaN(Number(search))
+        ? { employee_id: Number(search) }
+        : {}),
       ...initialFilters,
     }),
     [page, pageSize, search, initialFilters]
@@ -40,7 +42,12 @@ export const useEmployeePermissions = (
         `${it.firstname_eng || ""} ${it.lastname_eng || ""}`.trim(),
       start_date: it.from_date,
       end_date: it.to_date,
-      status: it.approve_reject_flag === 1 ? "APPROVED" : it.approve_reject_flag === 2 ? "REJECTED" : "PENDING",
+      status:
+        it.approve_reject_flag === 1
+          ? "APPROVED"
+          : it.approve_reject_flag === 2
+          ? "REJECTED"
+          : "PENDING",
       reason: it.remarks,
       created_date: it.created_date,
       raw: it,

@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   MessageCircle,
   X,
@@ -13,23 +13,23 @@ import {
   FileText,
   CheckCircle,
   Minimize2,
-  Maximize2
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from "@/components/ui/Input";;
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { PermissionForm, LeaveForm, ManualPunchForm } from './ChatbotForms';
-import { useTranslations } from '@/hooks/use-translations';
+  Maximize2,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/Input";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { PermissionForm, LeaveForm, ManualPunchForm } from "./ChatbotForms";
+import { useTranslations } from "@/hooks/use-translations";
 
 export interface ChatBotConfig {
-  position?: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left';
+  position?: "bottom-right" | "bottom-left" | "top-right" | "top-left";
   primaryColor?: string;
   botName?: string;
   welcomeMessage?: string;
   supportedActions?: ChatBotAction[];
   apiEndpoints?: ChatBotEndpoints;
-  userRole?: 'employee' | 'manager' | 'admin';
+  userRole?: "employee" | "manager" | "admin";
 }
 
 export interface ChatBotAction {
@@ -37,7 +37,7 @@ export interface ChatBotAction {
   label: string;
   description: string;
   icon: React.ReactNode;
-  category: 'attendance' | 'leave' | 'permission' | 'approval' | 'report';
+  category: "attendance" | "leave" | "permission" | "approval" | "report";
   requiredRole?: string[];
 }
 
@@ -50,17 +50,17 @@ export interface ChatBotEndpoints {
 
 export interface ChatMessage {
   id: string;
-  type: 'user' | 'bot' | 'system';
+  type: "user" | "bot" | "system";
   content: string;
   timestamp: Date;
   actions?: ChatAction[];
-  status?: 'pending' | 'success' | 'error';
+  status?: "pending" | "success" | "error";
 }
 
 export interface ChatAction {
   id: string;
   label: string;
-  type: 'button' | 'form' | 'link';
+  type: "button" | "form" | "link";
   data?: any;
 }
 
@@ -69,92 +69,102 @@ function Chatbot({ config = {} }: { config?: ChatBotConfig }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [, setCurrentAction] = useState<string | null>(null);
-  const [activeForm, setActiveForm] = useState<'permission' | 'leave' | 'manual-punch' | null>(null);
+  const [activeForm, setActiveForm] = useState<
+    "permission" | "leave" | "manual-punch" | null
+  >(null);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const defaultConfig: ChatBotConfig = {
-    position: 'bottom-right',
-    botName: 'CHRONEXA BOT',
-    welcomeMessage: t('chatbot.welcome'),
-    userRole: 'employee',
-    ...config
+    position: "bottom-right",
+    botName: "CHRONEXA BOT",
+    welcomeMessage: t("chatbot.welcome"),
+    userRole: "employee",
+    ...config,
   };
   const defaultActions: ChatBotAction[] = [
     {
-      id: 'apply-permission',
-      label: t('chatbot.actions.applyPermission'),
-      description: t('chatbot.actions.applyPermissionDesc'),
+      id: "apply-permission",
+      label: t("chatbot.actions.applyPermission"),
+      description: t("chatbot.actions.applyPermissionDesc"),
       icon: <Clock className="w-4 h-4" />,
-      category: 'permission',
-      requiredRole: ['employee', 'manager']
+      category: "permission",
+      requiredRole: ["employee", "manager"],
     },
     {
-      id: 'apply-leave',
-      label: t('chatbot.actions.applyLeave'),
-      description: t('chatbot.actions.applyLeaveDesc'),
+      id: "apply-leave",
+      label: t("chatbot.actions.applyLeave"),
+      description: t("chatbot.actions.applyLeaveDesc"),
       icon: <Calendar className="w-4 h-4" />,
-      category: 'leave',
-      requiredRole: ['employee', 'manager']
+      category: "leave",
+      requiredRole: ["employee", "manager"],
     },
     {
-      id: 'manual-punch',
-      label: t('chatbot.actions.manualPunch'),
-      description: t('chatbot.actions.manualPunchDesc'),
+      id: "manual-punch",
+      label: t("chatbot.actions.manualPunch"),
+      description: t("chatbot.actions.manualPunchDesc"),
       icon: <FileText className="w-4 h-4" />,
-      category: 'attendance',
-      requiredRole: ['employee', 'manager']
+      category: "attendance",
+      requiredRole: ["employee", "manager"],
     },
     {
-      id: 'work-summary',
-      label: t('chatbot.actions.workSummary'),
-      description: t('chatbot.actions.workSummaryDesc'),
+      id: "work-summary",
+      label: t("chatbot.actions.workSummary"),
+      description: t("chatbot.actions.workSummaryDesc"),
       icon: <FileText className="w-4 h-4" />,
-      category: 'report',
-      requiredRole: ['employee', 'manager']
+      category: "report",
+      requiredRole: ["employee", "manager"],
     },
     {
-      id: 'pending-approvals',
-      label: t('chatbot.actions.pendingApprovals'),
-      description: t('chatbot.actions.pendingApprovalsDesc'),
+      id: "pending-approvals",
+      label: t("chatbot.actions.pendingApprovals"),
+      description: t("chatbot.actions.pendingApprovalsDesc"),
       icon: <CheckCircle className="w-4 h-4" />,
-      category: 'approval',
-      requiredRole: ['manager']
-    }
+      category: "approval",
+      requiredRole: ["manager"],
+    },
   ];
 
-  const availableActions = defaultActions.filter(action =>
-    !action.requiredRole || action.requiredRole.includes(defaultConfig.userRole || 'employee')
+  const availableActions = defaultActions.filter(
+    (action) =>
+      !action.requiredRole ||
+      action.requiredRole.includes(defaultConfig.userRole || "employee")
   );
   useEffect(() => {
     if (isOpen && messages.length === 0) {
       const welcomeMessage: ChatMessage = {
         id: `msg-${Date.now()}`,
-        type: 'bot',
-        content: defaultConfig.welcomeMessage || t('chatbot.welcome'),
+        type: "bot",
+        content: defaultConfig.welcomeMessage || t("chatbot.welcome"),
         timestamp: new Date(),
       };
       const actionsMessage: ChatMessage = {
         id: `msg-${Date.now() + 1}`,
-        type: 'system',
-        content: t('chatbot.availableActions'),
+        type: "system",
+        content: t("chatbot.availableActions"),
         timestamp: new Date(),
-        actions: availableActions.map(action => ({
+        actions: availableActions.map((action) => ({
           id: action.id,
           label: action.label,
-          type: 'button',
-          data: action
-        }))
+          type: "button",
+          data: action,
+        })),
       };
       setMessages([welcomeMessage, actionsMessage]);
     }
-  }, [isOpen, messages.length, defaultConfig.welcomeMessage, t, availableActions]);
+  }, [
+    isOpen,
+    messages.length,
+    defaultConfig.welcomeMessage,
+    t,
+    availableActions,
+  ]);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
   const handleSendMessage = async () => {
@@ -162,18 +172,18 @@ function Chatbot({ config = {} }: { config?: ChatBotConfig }) {
 
     const userMessage: ChatMessage = {
       id: `msg-${Date.now()}`,
-      type: 'user',
+      type: "user",
       content: inputValue,
-      timestamp: new Date()
+      timestamp: new Date(),
     };
 
-    setMessages(prev => [...prev, userMessage]);
-    setInputValue('');
+    setMessages((prev) => [...prev, userMessage]);
+    setInputValue("");
     setIsTyping(true);
 
     setTimeout(() => {
       const botResponse = generateBotResponse(inputValue);
-      setMessages(prev => [...prev, botResponse]);
+      setMessages((prev) => [...prev, botResponse]);
       setIsTyping(false);
     }, 1000);
   };
@@ -181,123 +191,133 @@ function Chatbot({ config = {} }: { config?: ChatBotConfig }) {
   const generateBotResponse = (userInput: string): ChatMessage => {
     const input = userInput.toLowerCase();
 
-    let response = '';
+    let response = "";
     let actions: ChatAction[] = [];
 
-    if (input.includes('late') || input.includes('permission')) {
-      response = t('chatbot.responses.permission');
-      actions = [{
-        id: 'apply-permission',
-        label: t('chatbot.actions.applyPermission'),
-        type: 'button'
-      }];
-    } else if (input.includes('leave') || input.includes('absent')) {
-      response = t('chatbot.responses.leave');
-      actions = [{
-        id: 'apply-leave',
-        label: t('chatbot.actions.applyLeave'),
-        type: 'button'
-      }];
-    } else if (input.includes('punch') || input.includes('forgot')) {
-      response = t('chatbot.responses.punch');
-      actions = [{
-        id: 'manual-punch',
-        label: t('chatbot.actions.manualPunch'),
-        type: 'button'
-      }];
-    } else if (input.includes('hours') || input.includes('summary')) {
-      response = t('chatbot.responses.summary');
-      actions = [{
-        id: 'work-summary',
-        label: t('chatbot.actions.viewSummary'),
-        type: 'button'
-      }];
+    if (input.includes("late") || input.includes("permission")) {
+      response = t("chatbot.responses.permission");
+      actions = [
+        {
+          id: "apply-permission",
+          label: t("chatbot.actions.applyPermission"),
+          type: "button",
+        },
+      ];
+    } else if (input.includes("leave") || input.includes("absent")) {
+      response = t("chatbot.responses.leave");
+      actions = [
+        {
+          id: "apply-leave",
+          label: t("chatbot.actions.applyLeave"),
+          type: "button",
+        },
+      ];
+    } else if (input.includes("punch") || input.includes("forgot")) {
+      response = t("chatbot.responses.punch");
+      actions = [
+        {
+          id: "manual-punch",
+          label: t("chatbot.actions.manualPunch"),
+          type: "button",
+        },
+      ];
+    } else if (input.includes("hours") || input.includes("summary")) {
+      response = t("chatbot.responses.summary");
+      actions = [
+        {
+          id: "work-summary",
+          label: t("chatbot.actions.viewSummary"),
+          type: "button",
+        },
+      ];
     } else {
-      response = t('chatbot.responses.default');
-      actions = [{
-        id: 'show-actions',
-        label: t('chatbot.showActions'),
-        type: 'button'
-      }];
+      response = t("chatbot.responses.default");
+      actions = [
+        {
+          id: "show-actions",
+          label: t("chatbot.showActions"),
+          type: "button",
+        },
+      ];
     }
 
     return {
       id: `msg-${Date.now()}`,
-      type: 'bot',
+      type: "bot",
       content: response,
       timestamp: new Date(),
-      actions
+      actions,
     };
   };
   const handleActionClick = (actionId: string) => {
     setCurrentAction(actionId);
 
-    if (actionId === 'show-actions') {
+    if (actionId === "show-actions") {
       const actionsMessage: ChatMessage = {
         id: `msg-${Date.now()}`,
-        type: 'system',
-        content: t('chatbot.availableActions'),
+        type: "system",
+        content: t("chatbot.availableActions"),
         timestamp: new Date(),
-        actions: availableActions.map(action => ({
+        actions: availableActions.map((action) => ({
           id: action.id,
           label: action.label,
-          type: 'button',
-          data: action
-        }))
+          type: "button",
+          data: action,
+        })),
       };
-      setMessages(prev => [...prev, actionsMessage]);
+      setMessages((prev) => [...prev, actionsMessage]);
     } else {
       handleSpecificAction(actionId);
     }
   };
 
   const handleSpecificAction = (actionId: string) => {
-    let response = '';
+    let response = "";
 
     switch (actionId) {
-      case 'apply-permission':
-        setActiveForm('permission');
-        response = t('chatbot.responses.permission');
+      case "apply-permission":
+        setActiveForm("permission");
+        response = t("chatbot.responses.permission");
         break;
-      case 'apply-leave':
-        setActiveForm('leave');
-        response = t('chatbot.responses.leave');
+      case "apply-leave":
+        setActiveForm("leave");
+        response = t("chatbot.responses.leave");
         break;
-      case 'manual-punch':
-        setActiveForm('manual-punch');
-        response = t('chatbot.responses.punch');
+      case "manual-punch":
+        setActiveForm("manual-punch");
+        response = t("chatbot.responses.punch");
         break;
-      case 'work-summary':
-        response = t('chatbot.forms.workSummary');
+      case "work-summary":
+        response = t("chatbot.forms.workSummary");
         break;
-      case 'pending-approvals':
-        response = t('chatbot.forms.approvals');
+      case "pending-approvals":
+        response = t("chatbot.forms.approvals");
         break;
       default:
-        response = t('chatbot.responses.processing');
+        response = t("chatbot.responses.processing");
     }
 
     const actionMessage: ChatMessage = {
       id: `msg-${Date.now()}`,
-      type: 'bot',
+      type: "bot",
       content: response,
       timestamp: new Date(),
-      status: 'success'
+      status: "success",
     };
 
-    setMessages(prev => [...prev, actionMessage]);
+    setMessages((prev) => [...prev, actionMessage]);
   };
 
   const handleFormSubmit = (formData: any) => {
     const submissionMessage: ChatMessage = {
       id: `msg-${Date.now()}`,
-      type: 'bot',
+      type: "bot",
       content: `✅ Your ${formData.type} request has been submitted successfully! You will receive a notification once it's processed.`,
       timestamp: new Date(),
-      status: 'success'
+      status: "success",
     };
 
-    setMessages(prev => [...prev, submissionMessage]);
+    setMessages((prev) => [...prev, submissionMessage]);
     setActiveForm(null);
 
     if (config?.apiEndpoints?.submitRequest) {
@@ -308,21 +328,21 @@ function Chatbot({ config = {} }: { config?: ChatBotConfig }) {
     setActiveForm(null);
     const cancelMessage: ChatMessage = {
       id: `msg-${Date.now()}`,
-      type: 'bot',
-      content: 'Request cancelled. How else can I help you?',
-      timestamp: new Date()
+      type: "bot",
+      content: "Request cancelled. How else can I help you?",
+      timestamp: new Date(),
     };
-    setMessages(prev => [...prev, cancelMessage]);
+    setMessages((prev) => [...prev, cancelMessage]);
   };
 
   const getButtonPositionStyles = () => {
-    const base = 'fixed z-40';
+    const base = "fixed z-40";
     switch (defaultConfig.position) {
-      case 'bottom-left':
+      case "bottom-left":
         return `${base} bottom-4 left-4`;
-      case 'top-right':
+      case "top-right":
         return `${base} top-4 right-4`;
-      case 'top-left':
+      case "top-left":
         return `${base} top-4 left-4`;
       default:
         return `${base} bottom-4 right-4`;
@@ -330,14 +350,14 @@ function Chatbot({ config = {} }: { config?: ChatBotConfig }) {
   };
 
   const getChatWindowPositionStyles = () => {
-    const base = 'fixed z-50'; 
+    const base = "fixed z-50";
     switch (defaultConfig.position) {
-      case 'bottom-left':
-        return `${base} bottom-4 left-4`; 
-      case 'top-right':
-        return `${base} top-4 right-4`; 
-      case 'top-left':
-        return `${base} top-4 left-4`; 
+      case "bottom-left":
+        return `${base} bottom-4 left-4`;
+      case "top-right":
+        return `${base} top-4 right-4`;
+      case "top-left":
+        return `${base} top-4 left-4`;
       default:
         return `${base} bottom-4 right-4`;
     }
@@ -354,34 +374,34 @@ function Chatbot({ config = {} }: { config?: ChatBotConfig }) {
           type: "spring",
           stiffness: 260,
           damping: 20,
-          duration: 0.3
+          duration: 0.3,
         }}
       >
         <AnimatePresence mode="wait">
           {!isOpen ? (
             <motion.div
               key="chat-button"
-              initial={{ scale: 0, rotate: -180 , opacity: 0 }}
+              initial={{ scale: 0, rotate: -180, opacity: 0 }}
               animate={{ scale: 1, rotate: 0, opacity: 1 }}
-              exit={{ scale: 0, rotate: 180, opacity: 0 , y: 80 }}
+              exit={{ scale: 0, rotate: 180, opacity: 0, y: 80 }}
               transition={{
                 type: "tween",
                 stiffness: 300,
                 damping: 25,
-                duration: 0.4
+                duration: 0.4,
               }}
             >
               <Button
                 onClick={() => setIsOpen(true)}
                 className="w-12 h-12 rounded-full bg-primary cursor-pointer shadow-lg hover:shadow-xl transition-all duration-300 border-0"
                 style={{
-                  color: 'white'
+                  color: "white",
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'scale(1.05)';
+                  e.currentTarget.style.transform = "scale(1.05)";
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'scale(1)';
+                  e.currentTarget.style.transform = "scale(1)";
                 }}
               >
                 <MessageCircle className="w-6 h-6" />
@@ -397,7 +417,7 @@ function Chatbot({ config = {} }: { config?: ChatBotConfig }) {
                 type: "spring",
                 stiffness: 300,
                 damping: 25,
-                duration: 0.4
+                duration: 0.4,
               }}
             >
               <Button
@@ -405,13 +425,13 @@ function Chatbot({ config = {} }: { config?: ChatBotConfig }) {
                 className="w-12 h-12 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 border-0"
                 style={{
                   backgroundColor: defaultConfig.primaryColor,
-                  color: 'white'
+                  color: "white",
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'scale(1.05)';
+                  e.currentTarget.style.transform = "scale(1.05)";
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'scale(1)';
+                  e.currentTarget.style.transform = "scale(1)";
                 }}
               >
                 <X className="w-6 h-6" />
@@ -428,32 +448,33 @@ function Chatbot({ config = {} }: { config?: ChatBotConfig }) {
             initial={{
               scale: 0,
               opacity: 0,
-              x: defaultConfig.position?.includes('right') ? 20 : -20,
-              y: defaultConfig.position?.includes('top') ? -20 : 20
+              x: defaultConfig.position?.includes("right") ? 20 : -20,
+              y: defaultConfig.position?.includes("top") ? -20 : 20,
             }}
             animate={{
               scale: 1,
               opacity: 1,
               x: 0,
-              y: 0
+              y: 0,
             }}
             exit={{
               scale: 0,
               opacity: 0,
-              x: defaultConfig.position?.includes('right') ? 20 : -20,
-              y: defaultConfig.position?.includes('top') ? -20 : 20
+              x: defaultConfig.position?.includes("right") ? 20 : -20,
+              y: defaultConfig.position?.includes("top") ? -20 : 20,
             }}
             transition={{
               type: "spring",
               stiffness: 300,
               damping: 30,
-              duration: 0.5
+              duration: 0.5,
             }}
             className={`${getChatWindowPositionStyles()} w-80`}
           >
-            <Card className="w-full flex flex-col shadow-2xl transition-all duration-300 overflow-hidden"
+            <Card
+              className="w-full flex flex-col shadow-2xl transition-all duration-300 overflow-hidden"
               style={{
-                height: isMinimized ? '80px' : '500px'
+                height: isMinimized ? "80px" : "500px",
               }}
             >
               {/* Header */}
@@ -467,9 +488,11 @@ function Chatbot({ config = {} }: { config?: ChatBotConfig }) {
                       <Bot className="w-4 h-4" />
                     </div>
                     <div>
-                      <CardTitle className="text-sm">{defaultConfig.botName}</CardTitle>
+                      <CardTitle className="text-sm">
+                        {defaultConfig.botName}
+                      </CardTitle>
                       <p className="text-xs text-muted-foreground">
-                        {t('chatbot.online')}
+                        {t("chatbot.online")}
                       </p>
                     </div>
                   </div>
@@ -486,7 +509,11 @@ function Chatbot({ config = {} }: { config?: ChatBotConfig }) {
                         animate={{ rotate: isMinimized ? 0 : 0 }}
                         transition={{ duration: 0.2 }}
                       >
-                        {isMinimized ? <Maximize2 className="w-3 h-3" /> : <Minimize2 className="w-3 h-3" />}
+                        {isMinimized ? (
+                          <Maximize2 className="w-3 h-3" />
+                        ) : (
+                          <Minimize2 className="w-3 h-3" />
+                        )}
                       </motion.div>
                     </Button>
                     <Button
@@ -523,37 +550,55 @@ function Chatbot({ config = {} }: { config?: ChatBotConfig }) {
                                   key={message.id}
                                   initial={{ opacity: 0, y: 10 }}
                                   animate={{ opacity: 1, y: 0 }}
-                                  className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'} items-start gap-1`}
+                                  className={`flex ${
+                                    message.type === "user"
+                                      ? "justify-end"
+                                      : "justify-start"
+                                  } items-start gap-1`}
                                 >
-                                  <div className={`max-w-[80%] ${message.type === 'user' ? 'order-2' : 'order-1'}`}>
+                                  <div
+                                    className={`max-w-[80%] ${
+                                      message.type === "user"
+                                        ? "order-2"
+                                        : "order-1"
+                                    }`}
+                                  >
                                     <div
-                                      className={`rounded-lg p-3 text-sm break-words ${message.type === 'user'
-                                          ? 'bg-primary text-primary-foreground'
-                                          : message.type === 'system'
-                                            ? 'bg-muted'
-                                            : 'bg-secondary'
-                                        }`}
+                                      className={`rounded-lg p-3 text-sm break-words ${
+                                        message.type === "user"
+                                          ? "bg-primary text-primary-foreground"
+                                          : message.type === "system"
+                                          ? "bg-muted"
+                                          : "bg-secondary"
+                                      }`}
                                     >
                                       {message.content}
                                     </div>
 
                                     {/* Action Buttons */}
-                                    {message.actions && message.actions.length > 0 && (
-                                      <div className="mt-2 space-y-1">
-                                        {message.actions.map((action) => (
-                                          <Button
-                                            key={action.id}
-                                            variant="outline"
-                                            size="sm"
-                                            className="w-full text-left justify-start text-xs"
-                                            onClick={() => handleActionClick(action.id)}
-                                          >
-                                            {action.data?.icon && <span className="mr-2">{action.data.icon}</span>}
-                                            {action.label}
-                                          </Button>
-                                        ))}
-                                      </div>
-                                    )}
+                                    {message.actions &&
+                                      message.actions.length > 0 && (
+                                        <div className="mt-2 space-y-1">
+                                          {message.actions.map((action) => (
+                                            <Button
+                                              key={action.id}
+                                              variant="outline"
+                                              size="sm"
+                                              className="w-full text-left justify-start text-xs"
+                                              onClick={() =>
+                                                handleActionClick(action.id)
+                                              }
+                                            >
+                                              {action.data?.icon && (
+                                                <span className="mr-2">
+                                                  {action.data.icon}
+                                                </span>
+                                              )}
+                                              {action.label}
+                                            </Button>
+                                          ))}
+                                        </div>
+                                      )}
 
                                     <p className="text-xs text-muted-foreground mt-1">
                                       {message.timestamp.toLocaleTimeString()}
@@ -561,9 +606,14 @@ function Chatbot({ config = {} }: { config?: ChatBotConfig }) {
                                   </div>
 
                                   {/* Avatar */}
-                                  <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs ${message.type === 'user' ? 'order-1 ml-2 bg-primary' : 'order-2 mr-2 bg-secondary'
-                                    }`}>
-                                    {message.type === 'user' ? (
+                                  <div
+                                    className={`w-6 h-6 rounded-full flex items-center justify-center text-xs ${
+                                      message.type === "user"
+                                        ? "order-1 ml-2 bg-primary"
+                                        : "order-2 mr-2 bg-secondary"
+                                    }`}
+                                  >
+                                    {message.type === "user" ? (
                                       <User className="w-3 h-3" />
                                     ) : (
                                       <Bot className="w-3 h-3" />
@@ -582,8 +632,14 @@ function Chatbot({ config = {} }: { config?: ChatBotConfig }) {
                                   <div className="bg-secondary rounded-lg p-3">
                                     <div className="flex space-x-1">
                                       <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce"></div>
-                                      <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                                      <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                                      <div
+                                        className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce"
+                                        style={{ animationDelay: "0.1s" }}
+                                      ></div>
+                                      <div
+                                        className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce"
+                                        style={{ animationDelay: "0.2s" }}
+                                      ></div>
                                     </div>
                                   </div>
                                 </motion.div>
@@ -604,19 +660,19 @@ function Chatbot({ config = {} }: { config?: ChatBotConfig }) {
                                   animate={{ opacity: 1, y: 0 }}
                                   exit={{ opacity: 0, y: -20 }}
                                 >
-                                  {activeForm === 'permission' && (
+                                  {activeForm === "permission" && (
                                     <PermissionForm
                                       onSubmit={handleFormSubmit}
                                       onCancel={handleFormCancel}
                                     />
                                   )}
-                                  {activeForm === 'leave' && (
+                                  {activeForm === "leave" && (
                                     <LeaveForm
                                       onSubmit={handleFormSubmit}
                                       onCancel={handleFormCancel}
                                     />
                                   )}
-                                  {activeForm === 'manual-punch' && (
+                                  {activeForm === "manual-punch" && (
                                     <ManualPunchForm
                                       onSubmit={handleFormSubmit}
                                       onCancel={handleFormCancel}
@@ -637,8 +693,10 @@ function Chatbot({ config = {} }: { config?: ChatBotConfig }) {
                           ref={inputRef}
                           value={inputValue}
                           onChange={(e) => setInputValue(e.target.value)}
-                          placeholder={t('chatbot.typePlaceholder')}
-                          onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                          placeholder={t("chatbot.typePlaceholder")}
+                          onKeyPress={(e) =>
+                            e.key === "Enter" && handleSendMessage()
+                          }
                           className="flex-1 text-sm"
                         />
                         <Button

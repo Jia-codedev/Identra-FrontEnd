@@ -1,16 +1,16 @@
 "use client";
 
-import React, { useState } from 'react';
-import { useTranslations } from '@/hooks/use-translations';
-import { Button } from '@/components/ui/button';
-import { 
+import React, { useState } from "react";
+import { useTranslations } from "@/hooks/use-translations";
+import { Button } from "@/components/ui/button";
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { MoreHorizontal, Edit, Trash2, Check, X } from 'lucide-react';
-import usePermissionMutations from '../hooks/useMutations';
+} from "@/components/ui/dropdown-menu";
+import { MoreHorizontal, Edit, Trash2, Check, X } from "lucide-react";
+import usePermissionMutations from "../hooks/useMutations";
 
 interface Props {
   permission: any;
@@ -18,7 +18,11 @@ interface Props {
   onRefresh: () => void;
 }
 
-const PermissionActions: React.FC<Props> = ({ permission, onEdit, onRefresh }) => {
+const PermissionActions: React.FC<Props> = ({
+  permission,
+  onEdit,
+  onRefresh,
+}) => {
   const { t } = useTranslations();
   const [loading, setLoading] = useState(false);
   const mutations = usePermissionMutations();
@@ -46,13 +50,13 @@ const PermissionActions: React.FC<Props> = ({ permission, onEdit, onRefresh }) =
   };
 
   const handleDelete = async () => {
-    if (!confirm('Are you sure you want to delete this permission?')) {
+    if (!confirm("Are you sure you want to delete this permission?")) {
       return;
     }
-    
+
     setLoading(true);
     try {
-      await mutations.remove.mutateAsync(permission.id);
+      await mutations.deletePermission.mutateAsync(permission.id);
       onRefresh();
     } catch (error) {
     } finally {
@@ -60,8 +64,8 @@ const PermissionActions: React.FC<Props> = ({ permission, onEdit, onRefresh }) =
     }
   };
 
-  const canApprove = permission.status?.toLowerCase() === 'pending';
-  const canEdit = permission.status?.toLowerCase() !== 'approved';
+  const canApprove = permission.status?.toLowerCase() === "pending";
+  const canEdit = permission.status?.toLowerCase() !== "approved";
 
   return (
     <DropdownMenu>
@@ -74,24 +78,24 @@ const PermissionActions: React.FC<Props> = ({ permission, onEdit, onRefresh }) =
         {canEdit && (
           <DropdownMenuItem onClick={onEdit}>
             <Edit className="h-4 w-4 mr-2" />
-            {t('common.edit')}
+            {t("common.edit")}
           </DropdownMenuItem>
         )}
         {canApprove && (
           <>
             <DropdownMenuItem onClick={handleApprove}>
               <Check className="h-4 w-4 mr-2" />
-              {t('leaveManagement.permissions.actionsMenu.approve')}
+              {t("leaveManagement.permissions.actionsMenu.approve")}
             </DropdownMenuItem>
             <DropdownMenuItem onClick={handleReject}>
               <X className="h-4 w-4 mr-2" />
-              {t('leaveManagement.permissions.actionsMenu.reject')}
+              {t("leaveManagement.permissions.actionsMenu.reject")}
             </DropdownMenuItem>
           </>
         )}
         <DropdownMenuItem onClick={handleDelete} className="text-red-600">
           <Trash2 className="h-4 w-4 mr-2" />
-          {t('common.delete')}
+          {t("common.delete")}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
