@@ -151,11 +151,11 @@ const OrganizationTypesPage = () => {
         title={t("common.confirmDelete")}
         description={
           !!selected?.length
-            ? t("common.messages.confirmDeleteMultipleDescription", {
+            ? t("messages.confirm.deleteMultiple", {
                 count: selected?.length,
                 deleteType: "Organization types",
               })
-            : t("common.messages.confirmDeleteSingleDescription", {
+            : t("messages.confirm.delete", {
                 deleteType: "Organization type",
               })
         }

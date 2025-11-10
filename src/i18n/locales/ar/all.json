@@ -2045,5 +2045,96 @@
     "faqs": "الأسئلة الشائعة",
     "user-manual": "دليل المستخدم",
     "license-management": "إدارة التراخيص"
+  },
+  "geoAnalytics": {
+    "title": "تحليلات السياج الجغرافي",
+    "subtitle": "راقب موقعك وسجل الحضور/الانصراف ضمن المنطقة المسموح بها",
+    "errors": {
+      "userDataNotAvailable": "بيانات المستخدم غير متوفرة",
+      "geofencingNotEnabled": "السياج الجغرافي غير مفعل لحسابك",
+      "noCoordinates": "لا توجد إحداثيات موقع الجدول متاحة"
+    },
+    "map": {
+      "title": "خريطة الموقع",
+      "loading": "جاري تحميل الخريطة...",
+      "loadingSchedule": "جاري تحميل موقع الجدول...",
+      "legend": {
+        "title": "دليل الخريطة:",
+        "scheduleLocation": "موقع الجدول",
+        "yourLocation": "موقعك",
+        "allowedRadius": "نطاق السماح"
+      },
+      "freeMap": "خريطة OpenStreetMap المجانية",
+      "popup": {
+        "scheduleLocation": "موقع الجدول",
+        "yourLocation": "موقعك",
+        "latitude": "خط العرض",
+        "longitude": "خط الطول",
+        "accuracy": "الدقة"
+      }
+    },
+    "locationInfo": {
+      "scheduleLocation": {
+        "title": "موقع الجدول",
+        "locationName": "اسم الموقع",
+        "coordinates": "الإحداثيات",
+        "allowedRadius": "نطاق السماح",
+        "city": "المدينة",
+        "noLocationAvailable": "لا يوجد موقع جدول متاح"
+      },
+      "userLocation": {
+        "title": "موقعك الحالي",
+        "detecting": "جاري تحديد موقعك...",
+        "error": "خطأ في الموقع",
+        "coordinates": "الإحداثيات",
+        "accuracy": "الدقة",
+        "distance": "المسافة من موقع الجدول",
+        "notAvailable": "الموقع غير متوفر"
+      },
+      "geoFenceStatus": {
+        "title": "حالة السياج الجغرافي",
+        "insideMessage": "✓ أنت ضمن المنطقة المسموح بها",
+        "outsideMessage": "✗ أنت خارج المنطقة المسموح بها",
+        "canPunch": "يمكنك تسجيل الحضور/الانصراف من هذا الموقع",
+        "cannotPunch": "يرجى الاقتراب من موقع الجدول لتسجيل الحضور/الانصراف",
+        "distance": "المسافة",
+        "allowedRadius": "نطاق السماح",
+        "status": "الحالة",
+        "inside": "داخل",
+        "outside": "خارج",
+        "noScheduleLocation": "لم يتم تكوين موقع الجدول",
+        "waitingForLocation": "في انتظار موقعك..."
+      }
+    },
+    "punchControl": {
+      "title": "التحكم في الحضور",
+      "warning": "⚠️ يجب أن تكون ضمن المنطقة المسموح بها لتسجيل الحضور/الانصراف",
+      "punchIn": "تسجيل حضور",
+      "punchOut": "تسجيل انصراف",
+      "punching": "جاري التسجيل...",
+      "lastPunch": "آخر تسجيل:",
+      "at": "في",
+      "notes": {
+        "note1": "• يجب أن تكون ضمن نطاق موقع الجدول للتسجيل",
+        "note2": "• سيتم تسجيل موقعك مع كل عملية تسجيل",
+        "note3": "• تأكد من تفعيل خدمات الموقع"
+      },
+      "toast": {
+        "cannotPunchOutside": "لا يمكن التسجيل",
+        "outsideArea": "أنت خارج المنطقة المسموح بها",
+        "locationUnavailable": "الموقع غير متوفر",
+        "unableToGetLocation": "غير قادر على الحصول على موقعك الحالي",
+        "punchInSuccess": "تم تسجيل الحضور بنجاح",
+        "punchOutSuccess": "تم تسجيل الانصراف بنجاح",
+        "recordedAt": "تم التسجيل في",
+        "punchFailed": "فشل التسجيل",
+        "errorOccurred": "حدث خطأ"
+      }
+    },
+    "units": {
+      "meters": "متر",
+      "metersShort": "م",
+      "kilometers": "كم"
+    }
   }
 }
