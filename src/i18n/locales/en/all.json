@@ -2088,5 +2088,96 @@
     "faqs": "Faqs",
     "user-manual": "User Manual",
     "license-management": "License Management"
+  },
+  "geoAnalytics": {
+    "title": "Geo-Fencing Analytics",
+    "subtitle": "Monitor your location and punch in/out within the allowed area",
+    "errors": {
+      "userDataNotAvailable": "User data not available",
+      "geofencingNotEnabled": "Geo-fencing is not enabled for your account",
+      "noCoordinates": "No schedule location coordinates available"
+    },
+    "map": {
+      "title": "Location Map",
+      "loading": "Loading map...",
+      "loadingSchedule": "Loading schedule location...",
+      "legend": {
+        "title": "Map Legend:",
+        "scheduleLocation": "Schedule Location",
+        "yourLocation": "Your Location",
+        "allowedRadius": "Allowed Radius"
+      },
+      "freeMap": "Free OpenStreetMap",
+      "popup": {
+        "scheduleLocation": "Schedule Location",
+        "yourLocation": "Your Location",
+        "latitude": "Lat",
+        "longitude": "Lng",
+        "accuracy": "Accuracy"
+      }
+    },
+    "locationInfo": {
+      "scheduleLocation": {
+        "title": "Schedule Location",
+        "locationName": "Location Name",
+        "coordinates": "Coordinates",
+        "allowedRadius": "Allowed Radius",
+        "city": "City",
+        "noLocationAvailable": "No schedule location available"
+      },
+      "userLocation": {
+        "title": "Your Current Location",
+        "detecting": "Detecting your location...",
+        "error": "Location Error",
+        "coordinates": "Coordinates",
+        "accuracy": "Accuracy",
+        "distance": "Distance from Schedule Location",
+        "notAvailable": "Location not available"
+      },
+      "geoFenceStatus": {
+        "title": "Geo-Fence Status",
+        "insideMessage": "✓ You are within the allowed area",
+        "outsideMessage": "✗ You are outside the allowed area",
+        "canPunch": "You can punch in/out from this location",
+        "cannotPunch": "Please move closer to the schedule location to punch in/out",
+        "distance": "Distance",
+        "allowedRadius": "Allowed Radius",
+        "status": "Status",
+        "inside": "Inside",
+        "outside": "Outside",
+        "noScheduleLocation": "No schedule location configured",
+        "waitingForLocation": "Waiting for your location..."
+      }
+    },
+    "punchControl": {
+      "title": "Attendance Control",
+      "warning": "⚠️ You must be within the allowed area to punch in/out",
+      "punchIn": "Punch In",
+      "punchOut": "Punch Out",
+      "punching": "Punching...",
+      "lastPunch": "Last punch:",
+      "at": "at",
+      "notes": {
+        "note1": "• You must be within the schedule location radius to punch",
+        "note2": "• Your location will be recorded with each punch",
+        "note3": "• Ensure location services are enabled"
+      },
+      "toast": {
+        "cannotPunchOutside": "Cannot punch",
+        "outsideArea": "You are outside the allowed area",
+        "locationUnavailable": "Location unavailable",
+        "unableToGetLocation": "Unable to get your current location",
+        "punchInSuccess": "Punch IN successful",
+        "punchOutSuccess": "Punch OUT successful",
+        "recordedAt": "Recorded at",
+        "punchFailed": "Punch failed",
+        "errorOccurred": "An error occurred"
+      }
+    },
+    "units": {
+      "meters": "meters",
+      "metersShort": "m",
+      "kilometers": "km"
+    }
   }
 }
