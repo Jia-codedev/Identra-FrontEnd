@@ -334,6 +334,7 @@
       "enterOrganizationNameEnglish": "أدخل اسم المؤسسة بالإنجليزية",
       "enterOrganizationCode": "أدخل رمز المؤسسة",
       "noOrganizationsFound": "لم يتم العثور على مؤسسات.",
+      "selectParentOrganizationType": "اختر نوع المؤسسة الأم",
       "structure": {
         "title": "هيكل الرسم البياني"
       },
