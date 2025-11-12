@@ -11,7 +11,22 @@
     "addRole": "إضافة دور",
     "editRole": "تعديل الدور",
     "enterRoleName": "أدخل اسم الدور",
-    "noRolesFound": "لم يتم العثور على أدوار"
+    "noRolesFound": "لم يتم العثور على أدوار",
+    "members": "الأعضاء",
+    "roleIdRequired": "معرف الدور مطلوب",
+    "searchMembers": "البحث عن الأعضاء...",
+    "addMembers": "إضافة أعضاء",
+    "addMembersDescription": "حدد الموظفين لإضافتهم كأعضاء لهذا الدور",
+    "removeSelected": "إزالة المحدد",
+    "confirmRemove": "تأكيد الإزالة",
+    "confirmRemoveDescription": "هل أنت متأكد أنك تريد إزالة العضو/الأعضاء المحددين من هذا الدور؟",
+    "employeeNumber": "رقم الموظف",
+    "employeeName": "اسم الموظف",
+    "organization": "المنظمة",
+    "effectiveFrom": "ساري من",
+    "noMembers": "لم يتم العثور على أعضاء",
+    "searchEmployees": "البحث عن الموظفين...",
+    "noEmployeesAvailable": "لا يوجد موظفون متاحون"
   },
   "accessPermissions": {
     "title": "إذن الوصول",

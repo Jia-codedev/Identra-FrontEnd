@@ -54,7 +54,6 @@ const LeavesList: React.FC<Props> = ({
   canDelete,
   canEdit,
 }) => {
-  console.log("LeavesList rendered with leaves:", leaves);
   const { t } = useTranslations();
   const columns: TableColumn<Leave>[] = [
     {

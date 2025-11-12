@@ -65,7 +65,6 @@ export default function EmployeeTypesPage() {
     "employee-management",
     "contract-types"
   );
-  console.log("Privileges:", { canView, canCreate, canEdit, canDelete });
 
   const handleAddEmployeeType = () => {
     setModalState({

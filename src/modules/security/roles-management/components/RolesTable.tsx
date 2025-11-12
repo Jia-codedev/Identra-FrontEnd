@@ -4,6 +4,7 @@ import React from "react";
 import { useTranslations } from "@/hooks/use-translations";
 import { GenericTable, TableColumn } from "@/components/common/GenericTable";
 import { SecRole } from "@/services/security/securityRoles";
+import Link from "next/link";
 
 interface RolesTableProps {
   roles: SecRole[];
@@ -47,6 +48,19 @@ export const RolesTable: React.FC<RolesTableProps> = ({
       header: t("security.roles.status") || "Status",
       accessor: (item) =>
         item.editable_flag ? t("common.editable") : t("common.readOnly"),
+    },
+    {
+      key: "members",
+      header: t("security.roles.members") || "Members",
+      accessor: (item) => (
+        <Link
+          href={"/roles-management/members/" + item.role_id}
+          className="text-primary hover:underline bg-accent px-3 py-1 rounded-2xl "
+        >
+          {item._count.sec_user_roles}{" "}
+          {t("security.roles.members") || "Members"}
+        </Link>
+      ),
     },
   ];
 

@@ -60,18 +60,12 @@ export const OrganizationTypeModal: React.FC<OrganizationTypeModalProps> = ({
   }, [organizationType, mode, isOpen]);
 
   const disableSubmit =
-    ((organizationType?.organization_type_eng ===
+    (organizationType?.organization_type_eng ===
       formData.organization_type_eng &&
-    organizationType?.organization_type_arb ===
-      formData.organization_type_arb &&
-    organizationType?.org_type_level === formData.org_type_level) ||
-      (
-        !formData.organization_type_eng &&
-        !formData.organization_type_arb 
-       
-      )) ;
-
-
+      organizationType?.organization_type_arb ===
+        formData.organization_type_arb &&
+      organizationType?.org_type_level === formData.org_type_level) ||
+    (!formData.organization_type_eng && !formData.organization_type_arb);
 
   const handleInputChange = (
     field: keyof OrganizationTypeFormFields,
@@ -79,7 +73,7 @@ export const OrganizationTypeModal: React.FC<OrganizationTypeModalProps> = ({
   ) => {
     setFormData((prev) => ({
       ...prev,
-      [field]: field === "org_type_level" ? Number(value) || 1 : value,
+      [field]: field === "org_type_level" ? Number(value) : value,
     }));
   };
 
@@ -182,7 +176,7 @@ export const OrganizationTypeModal: React.FC<OrganizationTypeModalProps> = ({
               </Label>
               <Input
                 id="org_type_level"
-                type="number"
+                type="text"
                 value={formData.org_type_level}
                 onChange={(e) =>
                   handleInputChange("org_type_level", e.target.value)

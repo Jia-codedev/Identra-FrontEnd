@@ -57,9 +57,6 @@ const PunchControl: React.FC<PunchControlProps> = React.memo(
                 employeeId,
                 geolocation
               );
-
-        console.log(`✅ Punch ${type} Response:`, response);
-
         setLastPunchType(type);
         toast.success(`Punch ${type} successful`, {
           description: `Recorded at ${new Date().toLocaleTimeString("en-US", {
