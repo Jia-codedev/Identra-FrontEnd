@@ -55,11 +55,10 @@ export default function MonthlyRosterPage() {
       if (filters.manager_id) params.manager_id = filters.manager_id;
       if (filters.schedule_id) params.schedule_id = filters.schedule_id;
       if (filters.version_no) params.version_no = filters.version_no;
-      if (filters.day) params.day = filters.day;
+      if (filters.from_date) params.from_date = filters.from_date;
+      if (filters.to_date) params.to_date = filters.to_date;
       if (filters.finalize_flag !== undefined)
         params.finalize_flag = filters.finalize_flag;
-      if (filters.month) params.month = filters.month;
-      if (filters.year) params.year = filters.year;
 
       const resp = await employeeMonthlyRosterApi.getAll(params);
 
@@ -162,6 +161,7 @@ export default function MonthlyRosterPage() {
         onFinalize={handleFinalize}
         onDelete={handleDelete}
         onRefetch={fetchData}
+        organizationId={filters.organization_id}
         noDataMessage={
           !filters.organization_id
             ? t("scheduling.monthlyRoster.table.selectOrganization") ||

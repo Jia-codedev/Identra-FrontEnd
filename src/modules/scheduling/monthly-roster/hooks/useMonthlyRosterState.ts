@@ -6,11 +6,22 @@ export const useMonthlyRosterState = () => {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
 
-  // Initialize with current month and year
+  // Initialize with current month date range
   const currentDate = new Date();
+  const firstDay = new Date(
+    currentDate.getFullYear(),
+    currentDate.getMonth(),
+    1
+  );
+  const lastDay = new Date(
+    currentDate.getFullYear(),
+    currentDate.getMonth() + 1,
+    0
+  );
+
   const [filters, setFilters] = useState<MonthlyRosterFilters>({
-    month: currentDate.getMonth() + 1, // JavaScript months are 0-indexed
-    year: currentDate.getFullYear(),
+    from_date: firstDay.toISOString().split("T")[0], // YYYY-MM-DD format
+    to_date: lastDay.toISOString().split("T")[0],
   });
 
   const selectMonthlyRoster = (id: number) => {

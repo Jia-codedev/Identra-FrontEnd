@@ -68,9 +68,8 @@ export interface UpdateMonthlyRosterRequest {
 
 export interface FilterMonthlyRosterRequest {
   organization_id?: number;
-  month?: number;
-  year?: number;
-  day?: number;
+  from_date?: string;
+  to_date?: string;
   employee_id?: number;
   employee_group_id?: number;
   manager_id?: number;
@@ -86,9 +85,8 @@ class EmployeeMonthlyRosterApi {
 
   getAll(params?: {
     organization_id?: number;
-    month?: number;
-    year?: number;
-    day?: number;
+    from_date?: string;
+    to_date?: string;
     employee_id?: number;
     employee_group_id?: number;
     manager_id?: number;

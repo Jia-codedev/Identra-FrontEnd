@@ -45,12 +45,11 @@ export default function PunchesPage() {
     initialLimit: 5,
   });
 
-    const { canView, canCreate, canEdit, canDelete } = useSubModulePrivileges(
+  const { canView, canCreate, canEdit, canDelete } = useSubModulePrivileges(
     "self-services",
     "attendance-logs"
   );
   console.log("Privileges:", { canView, canCreate, canEdit, canDelete });
-
 
   useEffect(() => {
     handleFiltersChange({ search: searchTerm });
@@ -191,42 +190,26 @@ export default function PunchesPage() {
 
             <TabsContent value="team-punches" className="mt-0">
               <div className="px-4 py-4 w-full">
-                {teamMembers.length === 0 && !isLoading ? (
-                  <div className="text-center py-16">
-                    <Users className="mx-auto h-12 w-12 text-muted-foreground" />
-                    <h3 className="mt-2 text-sm font-medium text-foreground">
-                      {t("leaveManagement.attendance.noTeamMembers") ||
-                        "No team members found"}
-                    </h3>
-                    <p className="mt-1 text-sm text-muted-foreground">
-                      {t("leaveManagement.attendance.noTeamMembersDesc") ||
-                        "You don't have any team members assigned to you."}
-                    </p>
-                  </div>
-                ) : (
-                  <>
-                    <PunchesList
-                      punches={data || []}
-                      selected={selectedItems}
-                      allChecked={isAllSelected}
-                      onSelectItem={handleSelectItem}
-                      onSelectAll={handleSelectAll}
-                      isLoading={isLoading}
-                    />
+                <PunchesList
+                  punches={data || []}
+                  selected={selectedItems}
+                  allChecked={isAllSelected}
+                  onSelectItem={handleSelectItem}
+                  onSelectAll={handleSelectAll}
+                  isLoading={isLoading}
+                />
 
-                    {!isLoading && data.length > 0 && (
-                      <div className="flex justify-center py-4 w-full">
-                        <CustomPagination
-                          currentPage={page}
-                          totalPages={totalPages}
-                          pageSize={limit}
-                          onPageChange={handlePageChange}
-                          pageSizeOptions={[5, 10, 20, 50]}
-                          onPageSizeChange={handleLimitChange}
-                        />
-                      </div>
-                    )}
-                  </>
+                {!isLoading && data.length > 0 && (
+                  <div className="flex justify-center py-4 w-full">
+                    <CustomPagination
+                      currentPage={page}
+                      totalPages={totalPages}
+                      pageSize={limit}
+                      onPageChange={handlePageChange}
+                      pageSizeOptions={[5, 10, 20, 50]}
+                      onPageSizeChange={handleLimitChange}
+                    />
+                  </div>
                 )}
               </div>
             </TabsContent>
