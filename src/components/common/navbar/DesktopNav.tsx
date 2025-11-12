@@ -32,7 +32,6 @@ export const DesktopNav: React.FC<DesktopNavProps> = ({ NAV_LINKS }) => {
           const isActive = activeMenuId === menu.id;
           const key = menu.id || menu.label || `nav-${menuIndex}`;
           const label = t(menu.id);
-          console.log(t("navigation.test"));
           if (!Icon) {
             console.warn(
               `⚠️ Navigation item "${menu.label}" has undefined icon, skipping render`

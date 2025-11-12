@@ -1,5 +1,6 @@
 {
   "dashboard": "Workforce Analytics",
+  "filterByOrganization":" Filter by Organization",
   "masterData": "Master Data",
   "scheduling": "Scheduling",
   "workforce": "Workforce",

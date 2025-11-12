@@ -7,11 +7,8 @@ import React, { useEffect } from "react";
 function Page() {
   useEffect(() => {
     let profile = async (token: string) => {
-      console.log("Received token:", token);
       localStorage.setItem("token", token);
-      document.cookie = `auth_token=${token}; path=/; max-age=${
-        15 * 24 * 60 * 60
-      }`;
+      document.cookie = `token=${token}; path=/; max-age=${15 * 24 * 60 * 60}`;
       const res = await apiClient.get(`/auth/me`, {
         withCredentials: true,
         headers: {

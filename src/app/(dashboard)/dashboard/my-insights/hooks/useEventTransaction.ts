@@ -40,29 +40,16 @@ export const useEventTransaction = () => {
         const seconds = totalSeconds % 60;
         
         const duration = `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
-        
-        console.log("⏱️ Timer Update:", {
-          now: now.toLocaleTimeString(),
-          checkInTime: checkInTimestamp.toLocaleTimeString(),
-          elapsedMs,
-          totalSeconds,
-          duration,
-          isCheckedIn,
-          renderKey
-        });
-        
         setWorkingDuration(duration);
-        setRenderKey(prev => prev + 1); // Force re-render
+        setRenderKey(prev => prev + 1); 
       } else if (!checkInTimestamp) {
         setWorkingDuration("00:00:00");
       }
-      // If checked out, timer stays frozen (don't update)
     }, 1000);
 
     return () => clearInterval(timer);
   }, [isCheckedIn, checkInTimestamp, renderKey]);
 
-  // Fetch punch status and schedule info
   const fetchPunchStatus = useCallback(async () => {
     try {
       setLoading(true);
@@ -70,13 +57,6 @@ export const useEventTransaction = () => {
         employeeEventTransactionApi.getPunchStatus(employeeId ?? undefined),
         employeeEventTransactionApi.getTodaySchedule(),
       ]);
-
-      console.log("🔍 Raw API Response:", {
-        punchStatusRes,
-        actual_in_time: punchStatusRes.data.actual_in_time,
-        actual_out_time: punchStatusRes.data.actual_out_time,
-        current_status: punchStatusRes.data.current_status
-      });
 
       if (punchStatusRes.success) {
         const { actual_in_time, actual_out_time, current_status } =
@@ -86,18 +66,7 @@ export const useEventTransaction = () => {
         setIsCheckedIn(isCurrentlyCheckedIn);
 
         if (actual_in_time) {
-          // Parse the time from backend - it should be in ISO format
           const inTime = new Date(actual_in_time);
-          
-          console.log("📍 Setting Check-in:", {
-            rawInTime: actual_in_time,
-            parsedInTime: inTime,
-            inTimeString: inTime.toLocaleTimeString(),
-            inTimeISO: inTime.toISOString(),
-            currentTime: new Date().toLocaleTimeString(),
-            isCheckedIn: isCurrentlyCheckedIn
-          });
-          
           setCheckInTimestamp(inTime);
           setCheckInTime(
             inTime.toLocaleTimeString("en-US", {
@@ -107,7 +76,6 @@ export const useEventTransaction = () => {
             })
           );
 
-          // If checked IN, calculate initial duration to trigger the timer
           if (isCurrentlyCheckedIn) {
             const now = new Date();
             const elapsedMs = Math.max(0, now.getTime() - inTime.getTime());
@@ -117,12 +85,9 @@ export const useEventTransaction = () => {
             const seconds = totalSeconds % 60;
             
             const initialDuration = `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
-            console.log("⏰ Initial Duration:", initialDuration, "Elapsed seconds:", totalSeconds);
-            
             setWorkingDuration(initialDuration);
-            setRenderKey(prev => prev + 1); // Force re-render
+            setRenderKey(prev => prev + 1); 
           }
-          // If checked out, calculate the frozen duration
           else if (actual_out_time) {
             const outTime = new Date(actual_out_time);
             const elapsedMs = Math.max(0, outTime.getTime() - inTime.getTime());
@@ -134,22 +99,18 @@ export const useEventTransaction = () => {
             setWorkingDuration(
               `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`
             );
-            setRenderKey(prev => prev + 1); // Force re-render
+            setRenderKey(prev => prev + 1);
           }
         } else {
           setCheckInTimestamp(null);
           setCheckInTime("--:--");
           setWorkingDuration("00:00:00");
-          setRenderKey(prev => prev + 1); // Force re-render
+          setRenderKey(prev => prev + 1); 
         }
 
         if (actual_out_time) {
           const outTime = new Date(actual_out_time);
-          console.log("📤 Setting Check-out:", {
-            rawOutTime: actual_out_time,
-            parsedOutTime: outTime,
-            outTimeString: outTime.toLocaleTimeString(),
-          });
+         
           setCheckOutTime(
             outTime.toLocaleTimeString("en-US", {
               hour12: false,
@@ -178,7 +139,6 @@ export const useEventTransaction = () => {
     }
   }, []);
 
-  // Calculate remaining and overtime hours
   const calculateWorkHours = (
     schedule: any,
     actualInTime: Date | null,
@@ -195,13 +155,11 @@ export const useEventTransaction = () => {
     const scheduledWorkMinutes =
       schedule.schedule_info.expected_work_duration?.total_minutes || 480; // Default 8 hours
 
-    // Calculate worked minutes
     const endTime = actualOutTime ? new Date(actualOutTime) : now;
     const workedMinutes = Math.floor(
       (endTime.getTime() - inTime.getTime()) / (1000 * 60)
     );
 
-    // Calculate remaining time
     const remainingMinutes = Math.max(0, scheduledWorkMinutes - workedMinutes);
     const remainingHours = Math.floor(remainingMinutes / 60);
     const remainingMins = remainingMinutes % 60;
@@ -209,7 +167,6 @@ export const useEventTransaction = () => {
       `${String(remainingHours).padStart(2, "0")}:${String(remainingMins).padStart(2, "0")}`
     );
 
-    // Calculate overtime
     const overtimeMinutes = Math.max(0, workedMinutes - scheduledWorkMinutes);
     const overtimeHours = Math.floor(overtimeMinutes / 60);
     const overtimeMins = overtimeMinutes % 60;
@@ -218,7 +175,6 @@ export const useEventTransaction = () => {
     );
   };
 
-  // Refresh data periodically
   useEffect(() => {
     fetchPunchStatus();
     const interval = setInterval(fetchPunchStatus, 60000); // Refresh every minute
@@ -235,7 +191,6 @@ export const useEventTransaction = () => {
       setLoading(true);
       let geolocation: string | undefined;
 
-      // Get geolocation if available
       if (navigator.geolocation) {
         try {
           const position = await new Promise<GeolocationPosition>(
@@ -249,10 +204,7 @@ export const useEventTransaction = () => {
         }
       }
 
-      const checkInResponse = await employeeEventTransactionApi.checkIn(employeeId, geolocation);
-      console.log("✅ Check-in Response:", checkInResponse);
 
-      // Optimistic UI update using local time
       const now = new Date();
       setIsCheckedIn(true);
       setCheckInTimestamp(now);
@@ -268,7 +220,6 @@ export const useEventTransaction = () => {
 
       toast.success("Checked in successfully!");
 
-      // Wait a bit for backend to process, then refresh
       setTimeout(async () => {
         await fetchPunchStatus();
       }, 500);
@@ -305,9 +256,6 @@ export const useEventTransaction = () => {
       }
 
       const checkOutResponse = await employeeEventTransactionApi.checkOut(employeeId, geolocation);
-      console.log("✅ Check-out Response:", checkOutResponse);
-
-      // Optimistic UI update using local time
       const now = new Date();
       setIsCheckedIn(false);
       setCheckOutTime(

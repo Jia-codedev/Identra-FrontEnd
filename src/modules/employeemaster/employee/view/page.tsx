@@ -63,7 +63,6 @@ export default function EmployeePage() {
       "employee-management",
       "employee-directory"
     );
-    console.log("Privileges:", { canView, canCreate, canEdit, canDelete });
   
 
   const handleAddEmployeeType = () => {

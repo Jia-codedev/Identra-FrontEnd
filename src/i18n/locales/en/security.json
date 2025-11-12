@@ -11,7 +11,22 @@
     "addRole": "Add Role",
     "editRole": "Edit Role",
     "enterRoleName": "Enter role name",
-    "noRolesFound": "No roles found"
+    "noRolesFound": "No roles found",
+    "members": "Members",
+    "roleIdRequired": "Role ID is required",
+    "searchMembers": "Search members...",
+    "addMembers": "Add Members",
+    "addMembersDescription": "Select employees to add as members to this role",
+    "removeSelected": "Remove Selected",
+    "confirmRemove": "Confirm Remove",
+    "confirmRemoveDescription": "Are you sure you want to remove the selected member(s) from this role?",
+    "employeeNumber": "Employee No",
+    "employeeName": "Employee Name",
+    "organization": "Organization",
+    "effectiveFrom": "Effective From",
+    "noMembers": "No members found",
+    "searchEmployees": "Search employees...",
+    "noEmployeesAvailable": "No employees available"
   },
   "accessPermissions": {
     "title": "Access Permission",

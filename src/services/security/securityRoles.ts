@@ -8,6 +8,9 @@ export interface SecRole {
   created_date?: string;
   last_updated_id?: number;
   last_updated_date?: string;
+  _count: {
+    sec_user_roles: number;
+  };
 }
 
 export interface CreateSecRoleRequest {
@@ -85,15 +88,22 @@ class SecurityRolesApi {
   }
 
   getUserRoles(
-    { offset = 1, limit = 10, user_id, role_id } = {} as {
+    { offset = 1, limit = 10, user_id, role_id, organization_id } = {} as {
       offset?: number;
       limit?: number;
       user_id?: number;
       role_id?: number;
+      organization_id?: number | null;
     }
   ) {
     return apiClient.get("/secUserRole/all", {
-      params: { offset, limit, ...(user_id && { user_id }), ...(role_id && { role_id }) },
+      params: {
+        offset,
+        limit,
+        ...(user_id && { user_id }),
+        ...(role_id && { role_id }),
+        ...(organization_id && { organization_id }),
+      },
     });
   }
 

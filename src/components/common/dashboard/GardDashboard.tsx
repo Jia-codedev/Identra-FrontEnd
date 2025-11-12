@@ -9,7 +9,6 @@ function GardDashboard({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (roleId) {
-      console.log("Loading privileges for role:", roleId);
       loadPrivileges(roleId);
     }
   }, [roleId, loadPrivileges]);

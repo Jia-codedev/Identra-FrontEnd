@@ -48,13 +48,10 @@ export const usePrivileges = create<PrivilegesState>()(
         set({ isLoading: true, error: null });
 
         try {
-          console.log("Loading privileges for roleId:", roleId);
           const response = await privilegeService.getPrivilegesByRole(roleId);
 
-          console.log("API Response:", response);
           if (response) {
             set({ modules: response, isLoading: false, error: null });
-            console.log("Privileges loaded successfully:", response);
           } else {
             throw new Error("Failed to load privileges - No data returned");
           }
