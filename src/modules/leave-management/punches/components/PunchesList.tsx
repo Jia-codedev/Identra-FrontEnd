@@ -10,48 +10,48 @@ import { useTranslations } from "@/hooks/use-translations";
 import { useLanguage } from "@/providers/language-provider";
 
 const formatDateTime = (dateString: string) => {
-  if (!dateString) return 'N/A';
+  if (!dateString) return "N/A";
   const date = new Date(dateString);
   return date.toLocaleString();
 };
 
 const formatTime = (timeString: string) => {
-  if (!timeString) return 'N/A';
+  if (!timeString) return "N/A";
   const date = new Date(timeString);
   return date.toLocaleTimeString();
 };
 
 const getReasonColor = (reason: string) => {
   switch (reason?.toUpperCase()) {
-    case 'IN':
-      return 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400';
-    case 'OUT':
-      return 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400';
-    case 'BREAK_START':
-      return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400';
-    case 'BREAK_END':
-      return 'bg-orange-100 text-orange-800 dark:bg-orange-900/20 dark:text-orange-400';
+    case "IN":
+      return "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400";
+    case "OUT":
+      return "bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400";
+    case "BREAK_START":
+      return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400";
+    case "BREAK_END":
+      return "bg-orange-100 text-orange-800 dark:bg-orange-900/20 dark:text-orange-400";
     default:
-      return 'bg-muted text-muted-foreground';
+      return "bg-muted text-muted-foreground";
   }
 };
 
 const formatReason = (reason: string, t: any) => {
   switch (reason?.toUpperCase()) {
-    case 'IN':
-      return t('leaveManagement.punches.checkIn') || 'Check In';
-    case 'OUT':
-      return t('leaveManagement.punches.checkOut') || 'Check Out';
-    case 'BREAK_START':
-      return t('leaveManagement.punches.breakStart') || 'Break Start';
-    case 'BREAK_END':
-      return t('leaveManagement.punches.breakEnd') || 'Break End';
+    case "IN":
+      return t("leaveManagement.punches.checkIn") || "Check In";
+    case "OUT":
+      return t("leaveManagement.punches.checkOut") || "Check Out";
+    case "BREAK_START":
+      return t("leaveManagement.punches.breakStart") || "Break Start";
+    case "BREAK_END":
+      return t("leaveManagement.punches.breakEnd") || "Break End";
     default:
-      return reason || t('leaveManagement.common.notAvailable') || 'Unknown';
+      return reason || t("leaveManagement.common.notAvailable") || "Unknown";
   }
 };
 
-type ViewMode = 'table' | 'grid';
+type ViewMode = "table" | "grid";
 
 interface EmployeeEventTransaction {
   transaction_id: number;
@@ -95,19 +95,23 @@ export default function PunchesList({
   const { t } = useTranslations();
   const { isRTL } = useLanguage();
 
-  const validPunches = Array.isArray(punches) ? 
-    punches.filter(punch => punch && (punch.transaction_id || punch.employee_id)) : [];
+  const validPunches = Array.isArray(punches)
+    ? punches.filter(
+        (punch) => punch && (punch.transaction_id || punch.employee_id)
+      )
+    : [];
 
   const columns: TableColumn<EmployeeEventTransaction>[] = [
     {
-      key: 'employee',
-      header: t('leaveManagement.employee.name') || 'Employee',
+      key: "employee",
+      header: t("leaveManagement.employee.name") || "Employee",
       accessor: (punch: EmployeeEventTransaction, isRTL?: boolean) => {
-        const employeeName = punch.employee_master 
+        const employeeName = punch.employee_master
           ? `${punch.employee_master.firstname_eng} ${punch.employee_master.lastname_eng}`.trim()
-          : 'Unknown Employee';
-        const empNo = punch.employee_master?.emp_no || punch.employee_id.toString();
-        
+          : "Unknown Employee";
+        const empNo =
+          punch.employee_master?.emp_no || punch.employee_id.toString();
+
         return (
           <div>
             <div className="font-medium text-foreground">{employeeName}</div>
@@ -117,26 +121,32 @@ export default function PunchesList({
       },
     },
     {
-      key: 'date',
-      header: t('leaveManagement.common.date') || 'Date',
+      key: "date",
+      header: t("leaveManagement.common.date") || "Date",
       accessor: (punch: EmployeeEventTransaction, isRTL?: boolean) => (
         <div className="text-sm">
-          <div className="font-medium text-foreground">{formatDateTime(punch.transaction_time)}</div>
+          <div className="font-medium text-foreground">
+            {formatDateTime(punch.transaction_time)}
+          </div>
         </div>
       ),
     },
     {
-      key: 'reason',
-      header: t('leaveManagement.common.type') || 'Type',
+      key: "reason",
+      header: t("leaveManagement.common.type") || "Type",
       accessor: (punch: EmployeeEventTransaction, isRTL?: boolean) => (
         <Badge className={getReasonColor(punch.reason)}>
-          {formatReason(punch.reason, t)}
+          {t(
+            punch.reason == "IN"
+              ? "leaveManagement.punches.punchIn"
+              : "leaveManagement.punches.punchOut"
+          )}
         </Badge>
       ),
     },
     {
-      key: 'time',
-      header: t('leaveManagement.common.time') || 'Time',
+      key: "time",
+      header: t("leaveManagement.common.time") || "Time",
       accessor: (punch: EmployeeEventTransaction, isRTL?: boolean) => (
         <div className="text-sm text-muted-foreground">
           {formatTime(punch.transaction_time)}
@@ -144,33 +154,41 @@ export default function PunchesList({
       ),
     },
     {
-      key: 'device',
-      header: t('leaveManagement.common.device') || 'Device',
+      key: "device",
+      header: t("leaveManagement.common.device") || "Device",
       accessor: (punch: EmployeeEventTransaction, isRTL?: boolean) => (
         <div className="flex items-center text-sm text-muted-foreground">
           <Smartphone className="w-3 h-3 mr-1" />
-          {punch.device_id || (punch.user_entry_flag ? t('leaveManagement.punches.manualEntry') || 'Manual Entry' : t('leaveManagement.common.notAvailable') || 'Unknown')}
+          {punch.device_id ||
+            (punch.user_entry_flag
+              ? t("leaveManagement.punches.manualEntry") || "Manual Entry"
+              : t("leaveManagement.common.notAvailable") || "Unknown")}
         </div>
       ),
     },
     {
-      key: 'location',
-      header: t('leaveManagement.common.location') || 'Location',
+      key: "location",
+      header: t("leaveManagement.common.location") || "Location",
       accessor: (punch: EmployeeEventTransaction, isRTL?: boolean) => (
         <div className="flex items-center text-sm text-muted-foreground">
           <MapPin className="w-3 h-3 mr-1" />
-          {punch.geolocation || t('leaveManagement.common.notAvailable') || 'Unknown'}
+          {punch.geolocation ||
+            t("leaveManagement.common.notAvailable") ||
+            "Unknown"}
         </div>
       ),
     },
-  ];   
+  ];
   const getItemId = (punch: EmployeeEventTransaction) => {
     const id = punch?.transaction_id || punch?.employee_id;
-    return typeof id === 'number' ? id : parseInt(String(id)) || 0;
+    return typeof id === "number" ? id : parseInt(String(id)) || 0;
   };
-  
-  const getItemDisplayName = (punch: EmployeeEventTransaction, isRTL?: boolean) => {
-    const employeeName = punch.employee_master 
+
+  const getItemDisplayName = (
+    punch: EmployeeEventTransaction,
+    isRTL?: boolean
+  ) => {
+    const employeeName = punch.employee_master
       ? `${punch.employee_master.firstname_eng} ${punch.employee_master.lastname_eng}`.trim()
       : `Employee ${punch.employee_id}`;
     return employeeName;
@@ -189,32 +207,35 @@ export default function PunchesList({
       <div className="text-center py-16">
         <Clock className="mx-auto h-12 w-12 text-muted-foreground" />
         <h3 className="mt-2 text-sm font-medium text-foreground">
-          {t('leaveManagement.punches.noRecords') || 'No punches found'}
+          {t("leaveManagement.punches.noRecords") || "No punches found"}
         </h3>
         <p className="mt-1 text-sm text-muted-foreground">
-          {t('leaveManagement.punches.noRecordsDesc') || 'No attendance records match your current filters.'}
+          {t("leaveManagement.punches.noRecordsDesc") ||
+            "No attendance records match your current filters."}
         </p>
       </div>
     );
   }
 
   return (
-      <GenericTable
-        data={validPunches}
-        columns={columns}
-        selected={selected}
-        page={1}
-        pageSize={validPunches.length}
-        allChecked={allChecked}
-        getItemId={getItemId}
-        getItemDisplayName={getItemDisplayName}
-        onSelectItem={(id) => onSelectItem && onSelectItem(Number(id))}
-        onSelectAll={onSelectAll || (() => {})}
-        noDataMessage={t('attendance.noRecords') || t('common.noResults') || 'No punches found'}
-        isLoading={isLoading}
-        onPageChange={() => {}}
-        showActions={false}
-        onPageSizeChange={() => {}}
-      />
-    );
+    <GenericTable
+      data={validPunches}
+      columns={columns}
+      selected={selected}
+      page={1}
+      pageSize={validPunches.length}
+      allChecked={allChecked}
+      getItemId={getItemId}
+      getItemDisplayName={getItemDisplayName}
+      onSelectItem={(id) => onSelectItem && onSelectItem(Number(id))}
+      onSelectAll={onSelectAll || (() => {})}
+      noDataMessage={
+        t("attendance.noRecords") || t("common.noResults") || "No punches found"
+      }
+      isLoading={isLoading}
+      onPageChange={() => {}}
+      showActions={false}
+      onPageSizeChange={() => {}}
+    />
+  );
 }
