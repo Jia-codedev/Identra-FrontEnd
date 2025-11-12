@@ -212,7 +212,7 @@ export default function ApprovalsPage() {
     canCreate: canCreatePermissions,
     canEdit: canEditPermissions,
     canDelete: canDeletePermissions,
-  } = useTabPrivileges("workforce", "approvals", "permissions-approval");
+  } = useTabPrivileges("workforce", "approvals", "permission-approval");
   React.useEffect(() => {
     if (!canViewLeaves && canViewPermissions) {
       setActiveTab("permissions");
