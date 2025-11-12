@@ -9,6 +9,7 @@ import { useAccessZones } from "@/modules/device-and-infra/access-zones/hooks/us
 import { AccessZone } from "@/services/device-and-infra/accessZonesApi";
 import { CustomPagination } from "@/components/common/dashboard/Pagination";
 import { useAccessZoneMutations } from "@/modules/device-and-infra/access-zones/hooks/useAccessZoneMutations";
+import { useSubModulePrivileges } from "@/hooks/security/useSubModulePrivileges";
 
 export default function AccessZonesPage() {
   const [showForm, setShowForm] = useState(false);
@@ -38,6 +39,12 @@ export default function AccessZonesPage() {
     pageSizeOptions,
   } = useAccessZones();
 
+  const { canView, canCreate, canEdit, canDelete } = useSubModulePrivileges(
+        "devices-infrastructure",
+        "access-zones"
+      );
+      console.log("Privileges:", { canView, canCreate, canEdit, canDelete });
+  
   const handleSearchChange = (value: string) => {
     setSearch(value);
   };
@@ -90,6 +97,8 @@ export default function AccessZonesPage() {
   return (
     <div className="flex flex-col gap-6 p-6">
       <AccessZonesHeader
+        canCreate={canCreate}
+        canDelete={canDelete}
         search={search}
         statusFilter={statusFilter}
         typeFilter={typeFilter}
@@ -102,6 +111,8 @@ export default function AccessZonesPage() {
       />
 
       <AccessZonesList
+        canEdit={canEdit} 
+        canDelete={canDelete}
         accessZones={accessZones}
         selected={selected}
         allChecked={allChecked}

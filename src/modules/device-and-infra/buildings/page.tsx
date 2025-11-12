@@ -9,6 +9,7 @@ import BuildingForm from "@/modules/device-and-infra/buildings/components/Buildi
 import { useBuildings } from "@/modules/device-and-infra/buildings/hooks/useBuildings";
 import useBuildingMutations from "@/modules/device-and-infra/buildings/hooks/useBuildingMutations";
 import { Building } from "@/services/device-and-infra/buildingsApi";
+import { useSubModulePrivileges } from "@/hooks/security/useSubModulePrivileges";
 
 export default function BuildingsPage() {
   const [showForm, setShowForm] = useState(false);
@@ -41,6 +42,12 @@ export default function BuildingsPage() {
 
   const { deleteBuilding, bulkDeleteBuildings } = useBuildingMutations();
 
+    const { canView, canCreate, canEdit, canDelete } = useSubModulePrivileges(
+          "devices-infrastructure",
+          "buildings"
+        );
+        console.log("Privileges:", { canView, canCreate, canEdit, canDelete });
+  
   const handleSearchChange = (value: string) => {
     setSearch(value);
   };
@@ -97,6 +104,8 @@ export default function BuildingsPage() {
   return (
     <div className="flex flex-col gap-6 p-6">
       <BuildingsHeader
+        canCreate={canCreate}
+        canDelete={canDelete}
         search={search}
         statusFilter={statusFilter}
         typeFilter={typeFilter}
@@ -111,6 +120,8 @@ export default function BuildingsPage() {
       />
 
       <BuildingsList
+        canEdit={canEdit}
+        canDelete={canDelete}
         buildings={buildings}
         selected={selected}
         allChecked={allChecked}

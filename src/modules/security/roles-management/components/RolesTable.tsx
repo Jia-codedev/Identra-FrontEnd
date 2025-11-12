@@ -19,6 +19,8 @@ interface RolesTableProps {
   onEditRole: (role: SecRole) => void;
   onDeleteRole: (id: number) => void;
   isLoading?: boolean;
+  canEdit?: boolean;
+  canDelete?: boolean;
 }
 
 export const RolesTable: React.FC<RolesTableProps> = ({
@@ -34,6 +36,8 @@ export const RolesTable: React.FC<RolesTableProps> = ({
   isLoading,
   onPageChange,
   onPageSizeChange,
+  canEdit,
+  canDelete,
 }) => {
   const { t } = useTranslations();
 
@@ -66,6 +70,8 @@ export const RolesTable: React.FC<RolesTableProps> = ({
 
   return (
     <GenericTable
+      canEdit={canEdit}
+      canDelete={canDelete}
       data={roles}
       columns={columns}
       selected={selected}

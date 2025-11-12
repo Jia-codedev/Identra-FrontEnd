@@ -35,6 +35,8 @@ interface AccessZonesListProps {
   onPageSizeChange: (size: number) => void;
 
   onDeleteItem: (id: number) => void;
+  canEdit: boolean;
+  canDelete: boolean;
 }
 
 export default function AccessZonesList({
@@ -48,6 +50,8 @@ export default function AccessZonesList({
   onPageChange,
   onPageSizeChange,
   onDeleteItem,
+  canEdit,
+  canDelete,
 }: AccessZonesListProps) {
   const { t } = useTranslations();
   const { isRTL } = useLanguage();
@@ -116,6 +120,8 @@ export default function AccessZonesList({
   return (
     <div>
       <GenericTable
+        canEdit={canEdit}
+        canDelete={canDelete}
         data={accessZones}
         columns={columns}
         selected={selected}

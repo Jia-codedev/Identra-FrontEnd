@@ -56,7 +56,7 @@ export function useInsights() {
 
         // Update states with fetched data
         setAttendance({
-          data: a.data.data[0],
+          data: a.data.data,
           loading: false,
           error: null,
         });
