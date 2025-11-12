@@ -1,8 +1,7 @@
 export interface MonthlyRosterFilters {
   organization_id?: number;
-  month?: number;
-  year?: number;
-  day?: number;
+  from_date?: string;
+  to_date?: string;
   employee_id?: number;
   employee_group_id?: number;
   manager_id?: number;

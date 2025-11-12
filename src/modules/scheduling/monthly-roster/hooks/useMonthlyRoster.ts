@@ -29,11 +29,7 @@ export const useMonthlyRoster = (
         return [] as MonthlyRoster[];
       }
     },
-    enabled:
-      !!filters &&
-      !!filters.organization_id &&
-      !!filters.month &&
-      !!filters.year,
+    enabled: !!filters && !!filters.organization_id,
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
     initialData: [] as MonthlyRoster[],

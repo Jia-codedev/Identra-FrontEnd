@@ -1,7 +1,14 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
-import { Calendar, Users, Building2, User, Clock } from "lucide-react";
+import {
+  Calendar as CalendarIcon,
+  Users,
+  Building2,
+  User,
+  Clock,
+  Hash,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/Input";
 import {
@@ -9,10 +16,12 @@ import {
   PopoverTrigger,
   PopoverContent,
 } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
 import { Checkbox } from "@/components/ui/Checkbox";
 import { Label } from "@/components/ui/label";
 import { useTranslations } from "@/hooks/use-translations";
 import { useLanguage } from "@/providers/language-provider";
+import { format } from "date-fns";
 import employeeGroupApi from "@/services/employeemaster/employeeGroup";
 import organizationsApi from "@/services/masterdata/organizations";
 import employeeApi from "@/services/employeemaster/employee";
@@ -70,9 +79,8 @@ export const MonthlyRosterHeader: React.FC<MonthlyRosterHeaderProps> = ({
   const [versionOpen, setVersionOpen] = useState(false);
   const [applyVersionFilter, setApplyVersionFilter] = useState(false);
 
-  const [monthOpen, setMonthOpen] = useState(false);
-  const [yearOpen, setYearOpen] = useState(false);
-  const [dayOpen, setDayOpen] = useState(false);
+  const [fromDateOpen, setFromDateOpen] = useState(false);
+  const [toDateOpen, setToDateOpen] = useState(false);
 
   // Clear dependent filters when organization changes
   useEffect(() => {
@@ -197,25 +205,6 @@ export const MonthlyRosterHeader: React.FC<MonthlyRosterHeaderProps> = ({
     [schedules, filters.schedule_id]
   );
 
-  const months = [
-    { value: 1, label: "Jan" },
-    { value: 2, label: "Feb" },
-    { value: 3, label: "Mar" },
-    { value: 4, label: "Apr" },
-    { value: 5, label: "May" },
-    { value: 6, label: "Jun" },
-    { value: 7, label: "Jul" },
-    { value: 8, label: "Aug" },
-    { value: 9, label: "Sep" },
-    { value: 10, label: "Oct" },
-    { value: 11, label: "Nov" },
-    { value: 12, label: "Dec" },
-  ];
-
-  const years = Array.from(
-    { length: 11 },
-    (_, i) => new Date().getFullYear() - 5 + i
-  );
   const { importMutation, exportMutation } = useMonthlyRosterMutations();
   const fileInputRef = React.useRef<HTMLInputElement | null>(null);
 
@@ -254,10 +243,9 @@ export const MonthlyRosterHeader: React.FC<MonthlyRosterHeaderProps> = ({
           manager_id: filters.manager_id,
           schedule_id: filters.schedule_id,
           version_no: filters.version_no,
-          day: filters.day,
+          from_date: filters.from_date,
+          to_date: filters.to_date,
           finalize_flag: filters.finalize_flag,
-          month: filters.month,
-          year: filters.year,
         };
       }
 
@@ -270,8 +258,8 @@ export const MonthlyRosterHeader: React.FC<MonthlyRosterHeaderProps> = ({
       const fnParts = ["monthly_roster"];
       if (payload.organization_id)
         fnParts.push(String(payload.organization_id));
-      if (payload.year) fnParts.push(String(payload.year));
-      if (payload.month) fnParts.push(String(payload.month));
+      if (payload.from_date) fnParts.push(String(payload.from_date));
+      if (payload.to_date) fnParts.push(String(payload.to_date));
       a.download = `${fnParts.join("_")}.csv`;
       document.body.appendChild(a);
       a.click();
@@ -305,7 +293,7 @@ export const MonthlyRosterHeader: React.FC<MonthlyRosterHeaderProps> = ({
               onClick={onAddRoster}
               className="gap-2"
             >
-              <Calendar className="h-4 w-4" />
+              <CalendarIcon className="h-4 w-4" />
               {t("scheduling.monthlyRoster.addRoster")}
             </Button>
             {onAddSampleData && (
@@ -314,7 +302,7 @@ export const MonthlyRosterHeader: React.FC<MonthlyRosterHeaderProps> = ({
                 variant="outline"
                 className="gap-2"
               >
-                <Calendar className="h-4 w-4" />
+                <CalendarIcon className="h-4 w-4" />
                 Add Sample Data
               </Button>
             )}
@@ -656,7 +644,7 @@ export const MonthlyRosterHeader: React.FC<MonthlyRosterHeaderProps> = ({
                 disabled={!filters.organization_id}
               >
                 <div className="flex items-center gap-2">
-                  <Calendar className="h-4 w-4" />
+                  <Hash className="h-4 w-4" />
                   {filters.version_no
                     ? `Version ${filters.version_no}`
                     : "Choose Version"}
@@ -713,115 +701,80 @@ export const MonthlyRosterHeader: React.FC<MonthlyRosterHeaderProps> = ({
             </Label>
           </div>
 
-          {/* Day filter */}
-          <Popover open={dayOpen} onOpenChange={setDayOpen}>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                className="w-[140px] justify-between"
+          {/* From Date */}
+          <div className="flex items-center gap-2">
+            <Label className="text-sm whitespace-nowrap">From:</Label>
+            <Popover open={fromDateOpen} onOpenChange={setFromDateOpen}>
+              <PopoverTrigger
+                className="inline-flex items-center justify-start gap-2 whitespace-nowrap rounded-md border border-input bg-background px-3 h-9 text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 w-[200px]"
                 disabled={!filters.organization_id}
               >
-                <div className="flex items-center gap-2">
-                  <Calendar className="h-4 w-4" />
-                  {filters.day ? `Day ${filters.day}` : "Choose Day"}
-                </div>
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-[280px] p-2">
-              <div className="grid grid-cols-7 gap-1">
-                <Button
-                  variant="ghost"
-                  className="col-span-7 h-8 text-xs"
-                  onClick={() => {
-                    onFiltersChange({ day: undefined });
-                    setDayOpen(false);
+                <CalendarIcon className="mr-2 h-4 w-4" />
+                {filters.from_date
+                  ? format(new Date(filters.from_date), "PPP")
+                  : "Pick a date"}
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0 z-[100]" align="start">
+                <Calendar
+                  mode="single"
+                  selected={
+                    filters.from_date ? new Date(filters.from_date) : undefined
+                  }
+                  onSelect={(date) => {
+                    if (date) {
+                      onFiltersChange({
+                        from_date: format(date, "yyyy-MM-dd"),
+                      });
+                    } else {
+                      onFiltersChange({ from_date: undefined });
+                    }
+                    setFromDateOpen(false);
                   }}
-                >
-                  All Days
-                </Button>
-                {Array.from({ length: 31 }, (_, i) => i + 1).map((d) => (
-                  <Button
-                    key={d}
-                    variant="ghost"
-                    className="h-8 text-xs"
-                    onClick={() => {
-                      onFiltersChange({ day: d });
-                      setDayOpen(false);
-                    }}
-                  >
-                    {d}
-                  </Button>
-                ))}
-              </div>
-            </PopoverContent>
-          </Popover>
+                  initialFocus
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
 
-          {/* Month */}
-          <Popover open={monthOpen} onOpenChange={setMonthOpen}>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                className="w-[160px] justify-between"
-                disabled={!filters.organization_id}
+          {/* To Date */}
+          <div className="flex items-center gap-2">
+            <Label className="text-sm whitespace-nowrap">To:</Label>
+            <Popover open={toDateOpen} onOpenChange={setToDateOpen}>
+              <PopoverTrigger
+                className="inline-flex items-center justify-start gap-2 whitespace-nowrap rounded-md border border-input bg-background px-3 h-9 text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 w-[200px]"
+                disabled={!filters.organization_id || !filters.from_date}
               >
-                <div className="flex items-center gap-2">
-                  <Calendar className="h-4 w-4" />
-                  {months.find((m) => m.value === filters.month)?.label ||
-                    t("common.month")}
-                </div>
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-[220px] p-2">
-              <div className="grid grid-cols-3 gap-1">
-                {months.map((m) => (
-                  <Button
-                    key={m.value}
-                    variant="ghost"
-                    className="h-8"
-                    onClick={() => {
-                      onFiltersChange({ month: m.value });
-                      setMonthOpen(false);
-                    }}
-                  >
-                    {m.label}
-                  </Button>
-                ))}
-              </div>
-            </PopoverContent>
-          </Popover>
-
-          {/* Year */}
-          <Popover open={yearOpen} onOpenChange={setYearOpen}>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                className="w-[140px] justify-between"
-                disabled={!filters.organization_id}
-              >
-                <div className="flex items-center gap-2">
-                  <Calendar className="h-4 w-4" />
-                  {filters.year || new Date().getFullYear()}
-                </div>
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-[200px] p-2">
-              <div className="grid grid-cols-2 gap-1">
-                {years.map((y) => (
-                  <Button
-                    key={y}
-                    variant="ghost"
-                    className="h-8"
-                    onClick={() => {
-                      onFiltersChange({ year: y });
-                      setYearOpen(false);
-                    }}
-                  >
-                    {y}
-                  </Button>
-                ))}
-              </div>
-            </PopoverContent>
-          </Popover>
+                <CalendarIcon className="mr-2 h-4 w-4" />
+                {filters.to_date
+                  ? format(new Date(filters.to_date), "PPP")
+                  : "Pick a date"}
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0 z-[100]" align="start">
+                <Calendar
+                  mode="single"
+                  selected={
+                    filters.to_date ? new Date(filters.to_date) : undefined
+                  }
+                  onSelect={(date) => {
+                    if (date) {
+                      onFiltersChange({
+                        to_date: format(date, "yyyy-MM-dd"),
+                      });
+                    } else {
+                      onFiltersChange({ to_date: undefined });
+                    }
+                    setToDateOpen(false);
+                  }}
+                  initialFocus
+                  disabled={(date) =>
+                    filters.from_date
+                      ? date < new Date(filters.from_date)
+                      : false
+                  }
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
 
           {/* Clear */}
           <Button
@@ -834,9 +787,8 @@ export const MonthlyRosterHeader: React.FC<MonthlyRosterHeaderProps> = ({
                 employee_id: undefined,
                 schedule_id: undefined,
                 version_no: undefined,
-                day: undefined,
-                month: undefined,
-                year: undefined,
+                from_date: undefined,
+                to_date: undefined,
               });
               setApplyVersionFilter(false);
             }}

@@ -21,6 +21,7 @@ interface MonthlyRosterTableProps {
   canEdit?: boolean;
   canDelete?: boolean;
   noDataMessage?: string;
+  organizationId?: number | null;
 }
 
 export const MonthlyRosterTable: React.FC<MonthlyRosterTableProps> = ({
@@ -33,6 +34,7 @@ export const MonthlyRosterTable: React.FC<MonthlyRosterTableProps> = ({
   canEdit,
   canDelete,
   noDataMessage,
+  organizationId,
 }) => {
   const { isRTL } = useLanguage();
   const { t } = useTranslations();
@@ -79,8 +81,9 @@ export const MonthlyRosterTable: React.FC<MonthlyRosterTableProps> = ({
     const dayKey = `D${day}` as `D${number}`;
 
     // Prepare the update data with only the specific day field
+    // When removing a schedule, explicitly set to null (not undefined)
     const updateData: any = {
-      [dayKey]: scheduleId ?? undefined,
+      [dayKey]: scheduleId === null ? null : scheduleId,
     };
 
     // Use the mutation - cache update is handled in the mutation hook
@@ -181,6 +184,7 @@ export const MonthlyRosterTable: React.FC<MonthlyRosterTableProps> = ({
           employeeData={selectedEmployee}
           onUpdateSchedule={handleUpdateSchedule}
           isUpdating={editMutation.isPending}
+          organizationId={organizationId}
         />
       )}
     </>

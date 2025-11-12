@@ -7,10 +7,9 @@ export interface MonthlyRosterFilters {
   manager_id?: number;
   schedule_id?: number;
   version_no?: number;
-  day?: number;
+  from_date?: string;
+  to_date?: string;
   finalize_flag?: boolean;
-  month?: number;
-  year?: number;
 }
 
 export interface MonthlyRosterRow {

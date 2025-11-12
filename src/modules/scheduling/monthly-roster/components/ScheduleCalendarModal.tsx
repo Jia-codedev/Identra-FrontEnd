@@ -31,6 +31,7 @@ interface ScheduleCalendarModalProps {
   employeeData: MonthlyRosterRow;
   onUpdateSchedule?: (day: number, scheduleId: number | null) => Promise<void>;
   isUpdating?: boolean;
+  organizationId?: number | null;
 }
 
 const DAYS_OF_WEEK = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -111,6 +112,7 @@ export const ScheduleCalendarModal: React.FC<ScheduleCalendarModalProps> = ({
   employeeData,
   onUpdateSchedule,
   isUpdating = false,
+  organizationId,
 }) => {
   const { t } = useTranslations();
   const { isRTL } = useLanguage();
@@ -189,7 +191,12 @@ export const ScheduleCalendarModal: React.FC<ScheduleCalendarModalProps> = ({
     const loadSchedules = async () => {
       setIsLoadingSchedules(true);
       try {
-        const res = await schedulesApi.getSchedulesForDropdown({});
+        const params: any = {};
+        // Filter schedules by organization if provided
+        if (organizationId) {
+          params.organization_id = organizationId;
+        }
+        const res = await schedulesApi.getSchedulesForDropdown(params);
         setAvailableSchedules(res?.data?.data || []);
       } catch (error) {
         console.error("Failed to load schedules:", error);
@@ -199,7 +206,7 @@ export const ScheduleCalendarModal: React.FC<ScheduleCalendarModalProps> = ({
     };
 
     loadSchedules();
-  }, [isOpen]);
+  }, [isOpen, organizationId]);
 
   // Optimize the schedule fetching useEffect with better dependency management
   useEffect(() => {
@@ -463,7 +470,17 @@ export const ScheduleCalendarModal: React.FC<ScheduleCalendarModalProps> = ({
 
             <ScrollArea className="flex-1 pr-3">
               <div className="space-y-2">
-                {isLoadingSchedules ? (
+                {!organizationId ? (
+                  <div className="text-center py-8 px-4 text-sm text-muted-foreground">
+                    <Users className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                    <p>
+                      {t(
+                        "scheduling.monthlyRoster.calendar.selectOrganization"
+                      ) ||
+                        "Please select an organization to view available schedules"}
+                    </p>
+                  </div>
+                ) : isLoadingSchedules ? (
                   <>
                     {Array.from({ length: 5 }, (_, i) => (
                       <Skeleton key={i} className="h-16 w-full rounded-lg" />
@@ -472,7 +489,7 @@ export const ScheduleCalendarModal: React.FC<ScheduleCalendarModalProps> = ({
                 ) : availableSchedules.length === 0 ? (
                   <div className="text-center py-8 text-sm text-muted-foreground">
                     {t("scheduling.monthlyRoster.calendar.noSchedules") ||
-                      "No schedules available"}
+                      "No schedules available for this organization"}
                   </div>
                 ) : (
                   availableSchedules.map((schedule) => {

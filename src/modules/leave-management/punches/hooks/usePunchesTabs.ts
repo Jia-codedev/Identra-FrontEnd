@@ -15,51 +15,56 @@ interface UsePunchesTabsParams {
 }
 
 export default function usePunchesTabs(params: UsePunchesTabsParams = {}) {
-  const [activeTab, setActiveTab] = useState<PunchesTabType>(params.initialTab || "my-punches");
+  const [activeTab, setActiveTab] = useState<PunchesTabType>(
+    params.initialTab || "my-punches"
+  );
   const [page, setPage] = useState(params.initialPage || 1);
   const [limit, setLimit] = useState(params.initialLimit || 10);
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
   const [filters, setFilters] = useState<any>({});
-  
+
   const currentUserId = useUserId();
 
+  // For team punches, we don't need to fetch team members separately
+  // The API will filter by manager_id directly
   const teamMembersQuery = useQuery({
     queryKey: ["teamMembers", currentUserId],
     queryFn: async () => {
-      if (!currentUserId) return [];
-      
-      const response = await employeeApi.getEmployees({
-        limit: 1000, 
-        manager_flag: true,
-      });
-      
-      const allEmployees = response.data?.data || [];
-      return allEmployees.filter((emp: any) => emp.manager_id === currentUserId);
+      // This is kept for compatibility but won't be used for filtering
+      return [];
     },
-    enabled: !!currentUserId && activeTab === "team-punches",
-    staleTime: 10 * 60 * 1000, 
+    enabled: false, // Disabled as we use manager_id filter directly in the API
+    staleTime: 10 * 60 * 1000,
   });
 
   const employeeFilter = useMemo(() => {
     if (activeTab === "my-punches") {
       return { employee_id: currentUserId };
     } else if (activeTab === "team-punches") {
-      const teamMemberIds = teamMembersQuery.data?.map((emp: any) => emp.emp_no) || [];
-      return teamMemberIds.length > 0 ? { employee_ids: teamMemberIds } : { employee_id: -1 };
+      // Use manager_id to fetch all punches of employees under this manager
+      return { manager_id: currentUserId };
     }
     return {};
-  }, [activeTab, currentUserId, teamMembersQuery.data]);
+  }, [activeTab, currentUserId]);
 
   const punchesQuery = useQuery({
-    queryKey: ["punches", activeTab, { page, limit, ...filters, ...employeeFilter }],
-    queryFn: () => employeeEventTransactionsApi.getAllEmployeeEventTransactions({ 
-      limit, 
-      offset: page, 
-      ...filters,
-      ...employeeFilter
-    }),
-    enabled: !!currentUserId && (activeTab === "my-punches" || (activeTab === "team-punches" && !teamMembersQuery.isLoading)),
-    staleTime: 5 * 60 * 1000, 
+    queryKey: [
+      "punches",
+      activeTab,
+      { page, limit, ...filters, ...employeeFilter },
+    ],
+    queryFn: () =>
+      employeeEventTransactionsApi.getAllEmployeeEventTransactions({
+        limit,
+        offset: page,
+        ...filters,
+        ...employeeFilter,
+      }),
+    enabled:
+      !!currentUserId &&
+      (activeTab === "my-punches" ||
+        (activeTab === "team-punches" && !teamMembersQuery.isLoading)),
+    staleTime: 5 * 60 * 1000,
   });
 
   const data = punchesQuery.data?.data || [];
@@ -86,10 +91,8 @@ export default function usePunchesTabs(params: UsePunchesTabsParams = {}) {
   }, []);
 
   const handleSelectItem = useCallback((id: number) => {
-    setSelectedItems(prev => 
-      prev.includes(id) 
-        ? prev.filter(item => item !== id)
-        : [...prev, id]
+    setSelectedItems((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
   }, []);
 
@@ -115,21 +118,23 @@ export default function usePunchesTabs(params: UsePunchesTabsParams = {}) {
   return {
     activeTab,
     handleTabChange,
-    
+
     data,
     total,
     teamMembers: teamMembersQuery.data || [],
-    
+
     page,
     limit,
-    
+
     selectedItems,
-    
-    isLoading: punchesQuery.isLoading || (activeTab === "team-punches" && teamMembersQuery.isLoading),
+
+    isLoading:
+      punchesQuery.isLoading ||
+      (activeTab === "team-punches" && teamMembersQuery.isLoading),
     isFetching: punchesQuery.isFetching || teamMembersQuery.isFetching,
     isError: punchesQuery.isError || teamMembersQuery.isError,
     error: punchesQuery.error || teamMembersQuery.error,
-    
+
     handlePageChange,
     handleLimitChange,
     handleFiltersChange,
