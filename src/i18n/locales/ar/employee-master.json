@@ -40,6 +40,8 @@
     "employeeGroupReporting": "مجموعة التقارير"
   },
   "employee": {
+    "role":"الموظف",
+    "selectRole":"اختر الدور",
     "employeeName": "اسم الموظف",
     "title": "إدارة الموظفين",
     "searchPlaceholder": "ابحث عن الموظفين...",

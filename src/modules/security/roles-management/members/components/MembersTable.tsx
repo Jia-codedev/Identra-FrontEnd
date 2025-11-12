@@ -59,9 +59,11 @@ export const MembersTable: React.FC<MembersTableProps> = ({
     {
       key: "organization",
       header: t("security.roles.organization") || "Organization",
-      accessor: (item) => {
+      accessor: (item, isRTL) => {
         const employee = item.sec_users?.employee_master as any;
-        return employee?.organizations?.organization_name_eng || "N/A";
+        return isRTL
+          ? employee?.organizations?.organization_arb
+          : employee?.organizations?.organization_eng;
       },
     },
   ];
