@@ -9,6 +9,7 @@ import { useRoleMutations } from "../hooks/useMutations";
 import { SecRole } from "@/services/security/securityRoles";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { useSubModulePrivileges } from "@/hooks/security/useSubModulePrivileges";
 
 export default function RolesManagementPage() {
   const {
@@ -36,6 +37,13 @@ export default function RolesManagementPage() {
     mode: "add" | "edit";
     role: SecRole | null;
   }>({ isOpen: false, mode: "add", role: null });
+
+ const { canView, canCreate, canEdit, canDelete } = useSubModulePrivileges(
+        "user-security",
+        "roles-management"
+      );
+      console.log("Privileges:", { canView, canCreate, canEdit, canDelete });
+  
 
   const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; type: "single" | "bulk" | null; id?: number }>({ open: false, type: null });
 
@@ -79,6 +87,8 @@ export default function RolesManagementPage() {
       <div className="w-full relative">
         <div className="py-4 border-border bg-background/90">
           <RolesHeader
+            canCreate={canCreate}
+            canDelete={canDelete}
             search={search}
             onSearchChange={setSearch}
             onAddRole={handleAddRole}
@@ -86,6 +96,8 @@ export default function RolesManagementPage() {
             onDeleteSelected={handleDeleteSelected}
           />
           <RolesTable
+            canEdit={canEdit}
+            canDelete={canDelete} 
             roles={roles}
             selected={selected}
             page={page}

@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useTranslations } from '@/hooks/use-translations';
 import { useLanguage } from '@/providers/language-provider';
+import { ca } from 'date-fns/locale';
 
 interface BiometricTerminalsHeaderProps {
   search: string;
@@ -16,6 +17,8 @@ interface BiometricTerminalsHeaderProps {
   onStatusFilterChange: (value: boolean | undefined) => void;
   onAddNew: () => void;
   onDeleteSelected: () => void;
+  canCreate: boolean;
+  canDelete: boolean;
 }
 
 export default function BiometricTerminalsHeader({
@@ -26,6 +29,8 @@ export default function BiometricTerminalsHeader({
   onStatusFilterChange,
   onAddNew,
   onDeleteSelected,
+  canCreate,
+  canDelete,
 }: BiometricTerminalsHeaderProps) {
   const { t } = useTranslations();
   const { isRTL } = useLanguage();
@@ -67,7 +72,7 @@ export default function BiometricTerminalsHeader({
               <SelectItem value="false">{t('common.inactive')}</SelectItem>
             </SelectContent>
           </Select>
-          {selectedCount > 0 && (
+          {selectedCount > 0 && canDelete && (
             <Button
               onClick={onDeleteSelected}
               variant="destructive"
@@ -78,6 +83,7 @@ export default function BiometricTerminalsHeader({
             </Button>
           )}
           <Button
+            disabled={!canCreate}
             onClick={onAddNew}
             className="w-full sm:w-auto bg-primary text-primary-foreground hover:bg-primary/90"
           >

@@ -43,6 +43,8 @@ interface BuildingsListProps {
   onDeleteItem: (id: string | number) => void;
   onPageChange: (page: number) => void;
   onPageSizeChange: (size: number) => void;
+  canEdit: boolean;
+  canDelete: boolean;
 }
 
 export default function BuildingsList({
@@ -58,6 +60,8 @@ export default function BuildingsList({
   onDeleteItem,
   onPageChange,
   onPageSizeChange,
+  canEdit,
+  canDelete,
 }: BuildingsListProps) {
   const { t } = useTranslations();
   const { isRTL } = useLanguage();
@@ -169,6 +173,8 @@ export default function BuildingsList({
   return (
     <div className="space-y-4">
       <GenericTable<Building>
+        canEdit={canEdit}
+        canDelete={canDelete}
         data={buildings}
         columns={columns}
         selected={selected}

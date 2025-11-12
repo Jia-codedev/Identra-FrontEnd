@@ -27,6 +27,8 @@ interface BiometricTerminalsListProps {
   onSelectAll: () => void;
   onEditItem: (terminal: BiometricTerminal) => void;
   onDeleteItem: (id: string | number) => void;
+  canEdit: boolean;
+  canDelete: boolean; 
 }
 
 export default function BiometricTerminalsList({
@@ -38,6 +40,8 @@ export default function BiometricTerminalsList({
   onSelectAll,
   onEditItem,
   onDeleteItem,
+  canEdit,
+  canDelete,
 }: BiometricTerminalsListProps) {
   const { t } = useTranslations();
   const { isRTL } = useLanguage();
@@ -79,6 +83,8 @@ export default function BiometricTerminalsList({
   return (
     <div>
       <GenericTable
+        canEdit={canEdit}
+        canDelete={canDelete}
         data={biometricTerminals}
         columns={columns}
         selected={selected}

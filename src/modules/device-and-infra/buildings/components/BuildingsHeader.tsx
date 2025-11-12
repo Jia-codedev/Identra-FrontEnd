@@ -20,6 +20,8 @@ interface BuildingsHeaderProps {
   onCityFilterChange: (value: string | undefined) => void;
   onAddNew: () => void;
   onDeleteSelected: () => void;
+  canCreate: boolean;
+  canDelete: boolean;
 }
 
 export default function BuildingsHeader({
@@ -34,6 +36,8 @@ export default function BuildingsHeader({
   onCityFilterChange,
   onAddNew,
   onDeleteSelected,
+  canCreate,
+  canDelete,
 }: BuildingsHeaderProps) {
   const { t } = useTranslations();
   const { isRTL } = useLanguage();
@@ -76,7 +80,7 @@ export default function BuildingsHeader({
         </div>
 
         <div className="flex items-center gap-3">
-          {selectedCount > 0 && (
+          {selectedCount > 0 &&  canDelete && (
             <Button
               variant="destructive"
               size="sm"
@@ -89,6 +93,7 @@ export default function BuildingsHeader({
           )}
           
           <Button
+            disabled={!canCreate}
             onClick={onAddNew}
             className="flex items-center gap-2"
           >

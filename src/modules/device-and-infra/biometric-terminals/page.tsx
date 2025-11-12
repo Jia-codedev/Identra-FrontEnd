@@ -20,6 +20,7 @@ import BiometricTerminalForm from "./components/BiometricTerminalForm";
 import useBiometricTerminals from "./hooks/useBiometricTerminals";
 import useBiometricTerminalMutations from "./hooks/useBiometricTerminalMutations";
 import { BiometricTerminal } from "@/services/biometric-terminals/biometricTerminalsApi";
+import { useSubModulePrivileges } from "@/hooks/security/useSubModulePrivileges";
 
 export default function BiometricTerminalManagementPage() {
   const { t } = useTranslations();
@@ -53,6 +54,12 @@ export default function BiometricTerminalManagementPage() {
     pageSizeOptions,
   } = useBiometricTerminals();
 
+    const { canView, canCreate, canEdit, canDelete } = useSubModulePrivileges(
+      "devices-infrastructure",
+      "biometric-terminals"
+    );
+    console.log("Privileges:", { canView, canCreate, canEdit, canDelete });
+  
   const handleAddNew = () => {
     setEditingTerminal(null);
     setIsAddModalOpen(true);
@@ -115,6 +122,8 @@ export default function BiometricTerminalManagementPage() {
       <div className="w-full relative">
         <div className="py-4 border-border bg-background/90">
           <BiometricTerminalsHeader
+            canCreate={canCreate}
+            canDelete={canDelete}
             search={search}
             statusFilter={statusFilter}
             selectedCount={selected.length}
@@ -129,6 +138,8 @@ export default function BiometricTerminalManagementPage() {
 
           <BiometricTerminalsList
             biometricTerminals={biometricTerminals}
+            canEdit={canEdit}
+            canDelete={canDelete}
             selected={selected}
             allChecked={allChecked}
             isLoading={isLoading}
