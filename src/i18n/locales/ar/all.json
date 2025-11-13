@@ -393,6 +393,21 @@
       "active": "نشط",
       "remarks": "ملاحظات",
       "noData": "لم يتم العثور على مسؤولي الأقسام"
+    },
+    "departments": {
+      "title": "الأقسام",
+      "description": "إدارة الأقسام في مؤسستك.",
+      "searchPlaceholder": "ابحث عن الأقسام...",
+      "addDepartment": "إضافة قسم",
+      "editDepartment": "تعديل قسم",
+      "departmentCode": "رمز القسم",
+      "departmentName": "اسم القسم",
+      "departmentNameEnglish": "اسم القسم (بالإنجليزية)",
+      "departmentNameArabic": "اسم القسم (بالعربية)",
+      "enterDepartmentCode": "أدخل رمز القسم",
+      "enterDepartmentName": "أدخل اسم القسم",
+      "enterDepartmentNameArabic": "أدخل اسم القسم بالعربية",
+      "noDepartmentsFound": "لم يتم العثور على أقسام."
     }
   },
   "employeeMaster": {
@@ -436,6 +451,8 @@
       "employeeGroupReporting": "مجموعة التقارير"
     },
     "employee": {
+      "role": "الموظف",
+      "selectRole": "اختر الدور",
       "employeeName": "اسم الموظف",
       "title": "إدارة الموظفين",
       "searchPlaceholder": "ابحث عن الموظفين...",
@@ -1411,8 +1428,8 @@
       "absent": "غائب",
       "late": "متأخر",
       "halfDay": "نصف يوم",
-      "checkIn": "تسجيل الدخول",
-      "checkOut": "تسجيل الخروج",
+      "punchIn": "تسجيل الدخول",
+      "punchOut": "تسجيل الخروج",
       "breakStart": "بداية الاستراحة",
       "breakEnd": "نهاية الاستراحة",
       "manualEntry": "إدخال يدوي",
@@ -2060,7 +2077,8 @@
     "support-centre": "مركز الدعم",
     "faqs": "الأسئلة الشائعة",
     "user-manual": "دليل المستخدم",
-    "license-management": "إدارة التراخيص"
+    "license-management": "إدارة التراخيص",
+    "departments": "الأقسام"
   },
   "geoAnalytics": {
     "title": "تحليلات السياج الجغرافي",

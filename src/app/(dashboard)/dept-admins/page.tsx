@@ -1,4 +1,4 @@
-import { DeptAdminsPage } from "@/modules/masterdata/deptAdmins";
+import { DeptAdminsPage } from "@/modules/organization/deptAdmins";
 import React from "react";
 
 function page() {

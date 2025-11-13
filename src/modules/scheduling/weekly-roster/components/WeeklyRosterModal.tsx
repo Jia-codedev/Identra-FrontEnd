@@ -40,6 +40,7 @@ import { SearchCombobox } from "@/components/ui/search-combobox";
 import schedulesApi from "@/services/scheduling/schedules";
 import { OrganizationSchedule, OrganizationScheduleCreate } from "../types";
 import organizationsApi from "@/services/masterdata/organizations";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface FormData {
   organization_id: number;
@@ -354,233 +355,235 @@ export function WeeklyRosterModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-[900px] min-w-[60vw] w-full max-h-[90vh] ">
+      <DialogContent className="sm:max-w-[900px] min-w-[60vw] w-full max-h-[90vh]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-lg sm:text-xl">
             <CalendarDays className="h-5 w-5" />
             {getModalTitle()}
           </DialogTitle>
         </DialogHeader>
-
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(handleFormSubmit)}
-            className="space-y-6"
-          >
-            <div className="grid gap-6">
-              <FormField
-                control={form.control}
-                name="organization_id"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col">
-                    <FormLabel className="text-sm font-medium">
-                      {t("scheduling.weeklyRoster.fields.organization")} *
-                    </FormLabel>
-                    <FormControl>
-                      <SearchCombobox
-                        onSearch={(searchTerm: string) => {
-                          setOrganizationSearch(searchTerm);
-                        }}
-                        onValueChange={(val: string | number | null) =>
-                          field.onChange(val)
-                        }
-                        options={organizationOptions}
-                        value={field.value ?? ""}
-                        placeholder={t(
-                          "scheduling.weeklyRoster.selectOrganization"
-                        )}
-                        disabled={isLoading}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {/* Date Range */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {/* Start Date */}
+        <ScrollArea className="max-h-[70vh]">
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(handleFormSubmit)}
+              className="space-y-6 pr-4 py-2"
+            >
+              <div className="grid gap-6">
                 <FormField
                   control={form.control}
-                  name="from_date"
+                  name="organization_id"
                   render={({ field }) => (
                     <FormItem className="flex flex-col">
                       <FormLabel className="text-sm font-medium">
-                        {t("common.startDate")} *
+                        {t("scheduling.weeklyRoster.fields.organization")} *
                       </FormLabel>
-                      <Popover
-                        open={startDateOpen}
-                        onOpenChange={setStartDateOpen}
-                      >
-                        <PopoverTrigger asChild>
-                          <FormControl>
-                            <Button
-                              variant="outline"
-                              className={cn(
-                                "w-full pl-3 text-left font-normal text-sm sm:text-base h-10",
-                                !field.value && "text-muted-foreground"
-                              )}
-                            >
-                              {field.value ? (
-                                format(field.value, "PPP")
-                              ) : (
-                                <span>{t("common.selectDate")}</span>
-                              )}
-                              <CalendarDays className="ml-auto h-4 w-4 opacity-50" />
-                            </Button>
-                          </FormControl>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                          <Calendar
-                            mode="single"
-                            selected={field.value}
-                            onSelect={(date) => {
-                              field.onChange(date);
-                              setStartDateOpen(false);
-                            }}
-                            disabled={(date) => date < new Date("1900-01-01")}
-                            initialFocus
-                          />
-                        </PopoverContent>
-                      </Popover>
+                      <FormControl>
+                        <SearchCombobox
+                          onSearch={(searchTerm: string) => {
+                            setOrganizationSearch(searchTerm);
+                          }}
+                          onValueChange={(val: string | number | null) =>
+                            field.onChange(val)
+                          }
+                          options={organizationOptions}
+                          value={field.value ?? ""}
+                          placeholder={t(
+                            "scheduling.weeklyRoster.selectOrganization"
+                          )}
+                          disabled={isLoading}
+                        />
+                      </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
 
-                {/* End Date */}
-                <FormField
-                  control={form.control}
-                  name="to_date"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-col">
-                      <FormLabel className="text-sm font-medium">
-                        {t("common.endDate")} *
-                      </FormLabel>
-                      <Popover open={endDateOpen} onOpenChange={setEndDateOpen}>
-                        <PopoverTrigger asChild>
-                          <FormControl>
-                            <Button
-                              variant="outline"
-                              className={cn(
-                                "w-full pl-3 text-left font-normal text-sm sm:text-base h-10",
-                                !field.value && "text-muted-foreground"
-                              )}
-                            >
-                              {field.value ? (
-                                format(field.value, "PPP")
-                              ) : (
-                                <span>{t("common.selectDate")}</span>
-                              )}
-                              <CalendarDays className="ml-auto h-4 w-4 opacity-50" />
-                            </Button>
-                          </FormControl>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                          <Calendar
-                            mode="single"
-                            selected={field.value}
-                            onSelect={(date) => {
-                              field.onChange(date);
-                              setEndDateOpen(false);
-                            }}
-                            disabled={(date) => {
-                              if (date < new Date("1900-01-01")) return true;
-                              if (
-                                form.watch("from_date") &&
-                                date < form.watch("from_date")
-                              )
-                                return true;
-                              return false;
-                            }}
-                            initialFocus
-                          />
-                        </PopoverContent>
-                      </Popover>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
+                {/* Date Range */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {/* Start Date */}
+                  <FormField
+                    control={form.control}
+                    name="from_date"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col">
+                        <FormLabel className="text-sm font-medium">
+                          {t("common.startDate")} *
+                        </FormLabel>
+                        <Popover
+                          open={startDateOpen}
+                          onOpenChange={setStartDateOpen}
+                        >
+                          <PopoverTrigger asChild>
+                            <FormControl>
+                              <Button
+                                variant="outline"
+                                className={cn(
+                                  "w-full pl-3 text-left font-normal text-sm sm:text-base h-10",
+                                  !field.value && "text-muted-foreground"
+                                )}
+                              >
+                                {field.value ? (
+                                  format(field.value, "PPP")
+                                ) : (
+                                  <span>{t("common.selectDate")}</span>
+                                )}
+                                <CalendarDays className="ml-auto h-4 w-4 opacity-50" />
+                              </Button>
+                            </FormControl>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0" align="start">
+                            <Calendar
+                              mode="single"
+                              selected={field.value}
+                              onSelect={(date) => {
+                                field.onChange(date);
+                                setStartDateOpen(false);
+                              }}
+                              disabled={(date) => date < new Date("1900-01-01")}
+                              initialFocus
+                            />
+                          </PopoverContent>
+                        </Popover>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-              {/* Weekly Schedule Assignment */}
-              <Card>
-                <CardHeader className="pb-4">
-                  <CardTitle className="flex items-center gap-2 text-base">
-                    <Clock className="h-4 w-4" />
-                    {t("scheduling.weeklyRoster.fields.schedules")}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 items-start">
-                    {DAYS_OF_WEEK.map((day) => (
-                      <FormField
-                        key={day.key}
-                        control={form.control}
-                        name={day.field as keyof FormData}
-                        render={({ field }) => (
-                          <FormItem>
-                            <div className="p-3 border rounded-lg bg-muted/5 min-h-[88px]">
-                              <div className="flex items-center justify-between mb-2">
-                                <FormLabel className="text-sm font-medium m-0">
-                                  {t(DAY_TRANSLATION_KEYS[day.key].fieldKey)}
-                                </FormLabel>
-                              </div>
-                              <FormControl>
-                                <div className="w-full relative">
-                                  <DayScheduleSearchCombobox
-                                    value={
-                                      typeof field.value === "number"
-                                        ? field.value
-                                        : null
-                                    }
-                                    onValueChange={(v) => field.onChange(v)}
-                                    placeholder={t(
-                                      DAY_TRANSLATION_KEYS[day.key]
-                                        .placeholderKey
-                                    )}
-                                    organizationId={
-                                      form.watch("organization_id") || undefined
-                                    }
-                                    disabled={isLoading}
-                                  />
+                  {/* End Date */}
+                  <FormField
+                    control={form.control}
+                    name="to_date"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col">
+                        <FormLabel className="text-sm font-medium">
+                          {t("common.endDate")} *
+                        </FormLabel>
+                        <Popover
+                          open={endDateOpen}
+                          onOpenChange={setEndDateOpen}
+                        >
+                          <PopoverTrigger asChild>
+                            <FormControl>
+                              <Button
+                                variant="outline"
+                                className={cn(
+                                  "w-full pl-3 text-left font-normal text-sm sm:text-base h-10",
+                                  !field.value && "text-muted-foreground"
+                                )}
+                              >
+                                {field.value ? (
+                                  format(field.value, "PPP")
+                                ) : (
+                                  <span>{t("common.selectDate")}</span>
+                                )}
+                                <CalendarDays className="ml-auto h-4 w-4 opacity-50" />
+                              </Button>
+                            </FormControl>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0" align="start">
+                            <Calendar
+                              mode="single"
+                              selected={field.value}
+                              onSelect={(date) => {
+                                field.onChange(date);
+                                setEndDateOpen(false);
+                              }}
+                              disabled={(date) => {
+                                if (date < new Date("1900-01-01")) return true;
+                                if (
+                                  form.watch("from_date") &&
+                                  date < form.watch("from_date")
+                                )
+                                  return true;
+                                return false;
+                              }}
+                              initialFocus
+                            />
+                          </PopoverContent>
+                        </Popover>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                {/* Weekly Schedule Assignment */}
+                <Card>
+                  <CardHeader className="pb-4">
+                    <CardTitle className="flex items-center gap-2 text-base">
+                      <Clock className="h-4 w-4" />
+                      {t("scheduling.weeklyRoster.fields.schedules")}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 items-start">
+                      {DAYS_OF_WEEK.map((day) => (
+                        <FormField
+                          key={day.key}
+                          control={form.control}
+                          name={day.field as keyof FormData}
+                          render={({ field }) => (
+                            <FormItem>
+                              <div className="p-3 border rounded-lg bg-muted/5 min-h-[88px]">
+                                <div className="flex items-center justify-between mb-2">
+                                  <FormLabel className="text-sm font-medium m-0">
+                                    {t(DAY_TRANSLATION_KEYS[day.key].fieldKey)}
+                                  </FormLabel>
                                 </div>
-                              </FormControl>
-                              <FormMessage className="text-xs mt-2" />
-                            </div>
-                          </FormItem>
-                        )}
-                      />
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            <div className="space-x-2 flex flex-col">
-              <Button
-                className="w-full"
-                type="button"
-                variant="outline"
-                onClick={handleClose}
-                disabled={isLoading}
-              >
-                {t("common.cancel")}
-              </Button>
-              <Button
-                className="w-full mt-2"
-                type="submit"
-                disabled={isLoading}
-              >
-                {isLoading
-                  ? t("common.saving")
-                  : mode === "create"
-                  ? t("common.create")
-                  : t("common.update")}
-              </Button>
-            </div>
-          </form>
-        </Form>
+                                <FormControl>
+                                  <div className="w-full relative">
+                                    <DayScheduleSearchCombobox
+                                      value={
+                                        typeof field.value === "number"
+                                          ? field.value
+                                          : null
+                                      }
+                                      onValueChange={(v) => field.onChange(v)}
+                                      placeholder={t(
+                                        DAY_TRANSLATION_KEYS[day.key]
+                                          .placeholderKey
+                                      )}
+                                      organizationId={
+                                        form.watch("organization_id") ||
+                                        undefined
+                                      }
+                                      disabled={isLoading}
+                                    />
+                                  </div>
+                                </FormControl>
+                                <FormMessage className="text-xs mt-2" />
+                              </div>
+                            </FormItem>
+                          )}
+                        />
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+              <DialogFooter>
+                <div className="grid grid-cols-2 gap-2 w-full place-items-center">
+                  <Button
+                    className="w-full"
+                    type="button"
+                    variant="outline"
+                    onClick={handleClose}
+                    disabled={isLoading}
+                  >
+                    {t("common.cancel")}
+                  </Button>
+                  <Button className="w-full" type="submit" disabled={isLoading}>
+                    {isLoading
+                      ? t("common.saving")
+                      : mode === "create"
+                      ? t("common.create")
+                      : t("common.update")}
+                  </Button>
+                </div>
+              </DialogFooter>
+            </form>
+          </Form>
+        </ScrollArea>
       </DialogContent>
     </Dialog>
   );

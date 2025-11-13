@@ -866,7 +866,7 @@ export const EmployeeModal: React.FC<EmployeeModalProps> = ({
                   {steps[currentStep]?.description}
                 </p>
               </div>
-              <ScrollArea className="w-full px-6 row-span-9 py-1">
+              <ScrollArea className="w-full px-6 row-span-9 py-1 pb-8">
                 {renderStepContent()}
               </ScrollArea>
             </div>

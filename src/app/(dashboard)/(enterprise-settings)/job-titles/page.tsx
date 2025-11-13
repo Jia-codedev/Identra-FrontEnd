@@ -1,10 +1,8 @@
-import DesignationsPage from '@/modules/masterdata/designations/view/page'
-import React from 'react'
+import DesignationsPage from "@/modules/masterdata/designations/view/page";
+import React from "react";
 
 function page() {
-  return (
-    <DesignationsPage />
-  )
+  return <DesignationsPage />;
 }
 
-export default page
+export default page;
