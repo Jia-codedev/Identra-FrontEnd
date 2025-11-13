@@ -1,10 +1,8 @@
-import OrganizationTypesPage from '@/modules/masterdata/organizationtypes/page'
-import React from 'react'
+import OrganizationTypesPage from "@/modules/organization/organizationtypes/page";
+import React from "react";
 
 function page() {
-  return (
-    <OrganizationTypesPage />
-  )
+  return <OrganizationTypesPage />;
 }
 
-export default page
+export default page;

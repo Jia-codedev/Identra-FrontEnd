@@ -395,6 +395,21 @@
       "active": "Active",
       "remarks": "Remarks",
       "noData": "No department admins found"
+    },
+    "departments": {
+      "title": "Departments",
+      "description": "Manage departments for your organization.",
+      "searchPlaceholder": "Search departments...",
+      "addDepartment": "Add Department",
+      "editDepartment": "Edit Department",
+      "departmentCode": "Department Code",
+      "departmentName": "Department Name",
+      "departmentNameEnglish": "Department Name (English)",
+      "departmentNameArabic": "Department Name (Arabic)",
+      "enterDepartmentCode": "Enter department code",
+      "enterDepartmentName": "Enter department name",
+      "enterDepartmentNameArabic": "Enter department name in Arabic",
+      "noDepartmentsFound": "No departments found."
     }
   },
   "employeeMaster": {
@@ -2105,7 +2120,8 @@
     "support-centre": "Support Centre",
     "faqs": "Faqs",
     "user-manual": "User Manual",
-    "license-management": "License Management"
+    "license-management": "License Management",
+    "departments": "Departments"
   },
   "geoAnalytics": {
     "title": "Geo-Fencing Analytics",

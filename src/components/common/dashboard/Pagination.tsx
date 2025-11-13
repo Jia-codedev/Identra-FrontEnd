@@ -64,65 +64,73 @@ export const CustomPagination: React.FC<PaginationProps> = ({
   const pageNumbers = getPageNumbers();
 
   return (
-    <div className="mt-2 px-4 flex flex-col md:flex-row justify-between items-center gap-4 dark:bg-card py-4 rounded-md border w-full">
+    <div className="mt-2 px-4 flex flex-col md:flex-row justify-between items-center gap-4 bg-white dark:bg-card py-4 rounded-md border w-full">
       <div className="flex-1 flex justify-start">
         <Pagination>
           <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious
-              onClick={() => handlePageChange(currentPage - 1)}
-              aria-disabled={currentPage === 1}
-              className={
-                currentPage === 1
-                  ? "pointer-events-none opacity-50"
-                  : "cursor-pointer"
-              }
-            />
-          </PaginationItem>
-
-          {pageNumbers.map((pageNum) => (
-            <PaginationItem key={pageNum}>
-              <PaginationLink
-                isActive={currentPage === pageNum}
-                onClick={(e) => {
-                  e.preventDefault();
-                  handlePageChange(pageNum);
-                }}
-                className="cursor-pointer"
-              >
-                {pageNum}
-              </PaginationLink>
+            <PaginationItem>
+              <PaginationPrevious
+                onClick={() => handlePageChange(currentPage - 1)}
+                aria-disabled={currentPage === 1}
+                className={
+                  currentPage === 1
+                    ? "pointer-events-none opacity-50"
+                    : "cursor-pointer"
+                }
+              />
             </PaginationItem>
-          ))}
 
-          <PaginationItem>
-            <PaginationNext
-              onClick={() => handlePageChange(currentPage + 1)}
-              aria-disabled={currentPage === totalPages || totalPages === 0}
-              className={
-                currentPage === totalPages || totalPages === 0
-                  ? "pointer-events-none opacity-50"
-                  : "cursor-pointer"
-              }
-            />
-          </PaginationItem>
+            {pageNumbers.map((pageNum) => (
+              <PaginationItem key={pageNum}>
+                <PaginationLink
+                  isActive={currentPage === pageNum}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handlePageChange(pageNum);
+                  }}
+                  className="cursor-pointer"
+                >
+                  {pageNum}
+                </PaginationLink>
+              </PaginationItem>
+            ))}
+
+            <PaginationItem>
+              <PaginationNext
+                onClick={() => handlePageChange(currentPage + 1)}
+                aria-disabled={currentPage === totalPages || totalPages === 0}
+                className={
+                  currentPage === totalPages || totalPages === 0
+                    ? "pointer-events-none opacity-50"
+                    : "cursor-pointer"
+                }
+              />
+            </PaginationItem>
           </PaginationContent>
         </Pagination>
       </div>
 
       <div className="flex items-center gap-2">
-        <label htmlFor="pagination-limit" className="text-sm text-muted-foreground">
+        <label
+          htmlFor="pagination-limit"
+          className="text-sm text-muted-foreground"
+        >
           {t("common.limit")}
         </label>
-        <Select value={pageSize.toString()} onValueChange={val => onPageSizeChange(Number(val))}>
+        <Select
+          value={pageSize.toString()}
+          onValueChange={(val) => onPageSizeChange(Number(val))}
+        >
           <SelectTrigger className="w-[90px]">
             <SelectValue placeholder={t("common.limit")} />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
               <SelectLabel>{t("common.limit")}</SelectLabel>
-              {pageSizeOptions.map(opt => (
-                <SelectItem key={opt} value={opt.toString()}>{opt}</SelectItem>
+              {pageSizeOptions.map((opt) => (
+                <SelectItem key={opt} value={opt.toString()}>
+                  {opt}
+                </SelectItem>
               ))}
             </SelectGroup>
           </SelectContent>

@@ -2,9 +2,11 @@ import { IDesignation } from "@/modules/masterdata/designations/types";
 import apiClient from "@/configs/api/Axios";
 
 class DesignationsApi {
-  getDesignations(
-    { offset = 0, limit = 10, search = "" }: { offset?: number; limit?: number; search?: string } = {}
-  ) {
+  getDesignations({
+    offset = 0,
+    limit = 10,
+    search = "",
+  }: { offset?: number; limit?: number; search?: string } = {}) {
     return apiClient.get("/designation/all", {
       params: {
         offset,

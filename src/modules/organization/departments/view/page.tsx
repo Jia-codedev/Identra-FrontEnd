@@ -9,19 +9,24 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { useGrades } from "../hooks/useGrades";
-import { IGrade } from "../types";
-import { useGradeMutations } from "../hooks/useMutations";
-import { GradesTable, GradeModal, GradesHeader } from "../index";
+import { useDepartments } from "../hooks/useDepartments";
+import { IDepartment } from "../types";
+import { useDepartmentMutations } from "../hooks/useMutation";
+import { DepartmentTable, DepartmentModal, DepartmentHeader } from "../index";
 import { CustomPagination } from "@/components/common/dashboard/Pagination";
 import { useSubModulePrivileges } from "@/hooks/security/useSubModulePrivileges";
 
-export default function GradesPage() {
+export default function DepartmentPage() {
   const { t } = useTranslations();
-  const { createGrade, updateGrade, deleteGrade, deleteGrades } =
-    useGradeMutations();
   const {
-    grades,
+    createDepartment,
+    updateDepartment,
+    deleteDepartment,
+    deleteDepartments,
+  } = useDepartmentMutations();
+
+  const {
+    departments,
     selected,
     search,
     page,
@@ -32,23 +37,19 @@ export default function GradesPage() {
     setSearch,
     setPage,
     setPageSize,
-    selectGrade,
+    selectDepartment,
     selectAll,
-    clearSelection,
     isLoading,
-  } = useGrades();
-  const { canCreate, canEdit, canDelete } = useSubModulePrivileges(
-    "enterprise-settings",
-    "job-levels"
-  );
+  } = useDepartments();
+
   const [modalState, setModalState] = useState<{
     isOpen: boolean;
     mode: "add" | "edit";
-    grade: IGrade | null;
+    department: IDepartment | null;
   }>({
     isOpen: false,
     mode: "add",
-    grade: null,
+    department: null,
   });
 
   const [deleteDialog, setDeleteDialog] = useState<{
@@ -57,19 +58,19 @@ export default function GradesPage() {
     id?: number;
   }>({ open: false, type: null });
 
-  const handleAddGrade = () => {
+  const handleAddDepartment = () => {
     setModalState({
       isOpen: true,
       mode: "add",
-      grade: null,
+      department: null,
     });
   };
 
-  const handleEditGrade = (grade: IGrade) => {
+  const handleEditDepartment = (department: IDepartment) => {
     setModalState({
       isOpen: true,
       mode: "edit",
-      grade,
+      department,
     });
   };
 
@@ -77,22 +78,22 @@ export default function GradesPage() {
     setModalState({
       isOpen: false,
       mode: "add",
-      grade: null,
+      department: null,
     });
   };
 
-  const handleSaveGrade = (data: IGrade) => {
+  const handleSaveDepartment = (data: IDepartment) => {
     if (modalState.mode === "add") {
-      createGrade({
-        gradeData: data,
+      createDepartment({
+        departmentData: data,
         onClose: handleCloseModal,
         search,
         pageSize,
       });
-    } else if (modalState.mode === "edit" && modalState.grade) {
-      updateGrade({
-        id: modalState.grade.grade_id,
-        gradeData: data,
+    } else if (modalState.mode === "edit" && modalState.department) {
+      updateDepartment({
+        id: modalState.department.department_id,
+        departmentData: data,
         onClose: handleCloseModal,
         search,
         pageSize,
@@ -100,29 +101,19 @@ export default function GradesPage() {
     }
   };
 
-  const handleDeleteGrade = (id: number) => {
-    if (!canDelete) {
-      return;
-    }
+  const handleDeleteDepartment = (id: number) => {
     setDeleteDialog({ open: true, type: "single", id });
   };
 
   const handleDeleteSelected = () => {
-    if (!canDelete) {
-      return;
-    }
     setDeleteDialog({ open: true, type: "bulk" });
   };
 
   const handleConfirmDelete = () => {
-    if (!canDelete) {
-      return;
-    }
     if (deleteDialog.type === "single" && deleteDialog.id !== undefined) {
-      deleteGrade(deleteDialog.id);
+      deleteDepartment(deleteDialog.id);
     } else if (deleteDialog.type === "bulk" && selected.length > 0) {
-      deleteGrades(selected);
-      clearSelection();
+      deleteDepartments(selected);
     }
     setDeleteDialog({ open: false, type: null });
   };
@@ -131,33 +122,38 @@ export default function GradesPage() {
     setDeleteDialog({ open: false, type: null });
   };
 
+  const { canCreate, canEdit, canDelete } = useSubModulePrivileges(
+    "organization",
+    "departments"
+  );
+
   return (
     <div className="w-full h-full flex flex-col items-center justify-start">
       <div className="w-full relative">
         <div className="py-4 border-border bg-background/90">
-          <GradesHeader
+          <DepartmentHeader
             canDelete={canDelete}
             canCreate={canCreate}
             search={search}
             onSearchChange={setSearch}
-            onAddGrade={handleAddGrade}
+            onAddDepartment={handleAddDepartment}
             selectedCount={selected.length}
             onDeleteSelected={handleDeleteSelected}
           />
 
-          <GradesTable
+          <DepartmentTable
             canEdit={canEdit}
             canDelete={canDelete}
-            grades={grades}
+            departments={departments}
             selected={selected}
             page={page}
             pageSize={pageSize}
             allChecked={allChecked}
-            onSelectGrade={selectGrade}
+            onSelectDepartment={selectDepartment}
             onSelectAll={selectAll}
             isLoading={isLoading}
-            onEditGrade={handleEditGrade}
-            onDeleteGrade={handleDeleteGrade}
+            onEditDepartment={handleEditDepartment}
+            onDeleteDepartment={handleDeleteDepartment}
             onPageChange={setPage}
             onPageSizeChange={setPageSize}
           />
@@ -173,13 +169,14 @@ export default function GradesPage() {
         </div>
       </div>
 
-      <GradeModal
+      <DepartmentModal
         isOpen={modalState.isOpen}
         onClose={handleCloseModal}
-        onSave={handleSaveGrade}
-        grade={modalState.grade}
+        onSave={handleSaveDepartment}
+        department={modalState.department}
         mode={modalState.mode}
       />
+
       <Dialog
         open={deleteDialog.open}
         onOpenChange={(open) => !open && handleCancelDelete()}

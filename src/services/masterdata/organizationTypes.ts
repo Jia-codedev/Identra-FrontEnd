@@ -1,4 +1,4 @@
-import { IOrganizationType } from "@/modules/masterdata/organizationtypes/types";
+import { IOrganizationType } from "@/modules/organization/organizationtypes/types";
 import apiClient from "@/configs/api/Axios";
 
 class OrganizationTypesApi {
@@ -17,8 +17,7 @@ class OrganizationTypesApi {
       },
     });
   }
-  getOrganizationTypesWithoutPagination(
-  ) {
+  getOrganizationTypesWithoutPagination() {
     return apiClient.get("/organizationtype");
   }
   getOrganizationTypeById(id: number) {

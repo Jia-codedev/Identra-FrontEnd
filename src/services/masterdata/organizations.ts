@@ -1,4 +1,4 @@
-import { IOrganization } from "@/modules/masterdata/organizations/types";
+import { IOrganization } from "@/modules/organization/organizations/types";
 import apiClient from "@/configs/api/Axios";
 
 class OrganizationsApi {
