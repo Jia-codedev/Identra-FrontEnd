@@ -20,8 +20,8 @@ import { useTranslations } from "@/hooks/use-translations";
 
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useUserId } from "@/store/userStore";
-import useLeaves from "@/modules/leave-management/leaves/hooks/useLeaves";
-import useEmployeePermissions from "@/modules/leave-management/permissions/hooks/useEmployeePermissions";
+import useLeaves from "@/modules/self-services/leaves/hooks/useLeaves";
+import useEmployeePermissions from "@/modules/self-services/permissions/hooks/useEmployeePermissions";
 import ApprovalsList from "./components/ApprovalsList";
 import employeeLeavesApi from "@/services/leaveManagement/employeeLeaves";
 import employeeShortPermissionsApi from "@/services/leaveManagement/employeeShortPermissions";

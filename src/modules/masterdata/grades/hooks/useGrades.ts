@@ -7,8 +7,8 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import gradesApi from "@/services/masterdata/grades";
 
 
-const PAGE_SIZE = 5;
-const PAGE_SIZE_OPTIONS = [5, 10, 20, 50];
+const PAGE_SIZE = 10;
+const PAGE_SIZE_OPTIONS = [10, 20, 50, 100];
 
 export const useGrades = () => {
   const [state, setState] = useState<GradesState>({

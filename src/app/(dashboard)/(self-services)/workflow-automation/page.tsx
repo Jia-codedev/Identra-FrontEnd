@@ -1,4 +1,4 @@
-import WorkflowAutomationPage from '@/modules/leave-management/workflow-automation/page';
+import WorkflowAutomationPage from '@/modules/self-services/workflow-automation/page';
 
 export default function RouteWrapper() {
   return <WorkflowAutomationPage />;

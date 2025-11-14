@@ -47,6 +47,7 @@ export interface IEmployee {
   geofence_flag?: boolean;
   login?: string;
   password?: string;
+  organization?: any
 }
 
 export interface EmployeeFormData {

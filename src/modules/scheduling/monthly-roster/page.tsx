@@ -170,7 +170,6 @@ export default function MonthlyRosterPage() {
         }
       />
 
-      {/* Pagination */}
       <CustomPagination
         currentPage={page}
         totalPages={Math.max(1, Math.ceil(total / pageSize))}
@@ -182,8 +181,6 @@ export default function MonthlyRosterPage() {
           setPage(1);
         }}
       />
-
-      {/* Add/Edit Modal */}
       <MonthlyRosterAddModal
         isOpen={isAddModalOpen}
         initialData={editingRoster || null}

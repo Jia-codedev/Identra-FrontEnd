@@ -1,4 +1,4 @@
-import PermissionsPage from '@/modules/leave-management/permissions/page';
+import PermissionsPage from '@/modules/self-services/permissions/page';
 
 export default function RouteWrapper() {
   return <PermissionsPage />;

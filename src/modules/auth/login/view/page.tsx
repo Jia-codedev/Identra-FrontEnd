@@ -51,9 +51,7 @@ function AuthComponent() {
         setError(null);
         setSubmitted(true);
         setTimeout(() => {
-          router.push(
-            getRouteFromKey("mainMenu.workforceAnalytics.myInsights")
-          );
+          router.push("/my-insights");
         }, 2000);
         reset();
       }

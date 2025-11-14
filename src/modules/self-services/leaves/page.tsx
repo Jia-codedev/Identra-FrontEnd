@@ -52,12 +52,11 @@ export default function LeavesPage() {
     }
   };
 
-    const { canView, canCreate, canEdit, canDelete } = useSubModulePrivileges(
+  const { canView, canCreate, canEdit, canDelete } = useSubModulePrivileges(
     "self-services",
     "leave-management"
   );
   console.log("Privileges:", { canView, canCreate, canEdit, canDelete });
-
 
   const getItemId = (item: LeaveType) => item.id;
   const getItemDisplayName = (item: LeaveType) =>
@@ -80,7 +79,7 @@ export default function LeavesPage() {
       <div className="w-full relative">
         <div className="py-4 border-border bg-background/90 p-4">
           <LeavesHeader
-            canCreate={canCreate} 
+            canCreate={canCreate}
             canDelete={canDelete}
             search={search}
             onSearchChange={handleSearchChange}
@@ -97,13 +96,15 @@ export default function LeavesPage() {
           </Dialog>
 
           <div className="w-full mt-4">
-            <LeavesList 
-              leaves={data} 
-              loading={isLoading} 
+            <LeavesList
+              leaves={data}
+              loading={isLoading}
               selected={selected}
               onSelectItem={selectItem}
               onSelectAll={selectAll}
-              allChecked={selected.length > 0 && selected.length === data.length}
+              allChecked={
+                selected.length > 0 && selected.length === data.length
+              }
               page={page}
               pageSize={pageSize}
               onPageChange={setPage}
@@ -117,7 +118,7 @@ export default function LeavesPage() {
               totalPages={pageCount}
               onPageChange={setPage}
               pageSize={pageSize}
-              pageSizeOptions={[5, 10, 20, 50]}
+              pageSizeOptions={[10, 20, 50, 100]}
               onPageSizeChange={setPageSize}
             />
           </div>

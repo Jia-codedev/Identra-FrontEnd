@@ -6,7 +6,7 @@ export const useSites = () => {
   const [selected, setSelected] = useState<number[]>([]);
   const [search, setSearch] = useState<string>("");
   const [page, setPage] = useState<number>(1);
-  const [pageSize, setPageSize] = useState<number>(5);
+  const [pageSize, setPageSize] = useState<number>(10);
   const [allChecked, setAllChecked] = useState<boolean>(false);
   const queryKey = ["sites", search ?? "", pageSize ?? 5, page ?? 1];
   const { data, isLoading, refetch } = useQuery<any>({
@@ -42,7 +42,7 @@ export const useSites = () => {
     page,
     pageCount,
     pageSize,
-    pageSizeOptions: [5, 10, 20, 50],
+    pageSizeOptions: [10, 20, 50 , 100],
     allChecked,
     setSearch,
     setPage,

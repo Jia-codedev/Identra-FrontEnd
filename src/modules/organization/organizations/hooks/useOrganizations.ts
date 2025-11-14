@@ -7,8 +7,8 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import organizationsApi from "@/services/masterdata/organizations";
 
 
-const PAGE_SIZE = 5;
-const PAGE_SIZE_OPTIONS = [5, 10, 20, 50];
+const PAGE_SIZE = 10;
+const PAGE_SIZE_OPTIONS = [10, 20, 50, 100];
 
 export const useOrganizations = () => {
   const [state, setState] = useState<OrganizationsState>({

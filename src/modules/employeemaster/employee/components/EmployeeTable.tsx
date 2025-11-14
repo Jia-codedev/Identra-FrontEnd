@@ -84,40 +84,25 @@ export const EmployeesTable: React.FC<EmployeesTableProps> = ({
       key: "name",
       header: t("employeeMaster.employee.employeeName"),
       accessor: (item, isRTL) =>
-        isRTL
-          ? item.firstname_arb + " " + item.lastname_arb
-          : item.firstname_eng + " " + item.lastname_eng,
+        isRTL ? item.firstname_arb : item.firstname_eng,
     },
     {
       key: "Email",
       header: t("employeeMaster.employee.email"),
-      accessor: (item) => item.email || "",
+      accessor: (item) => item.email?.toLocaleLowerCase() || "",
     },
     {
       key: "JoinDate",
       header: t("employeeMaster.employee.joinDate"),
       accessor: (item) =>
         item.join_date
-          ? typeof item.join_date === "string"
-            ? item.join_date
-            : item.join_date.toLocaleDateString()
+          ? new Date(item.join_date).toISOString().split("T")[0]
           : "",
-    },
-    {
-      key: "Designation",
-      header: t("employeeMaster.employee.designation"),
-      accessor: (item, isRTL) => {
-        const id = item.designation_id;
-        if (!id) return "";
-        const d = designationMap[id];
-        if (!d) return "";
-        return isRTL ? d.arb : d.eng;
-      },
     },
     {
       key: "Organization",
       header: t("employeeMaster.employee.organization"),
-      accessor: (item) => item.organization_id || "",
+      accessor: (item, isRTL) => isRTL ? item.organization?.organization_arb || "" : item.organization?.organization_eng || "",
     },
     {
       key: "Manager",

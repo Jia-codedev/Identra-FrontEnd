@@ -1,4 +1,4 @@
-import PunchesPage from '@/modules/leave-management/punches/page'
+import PunchesPage from '@/modules/self-services/punches/page'
 import React from 'react'
 
 function page() {
