@@ -11,7 +11,7 @@ import {
 import holidaysApi from "@/services/scheduling/holidays";
 
 const PAGE_SIZE = 10;
-const PAGE_SIZE_OPTIONS = [5, 10, 20, 50];
+const PAGE_SIZE_OPTIONS = [10, 20, 50, 100];
 
 export const useHolidays = () => {
   const [state, setState] = useState<HolidaysState>({

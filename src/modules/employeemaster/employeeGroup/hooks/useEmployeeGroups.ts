@@ -5,9 +5,8 @@ import { EmployeeGroupState, IEmployeeGroup } from "../types";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import employeeGroupApi from "@/services/employeemaster/employeeGroup";
 
-
-const PAGE_SIZE = 5;
-const PAGE_SIZE_OPTIONS = [5, 10, 20, 50];
+const PAGE_SIZE = 10;
+const PAGE_SIZE_OPTIONS = [10, 20, 50, 100];
 
 export const useEmployeeGroups = () => {
   const [state, setState] = useState<EmployeeGroupState>({
@@ -20,34 +19,29 @@ export const useEmployeeGroups = () => {
     error: null,
   });
 
-  const {
-    data,
-    isLoading,
-    refetch,
-    fetchNextPage,
-    hasNextPage,
-  } = useInfiniteQuery({
-    queryKey: ["employeeGroups", state.search, state.pageSize],
-    queryFn: ({ pageParam = 1 }) =>
-      employeeGroupApi
-        .getEmployeeGroups({
-          offset: pageParam,
-          limit: state.pageSize,
-          search: state.search,
-        })
-        .then((response) => response.data),
-    getNextPageParam: (lastPage, allPages) => {
-      if (
-        lastPage &&
-        Array.isArray(lastPage.data) &&
-        lastPage.data.length === state.pageSize
-      ) {
-        return allPages.length + 1;
-      }
-      return undefined;
-    },
-    initialPageParam: 1,
-  });
+  const { data, isLoading, refetch, fetchNextPage, hasNextPage } =
+    useInfiniteQuery({
+      queryKey: ["employeeGroups", state.search, state.pageSize],
+      queryFn: ({ pageParam = 1 }) =>
+        employeeGroupApi
+          .getEmployeeGroups({
+            offset: pageParam,
+            limit: state.pageSize,
+            search: state.search,
+          })
+          .then((response) => response.data),
+      getNextPageParam: (lastPage, allPages) => {
+        if (
+          lastPage &&
+          Array.isArray(lastPage.data) &&
+          lastPage.data.length === state.pageSize
+        ) {
+          return allPages.length + 1;
+        }
+        return undefined;
+      },
+      initialPageParam: 1,
+    });
 
   const employeeGroups = useMemo(() => {
     if (data && data.pages && data.pages[state.page - 1]) {

@@ -1,4 +1,4 @@
-import PermissionTypeModulePage from '@/modules/leave-management/permission-type/page'
+import PermissionTypeModulePage from '@/modules/self-services/permission-type/page'
 
 export default function Page() {
   return <PermissionTypeModulePage />;

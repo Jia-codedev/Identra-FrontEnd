@@ -120,6 +120,22 @@ export const MonthlyRosterTable: React.FC<MonthlyRosterTableProps> = ({
             : row.employee_name || row.employee_name_arb,
       },
       {
+        key: "finalized",
+        header: t("scheduling.monthlyRoster.table.finalized") || "Finalized",
+        accessor: (row) =>
+          row.finalize_flag ? (
+            <div className="bg-green-400/20 text-green-800 px-2 py-1 rounded-md mx-auto w-max">
+              {t("common.yes") || "Yes"}
+            </div>
+          ) : (
+            <div className="bg-red-400/20 text-red-800 px-2 py-1 rounded-md mx-auto w-max">
+              {t("common.no") || "No"}
+            </div>
+          ),
+        className: "text-center",
+        width: "w-24",
+      },
+      {
         key: "view_schedule",
         header:
           t("scheduling.monthlyRoster.table.viewSchedule") || "View Schedule",

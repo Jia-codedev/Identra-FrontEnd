@@ -24,9 +24,13 @@ export const SecondaryNav: React.FC<SecondaryNavProps> = ({
   activeMenuObj,
 }) => {
   const { t } = useTranslations();
+  const [currentPath, setCurrentPath] = React.useState("");
   const pathname = usePathname();
-  const { secondaryLinks: storeSecondary } = useNavigationState();
-
+  const { secondaryLinks: storeSecondary, activeMenuId: selectedMenuId } =
+    useNavigationState();
+  React.useEffect(() => {
+    setCurrentPath(pathname);
+  }, [pathname]);
   const secondaryLinks =
     storeSecondary && storeSecondary.length > 0
       ? storeSecondary
@@ -38,7 +42,8 @@ export const SecondaryNav: React.FC<SecondaryNavProps> = ({
   return (
     <div className="w-full bg-sidebar border-t h-fit pt-1 pb-0.5 px-6 flex items-baseline space-x-2">
       {secondaryLinks.map((item: any, idx: number) => {
-        const isActive = pathname === item.href;
+        const isRouteActive = pathname === item.href;
+        const isMenuSelected = activeMenuObj?.id && selectedMenuId === activeMenuObj.id;
         const key = item.href || item.label || `sub-link-${idx}`;
         let displayLabel: string = item.label;
         if (item.labelKey) {
@@ -53,20 +58,24 @@ export const SecondaryNav: React.FC<SecondaryNavProps> = ({
           if (found?.labelKey) displayLabel = t(found.labelKey);
         }
 
+        const linkClass = isRouteActive
+          ? "text-primary font-semibold"
+          : isMenuSelected
+          ? "font-medium"
+          : "text-muted-foreground";
+
         return (
           <motion.div key={key} variants={subLinkVariant}>
             <Link
               href={item.href}
-              aria-current={isActive ? "page" : undefined}
+              aria-current={isRouteActive ? "page" : undefined}
               className={cn(
                 "p-1 font-medium text-xs transition-all text-nowrap hover:text-primary block relative",
-                isActive
-                  ? "text-primary font-semibold"
-                  : "text-muted-foreground"
+                linkClass
               )}
             >
               {displayLabel}
-              {isActive && (
+              {isRouteActive && (
                 <span className="absolute left-0 right-0 -bottom-0.5 h-0.5 bg-primary rounded-full" />
               )}
             </Link>

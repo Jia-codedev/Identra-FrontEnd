@@ -13,7 +13,8 @@ const Navbar = () => {
   const { isRTL } = useLanguage();
   const pathname = usePathname();
   const { t } = useTranslations();
-  const { NAV_LINKS, activeMenuId: storeActiveId } = useNavigationState();
+  const { NAV_LINKS, activeMenuId: storeActiveId, setActiveMenu } =
+    useNavigationState();
   useAuthNavigationSync();
   const [activeMenuId, setActiveMenuId] = useState<string>("");
   const headerRef = useRef<HTMLElement | null>(null);
@@ -34,15 +35,28 @@ const Navbar = () => {
     return () => window.removeEventListener("resize", setNavbarHeightVar);
   }, []);
   React.useEffect(() => {
+    // If store already has an active id (user clicked previously), prefer it.
     if (storeActiveId) {
       setActiveMenuId(storeActiveId);
       return;
     }
-    const currentLink = NAV_LINKS.find((link) =>
-      link.secondary?.some((item) => pathname.startsWith(item.href))
-    );
-    setActiveMenuId(currentLink ? currentLink.id : NAV_LINKS[0]?.id ?? "");
-  }, [pathname, t, storeActiveId]);
+
+    // When NAV_LINKS become available (e.g. after login/navigation load),
+    // determine the correct active menu from the current pathname and
+    // update both local and global (store) state so other components
+    // reflect the selection without requiring a full page refresh.
+    if (NAV_LINKS && NAV_LINKS.length > 0) {
+      const currentLink = NAV_LINKS.find((link) =>
+        link.secondary?.some((item) => pathname.startsWith(item.href))
+      );
+
+      const newActiveId = currentLink ? currentLink.id : NAV_LINKS[0]?.id ?? "";
+      setActiveMenuId(newActiveId);
+      // update the global store so components that read from store update too
+      const secondary = currentLink?.secondary || NAV_LINKS.find((m) => m.id === newActiveId)?.secondary || [];
+      setActiveMenu(newActiveId, secondary);
+    }
+  }, [NAV_LINKS, pathname, t, storeActiveId, setActiveMenu]);
 
   const activeMenuObj = NAV_LINKS.find((menu) => menu.id === activeMenuId);
 

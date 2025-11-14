@@ -1,4 +1,4 @@
-import AddWorkflowAutomationPage from "@/modules/leave-management/workflow-automation/add/page";
+import AddWorkflowAutomationPage from "@/modules/self-services/workflow-automation/add/page";
 import React from "react";
 
 function page() {

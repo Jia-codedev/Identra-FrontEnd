@@ -3,6 +3,7 @@ import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useNavigationState } from "@/hooks/useNavigationState";
+import { usePathname } from "next/navigation";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { useTranslations } from "@/hooks/use-translations";
 
@@ -23,13 +24,28 @@ interface DesktopNavProps {
 
 export const DesktopNav: React.FC<DesktopNavProps> = ({ NAV_LINKS }) => {
   const { t } = useTranslations();
+  const pathname = usePathname();
   const { activeMenuId, setActiveMenu } = useNavigationState();
+  // Determine which menu corresponds to the current route (route-based active)
+  const routeActiveMenuId = React.useMemo(() => {
+    if (!NAV_LINKS || NAV_LINKS.length === 0) return null;
+    const found = NAV_LINKS.find(
+      (link) =>
+        // check secondary links for a matching/current route
+        (link.secondary &&
+          link.secondary.some((s) => pathname?.startsWith(s.href))) ||
+        // or menu-level link equals current path
+        (link.href && pathname?.startsWith(link.href))
+    );
+    return found?.id ?? null;
+  }, [NAV_LINKS, pathname]);
   return (
     <ScrollArea className="w-full overflow-x-auto" type="hover">
       <div className="flex flex-row items-center gap-1 min-w-fit">
         {NAV_LINKS.map((menu, menuIndex) => {
           const Icon = menu.icon;
-          const isActive = activeMenuId === menu.id;
+          const isActive = activeMenuId === menu.id; // user-selected (store) active
+          const isRouteActive = routeActiveMenuId === menu.id; // current route active
           const key = menu.id || menu.label || `nav-${menuIndex}`;
           const label = t(menu.id);
           if (!Icon) {
@@ -47,7 +63,12 @@ export const DesktopNav: React.FC<DesktopNavProps> = ({ NAV_LINKS }) => {
               <motion.button
                 className={cn(
                   "flex text-nowrap group/button w-auto items-center rounded-2xl justify-center px-4 py-2 font-semibold transition-colors duration-200 cursor-pointer text-xs",
-                  isActive ? "bg-primary/80 text-white" : "hover:bg-muted"
+                  isActive && !isRouteActive
+                    ? "bg-secondary/80"
+                    : // route-based active gets a different, lighter emphasis
+                    isRouteActive
+                    ? "text-white bg-primary font-semibold"
+                    : "hover:bg-muted"
                 )}
                 onClick={() => {
                   setActiveMenu(menu.id, menu.secondary || []);

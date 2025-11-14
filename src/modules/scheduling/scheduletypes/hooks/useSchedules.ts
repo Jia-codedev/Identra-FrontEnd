@@ -6,7 +6,7 @@ import { SchedulesState, ISchedule, ScheduleFilters } from "../types";
 import schedulesApi from "@/services/scheduling/schedules";
 
 const PAGE_SIZE = 10;
-const PAGE_SIZE_OPTIONS = [5, 10, 20, 50];
+const PAGE_SIZE_OPTIONS = [10, 20, 50, 100];
 
 export const useSchedules = () => {
   const [state, setState] = useState<SchedulesState>({

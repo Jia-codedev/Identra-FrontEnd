@@ -1,4 +1,4 @@
-import LeavesPage from '@/modules/leave-management/leaves/page';
+import LeavesPage from '@/modules/self-services/leaves/page';
 
 export default function RouteWrapper() {
   return <LeavesPage />;
