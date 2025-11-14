@@ -150,11 +150,17 @@ export const EmployeeLoginStep: React.FC<EmployeeStepProps> = ({
               />
             </SelectTrigger>
             <SelectContent>
-              {roles?.map((role) => (
-                <SelectItem key={role.role_id} value={role.role_id.toString()}>
-                  {role.role_name}
-                </SelectItem>
-              ))}
+              {roles?.map((role) => {
+                if (role.role_id === 1) return null;
+                return (
+                  <SelectItem
+                    key={role.role_id}
+                    value={role.role_id.toString()}
+                  >
+                    {role.role_name}
+                  </SelectItem>
+                );
+              })}
             </SelectContent>
           </Select>
           {errors.role_id && (

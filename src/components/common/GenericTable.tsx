@@ -162,17 +162,9 @@ export function GenericTable<T>({
       </div>
     );
   }
-  if (data.length === 0) {
-    return (
-      <div className="overflow-x-auto rounded-md">
-        <div className="backdrop-blur-xl mt-4 bg-card/70 border border-border rounded-lg overflow-hidden min-h-56 flex items-center justify-center">
-          <div className="p-4 text-center text-muted-foreground">
-            {noDataMessage}
-          </div>
-        </div>
-      </div>
-    );
-  }
+  // When there's no data, show the table header and a single body row
+  // that displays the `noDataMessage`. This keeps table layout consistent
+  // while still informing the user that there's no data.
 
   return (
     <div className="overflow-x-auto w-full grid grid-cols-1 border rounded-md overflow-hidden">
@@ -214,94 +206,113 @@ export function GenericTable<T>({
           </TableHeader>
           <TableBody className="oberflow-y-auto max-h-[60vh]">
             <AnimatePresence>
-              {data
-                .filter((item) => item && getItemId(item) !== undefined)
-                .map((item, idx) => {
-                  const itemId = getItemId(item);
-                  return (
-                    <TableRow
-                      key={itemId}
-                      className={
-                        ((page - 1) * pageSize + idx) % 2 === 0
-                          ? "bg-card/60 hover:bg-primary/10 transition-all "
-                          : "bg-card/40 hover:bg-primary/10 transition-all "
-                      }
-                      style={{ backdropFilter: "blur(8px)" }}
-                    >
-                      <TableCell className="text-center">
-                        <Checkbox
-                          checked={selected.includes(itemId)}
-                          onCheckedChange={() => onSelectItem(itemId)}
-                          aria-label={`${t(
-                            "common.select"
-                          )} ${getItemDisplayName(item, isRTL)}`}
-                        />
-                      </TableCell>
-                      {columns.map((column) => (
-                        <TableCell
-                          key={column.key}
-                          className="text-foreground text-md drop-shadow-sm"
-                        >
-                          {column.accessor(item, isRTL)}
+              {data.length === 0 ? (
+                <TableRow
+                  key="empty-row"
+                  className={"bg-card/40"}
+                  style={{ backdropFilter: "blur(8px)" }}
+                >
+                  <TableCell
+                    colSpan={
+                      columns.length +
+                      1 +
+                      ((onEditItem || onDeleteItem || actions || canDelete || canEdit) ? 1 : 0)
+                    }
+                    className="text-center py-20 text-muted-foreground "
+                  >
+                    {noDataMessage}
+                  </TableCell>
+                </TableRow>
+              ) : (
+                data
+                  .filter((item) => item && getItemId(item) !== undefined)
+                  .map((item, idx) => {
+                    const itemId = getItemId(item);
+                    return (
+                      <TableRow
+                        key={itemId}
+                        className={
+                          ((page - 1) * pageSize + idx) % 2 === 0
+                            ? "bg-card/60 hover:bg-primary/10 transition-all "
+                            : "bg-card/40 hover:bg-primary/10 transition-all "
+                        }
+                        style={{ backdropFilter: "blur(8px)" }}
+                      >
+                        <TableCell className="text-center">
+                          <Checkbox
+                            checked={selected.includes(itemId)}
+                            onCheckedChange={() => onSelectItem(itemId)}
+                            aria-label={`${t(
+                              "common.select"
+                            )} ${getItemDisplayName(item, isRTL)}`}
+                          />
                         </TableCell>
-                      ))}
-                      {(onEditItem ||
-                        onDeleteItem ||
-                        actions ||
-                        canDelete ||
-                        canEdit) && (
-                        <TableCell
-                          className={`text-center flex ${
-                            isRTL ? "flex-row-reverse" : "flex-row"
-                          } gap-2 justify-center`}
-                        >
-                          {actions && showActions ? (
-                            actions(item)
-                          ) : (
-                            <>
-                              {onEditItem && (
-                                <Button
-                                  disabled={!canEdit}
-                                  size="icon"
-                                  variant="outline"
-                                  className="p-2 rounded-full group cursor-pointer"
-                                  onClick={() => {
-                                    if (canEdit) onEditItem(item);
-                                  }}
-                                  aria-label={t("common.edit")}
-                                  title={
-                                    !canEdit
-                                      ? t("common.permissionRequired")
-                                      : t("common.edit")
-                                  }
-                                >
-                                  <FiEdit2 className="text-primary group-hover:scale-110 transition-transform" />
-                                </Button>
-                              )}
-                              {onDeleteItem && (
-                                <Button
-                                  disabled={!canDelete}
-                                  size="icon"
-                                  variant="destructive"
-                                  className="p-2 rounded-full group cursor-pointer"
-                                  onClick={() => onDeleteItem(itemId)}
-                                  aria-label={t("common.delete")}
-                                  title={
-                                    !canDelete
-                                      ? t("common.permissionRequired")
-                                      : t("common.delete")
-                                  }
-                                >
-                                  <FiTrash2 className="text-white group-hover:scale-110 transition-transform" />
-                                </Button>
-                              )}
-                            </>
-                          )}
-                        </TableCell>
-                      )}
-                    </TableRow>
-                  );
-                })}
+                        {columns.map((column) => (
+                          <TableCell
+                            key={column.key}
+                            className="text-foreground text-md drop-shadow-sm"
+                          >
+                            {column.accessor(item, isRTL)}
+                          </TableCell>
+                        ))}
+                        {(onEditItem ||
+                          onDeleteItem ||
+                          actions ||
+                          canDelete ||
+                          canEdit) && (
+                          <TableCell
+                            className={`text-center flex ${
+                              isRTL ? "flex-row-reverse" : "flex-row"
+                            } gap-2 justify-center`}
+                          >
+                            {actions && showActions ? (
+                              actions(item)
+                            ) : (
+                              <>
+                                {onEditItem && (
+                                  <Button
+                                    disabled={!canEdit}
+                                    size="icon"
+                                    variant="outline"
+                                    className="p-2 rounded-full group cursor-pointer"
+                                    onClick={() => {
+                                      if (canEdit) onEditItem(item);
+                                    }}
+                                    aria-label={t("common.edit")}
+                                    title={
+                                      !canEdit
+                                        ? t("common.permissionRequired")
+                                        : t("common.edit")
+                                    }
+                                  >
+                                    <FiEdit2 className="text-primary group-hover:scale-110 transition-transform" />
+                                  </Button>
+                                )}
+                                {onDeleteItem && (
+                                  <Button
+                                    disabled={!canDelete}
+                                    size="icon"
+                                    variant="destructive"
+                                    className="p-2 rounded-full group cursor-pointer"
+                                    onClick={() => onDeleteItem(itemId)}
+                                    aria-label={t("common.delete")}
+                                    title={
+                                      !canDelete
+                                        ? t("common.permissionRequired")
+                                        : t("common.delete")
+                                    }
+                                  >
+                                    <FiTrash2 className="text-white group-hover:scale-110 transition-transform" />
+                                  </Button>
+                                )}
+                              </>
+                            )}
+                          </TableCell>
+                        )}
+                      </TableRow>
+                    );
+                  })
+              )}
             </AnimatePresence>
           </TableBody>
         </Table>

@@ -208,7 +208,6 @@ export const ScheduleCalendarModal: React.FC<ScheduleCalendarModalProps> = ({
     loadSchedules();
   }, [isOpen, organizationId]);
 
-  // Optimize the schedule fetching useEffect with better dependency management
   useEffect(() => {
     if (!isOpen) return;
 
@@ -277,10 +276,8 @@ export const ScheduleCalendarModal: React.FC<ScheduleCalendarModalProps> = ({
     return () => {
       mounted = false;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, availableSchedules, dayKeys]);
 
-  // Memoize event handlers
   const handleDragStart = useCallback((scheduleId: number) => {
     setDraggedSchedule(scheduleId);
   }, []);
@@ -360,7 +357,6 @@ export const ScheduleCalendarModal: React.FC<ScheduleCalendarModalProps> = ({
     }
   };
 
-  // Memoize getDayStyles to avoid recalculating on every render
   const getDayStyles = useCallback(
     (day: number, schedule: any) => {
       const dayOfWeek = new Date(dateInfo.year, dateInfo.month, day).getDay();
@@ -451,7 +447,7 @@ export const ScheduleCalendarModal: React.FC<ScheduleCalendarModalProps> = ({
                 "Monthly Schedule"}{" "}
               - {employeeName}
             </div>
-            <Badge variant="outline" className="text-sm">
+            <Badge variant="outline" className="text-sm mr-4">
               {dateInfo.monthName}
             </Badge>
           </DialogTitle>
